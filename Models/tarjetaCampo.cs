@@ -19,7 +19,7 @@ public partial class tarjetaCampo
 
     public int? idCampo { get; set; }
 
-    [StringLength(1)]
+    [StringLength(256)]
     public string valorTexto { get; set; }
 
     [Column(TypeName = "decimal(18, 0)")]
@@ -28,7 +28,6 @@ public partial class tarjetaCampo
     [Column(TypeName = "datetime")]
     public DateTime? valorFecha { get; set; }
 
-    [StringLength(1)]
     public string valorLista { get; set; }
 
     public bool? valorCasilla { get; set; }

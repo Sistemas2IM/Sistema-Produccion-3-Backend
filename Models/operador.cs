@@ -12,7 +12,9 @@ namespace Sistema_Produccion_3_Backend.Models;
 public partial class operador
 {
     [Key]
-    public int idOperador { get; set; }
+    [StringLength(50)]
+    [Unicode(false)]
+    public string idOperador { get; set; }
 
     [StringLength(50)]
     [Unicode(false)]

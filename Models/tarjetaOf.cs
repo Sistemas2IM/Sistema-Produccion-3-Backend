@@ -83,9 +83,6 @@ public partial class tarjetaOf
     public virtual posturasOf idPosturaNavigation { get; set; }
 
     [InverseProperty("idTarjetaOfNavigation")]
-    public virtual ICollection<movimientoOf> movimientoOf { get; set; } = new List<movimientoOf>();
-
-    [InverseProperty("idTarjetaOfNavigation")]
     public virtual ICollection<procesoOf> procesoOf { get; set; } = new List<procesoOf>();
 
     [InverseProperty("idTarjetaOfNavigation")]

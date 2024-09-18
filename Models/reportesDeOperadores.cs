@@ -15,7 +15,9 @@ namespace Sistema_Produccion_3_Backend.Models;
 public partial class reportesDeOperadores
 {
     [Key]
-    public int idReporte { get; set; }
+    [StringLength(50)]
+    [Unicode(false)]
+    public string idReporte { get; set; }
 
     public int? idEstadoReporte { get; set; }
 
@@ -23,7 +25,9 @@ public partial class reportesDeOperadores
 
     public int? idMaquina { get; set; }
 
-    public int? idOperador { get; set; }
+    [StringLength(50)]
+    [Unicode(false)]
+    public string idOperador { get; set; }
 
     [Column(TypeName = "datetime")]
     public DateTime? fechaDeCreacion { get; set; }
@@ -48,8 +52,11 @@ public partial class reportesDeOperadores
     [StringLength(100)]
     public string creadoPor { get; set; }
 
-    [StringLength(100)]
+    [StringLength(50)]
+    [Unicode(false)]
     public string actualizadoPor { get; set; }
+
+    public int? tipoObjeto { get; set; }
 
     [InverseProperty("idReporteNavigation")]
     public virtual ICollection<detalleReporte> detalleReporte { get; set; } = new List<detalleReporte>();

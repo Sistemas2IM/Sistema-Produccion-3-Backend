@@ -34,15 +34,12 @@ public partial class certificadoDeCalidad
     [Unicode(false)]
     public string cliente { get; set; }
 
-    [StringLength(200)]
-    [Unicode(false)]
+    [StringLength(254)]
     public string producto { get; set; }
 
-    [Column(TypeName = "numeric(18, 0)")]
-    public decimal? cantidadEntregada { get; set; }
+    public int? cantidadEntregada { get; set; }
 
-    [Column(TypeName = "numeric(18, 0)")]
-    public decimal? cantidadDespachada { get; set; }
+    public int? cantidadDespachada { get; set; }
 
     [Column(TypeName = "datetime")]
     public DateTime? fechaProduccion { get; set; }
@@ -52,6 +49,8 @@ public partial class certificadoDeCalidad
 
     [Column(TypeName = "datetime")]
     public DateTime? fechaCreacion { get; set; }
+
+    public int? tipoObjeto { get; set; }
 
     [InverseProperty("idCertificadoNavigation")]
     public virtual ICollection<detalleCertificado> detalleCertificado { get; set; } = new List<detalleCertificado>();

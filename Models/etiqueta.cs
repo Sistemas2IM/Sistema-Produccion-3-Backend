@@ -23,7 +23,7 @@ public partial class etiqueta
     [StringLength(100)]
     public string texto { get; set; }
 
-    public int? orden { get; set; }
+    public int? secuencia { get; set; }
 
     [ForeignKey("idTarjetaOf")]
     [InverseProperty("etiqueta")]

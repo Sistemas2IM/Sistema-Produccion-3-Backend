@@ -44,14 +44,11 @@ public partial class entregasProductoTerminado
     [Unicode(false)]
     public string areaRecibe { get; set; }
 
-    [Column(TypeName = "numeric(18, 0)")]
-    public decimal? numeroDeCorrugados { get; set; }
+    public int? numeroDeCorrugados { get; set; }
 
-    [Column(TypeName = "numeric(18, 0)")]
-    public decimal? numeroDeTarimas { get; set; }
+    public int? numeroDeTarimas { get; set; }
 
-    [Column(TypeName = "numeric(18, 0)")]
-    public decimal? numeroDeEntregada { get; set; }
+    public int? numeroDeEntrega { get; set; }
 
     [StringLength(100)]
     public string creadoPor { get; set; }
@@ -61,22 +58,23 @@ public partial class entregasProductoTerminado
 
     public bool? entregaParcial { get; set; }
 
-    [Column(TypeName = "numeric(18, 0)")]
-    public decimal? cantidadSobrante { get; set; }
+    public bool? reportaSobrantes { get; set; }
 
-    public int? cantidadSobrantes { get; set; }
+    public int? cantidadSobrante { get; set; }
+
+    public int? cantidadEntregadaTotal { get; set; }
 
     [Column(TypeName = "datetime")]
     public DateTime? fechaCreacion { get; set; }
 
+    [StringLength(50)]
+    [Unicode(false)]
+    public string actualizadoPor { get; set; }
+
     [Column(TypeName = "datetime")]
     public DateTime? ultimaActualizacion { get; set; }
 
-    [StringLength(100)]
-    public string actualizadoPor { get; set; }
-
-    [Column(TypeName = "numeric(18, 0)")]
-    public decimal? cantidadEntregadaTotal { get; set; }
+    public int? tipoObjeto { get; set; }
 
     [InverseProperty("idEntregaPtNavigation")]
     public virtual ICollection<contenidoEntrega> contenidoEntrega { get; set; } = new List<contenidoEntrega>();

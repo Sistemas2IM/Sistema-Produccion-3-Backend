@@ -18,7 +18,9 @@ public partial class detalleReporte
     [Key]
     public int idDetalle { get; set; }
 
-    public int? idReporte { get; set; }
+    [StringLength(50)]
+    [Unicode(false)]
+    public string idReporte { get; set; }
 
     public int? idOperacion { get; set; }
 
@@ -49,23 +51,25 @@ public partial class detalleReporte
     [Unicode(false)]
     public string tiroRetiro { get; set; }
 
-    [Column(TypeName = "numeric(18, 0)")]
-    public decimal? cantidadRecibida { get; set; }
+    public int? cantidadRecibida { get; set; }
 
-    [Column(TypeName = "numeric(18, 0)")]
-    public decimal? cantidadProducida { get; set; }
+    public int? cantidadProducida { get; set; }
 
-    [Column(TypeName = "numeric(18, 0)")]
-    public decimal? cantidadDanada { get; set; }
+    public int? cantidadDanada { get; set; }
 
-    [Column(TypeName = "numeric(18, 0)")]
-    public decimal? cantidadSolicitada { get; set; }
+    public int? cantidadSolicitada { get; set; }
 
-    [Column(TypeName = "numeric(18, 0)")]
-    public decimal? cantidadProducidaMt { get; set; }
+    public int? cantidadProducidaMt { get; set; }
 
-    [Column(TypeName = "numeric(18, 0)")]
-    public decimal? cantidadAjuste { get; set; }
+    public int? cantidadAjuste { get; set; }
+
+    public int? cantidadNc { get; set; }
+
+    public int? cantidadNcProducida { get; set; }
+
+    public int? cantidadMtEnRollos { get; set; }
+
+    public int? cantidadEnRollos { get; set; }
 
     [Column(TypeName = "numeric(18, 0)")]
     public decimal? anchoBobina { get; set; }
@@ -75,28 +79,25 @@ public partial class detalleReporte
 
     public string observaciones { get; set; }
 
-    [Column(TypeName = "numeric(18, 0)")]
-    public decimal? largoConvertido { get; set; }
+    public int? largoConvertido { get; set; }
+
+    public int? anchoMm { get; set; }
+
+    public int? largoMm { get; set; }
+
+    public int? anchoMt { get; set; }
+
+    public int? largoMt { get; set; }
 
     [Column(TypeName = "numeric(18, 0)")]
-    public decimal? anchoMm { get; set; }
-
-    [Column(TypeName = "numeric(18, 0)")]
-    public decimal? largoMm { get; set; }
-
-    [Column(TypeName = "numeric(18, 0)")]
-    public decimal? anchoMt { get; set; }
-
-    [Column(TypeName = "numeric(18, 0)")]
-    public decimal? largoMt { get; set; }
-
-    public int? repeticiones { get; set; }
-
-    [Column(TypeName = "numeric(18, 0)")]
-    public decimal? cantidadSobrante { get; set; }
+    public decimal? ancho { get; set; }
 
     [Column(TypeName = "numeric(18, 0)")]
     public decimal? alto { get; set; }
+
+    public int? repeticiones { get; set; }
+
+    public int? cantidadSobrante { get; set; }
 
     [Column(TypeName = "numeric(18, 0)")]
     public decimal? udCorrugados { get; set; }

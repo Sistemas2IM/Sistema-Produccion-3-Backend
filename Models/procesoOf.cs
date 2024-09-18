@@ -51,6 +51,11 @@ public partial class procesoOf
     [Column(TypeName = "datetime")]
     public DateTime? fechaCreacion { get; set; }
 
+    public int? tipoObjeto { get; set; }
+
+    [InverseProperty("idProcesoNavigation")]
+    public virtual ICollection<detalleOperacionProceso> detalleOperacionProceso { get; set; } = new List<detalleOperacionProceso>();
+
     [ForeignKey("idPostura")]
     [InverseProperty("procesoOf")]
     public virtual posturasOf idPosturaNavigation { get; set; }

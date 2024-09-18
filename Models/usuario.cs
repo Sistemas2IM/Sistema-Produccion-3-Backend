@@ -41,7 +41,8 @@ public partial class usuario
     [Column(TypeName = "datetime")]
     public DateTime? ultimaActualizacion { get; set; }
 
-    [StringLength(100)]
+    [StringLength(50)]
+    [Unicode(false)]
     public string actualizadoPor { get; set; }
 
     [InverseProperty("userNavigation")]
@@ -50,9 +51,6 @@ public partial class usuario
     [ForeignKey("idRol")]
     [InverseProperty("usuario")]
     public virtual rol idRolNavigation { get; set; }
-
-    [InverseProperty("userNavigation")]
-    public virtual ICollection<movimientoOf> movimientoOf { get; set; } = new List<movimientoOf>();
 
     [InverseProperty("userNavigation")]
     public virtual ICollection<operador> operador { get; set; } = new List<operador>();

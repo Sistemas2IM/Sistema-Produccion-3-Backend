@@ -26,11 +26,12 @@ public partial class fichaTecnica
     [Unicode(false)]
     public string cliente { get; set; }
 
-    [StringLength(200)]
-    [Unicode(false)]
+    [StringLength(254)]
     public string producto { get; set; }
 
     public int? numeroOf { get; set; }
+
+    public int? tipoObjeto { get; set; }
 
     [InverseProperty("idFichaTecnicaNavigation")]
     public virtual ICollection<detalleFicha> detalleFicha { get; set; } = new List<detalleFicha>();

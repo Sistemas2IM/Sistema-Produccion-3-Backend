@@ -18,19 +18,17 @@ public partial class contenidoEntrega
 
     public int? numeroFila { get; set; }
 
-    [Column(TypeName = "numeric(18, 0)")]
-    public decimal? cantidadPlanificada { get; set; }
+    public int? cantidadPlanificada { get; set; }
 
-    [Column(TypeName = "numeric(18, 0)")]
-    public decimal? cantidadEntregada { get; set; }
+    public int? cantidadEntregada { get; set; }
 
-    [StringLength(200)]
-    [Unicode(false)]
+    [StringLength(254)]
     public string producto { get; set; }
 
     public string descripcion { get; set; }
 
     [StringLength(100)]
+    [Unicode(false)]
     public string codigoProducto { get; set; }
 
     [ForeignKey("idEntregaPt")]

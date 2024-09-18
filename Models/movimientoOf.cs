@@ -8,18 +8,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Sistema_Produccion_3_Backend.Models;
 
-[Index("idTarjetaOf", Name = "TARJETA_MOVIMIENTO_FK")]
-[Index("user", Name = "USUARIO_MOVIMIENTO_FK")]
 public partial class movimientoOf
 {
     [Key]
     public int idMovimiento { get; set; }
 
-    [StringLength(50)]
-    [Unicode(false)]
-    public string user { get; set; }
+    public int? tipoObjeto { get; set; }
 
-    public int? idTarjetaOf { get; set; }
+    public int? idObjeto { get; set; }
 
     [Column(TypeName = "datetime")]
     public DateTime? fechaMovimiento { get; set; }
@@ -36,11 +32,7 @@ public partial class movimientoOf
 
     public int? posicionNueva { get; set; }
 
-    [ForeignKey("idTarjetaOf")]
-    [InverseProperty("movimientoOf")]
-    public virtual tarjetaOf idTarjetaOfNavigation { get; set; }
-
-    [ForeignKey("user")]
-    [InverseProperty("movimientoOf")]
-    public virtual usuario userNavigation { get; set; }
+    [StringLength(50)]
+    [Unicode(false)]
+    public string usuario { get; set; }
 }
