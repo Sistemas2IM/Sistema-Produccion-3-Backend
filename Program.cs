@@ -27,6 +27,11 @@ builder.Services.AddAutoMapper(typeof(Program));
 //Api key de seguridad
 builder.Services.AddTransient<IApiKeyValidation, ApiKeyValidation>();
 
+/*builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<ValidarApiEndpoint>(); // Registrar el filtro de validación de API Key globalmente
+});*/
+
 //Servicos de Autenticacion de Usuarios
 builder.Services.AddScoped<IAuthService, AuthService>();
 
