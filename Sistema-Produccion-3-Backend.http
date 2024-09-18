@@ -1,0 +1,6 @@
+@Sistema_Produccion_3_Backend_HostAddress = http://localhost:5268
+
+GET {{Sistema_Produccion_3_Backend_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
