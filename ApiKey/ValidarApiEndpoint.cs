@@ -14,13 +14,27 @@ namespace Sistema_Produccion_3_Backend.ApiKey
 
         public override void OnActionExecuting(ActionExecutingContext context)
         {
-            if (!context.ActionArguments.ContainsKey("apiKey") || string.IsNullOrWhiteSpace(context.ActionArguments["apiKey"]?.ToString()))
+            string apiKey = string.Empty;
+
+            // Primero buscar en el encabezado "apiKey"
+            if (context.HttpContext.Request.Headers.TryGetValue("apiKey", out var extractedApiKey))
+            {
+                apiKey = extractedApiKey.ToString();
+            }
+            // Si no se encuentra en el encabezado, buscar en el query string
+            else if (context.HttpContext.Request.Query.TryGetValue("apiKey", out var queryApiKey))
+            {
+                apiKey = queryApiKey.ToString();
+            }
+
+            // Si no se encuentra la API Key en ningún lugar
+            if (string.IsNullOrWhiteSpace(apiKey))
             {
                 context.Result = new UnauthorizedResult(); // La clave API es obligatoria
                 return;
             }
 
-            string apiKey = context.ActionArguments["apiKey"]?.ToString();
+            // Validar la API Key
             bool isValid = _apiKeyValidation.IsValidApiKey(apiKey);
 
             if (!isValid)
@@ -29,4 +43,7 @@ namespace Sistema_Produccion_3_Backend.ApiKey
             }
         }
     }
+
+
+
 }
