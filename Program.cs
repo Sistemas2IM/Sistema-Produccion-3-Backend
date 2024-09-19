@@ -7,6 +7,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Sistema_Produccion_3_Backend.ApiKey;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,8 +25,40 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddAutoMapper(typeof(Program));
 
-//Api key de seguridad
+// API KEY de seguridad ------------------------------------------------------------
 builder.Services.AddTransient<IApiKeyValidation, ApiKeyValidation>();
+
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<ValidarApiEndpoint>(); // Registrar el filtro globalmente
+});
+
+builder.Services.AddSwaggerGen(c =>
+{
+    c.AddSecurityDefinition("apiKey", new OpenApiSecurityScheme
+    {
+        In = ParameterLocation.Header,
+        Name = "apiKey",
+        Type = SecuritySchemeType.ApiKey,
+        Description = "API Key needed to access the endpoints"
+    });
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "apiKey"
+                }
+            },
+            new string[] {}
+        }
+    });
+});
+//---------------------------------------------------------------------------------
 
 //Servicos de Autenticacion de Usuarios
 builder.Services.AddScoped<IAuthService, AuthService>();
