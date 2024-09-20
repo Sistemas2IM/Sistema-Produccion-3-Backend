@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Sistema_Produccion_3_Backend.DTO.OV
 {
-    public class AddOVDto
+    public class OVDto
     {
         public int idOv { get; set; }
 
