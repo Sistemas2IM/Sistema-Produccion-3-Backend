@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Sistema_Produccion_3_Backend.DTO.OV;
 using Sistema_Produccion_3_Backend.DTO.TarjetasOF;
 using Sistema_Produccion_3_Backend.Models;
 
@@ -14,6 +15,9 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             CreateMap<tarjetaOf, TarjetaOfDto>().ReverseMap();
             CreateMap<tarjetaOf, AddTarjetaOfDto>().ReverseMap();
             CreateMap<tarjetaOf, UpdateTarjetaOfDto>().ReverseMap();
+
+            // OV - DTO
+            CreateMap<oV, AddOVDto>().ReverseMap();
         }
     }
 }
