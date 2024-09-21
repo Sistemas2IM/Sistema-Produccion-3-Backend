@@ -12,21 +12,21 @@ namespace Sistema_Produccion_3_Backend.DTO.OV
         [Column("oV")]
         [StringLength(200)]
         [Unicode(false)]
-        public string oV1 { get; set; }
+        public string? oV1 { get; set; }
 
-        public string codCliente { get; set; }
+        public string? codCliente { get; set; }
 
-        public string cliente { get; set; }
+        public string? cliente { get; set; }
 
         public DateTime? fechaOv { get; set; }
 
         public DateTime? fechaEntrega { get; set; }
 
-        public string comentario { get; set; }
+        public string? comentario { get; set; }
 
-        public string vendedor { get; set; }
+        public string? vendedor { get; set; }
 
-        public string tipoOrden { get; set; }
+        public string? tipoOrden { get; set; }
 
         [InverseProperty("idOvNavigation")]
         public virtual ICollection<articuloOv> articuloOv { get; set; } = new List<articuloOv>();

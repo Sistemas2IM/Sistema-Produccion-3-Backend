@@ -55,15 +55,15 @@ namespace Sistema_Produccion_3_Backend.DTO.TarjetasOF
 
         [ForeignKey("idEstadoOf")]
         [InverseProperty("tarjetaOf")]
-        public virtual estadosOf idEstadoOfNavigation { get; set; }
+        public virtual estadosOf? idEstadoOfNavigation { get; set; }
 
         [ForeignKey("idOv")]
         [InverseProperty("tarjetaOf")]
-        public virtual oV idOvNavigation { get; set; }
+        public virtual oV? idOvNavigation { get; set; }
 
         [ForeignKey("idPostura")]
         [InverseProperty("tarjetaOf")]
-        public virtual posturasOf idPosturaNavigation { get; set; }
+        public virtual posturasOf? idPosturaNavigation { get; set; }
 
         [InverseProperty("idTarjetaOfNavigation")]
         public virtual ICollection<procesoOf> procesoOf { get; set; } = new List<procesoOf>();

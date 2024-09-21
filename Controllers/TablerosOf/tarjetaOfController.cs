@@ -90,6 +90,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         public async Task<ActionResult<tarjetaOf>> PosttarjetaOf(AddTarjetaOfDto addTarjetaOf)
         {
             var tarjetaOf = _mapper.Map<tarjetaOf>(addTarjetaOf);
+
             _context.tarjetaOf.Add(tarjetaOf);
             await _context.SaveChangesAsync();
 
