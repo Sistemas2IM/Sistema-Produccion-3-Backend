@@ -2,10 +2,6 @@
 {
     public class UpdateTarjetaOfDto
     {
-        public int idTarjetaOf { get; set; }
-
-        public int? idOv { get; set; }
-
         public int? idPostura { get; set; }
 
         public int? idEstadoOf { get; set; }
@@ -25,10 +21,6 @@
         public decimal? cantidadOf { get; set; }
 
         public int? posicion { get; set; }
-
-        public DateTime? fechaEntrega { get; set; }
-
-        public DateTime? fechaCreacion { get; set; }
 
         public DateTime? fechaUltimaActualizacion { get; set; }
     }
