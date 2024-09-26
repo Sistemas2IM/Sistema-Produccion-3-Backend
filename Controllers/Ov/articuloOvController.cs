@@ -83,7 +83,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Ov
         // POST: api/articuloOv
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<articuloOv>> PostarticuloOv(AddOVDto addArticuloOv)
+        public async Task<ActionResult<articuloOv>> PostarticuloOv(AddArticuloDto addArticuloOv)
         {
             var articuloOv = _mapper.Map<articuloOv>(addArticuloOv);
 
