@@ -25,7 +25,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Ov
         }
 
         // GET: api/oV
-        [HttpGet]
+        [HttpGet("get")]
         public async Task<ActionResult<IEnumerable<OVDto>>> GetoV()
         {
             var oV = await _context.oV.ToListAsync();
@@ -35,7 +35,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Ov
         }
 
         // GET: api/oV/5
-        [HttpGet("{id}")]
+        [HttpGet("get/id/{id}")]
         public async Task<ActionResult<OVDto>> GetoV(int id)
         {
             var oV = await _context.oV.FindAsync(id);
@@ -82,7 +82,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Ov
 
         // POST: api/oV
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
+        [HttpPost("post")]
         public async Task<ActionResult<oV>> PostoV(AddOVDto addOv)
         {
             var oV = _mapper.Map<oV>(addOv);

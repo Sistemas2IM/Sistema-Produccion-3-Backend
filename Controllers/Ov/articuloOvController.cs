@@ -25,7 +25,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Ov
         }
 
         // GET: api/articuloOv
-        [HttpGet]
+        [HttpGet("get")]
         public async Task<ActionResult<IEnumerable<ArticuloDto>>> GetarticuloOv()
         {
             var articuloOv = await _context.articuloOv.ToListAsync();
@@ -35,7 +35,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Ov
         }
 
         // GET: api/articuloOv/5
-        [HttpGet("{id}")]
+        [HttpGet("get/id/{id}")]
         public async Task<ActionResult<ArticuloDto>> GetarticuloOv(int id)
         {
             var articuloOv = await _context.articuloOv.FindAsync(id);
@@ -82,7 +82,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Ov
 
         // POST: api/articuloOv
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
+        [HttpPost("post")]
         public async Task<ActionResult<articuloOv>> PostarticuloOv(AddArticuloDto addArticuloOv)
         {
             var articuloOv = _mapper.Map<articuloOv>(addArticuloOv);
