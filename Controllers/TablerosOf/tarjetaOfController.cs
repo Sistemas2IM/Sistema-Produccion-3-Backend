@@ -36,7 +36,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         }
 
         // GET: api/tarjetaOf/5
-        [HttpGet("get/id/{id}")]
+        [HttpGet("get/id/")]
         public async Task<ActionResult<TarjetaOfDto>> GettarjetaOf(int id)
         {
             var tarjetaOf = await _context.tarjetaOf.FindAsync(id);
@@ -52,7 +52,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
 
         // PUT: api/tarjetaOf/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("put/{id}")]
+        [HttpPut("put/")]
         public async Task<IActionResult> PuttarjetaOf(int id, UpdateTarjetaOfDto updateTarjetaOf)
         {
             var tarjetaOf = await _context.tarjetaOf.FindAsync(id);
