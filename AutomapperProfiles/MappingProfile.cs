@@ -24,7 +24,9 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ReverseMap();
 
             // OV - DTO
+            CreateMap<oV, OVDto>().ReverseMap();
             CreateMap<oV, AddOVDto>().ReverseMap();
+
             // Articulo - DTO
             CreateMap<articuloOv, ArticuloDto>().ReverseMap();
             CreateMap<articuloOv, AddArticuloDto>().ReverseMap();
