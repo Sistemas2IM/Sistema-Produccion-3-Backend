@@ -26,7 +26,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         }
 
         // GET: api/tarjetaOf
-        [HttpGet]
+        [HttpGet("get")]
         public async Task<ActionResult<IEnumerable<TarjetaOfDto>>> GettarjetaOf()
         {
             var tarjetaOf = await _context.tarjetaOf.ToListAsync();
@@ -36,7 +36,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         }
 
         // GET: api/tarjetaOf/5
-        [HttpGet("{id}")]
+        [HttpGet("get/id/{id}")]
         public async Task<ActionResult<TarjetaOfDto>> GettarjetaOf(int id)
         {
             var tarjetaOf = await _context.tarjetaOf.FindAsync(id);
@@ -52,7 +52,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
 
         // PUT: api/tarjetaOf/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
+        [HttpPut("put/{id}")]
         public async Task<IActionResult> PuttarjetaOf(int id, UpdateTarjetaOfDto updateTarjetaOf)
         {
             var tarjetaOf = await _context.tarjetaOf.FindAsync(id);
@@ -86,7 +86,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
 
         // POST: api/tarjetaOf
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
+        [HttpPost("post")]
         public async Task<ActionResult<tarjetaOf>> PosttarjetaOf(AddTarjetaOfDto addTarjetaOf)
         {
             var tarjetaOf = _mapper.Map<tarjetaOf>(addTarjetaOf);
