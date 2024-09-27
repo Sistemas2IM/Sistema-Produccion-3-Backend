@@ -23,5 +23,7 @@
         public int? posicion { get; set; }
 
         public DateTime? fechaUltimaActualizacion { get; set; }
+
+        public bool? archivado { get; set; }
     }
 }

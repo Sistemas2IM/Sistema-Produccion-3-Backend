@@ -52,6 +52,8 @@ public partial class tarjetaOf
     [Column(TypeName = "datetime")]
     public DateTime? fechaUltimaActualizacion { get; set; }
 
+    public bool? archivado { get; set; }
+
     [InverseProperty("idTarjetaOfNavigation")]
     public virtual ICollection<asignacion> asignacion { get; set; } = new List<asignacion>();
 
