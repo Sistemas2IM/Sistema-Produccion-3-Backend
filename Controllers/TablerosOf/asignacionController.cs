@@ -42,7 +42,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
 
 
         // GET: api/asignacion/5
-        [HttpGet("get/id/{id}")]
+        [HttpGet("get/id/")]
         public async Task<ActionResult<AsignarOfDto>> Getasignacion(int id)
         {
             var asignacion = await _context.asignacion.FindAsync(id);
@@ -58,7 +58,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
 
         // PUT: api/asignacion/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("put/{id}")]
+        [HttpPut("put/")]
         public async Task<IActionResult> Putasignacion(int id, AsignarOfDto asignarOfDto)
         {
             var asignarOf = await _context.asignacion.FindAsync(id);
