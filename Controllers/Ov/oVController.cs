@@ -41,7 +41,9 @@ namespace Sistema_Produccion_3_Backend.Controllers.Ov
         [HttpGet("get/id/")]
         public async Task<ActionResult<OVDto>> GetoV(int id)
         {
-            var oV = await _context.oV.FindAsync(id);
+            var oV = await _context.oV
+                .Include(u => u.articuloOv)
+                .FirstOrDefaultAsync(u => u.idOv == id);
             var oVDto = _mapper.Map<OVDto>(oV);
 
             if (oVDto == null)
