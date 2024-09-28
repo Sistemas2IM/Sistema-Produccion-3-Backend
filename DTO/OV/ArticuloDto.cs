@@ -17,17 +17,11 @@ namespace Sistema_Produccion_3_Backend.DTO.OV
 
         public string detalleArticulo { get; set; }
 
-        [Column(TypeName = "decimal(18, 0)")]
         public decimal? precioUnidad { get; set; }
 
-        [Unicode(false)]
         public string lineaDeNegocio { get; set; }
 
-        [Unicode(false)]
         public string departamento { get; set; }
 
-        [ForeignKey("idOv")]
-        [InverseProperty("articuloOv")]
-        public virtual oV? idOvNavigation { get; set; }
     }
 }
