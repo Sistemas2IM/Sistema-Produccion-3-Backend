@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
-using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Sistema_Produccion_3_Backend.DTO.PermisosUsuario;
@@ -63,18 +58,6 @@ namespace Sistema_Produccion_3_Backend.Controllers.LoginAuth
             return Ok(usuarioDto);
         }
 
-
-            var usuario = await _context.usuario.FindAsync(id);
-            if (usuario == null)
-            {
-                return NotFound();
-            }
-
-            _context.usuario.Remove(usuario);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }*/
 
         private bool usuarioExists(string id)
         {
