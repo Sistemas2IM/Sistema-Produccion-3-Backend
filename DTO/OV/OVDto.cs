@@ -28,8 +28,7 @@ namespace Sistema_Produccion_3_Backend.DTO.OV
 
         public string tipoOrden { get; set; }
 
-        [InverseProperty("idOvNavigation")]
-        public virtual ICollection<articuloOv> articuloOv { get; set; } = new List<articuloOv>();
+        public List<ArticuloDto> articulo { get; set; }
 
         [InverseProperty("idOvNavigation")]
         public virtual ICollection<entregasProductoTerminado> entregasProductoTerminado { get; set; } = new List<entregasProductoTerminado>();

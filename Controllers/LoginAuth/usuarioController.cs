@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Sistema_Produccion_3_Backend.DTO.PermisosUsuario;
 using Sistema_Produccion_3_Backend.Models;
 
 namespace Sistema_Produccion_3_Backend.Controllers.LoginAuth
@@ -14,88 +16,65 @@ namespace Sistema_Produccion_3_Backend.Controllers.LoginAuth
     public class usuarioController : ControllerBase
     {
         private readonly base_nuevaContext _context;
+        private readonly IMapper _mapper;
 
-        public usuarioController(base_nuevaContext context)
+        public usuarioController(base_nuevaContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         // GET: api/usuario
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<usuario>>> Getusuario()
+        [HttpGet("get")]
+        public async Task<ActionResult<IEnumerable<UsuarioDto>>> Getusuario()
         {
-            return await _context.usuario.ToListAsync();
+            var usuarios = await _context.usuario
+                .Include(u => u.idRolNavigation)        // Include the role
+                .ThenInclude(r => r.permiso)            // Include the permissions for each role
+                .ThenInclude(p => p.idSubModuloNavigation) // Include the sub-modules for each permission
+                .ThenInclude(sm => sm.idModuloNavigation)  // Include the modules for each sub-module
+                .ThenInclude(m => m.idMenuNavigation)   // Include the menu for each module
+                .ToListAsync();
+
+            var usuariosDto = _mapper.Map<List<UsuarioDto>>(usuarios);
+
+            return Ok(usuariosDto);
         }
 
-        // GET: api/usuario/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<usuario>> Getusuario(decimal id)
+        // GET: api/usuario/get/{user}
+        [HttpGet("get/{user}")]
+        public async Task<ActionResult<UsuarioDto>> Getusuario(string user)
         {
-            var usuario = await _context.usuario.FindAsync(id);
+            var usuario = await _context.usuario
+                .Include(u => u.idRolNavigation)
+                .ThenInclude(r => r.permiso)
+                .ThenInclude(p => p.idSubModuloNavigation)
+                .ThenInclude(sm => sm.idModuloNavigation)
+                .ThenInclude(m => m.idMenuNavigation)
+                .FirstOrDefaultAsync(u => u.user == user); // Filtrar por el campo "user" (string)
 
             if (usuario == null)
             {
                 return NotFound();
             }
 
-            return usuario;
+            var usuarioDto = _mapper.Map<UsuarioDto>(usuario);
+
+            return Ok(usuarioDto);
         }
 
-        // PUT: api/usuario/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Putusuario(string id, usuario usuario)
-        {
-            if (id != usuario.user)
+
+            var usuario = await _context.usuario.FindAsync(id);
+            if (usuario == null)
             {
-                return BadRequest();
+                return NotFound();
             }
 
-            _context.Entry(usuario).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!usuarioExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            _context.usuario.Remove(usuario);
+            await _context.SaveChangesAsync();
 
             return NoContent();
-        }
-
-        // POST: api/usuario
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<usuario>> Postusuario(usuario usuario)
-        {
-            _context.usuario.Add(usuario);
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (usuarioExists(usuario.user))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-            return CreatedAtAction("GetUsuario", new { id = usuario.user }, usuario);
-        }
-
+        }*/
 
         private bool usuarioExists(string id)
         {

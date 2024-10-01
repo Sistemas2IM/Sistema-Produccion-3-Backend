@@ -28,17 +28,22 @@ namespace Sistema_Produccion_3_Backend.Controllers.Ov
         [HttpGet("get")]
         public async Task<ActionResult<IEnumerable<OVDto>>> GetoV()
         {
-            var oV = await _context.oV.ToListAsync();
+            var oV = await _context.oV
+                .Include(u => u.articuloOv)
+                .ToListAsync();
+
             var oVDto = _mapper.Map<List<OVDto>>(oV);
 
             return Ok(oVDto);
         }
 
         // GET: api/oV/5
-        [HttpGet("get/id/{id}")]
+        [HttpGet("get/id/")]
         public async Task<ActionResult<OVDto>> GetoV(int id)
         {
-            var oV = await _context.oV.FindAsync(id);
+            var oV = await _context.oV
+                .Include(u => u.articuloOv)
+                .FirstOrDefaultAsync(u => u.idOv == id);
             var oVDto = _mapper.Map<OVDto>(oV);
 
             if (oVDto == null)
