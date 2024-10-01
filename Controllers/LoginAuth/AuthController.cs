@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Sistema_Produccion_3_Backend.DTO.LoginAuth;
@@ -15,10 +15,13 @@ namespace Sistema_Produccion_3_Backend.Controllers.LoginAuth
         private readonly IAuthService _authService;
         private readonly base_nuevaContext _context;
 
-        public AuthController(IAuthService authService, base_nuevaContext context)
+        private readonly IValidator<RegisterDto> _registerValidator;
+
+        public AuthController(IAuthService authService, base_nuevaContext context, IValidator<RegisterDto> registerValidator)
         {
             _authService = authService;
             _context = context;
+            _registerValidator = registerValidator;
         }
 
         [HttpPost("login")]
@@ -61,7 +64,16 @@ namespace Sistema_Produccion_3_Backend.Controllers.LoginAuth
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterDto register)
         {
+            var validationResult = await _registerValidator.ValidateAsync(register);
+
+            if (!validationResult.IsValid)
+            {
+                return BadRequest(validationResult.Errors);
+
+            }
+
             var registerResult = await _authService.RegisterUser(register);
+
 
             if (!registerResult.result)
             {
@@ -75,6 +87,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.LoginAuth
         public async Task<IActionResult> Revoke([FromBody] string id)
         {
             var usuario = await _context.refreshToken.Where(f => f.user == id).ToListAsync();
+
             if (usuario == null)
             {
                 return NotFound("Usuario no encontrado");

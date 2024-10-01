@@ -69,6 +69,9 @@ namespace Sistema_Produccion_3_Backend.Services
             var newUser = new usuario
             {
                 user = register.User,
+                nombres = register.Nombres,
+                apellidos = register.Apellidos,
+                email = register.Email,
                 password = hashedPassword,
                 fechaDeCreacion = DateTime.Now,
                 status = "1",

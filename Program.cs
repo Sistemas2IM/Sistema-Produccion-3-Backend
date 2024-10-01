@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using Sistema_Produccion_3_Backend;
 using Sistema_Produccion_3_Backend.Models;
 using Sistema_Produccion_3_Backend.AutomapperProfiles;
 using Sistema_Produccion_3_Backend.Services;
@@ -8,6 +7,10 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Sistema_Produccion_3_Backend.ApiKey;
 using Microsoft.OpenApi.Models;
+using FluentValidation.AspNetCore;
+using FluentValidation;
+using Sistema_Produccion_3_Backend.Validators.Auth;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,6 +34,8 @@ builder.Services.AddTransient<IApiKeyValidation, ApiKeyValidation>();
 builder.Services.AddControllers(options =>
 {
     options.Filters.Add<ValidarApiEndpoint>(); // Registrar el filtro globalmente
+    options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true; // para eliminar las validaciones por defecto
+
 });
 
 builder.Services.AddSwaggerGen(c =>
@@ -60,8 +65,14 @@ builder.Services.AddSwaggerGen(c =>
 });
 //---------------------------------------------------------------------------------
 
-//Servicos de Autenticacion de Usuarios
+//Servicios de Autenticacion de Usuarios
 builder.Services.AddScoped<IAuthService, AuthService>();
+
+
+//Validators
+builder.Services.AddValidatorsFromAssemblyContaining<RegisterValidator>();
+builder.Services.AddFluentValidationAutoValidation();
+
 
 // Habilitar Cors
 builder.Services.AddCors(options =>

@@ -96,21 +96,6 @@ namespace Sistema_Produccion_3_Backend.Controllers.LoginAuth
             return CreatedAtAction("GetUsuario", new { id = usuario.user }, usuario);
         }
 
-        // DELETE: api/usuario/5
-        /*[HttpDelete("{id}")]
-        public async Task<IActionResult> Deleteusuario(decimal id)
-        {
-            var usuario = await _context.usuario.FindAsync(id);
-            if (usuario == null)
-            {
-                return NotFound();
-            }
-
-            _context.usuario.Remove(usuario);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }*/
 
         private bool usuarioExists(string id)
         {
