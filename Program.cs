@@ -10,6 +10,7 @@ using Microsoft.OpenApi.Models;
 using FluentValidation.AspNetCore;
 using FluentValidation;
 using Sistema_Produccion_3_Backend.Validators.Auth;
+using Microsoft.AspNetCore.Mvc;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -36,7 +37,6 @@ builder.Services.AddTransient<IApiKeyValidation, ApiKeyValidation>();
 builder.Services.AddControllers(options =>
 {
     options.Filters.Add<ValidarApiEndpoint>(); // Registrar el filtro globalmente
-    options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true; // para eliminar las validaciones por defecto
 
 });
 
@@ -71,7 +71,27 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddScoped<IAuthService, AuthService>();
 
 
+
 //Validators
+
+// Configuración de comportamiento de errores de validación
+builder.Services.Configure<ApiBehaviorOptions>(options =>
+{
+    options.InvalidModelStateResponseFactory = context =>
+    {
+        var errors = context.ModelState
+                            .Where(e => e.Value.Errors.Count > 0)
+                            .Select(e => new
+                            {
+                                field = e.Key,
+                                error = e.Value.Errors.First().ErrorMessage
+                            })
+                            .ToArray();
+        return new BadRequestObjectResult(new { message = "Errores de validación", errors });
+    };
+});
+
+
 builder.Services.AddValidatorsFromAssemblyContaining<RegisterValidator>();
 builder.Services.AddFluentValidationAutoValidation();
 

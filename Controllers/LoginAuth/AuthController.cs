@@ -15,13 +15,11 @@ namespace Sistema_Produccion_3_Backend.Controllers.LoginAuth
         private readonly IAuthService _authService;
         private readonly base_nuevaContext _context;
 
-        private readonly IValidator<RegisterDto> _registerValidator;
 
-        public AuthController(IAuthService authService, base_nuevaContext context, IValidator<RegisterDto> registerValidator)
+        public AuthController(IAuthService authService, base_nuevaContext context)
         {
             _authService = authService;
             _context = context;
-            _registerValidator = registerValidator;
         }
 
         [HttpPost("login")]
@@ -64,13 +62,6 @@ namespace Sistema_Produccion_3_Backend.Controllers.LoginAuth
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterDto register)
         {
-            var validationResult = await _registerValidator.ValidateAsync(register);
-
-            if (!validationResult.IsValid)
-            {
-                return BadRequest(validationResult.Errors);
-
-            }
 
             var registerResult = await _authService.RegisterUser(register);
 
