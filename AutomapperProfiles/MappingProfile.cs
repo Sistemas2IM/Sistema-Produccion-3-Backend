@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Sistema_Produccion_3_Backend.DTO.Catalogo;
 using Sistema_Produccion_3_Backend.DTO.OV;
 using Sistema_Produccion_3_Backend.DTO.PermisosUsuario;
 using Sistema_Produccion_3_Backend.DTO.ReporteOperador;
@@ -37,7 +38,33 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
 
             // REPORTES POR OPERADOR
             CreateMap<reportesDeOperadores, AddReporteOperadorDto>().ReverseMap();
-            CreateMap<reportesDeOperadores, ReporteOperadorDto>().ReverseMap();
+
+            CreateMap<reportesDeOperadores, ReporteOperadorDto>()
+                .ForMember(dest => dest.operadorDto, opt => opt.MapFrom(src => src.idOperadorNavigation))
+                .ForMember(dest => dest.estadoReporteDto, opt => opt.MapFrom(src => src.idEstadoReporteNavigation))
+                .ForMember(dest => dest.tipoReporteDto, opt => opt.MapFrom(src => src.idTipoReporteNavigation))
+                .ForMember(dest => dest.maquinaDto, opt => opt.MapFrom(src => src.idMaquinaNavigation))
+                .ForMember(dest => dest.detalleReporte, opt => opt.MapFrom(src => src.detalleReporte))
+                .ReverseMap();
+
+            CreateMap<detalleReporte, DetalleReporteDto>()
+                .ForMember(dest => dest.operacionesDto, opt => opt.MapFrom(src => src.idOperacionNavigation))
+                .ForMember(dest => dest.materialDto, opt => opt.MapFrom(src => src.idMaterialNavigation))
+                .ForMember(dest => dest.tipoCierreDto, opt => opt.MapFrom(src => src.idTipoCierreNavigation))
+                .ForMember(dest => dest.numOf, opt => opt.MapFrom(src => src.idTarjetaOfNavigation.oF))
+                .ForMember(dest => dest.descripcionOf, opt => opt.MapFrom(src => src.idTarjetaOfNavigation.nombreOf))
+                .ForMember(dest => dest.clienteOf, opt => opt.MapFrom(src => src.idTarjetaOfNavigation.clienteOf))
+                .ReverseMap();
+
+            CreateMap<operador, OperadorDto>().ReverseMap();          
+            CreateMap<estadosReporte, EstadoReporteDto>().ReverseMap();
+            CreateMap<tipoReporte, TipoReporteDto>().ReverseMap();
+            CreateMap<operaciones, OperacionesDto>().ReverseMap();
+            CreateMap<material, MaterialDto>().ReverseMap();
+            CreateMap<tipoCierre, TipoCierreDto>().ReverseMap();
+
+            // CATALOGOS
+            CreateMap<maquinas, MaquinaDto>().ReverseMap();
 
             // PERMISOS / USUARIO
             CreateMap<usuario, UsuarioDto>()

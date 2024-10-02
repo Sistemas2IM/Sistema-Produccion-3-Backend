@@ -8,23 +8,25 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Sistema_Produccion_3_Backend.Models;
 
-[Index("idTarjetaOf", Name = "TARJETA_ETIQUETA_FK")]
-public partial class etiqueta
+public partial class detalleGira
 {
     [Key]
-    public int idEtiqueta { get; set; }
+    public int idDetalleGira { get; set; }
+
+    public int? idGira { get; set; }
+
+    [StringLength(300)]
+    public string resumen { get; set; }
+
+    public int? factura { get; set; }
 
     public int? idTarjetaOf { get; set; }
 
-    [StringLength(20)]
-    public string color { get; set; }
-
-    [StringLength(100)]
-    public string texto { get; set; }
-
-    public int? secuencia { get; set; }
+    [ForeignKey("idGira")]
+    [InverseProperty("detalleGira")]
+    public virtual gira idGiraNavigation { get; set; }
 
     [ForeignKey("idTarjetaOf")]
-    [InverseProperty("etiqueta")]
+    [InverseProperty("detalleGira")]
     public virtual tarjetaOf idTarjetaOfNavigation { get; set; }
 }

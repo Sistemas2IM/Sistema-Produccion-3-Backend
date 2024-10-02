@@ -28,7 +28,6 @@ public partial class contenidoEntrega
     public string descripcion { get; set; }
 
     [StringLength(100)]
-    [Unicode(false)]
     public string codigoProducto { get; set; }
 
     [ForeignKey("idEntregaPt")]

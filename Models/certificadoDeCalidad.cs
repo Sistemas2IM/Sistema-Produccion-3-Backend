@@ -17,7 +17,6 @@ public partial class certificadoDeCalidad
     public int? idTarjetaOf { get; set; }
 
     [StringLength(100)]
-    [Unicode(false)]
     public string numeroFactura { get; set; }
 
     public int? numeroOf { get; set; }
@@ -31,7 +30,6 @@ public partial class certificadoDeCalidad
     public DateTime? fechaCertificado { get; set; }
 
     [StringLength(200)]
-    [Unicode(false)]
     public string cliente { get; set; }
 
     [StringLength(254)]

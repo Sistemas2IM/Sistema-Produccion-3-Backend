@@ -19,7 +19,6 @@ public partial class detalleReporte
     public int idDetalle { get; set; }
 
     [StringLength(50)]
-    [Unicode(false)]
     public string idReporte { get; set; }
 
     public int? idOperacion { get; set; }
@@ -44,10 +43,9 @@ public partial class detalleReporte
     public string descripcion { get; set; }
 
     [StringLength(200)]
-    [Unicode(false)]
     public string cliente { get; set; }
 
-    [StringLength(2)]
+    [StringLength(1)]
     [Unicode(false)]
     public string tiroRetiro { get; set; }
 
@@ -71,10 +69,10 @@ public partial class detalleReporte
 
     public int? cantidadEnRollos { get; set; }
 
-    [Column(TypeName = "numeric(18, 0)")]
+    [Column(TypeName = "numeric(18, 2)")]
     public decimal? anchoBobina { get; set; }
 
-    [Column(TypeName = "numeric(18, 0)")]
+    [Column(TypeName = "numeric(18, 2)")]
     public decimal? velocidadMaquina { get; set; }
 
     public string observaciones { get; set; }
@@ -89,17 +87,17 @@ public partial class detalleReporte
 
     public int? largoMt { get; set; }
 
-    [Column(TypeName = "numeric(18, 0)")]
+    [Column(TypeName = "numeric(18, 2)")]
     public decimal? ancho { get; set; }
 
-    [Column(TypeName = "numeric(18, 0)")]
+    [Column(TypeName = "numeric(18, 2)")]
     public decimal? alto { get; set; }
 
     public int? repeticiones { get; set; }
 
     public int? cantidadSobrante { get; set; }
 
-    [Column(TypeName = "numeric(18, 0)")]
+    [Column(TypeName = "numeric(18, 2)")]
     public decimal? udCorrugados { get; set; }
 
     [ForeignKey("idMaterial")]

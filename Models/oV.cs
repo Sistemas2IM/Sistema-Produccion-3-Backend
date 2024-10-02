@@ -15,15 +15,12 @@ public partial class oV
 
     [Column("oV")]
     [StringLength(200)]
-    [Unicode(false)]
     public string oV1 { get; set; }
 
     [StringLength(100)]
-    [Unicode(false)]
     public string codCliente { get; set; }
 
     [StringLength(200)]
-    [Unicode(false)]
     public string cliente { get; set; }
 
     [Column(TypeName = "datetime")]
@@ -35,11 +32,9 @@ public partial class oV
     public string comentario { get; set; }
 
     [StringLength(50)]
-    [Unicode(false)]
     public string vendedor { get; set; }
 
     [StringLength(50)]
-    [Unicode(false)]
     public string tipoOrden { get; set; }
 
     [InverseProperty("idOvNavigation")]

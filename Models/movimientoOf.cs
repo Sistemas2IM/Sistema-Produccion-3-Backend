@@ -33,6 +33,5 @@ public partial class movimientoOf
     public int? posicionNueva { get; set; }
 
     [StringLength(50)]
-    [Unicode(false)]
     public string usuario { get; set; }
 }

@@ -17,7 +17,6 @@ public partial class posturasOf
     public int? idTablero { get; set; }
 
     [StringLength(200)]
-    [Unicode(false)]
     public string nombrePostura { get; set; }
 
     public int? secuencia { get; set; }

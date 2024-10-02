@@ -8,19 +8,21 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Sistema_Produccion_3_Backend.Models;
 
-public partial class camposPersonalizados
+public partial class vehiculo
 {
     [Key]
-    public int idCampo { get; set; }
+    public int idVehiculo { get; set; }
 
     [StringLength(200)]
-    public string nombreCampo { get; set; }
+    public string nombre { get; set; }
 
-    [StringLength(50)]
-    public string tipo { get; set; }
+    [StringLength(8)]
+    public string placa { get; set; }
 
-    public string valoresPosibles { get; set; }
+    public bool? activo { get; set; }
 
-    [InverseProperty("idCampoNavigation")]
-    public virtual ICollection<tarjetaCampo> tarjetaCampo { get; set; } = new List<tarjetaCampo>();
+    public bool? gps { get; set; }
+
+    [InverseProperty("idVehiculoNavigation")]
+    public virtual ICollection<gira> gira { get; set; } = new List<gira>();
 }

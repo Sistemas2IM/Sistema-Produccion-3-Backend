@@ -28,7 +28,6 @@ public partial class entregasProductoTerminado
     public int? numeroOf { get; set; }
 
     [StringLength(200)]
-    [Unicode(false)]
     public string cliente { get; set; }
 
     public string descripcionOf { get; set; }
@@ -37,11 +36,9 @@ public partial class entregasProductoTerminado
     public DateTime? fechaEntrega { get; set; }
 
     [StringLength(100)]
-    [Unicode(false)]
     public string areaEntrega { get; set; }
 
     [StringLength(100)]
-    [Unicode(false)]
     public string areaRecibe { get; set; }
 
     public int? numeroDeCorrugados { get; set; }
@@ -68,7 +65,6 @@ public partial class entregasProductoTerminado
     public DateTime? fechaCreacion { get; set; }
 
     [StringLength(50)]
-    [Unicode(false)]
     public string actualizadoPor { get; set; }
 
     [Column(TypeName = "datetime")]

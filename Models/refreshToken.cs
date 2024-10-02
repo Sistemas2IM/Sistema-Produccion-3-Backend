@@ -16,7 +16,6 @@ public partial class refreshToken
     public string token { get; set; }
 
     [StringLength(50)]
-    [Unicode(false)]
     public string user { get; set; }
 
     [Column("refreshToken")]

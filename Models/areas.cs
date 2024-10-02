@@ -14,7 +14,6 @@ public partial class areas
     public int idArea { get; set; }
 
     [StringLength(200)]
-    [Unicode(false)]
     public string nombreArea { get; set; }
 
     [InverseProperty("idAreaNavigation")]

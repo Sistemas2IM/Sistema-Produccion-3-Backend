@@ -13,11 +13,9 @@ public partial class operador
 {
     [Key]
     [StringLength(50)]
-    [Unicode(false)]
     public string idOperador { get; set; }
 
     [StringLength(50)]
-    [Unicode(false)]
     public string user { get; set; }
 
     [StringLength(100)]

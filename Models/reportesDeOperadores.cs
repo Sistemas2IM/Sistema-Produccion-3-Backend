@@ -16,7 +16,6 @@ public partial class reportesDeOperadores
 {
     [Key]
     [StringLength(50)]
-    [Unicode(false)]
     public string idReporte { get; set; }
 
     public int? idEstadoReporte { get; set; }
@@ -26,7 +25,6 @@ public partial class reportesDeOperadores
     public int? idMaquina { get; set; }
 
     [StringLength(50)]
-    [Unicode(false)]
     public string idOperador { get; set; }
 
     [Column(TypeName = "datetime")]
@@ -53,7 +51,6 @@ public partial class reportesDeOperadores
     public string creadoPor { get; set; }
 
     [StringLength(50)]
-    [Unicode(false)]
     public string actualizadoPor { get; set; }
 
     public int? tipoObjeto { get; set; }

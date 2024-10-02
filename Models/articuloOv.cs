@@ -17,11 +17,9 @@ public partial class articuloOv
     public int? idOv { get; set; }
 
     [StringLength(300)]
-    [Unicode(false)]
     public string articulo { get; set; }
 
     [StringLength(50)]
-    [Unicode(false)]
     public string unidad { get; set; }
 
     public string detalleArticulo { get; set; }
@@ -30,11 +28,9 @@ public partial class articuloOv
     public decimal? precioUnidad { get; set; }
 
     [StringLength(50)]
-    [Unicode(false)]
     public string lineaDeNegocio { get; set; }
 
     [StringLength(50)]
-    [Unicode(false)]
     public string departamento { get; set; }
 
     [ForeignKey("idOv")]

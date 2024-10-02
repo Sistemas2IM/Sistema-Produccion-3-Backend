@@ -1,5 +1,4 @@
-﻿using Sistema_Produccion_3_Backend.Models;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using Sistema_Produccion_3_Backend.DTO.Catalogo;
 
 namespace Sistema_Produccion_3_Backend.DTO.ReporteOperador
 {
@@ -13,7 +12,6 @@ namespace Sistema_Produccion_3_Backend.DTO.ReporteOperador
 
         public string idOperador { get; set; }
 
-        [Column(TypeName = "datetime")]
         public DateTime? fechaDeCreacion { get; set; }
 
         public string turno { get; set; }
@@ -34,23 +32,14 @@ namespace Sistema_Produccion_3_Backend.DTO.ReporteOperador
 
         public int? tipoObjeto { get; set; }
 
-        [InverseProperty("idReporteNavigation")]
-        public virtual ICollection<detalleReporte> detalleReporte { get; set; } = new List<detalleReporte>();
+        public List<DetalleReporteDto> detalleReporte { get; set; }
 
-        [ForeignKey("idEstadoReporte")]
-        [InverseProperty("reportesDeOperadores")]
-        public virtual estadosReporte idEstadoReporteNavigation { get; set; }
+        public EstadoReporteDto estadoReporteDto { get; set; }
 
-        [ForeignKey("idMaquina")]
-        [InverseProperty("reportesDeOperadores")]
-        public virtual maquinas idMaquinaNavigation { get; set; }
+        public MaquinaDto maquinaDto { get; set; }
 
-        [ForeignKey("idOperador")]
-        [InverseProperty("reportesDeOperadores")]
-        public virtual operador idOperadorNavigation { get; set; }
+        public OperadorDto operadorDto { get; set; }
 
-        [ForeignKey("idTipoReporte")]
-        [InverseProperty("reportesDeOperadores")]
-        public virtual tipoReporte idTipoReporteNavigation { get; set; }
+        public TipoReporteDto tipoReporteDto { get; set; }
     }
 }

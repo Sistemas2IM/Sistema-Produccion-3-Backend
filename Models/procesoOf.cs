@@ -40,7 +40,7 @@ public partial class procesoOf
     [Column(TypeName = "datetime")]
     public DateTime? fechaFinalizacion { get; set; }
 
-    [Column(TypeName = "numeric(18, 0)")]
+    [Column(TypeName = "numeric(18, 2)")]
     public decimal? horasTotales { get; set; }
 
     public int? posicion { get; set; }
