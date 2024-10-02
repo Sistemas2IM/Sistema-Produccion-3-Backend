@@ -1,15 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Sistema_Produccion_3_Backend.Models;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-using Sistema_Produccion_3_Backend.DTO.Catalogo;
+﻿using Sistema_Produccion_3_Backend.DTO.Catalogo;
 
 namespace Sistema_Produccion_3_Backend.DTO.ReporteOperador
 {
-    public class ReporteOperadorDto
+    public class UpdateReporteOperadorDto
     {
-        public string idReporte { get; set; }
-
         public int? idEstadoReporte { get; set; }
 
         public int? idTipoReporte { get; set; }
@@ -18,7 +12,6 @@ namespace Sistema_Produccion_3_Backend.DTO.ReporteOperador
 
         public string? idOperador { get; set; }
 
-        [Column(TypeName = "datetime")]
         public DateTime? fechaDeCreacion { get; set; }
 
         public string? turno { get; set; }

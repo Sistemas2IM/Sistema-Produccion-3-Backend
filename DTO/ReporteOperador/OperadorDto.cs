@@ -12,7 +12,5 @@ namespace Sistema_Produccion_3_Backend.DTO.ReporteOperador
         public string user { get; set; }
 
         public string nombreOperador { get; set; }
-
-        public virtual usuario userNavigation { get; set; }
     }
 }
