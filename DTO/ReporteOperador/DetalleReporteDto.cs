@@ -26,11 +26,11 @@ namespace Sistema_Produccion_3_Backend.DTO.ReporteOperador
 
         public DateTime? tiempo { get; set; }
 
-        public string descripcion { get; set; }
+        public string? descripcion { get; set; }
 
-        public string cliente { get; set; }
+        public string? cliente { get; set; }
 
-        public string tiroRetiro { get; set; }
+        public string? tiroRetiro { get; set; }
 
         public int? cantidadRecibida { get; set; }
 
@@ -58,7 +58,7 @@ namespace Sistema_Produccion_3_Backend.DTO.ReporteOperador
         [Column(TypeName = "numeric(18, 0)")]
         public decimal? velocidadMaquina { get; set; }
 
-        public string observaciones { get; set; }
+        public string? observaciones { get; set; }
 
         public int? largoConvertido { get; set; }
 
@@ -88,12 +88,12 @@ namespace Sistema_Produccion_3_Backend.DTO.ReporteOperador
 
         public OperacionesDto operacionesDto { get; set; }
 
-        public string numOf {  get; set; }
+        public string? numOf {  get; set; }
 
-        public string descripcionOf { get; set; }
+        public string? descripcionOf { get; set; }
 
-        public string clienteOf { get; set; } 
+        public string? clienteOf { get; set; } 
 
-        public TipoCierreDto tipoCierreDto { get; set; }
+        public TipoCierreDto? tipoCierreDto { get; set; }
     }
 }
