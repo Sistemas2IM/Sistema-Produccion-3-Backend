@@ -26,7 +26,6 @@ public partial class detalleOperacionProceso
     public DateTime? finalizacion { get; set; }
 
     [StringLength(50)]
-    [Unicode(false)]
     public string operador { get; set; }
 
     public int? secuencia { get; set; }

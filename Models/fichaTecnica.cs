@@ -23,7 +23,6 @@ public partial class fichaTecnica
     public DateTime? fechaFicha { get; set; }
 
     [StringLength(200)]
-    [Unicode(false)]
     public string cliente { get; set; }
 
     [StringLength(254)]

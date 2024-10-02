@@ -14,7 +14,6 @@ public partial class bitacora
     public int idBitacora { get; set; }
 
     [StringLength(50)]
-    [Unicode(false)]
     public string usuario { get; set; }
 
     public int? idObjeto { get; set; }

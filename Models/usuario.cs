@@ -13,7 +13,6 @@ public partial class usuario
 {
     [Key]
     [StringLength(50)]
-    [Unicode(false)]
     public string user { get; set; }
 
     public int? idRol { get; set; }
@@ -23,7 +22,6 @@ public partial class usuario
     public string status { get; set; }
 
     [StringLength(200)]
-    [Unicode(false)]
     public string password { get; set; }
 
     [StringLength(200)]
@@ -42,7 +40,6 @@ public partial class usuario
     public DateTime? ultimaActualizacion { get; set; }
 
     [StringLength(50)]
-    [Unicode(false)]
     public string actualizadoPor { get; set; }
 
     [InverseProperty("userNavigation")]

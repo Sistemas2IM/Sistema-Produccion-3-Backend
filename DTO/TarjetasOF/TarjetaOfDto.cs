@@ -43,8 +43,6 @@ namespace Sistema_Produccion_3_Backend.DTO.TarjetasOF
         [InverseProperty("idTarjetaOfNavigation")]
         public virtual ICollection<certificadoDeCalidad> certificadoDeCalidad { get; set; } = new List<certificadoDeCalidad>();
 
-        [InverseProperty("idTarjetaOfNavigation")]
-        public virtual ICollection<detalleReporte> detalleReporte { get; set; } = new List<detalleReporte>();
 
         [InverseProperty("idTarjetaOfNavigation")]
         public virtual ICollection<entregasProductoTerminado> entregasProductoTerminado { get; set; } = new List<entregasProductoTerminado>();

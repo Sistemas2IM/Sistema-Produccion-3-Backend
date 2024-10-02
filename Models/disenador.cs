@@ -15,7 +15,6 @@ public partial class disenador
     public int idDisenador { get; set; }
 
     [StringLength(50)]
-    [Unicode(false)]
     public string user { get; set; }
 
     [StringLength(200)]

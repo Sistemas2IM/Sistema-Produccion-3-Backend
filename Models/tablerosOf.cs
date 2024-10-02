@@ -20,7 +20,6 @@ public partial class tablerosOf
     public int? idMaquina { get; set; }
 
     [StringLength(500)]
-    [Unicode(false)]
     public string nombreTablero { get; set; }
 
     [ForeignKey("idArea")]

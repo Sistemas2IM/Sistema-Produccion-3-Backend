@@ -17,11 +17,9 @@ public partial class menu
     public string nombreMenu { get; set; }
 
     [StringLength(200)]
-    [Unicode(false)]
     public string icono { get; set; }
 
     [StringLength(200)]
-    [Unicode(false)]
     public string ruta { get; set; }
 
     [InverseProperty("idMenuNavigation")]

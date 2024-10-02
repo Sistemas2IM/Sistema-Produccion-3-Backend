@@ -8,10 +8,6 @@ namespace Sistema_Produccion_3_Backend.Models;
 
 public partial class base_nuevaContext : DbContext
 {
-    public base_nuevaContext()
-    {
-    }
-
     public base_nuevaContext(DbContextOptions<base_nuevaContext> options)
         : base(options)
     {
@@ -37,6 +33,8 @@ public partial class base_nuevaContext : DbContext
 
     public virtual DbSet<detalleFicha> detalleFicha { get; set; }
 
+    public virtual DbSet<detalleGira> detalleGira { get; set; }
+
     public virtual DbSet<detalleOperacionProceso> detalleOperacionProceso { get; set; }
 
     public virtual DbSet<detalleReporte> detalleReporte { get; set; }
@@ -55,6 +53,8 @@ public partial class base_nuevaContext : DbContext
 
     public virtual DbSet<fichaTecnica> fichaTecnica { get; set; }
 
+    public virtual DbSet<gira> gira { get; set; }
+
     public virtual DbSet<maquinas> maquinas { get; set; }
 
     public virtual DbSet<material> material { get; set; }
@@ -62,6 +62,8 @@ public partial class base_nuevaContext : DbContext
     public virtual DbSet<menu> menu { get; set; }
 
     public virtual DbSet<modulo> modulo { get; set; }
+
+    public virtual DbSet<motorista> motorista { get; set; }
 
     public virtual DbSet<movimientoOf> movimientoOf { get; set; }
 
@@ -99,27 +101,18 @@ public partial class base_nuevaContext : DbContext
 
     public virtual DbSet<usuario> usuario { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=192.168.2.62;Initial Catalog=base_nueva;Persist Security Info=True;User ID=sa;Password=sa2;Encrypt=True;TrustServerCertificate=true");
+    public virtual DbSet<vehiculo> vehiculo { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<areas>(entity =>
         {
             entity.HasKey(e => e.idArea).HasName("PK_AREAS");
-
-            entity.Property(e => e.nombreArea).IsFixedLength();
         });
 
         modelBuilder.Entity<articuloOv>(entity =>
         {
             entity.HasKey(e => e.idArticulo).HasName("PK_ARTICULOOV");
-
-            entity.Property(e => e.articulo).IsFixedLength();
-            entity.Property(e => e.departamento).IsFixedLength();
-            entity.Property(e => e.lineaDeNegocio).IsFixedLength();
-            entity.Property(e => e.unidad).IsFixedLength();
 
             entity.HasOne(d => d.idOvNavigation).WithMany(p => p.articuloOv).HasConstraintName("FK_ARTICULO_OV_ARTICU_OV");
         });
@@ -136,23 +129,16 @@ public partial class base_nuevaContext : DbContext
         modelBuilder.Entity<bitacora>(entity =>
         {
             entity.HasKey(e => e.idBitacora).HasName("PK_BITACORA");
-
-            entity.Property(e => e.usuario).IsFixedLength();
         });
 
         modelBuilder.Entity<camposPersonalizados>(entity =>
         {
             entity.HasKey(e => e.idCampo).HasName("PK_CAMPOSPERSONALIZADOS");
-
-            entity.Property(e => e.tipo).IsFixedLength();
         });
 
         modelBuilder.Entity<certificadoDeCalidad>(entity =>
         {
             entity.HasKey(e => e.idCertificado).HasName("PK_CERTIFICADODECALIDAD");
-
-            entity.Property(e => e.cliente).IsFixedLength();
-            entity.Property(e => e.numeroFactura).IsFixedLength();
 
             entity.HasOne(d => d.idTarjetaOfNavigation).WithMany(p => p.certificadoDeCalidad).HasConstraintName("FK_CERTIFIC_TARJETA_C_TARJETAO");
         });
@@ -160,8 +146,6 @@ public partial class base_nuevaContext : DbContext
         modelBuilder.Entity<contenidoEntrega>(entity =>
         {
             entity.HasKey(e => e.idContenidoEntrega).HasName("PK_CONTENIDOENTREGA");
-
-            entity.Property(e => e.codigoProducto).IsFixedLength();
 
             entity.HasOne(d => d.idEntregaPtNavigation).WithMany(p => p.contenidoEntrega).HasConstraintName("FK_CONTENID_ENTREGA_C_ENTREGAS");
         });
@@ -187,11 +171,18 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.idFichaTecnicaNavigation).WithMany(p => p.detalleFicha).HasConstraintName("FK_DETALLEF_FICHA_DET_FICHATEC");
         });
 
+        modelBuilder.Entity<detalleGira>(entity =>
+        {
+            entity.HasKey(e => e.idDetalleGira).HasName("PK_DetalleGira");
+
+            entity.HasOne(d => d.idGiraNavigation).WithMany(p => p.detalleGira).HasConstraintName("PK_DETALLEGIRA_GIRA");
+
+            entity.HasOne(d => d.idTarjetaOfNavigation).WithMany(p => p.detalleGira).HasConstraintName("PK_DETALLEGIRA_TARJETAOF_IDTARJETAOF");
+        });
+
         modelBuilder.Entity<detalleOperacionProceso>(entity =>
         {
             entity.HasKey(e => e.idDetalleOperacion).HasName("PK_DETALLEOPERACIONPROCESO");
-
-            entity.Property(e => e.operador).IsFixedLength();
 
             entity.HasOne(d => d.idProcesoNavigation).WithMany(p => p.detalleOperacionProceso).HasConstraintName("FK_DETALLEO_DETALLE_O_PROCESOO");
         });
@@ -200,8 +191,6 @@ public partial class base_nuevaContext : DbContext
         {
             entity.HasKey(e => e.idDetalle).HasName("PK_DETALLEREPORTE");
 
-            entity.Property(e => e.cliente).IsFixedLength();
-            entity.Property(e => e.idReporte).IsFixedLength();
             entity.Property(e => e.tiroRetiro).IsFixedLength();
 
             entity.HasOne(d => d.idMaterialNavigation).WithMany(p => p.detalleReporte).HasConstraintName("FK_DETALLER_MATERIAL__MATERIAL");
@@ -219,19 +208,12 @@ public partial class base_nuevaContext : DbContext
         {
             entity.HasKey(e => e.idDisenador).HasName("PK_DISENADOR");
 
-            entity.Property(e => e.user).IsFixedLength();
-
             entity.HasOne(d => d.userNavigation).WithMany(p => p.disenador).HasConstraintName("FK_DISENADO_USUARIO_D_USUARIO");
         });
 
         modelBuilder.Entity<entregasProductoTerminado>(entity =>
         {
             entity.HasKey(e => e.idEntregaPt).HasName("PK_ENTREGASPRODUCTOTERMINADO");
-
-            entity.Property(e => e.actualizadoPor).IsFixedLength();
-            entity.Property(e => e.areaEntrega).IsFixedLength();
-            entity.Property(e => e.areaRecibe).IsFixedLength();
-            entity.Property(e => e.cliente).IsFixedLength();
 
             entity.HasOne(d => d.idEstadoReporteNavigation).WithMany(p => p.entregasProductoTerminado).HasConstraintName("FK_ENTREGAS_ESTADO_EN_ESTADOSR");
 
@@ -256,8 +238,6 @@ public partial class base_nuevaContext : DbContext
         {
             entity.HasKey(e => e.idEtiqueta).HasName("PK_ETIQUETA");
 
-            entity.Property(e => e.color).IsFixedLength();
-
             entity.HasOne(d => d.idTarjetaOfNavigation).WithMany(p => p.etiqueta).HasConstraintName("FK_ETIQUETA_TARJETA_E_TARJETAO");
         });
 
@@ -270,16 +250,21 @@ public partial class base_nuevaContext : DbContext
         {
             entity.HasKey(e => e.idFichaTecnica).HasName("PK_FICHATECNICA");
 
-            entity.Property(e => e.cliente).IsFixedLength();
-
             entity.HasOne(d => d.idTarjetaOfNavigation).WithMany(p => p.fichaTecnica).HasConstraintName("FK_FICHATEC_TARJETA_F_TARJETAO");
+        });
+
+        modelBuilder.Entity<gira>(entity =>
+        {
+            entity.HasKey(e => e.idGira).HasName("PK_Gira");
+
+            entity.HasOne(d => d.idMotoristaNavigation).WithMany(p => p.gira).HasConstraintName("FK_Gira_Motorista_IdMotorista");
+
+            entity.HasOne(d => d.idVehiculoNavigation).WithMany(p => p.gira).HasConstraintName("FK_Gira_Vehiculo_IdVehiculo");
         });
 
         modelBuilder.Entity<maquinas>(entity =>
         {
             entity.HasKey(e => e.idMaquina).HasName("PK_MAQUINAS");
-
-            entity.Property(e => e.nombreMaquina).IsFixedLength();
 
             entity.HasOne(d => d.idFamiliaNavigation).WithMany(p => p.maquinas).HasConstraintName("FK_MAQUINAS_FAMILIA_M_FAMILLIA");
         });
@@ -292,9 +277,6 @@ public partial class base_nuevaContext : DbContext
         modelBuilder.Entity<menu>(entity =>
         {
             entity.HasKey(e => e.idMenu).HasName("PK_MENU");
-
-            entity.Property(e => e.icono).IsFixedLength();
-            entity.Property(e => e.ruta).IsFixedLength();
         });
 
         modelBuilder.Entity<modulo>(entity =>
@@ -304,22 +286,19 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.idMenuNavigation).WithMany(p => p.modulo).HasConstraintName("FK_MODULO_MENU_MODU_MENU");
         });
 
+        modelBuilder.Entity<motorista>(entity =>
+        {
+            entity.HasKey(e => e.idMotorista).HasName("PK_Motorista");
+        });
+
         modelBuilder.Entity<movimientoOf>(entity =>
         {
             entity.HasKey(e => e.idMovimiento).HasName("PK_MOVIMIENTOOF");
-
-            entity.Property(e => e.usuario).IsFixedLength();
         });
 
         modelBuilder.Entity<oV>(entity =>
         {
             entity.HasKey(e => e.idOv).HasName("PK_OV");
-
-            entity.Property(e => e.cliente).IsFixedLength();
-            entity.Property(e => e.codCliente).IsFixedLength();
-            entity.Property(e => e.oV1).IsFixedLength();
-            entity.Property(e => e.tipoOrden).IsFixedLength();
-            entity.Property(e => e.vendedor).IsFixedLength();
         });
 
         modelBuilder.Entity<operaciones>(entity =>
@@ -332,9 +311,6 @@ public partial class base_nuevaContext : DbContext
         modelBuilder.Entity<operador>(entity =>
         {
             entity.HasKey(e => e.idOperador).HasName("PK_OPERADOR");
-
-            entity.Property(e => e.idOperador).IsFixedLength();
-            entity.Property(e => e.user).IsFixedLength();
 
             entity.HasOne(d => d.userNavigation).WithMany(p => p.operador).HasConstraintName("FK_OPERADOR_USUARIO_O_USUARIO");
         });
@@ -351,8 +327,6 @@ public partial class base_nuevaContext : DbContext
         modelBuilder.Entity<posturasOf>(entity =>
         {
             entity.HasKey(e => e.idPostura).HasName("PK_POSTURASOF");
-
-            entity.Property(e => e.nombrePostura).IsFixedLength();
 
             entity.HasOne(d => d.idTableroNavigation).WithMany(p => p.posturasOf).HasConstraintName("FK_POSTURAS_TABLEROS__TABLEROS");
         });
@@ -372,18 +346,12 @@ public partial class base_nuevaContext : DbContext
         {
             entity.HasKey(e => e.token).HasName("PK_REFRESHTOKEN");
 
-            entity.Property(e => e.user).IsFixedLength();
-
             entity.HasOne(d => d.userNavigation).WithMany(p => p.refreshToken).HasConstraintName("FK_REFRESHT_USUARIO_T_USUARIO");
         });
 
         modelBuilder.Entity<reportesDeOperadores>(entity =>
         {
             entity.HasKey(e => e.idReporte).HasName("PK_REPORTESDEOPERADORES");
-
-            entity.Property(e => e.idReporte).IsFixedLength();
-            entity.Property(e => e.actualizadoPor).IsFixedLength();
-            entity.Property(e => e.idOperador).IsFixedLength();
 
             entity.HasOne(d => d.idEstadoReporteNavigation).WithMany(p => p.reportesDeOperadores).HasConstraintName("FK_REPORTES_ESTADO_RE_ESTADOSR");
 
@@ -410,8 +378,6 @@ public partial class base_nuevaContext : DbContext
         {
             entity.HasKey(e => e.idTablero).HasName("PK_TABLEROSOF");
 
-            entity.Property(e => e.nombreTablero).IsFixedLength();
-
             entity.HasOne(d => d.idAreaNavigation).WithMany(p => p.tablerosOf).HasConstraintName("FK_TABLEROS_AREAS_TAB_AREAS");
 
             entity.HasOne(d => d.idMaquinaNavigation).WithMany(p => p.tablerosOf).HasConstraintName("FK_TABLEROS_MAQUINAS__MAQUINAS");
@@ -421,7 +387,9 @@ public partial class base_nuevaContext : DbContext
         {
             entity.HasKey(e => e.tcampoId).HasName("PK_TARJETACAMPO");
 
-            entity.HasOne(d => d.idCampoNavigation).WithMany(p => p.tarjetaCampo).HasConstraintName("FK_TARJETAC_CAMPO_TAR_CAMPOSPE");
+            entity.HasOne(d => d.idCampoNavigation).WithMany(p => p.tarjetaCampo)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK_TARJETAC_CAMPO_TAR_CAMPOSPE");
 
             entity.HasOne(d => d.idTarjetaOfNavigation).WithMany(p => p.tarjetaCampo).HasConstraintName("FK_TARJETAC_TARJETA_C_TARJETAO");
         });
@@ -456,12 +424,14 @@ public partial class base_nuevaContext : DbContext
         {
             entity.HasKey(e => e.user).HasName("PK_USUARIO");
 
-            entity.Property(e => e.user).IsFixedLength();
-            entity.Property(e => e.actualizadoPor).IsFixedLength();
-            entity.Property(e => e.password).IsFixedLength();
             entity.Property(e => e.status).IsFixedLength();
 
             entity.HasOne(d => d.idRolNavigation).WithMany(p => p.usuario).HasConstraintName("FK_USUARIO_ROL_USUAR_ROL");
+        });
+
+        modelBuilder.Entity<vehiculo>(entity =>
+        {
+            entity.HasKey(e => e.idVehiculo).HasName("PK_Vehiculo");
         });
 
         OnModelCreatingPartial(modelBuilder);

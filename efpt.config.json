@@ -3,7 +3,7 @@
    "ContextClassName": "base_nuevaContext",
    "ContextNamespace": null,
    "FilterSchemas": false,
-   "IncludeConnectionString": true,
+   "IncludeConnectionString": false,
    "ModelNamespace": null,
    "OutputContextPath": null,
    "OutputPath": "Models",
@@ -55,6 +55,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[detalleGira]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[detalleOperacionProceso]",
          "ObjectType": 0
       },
@@ -91,6 +95,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[gira]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[maquinas]",
          "ObjectType": 0
       },
@@ -104,6 +112,10 @@
       },
       {
          "Name": "[dbo].[modulo]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[motorista]",
          "ObjectType": 0
       },
       {
@@ -176,6 +188,10 @@
       },
       {
          "Name": "[dbo].[usuario]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[vehiculo]",
          "ObjectType": 0
       }
    ],
