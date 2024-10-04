@@ -8,6 +8,6 @@ namespace Sistema_Produccion_3_Backend.DTO.ReporteOperador
     {
         public int idMaterial { get; set; }
 
-        public string nombreMaterial { get; set; }
+        public string? nombreMaterial { get; set; }
     }
 }

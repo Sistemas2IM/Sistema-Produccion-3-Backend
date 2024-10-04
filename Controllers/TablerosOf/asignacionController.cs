@@ -102,22 +102,6 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             return CreatedAtAction("GetAsignacion", new { id = asignarOf.idAsignacion}, asignarOf);
         }
 
-        // DELETE: api/asignacion/5
-        /*[HttpDelete("{id}")]
-        public async Task<IActionResult> Deleteasignacion(int id)
-        {
-            var asignacion = await _context.asignacion.FindAsync(id);
-            if (asignacion == null)
-            {
-                return NotFound();
-            }
-
-            _context.asignacion.Remove(asignacion);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }*/
-
         private bool asignacionExists(int id)
         {
             return _context.asignacion.Any(e => e.idAsignacion == id);

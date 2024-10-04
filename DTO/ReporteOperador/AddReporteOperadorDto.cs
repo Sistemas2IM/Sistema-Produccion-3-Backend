@@ -31,15 +31,5 @@ namespace Sistema_Produccion_3_Backend.DTO.ReporteOperador
         public string? actualizadoPor { get; set; }
 
         public int? tipoObjeto { get; set; }
-
-        public List<DetalleReporteDto> detalleReporte { get; set; }
-
-        public EstadoReporteDto estadoReporteDto { get; set; }
-
-        public MaquinaDto maquinaDto { get; set; }
-
-        public OperadorDto operadorDto { get; set; }
-
-        public TipoReporteDto tipoReporteDto { get; set; }
     }
 }
