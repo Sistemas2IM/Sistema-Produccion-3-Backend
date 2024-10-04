@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using Sistema_Produccion_3_Backend;
 using Sistema_Produccion_3_Backend.Models;
 using Sistema_Produccion_3_Backend.AutomapperProfiles;
 using Sistema_Produccion_3_Backend.Services;
@@ -8,6 +7,11 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Sistema_Produccion_3_Backend.ApiKey;
 using Microsoft.OpenApi.Models;
+using FluentValidation.AspNetCore;
+using FluentValidation;
+using Sistema_Produccion_3_Backend.Validators.Auth;
+using Microsoft.AspNetCore.Mvc;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,6 +37,7 @@ builder.Services.AddTransient<IApiKeyValidation, ApiKeyValidation>();
 builder.Services.AddControllers(options =>
 {
     options.Filters.Add<ValidarApiEndpoint>(); // Registrar el filtro globalmente
+
 });
 
 builder.Services.AddSwaggerGen(c =>
@@ -62,8 +67,32 @@ builder.Services.AddSwaggerGen(c =>
 });
 //---------------------------------------------------------------------------------
 
-//Servicos de Autenticacion de Usuarios
+//Servicios de Autenticacion de Usuarios
 builder.Services.AddScoped<IAuthService, AuthService>();
+
+
+
+// Configuración de comportamiento de errores de validación
+builder.Services.Configure<ApiBehaviorOptions>(options =>
+{
+    options.InvalidModelStateResponseFactory = context =>
+    {
+        var errors = context.ModelState
+                            .Where(e => e.Value.Errors.Count > 0)
+                            .Select(e => new
+                            {
+                                field = e.Key,
+                                error = e.Value.Errors.First().ErrorMessage
+                            })
+                            .ToArray();
+        return new BadRequestObjectResult(new { message = "Errores de validación", errors });
+    };
+});
+
+//Definir los validadores
+builder.Services.AddValidatorsFromAssemblyContaining<RegisterValidator>();
+builder.Services.AddFluentValidationAutoValidation();
+
 
 // Habilitar Cors
 builder.Services.AddCors(options =>
