@@ -72,8 +72,6 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 
 
 
-//Validators
-
 // Configuración de comportamiento de errores de validación
 builder.Services.Configure<ApiBehaviorOptions>(options =>
 {
@@ -91,7 +89,7 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
     };
 });
 
-
+//Definir los validadores
 builder.Services.AddValidatorsFromAssemblyContaining<RegisterValidator>();
 builder.Services.AddFluentValidationAutoValidation();
 
