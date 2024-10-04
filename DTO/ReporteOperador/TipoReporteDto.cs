@@ -6,6 +6,6 @@ namespace Sistema_Produccion_3_Backend.DTO.ReporteOperador
     {
         public int idTipoReporte { get; set; }
 
-        public string nombreTipoReporte { get; set; }
+        public string? nombreTipoReporte { get; set; }
     }
 }

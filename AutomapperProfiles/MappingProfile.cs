@@ -17,7 +17,8 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             // TARJETAS OF - DTO
             CreateMap<tarjetaOf, TarjetaOfDto>().ReverseMap();
             CreateMap<tarjetaOf, AddTarjetaOfDto>().ReverseMap();
-            CreateMap<tarjetaOf, UpdateTarjetaOfDto>().ReverseMap();
+            CreateMap<tarjetaOf, UpdateTarjetaOfDto>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             // ASIGNACION DE TARJETAS OF
             CreateMap<asignacion, AsignarOfDto>()
@@ -37,24 +38,32 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             CreateMap<articuloOv, AddArticuloDto>().ReverseMap();
 
             // REPORTES POR OPERADOR
-            CreateMap<reportesDeOperadores, AddReporteOperadorDto>().ReverseMap();
-
             CreateMap<reportesDeOperadores, ReporteOperadorDto>()
                 .ForMember(dest => dest.operadorDto, opt => opt.MapFrom(src => src.idOperadorNavigation))
                 .ForMember(dest => dest.estadoReporteDto, opt => opt.MapFrom(src => src.idEstadoReporteNavigation))
                 .ForMember(dest => dest.tipoReporteDto, opt => opt.MapFrom(src => src.idTipoReporteNavigation))
                 .ForMember(dest => dest.maquinaDto, opt => opt.MapFrom(src => src.idMaquinaNavigation))
                 .ForMember(dest => dest.detalleReporte, opt => opt.MapFrom(src => src.detalleReporte))
-                .ReverseMap();
+                .ReverseMap();         
+
+            CreateMap<reportesDeOperadores, AddReporteOperadorDto>().ReverseMap();
+
+            CreateMap<UpdateReporteOperadorDto, reportesDeOperadores>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             CreateMap<detalleReporte, DetalleReporteDto>()
-                .ForMember(dest => dest.operacionesDto, opt => opt.MapFrom(src => src.idOperacionNavigation))
-                .ForMember(dest => dest.materialDto, opt => opt.MapFrom(src => src.idMaterialNavigation))
-                .ForMember(dest => dest.tipoCierreDto, opt => opt.MapFrom(src => src.idTipoCierreNavigation))
-                .ForMember(dest => dest.numOf, opt => opt.MapFrom(src => src.idTarjetaOfNavigation.oF))
-                .ForMember(dest => dest.descripcionOf, opt => opt.MapFrom(src => src.idTarjetaOfNavigation.nombreOf))
-                .ForMember(dest => dest.clienteOf, opt => opt.MapFrom(src => src.idTarjetaOfNavigation.clienteOf))
-                .ReverseMap();
+               .ForMember(dest => dest.operacionesDto, opt => opt.MapFrom(src => src.idOperacionNavigation))
+               .ForMember(dest => dest.materialDto, opt => opt.MapFrom(src => src.idMaterialNavigation))
+               .ForMember(dest => dest.tipoCierreDto, opt => opt.MapFrom(src => src.idTipoCierreNavigation))
+               .ForMember(dest => dest.numOf, opt => opt.MapFrom(src => src.idTarjetaOfNavigation.oF))
+               .ForMember(dest => dest.descripcionOf, opt => opt.MapFrom(src => src.idTarjetaOfNavigation.nombreOf))
+               .ForMember(dest => dest.clienteOf, opt => opt.MapFrom(src => src.idTarjetaOfNavigation.clienteOf))
+               .ReverseMap();
+
+            CreateMap<detalleReporte, UpdateDetalleReporteDto>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            CreateMap<detalleReporte, AddDetalleReporteDto>().ReverseMap(); 
 
             CreateMap<operador, OperadorDto>().ReverseMap();          
             CreateMap<estadosReporte, EstadoReporteDto>().ReverseMap();

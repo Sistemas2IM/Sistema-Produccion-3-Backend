@@ -78,16 +78,18 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
         }
 
         // PUT: api/reportesDeOperadores/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutreportesDeOperadores(string id, reportesDeOperadores reportesDeOperadores)
+        [HttpPut("put")]
+        public async Task<IActionResult> PutreportesDeOperadores(string id, UpdateReporteOperadorDto updateReporteOperador)
         {
-            if (id != reportesDeOperadores.idReporte)
+            var reporteOperador = await _context.reportesDeOperadores.FindAsync(id);
+
+            if (reporteOperador == null)
             {
-                return BadRequest();
+                return BadRequest("Id no valido: " + id);
             }
 
-            _context.Entry(reportesDeOperadores).State = EntityState.Modified;
+            _mapper.Map(updateReporteOperador, reporteOperador);
+            _context.Entry(reporteOperador).State = EntityState.Modified;
 
             try
             {
@@ -97,7 +99,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
             {
                 if (!reportesDeOperadoresExists(id))
                 {
-                    return NotFound();
+                    return NotFound("No se encontro el reporte con el id: " + id);
                 }
                 else
                 {
@@ -105,32 +107,20 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
                 }
             }
 
-            return NoContent();
+            return Ok(updateReporteOperador);
         }
 
         // POST: api/reportesDeOperadores
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<reportesDeOperadores>> PostreportesDeOperadores(reportesDeOperadores reportesDeOperadores)
+        [HttpPost("post")]
+        public async Task<ActionResult<reportesDeOperadores>> PostreportesDeOperadores(AddReporteOperadorDto addReporteOperador)
         {
-            _context.reportesDeOperadores.Add(reportesDeOperadores);
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (reportesDeOperadoresExists(reportesDeOperadores.idReporte))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            var reporteOperador = _mapper.Map<reportesDeOperadores>(addReporteOperador);
 
-            return CreatedAtAction("GetreportesDeOperadores", new { id = reportesDeOperadores.idReporte }, reportesDeOperadores);
+            _context.reportesDeOperadores.Add(reporteOperador);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetReporte", new { id = reporteOperador.idReporte }, reporteOperador);
         }
     
         private bool reportesDeOperadoresExists(string id)

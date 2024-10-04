@@ -8,7 +8,7 @@ namespace Sistema_Produccion_3_Backend.DTO.ReporteOperador
     {
         public int idTipoCierre { get; set; }
 
-        public string nombreTipoCierre { get; set; }
+        public string? nombreTipoCierre { get; set; }
 
     }
 }
