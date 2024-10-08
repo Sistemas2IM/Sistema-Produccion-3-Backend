@@ -1,9 +1,7 @@
 ﻿namespace Sistema_Produccion_3_Backend.DTO.ProductoTerminado
 {
-    public class DetalleEntregaDto
+    public class AddDetalleEntregaDto
     {
-        public int idDetalleEtrega { get; set; }
-
         public int? idEntregaPt { get; set; }
 
         public int? numeroFila { get; set; }

@@ -48,12 +48,18 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForMember(dest => dest.tarjetaOfDto, opt => opt.MapFrom(src => src.idTarjetaOfNavigation))
                 .ReverseMap();
             CreateMap<entregasProductoTerminado, AddProductoTerminadoDto>().ReverseMap();
-
             CreateMap<UpdateProductoTerminadoDto, entregasProductoTerminado>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             CreateMap<contenidoEntrega, ContenidoEntregaDto>().ReverseMap();
+            CreateMap<contenidoEntrega, AddContenidoEntregaDto>().ReverseMap();
+            CreateMap<UpdateContenidoEntregaDto, contenidoEntrega>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
             CreateMap<detalleEntrega, DetalleEntregaDto>().ReverseMap();
+            CreateMap<detalleEntrega, AddDetalleEntregaDto>().ReverseMap();
+            CreateMap<UpdateDetalleEntregaDto, detalleEntrega>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             // REPORTES POR OPERADOR
             CreateMap<reportesDeOperadores, ReporteOperadorDto>()
