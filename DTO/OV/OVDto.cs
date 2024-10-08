@@ -29,11 +29,5 @@ namespace Sistema_Produccion_3_Backend.DTO.OV
         public string tipoOrden { get; set; }
 
         public List<ArticuloDto> articulo { get; set; }
-
-        [InverseProperty("idOvNavigation")]
-        public virtual ICollection<entregasProductoTerminado> entregasProductoTerminado { get; set; } = new List<entregasProductoTerminado>();
-
-        [InverseProperty("idOvNavigation")]
-        public virtual ICollection<tarjetaOf> tarjetaOf { get; set; } = new List<tarjetaOf>();
     }
 }
