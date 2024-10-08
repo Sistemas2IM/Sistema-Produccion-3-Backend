@@ -43,10 +43,6 @@ namespace Sistema_Produccion_3_Backend.DTO.TarjetasOF
         [InverseProperty("idTarjetaOfNavigation")]
         public virtual ICollection<certificadoDeCalidad> certificadoDeCalidad { get; set; } = new List<certificadoDeCalidad>();
 
-
-        [InverseProperty("idTarjetaOfNavigation")]
-        public virtual ICollection<entregasProductoTerminado> entregasProductoTerminado { get; set; } = new List<entregasProductoTerminado>();
-
         [InverseProperty("idTarjetaOfNavigation")]
         public virtual ICollection<etiqueta> etiqueta { get; set; } = new List<etiqueta>();
 
@@ -56,10 +52,6 @@ namespace Sistema_Produccion_3_Backend.DTO.TarjetasOF
         [ForeignKey("idEstadoOf")]
         [InverseProperty("tarjetaOf")]
         public virtual estadosOf? idEstadoOfNavigation { get; set; }
-
-        [ForeignKey("idOv")]
-        [InverseProperty("tarjetaOf")]
-        public virtual oV? idOvNavigation { get; set; }
 
         [ForeignKey("idPostura")]
         [InverseProperty("tarjetaOf")]

@@ -2,6 +2,7 @@
 using Sistema_Produccion_3_Backend.DTO.Catalogo;
 using Sistema_Produccion_3_Backend.DTO.OV;
 using Sistema_Produccion_3_Backend.DTO.PermisosUsuario;
+using Sistema_Produccion_3_Backend.DTO.ProductoTerminado;
 using Sistema_Produccion_3_Backend.DTO.ReporteOperador;
 using Sistema_Produccion_3_Backend.DTO.TarjetasOF;
 using Sistema_Produccion_3_Backend.Models;
@@ -17,7 +18,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             // TARJETAS OF - DTO
             CreateMap<tarjetaOf, TarjetaOfDto>().ReverseMap();
             CreateMap<tarjetaOf, AddTarjetaOfDto>().ReverseMap();
-            CreateMap<tarjetaOf, UpdateTarjetaOfDto>()
+            CreateMap<UpdateTarjetaOfDto, tarjetaOf>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             // ASIGNACION DE TARJETAS OF
@@ -36,6 +37,23 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             // Articulo - DTO
             CreateMap<articuloOv, ArticuloDto>().ReverseMap();
             CreateMap<articuloOv, AddArticuloDto>().ReverseMap();
+
+            // PRODUCTO TERMINADO
+            CreateMap<entregasProductoTerminado, ProductoTerminadoDto>()
+                .ForMember(dest => dest.contenidoEntregado, opt => opt.MapFrom(src => src.contenidoEntrega))
+                .ForMember(dest => dest.detalleEntrega, opt => opt.MapFrom(src => src.detalleEntrega))
+                .ForMember(dest => dest.estadoReporteDto, opt => opt.MapFrom(src => src.idEstadoReporteNavigation))
+                .ForMember(dest => dest.maquinaDto, opt => opt.MapFrom(src => src.idMaquinaNavigation))
+                .ForMember(dest => dest.ovDto, opt => opt.MapFrom(src => src.idOvNavigation))
+                .ForMember(dest => dest.tarjetaOfDto, opt => opt.MapFrom(src => src.idTarjetaOfNavigation))
+                .ReverseMap();
+            CreateMap<entregasProductoTerminado, AddProductoTerminadoDto>().ReverseMap();
+
+            CreateMap<UpdateProductoTerminadoDto, entregasProductoTerminado>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            CreateMap<contenidoEntrega, ContenidoEntregaDto>().ReverseMap();
+            CreateMap<detalleEntrega, DetalleEntregaDto>().ReverseMap();
 
             // REPORTES POR OPERADOR
             CreateMap<reportesDeOperadores, ReporteOperadorDto>()
