@@ -2,8 +2,6 @@
 {
     public class AddContenidoEntregaDto
     {
-        public int? idEntregaPt { get; set; }
-
         public int? numeroFila { get; set; }
 
         public int? cantidadPlanificada { get; set; }

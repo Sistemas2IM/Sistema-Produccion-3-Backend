@@ -57,12 +57,12 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
                 .Include(sm => sm.idTarjetaOfNavigation)
                 .FirstOrDefaultAsync(u => u.idDetalle == id);
 
-            if (detalleReporte == null)
+            var detalleReporteDto = _mapper.Map<DetalleReporteDto>(detalleReporte);
+
+            if (detalleReporteDto == null)
             {
                 return NotFound("No se encontro el detalle con el id: " + id);
             }
-
-            var detalleReporteDto = _mapper.Map<DetalleReporteDto>(detalleReporte);
 
             return Ok(detalleReporteDto);
         }
