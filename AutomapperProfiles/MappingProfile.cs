@@ -16,10 +16,23 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             // ACA PARA MAPEAR LOS MODELOS->DTO
 
             // TARJETAS OF - DTO
-            CreateMap<tarjetaOf, TarjetaOfDto>().ReverseMap();
+            CreateMap<tarjetaOf, TarjetaOfDto>()
+                .ForMember(dest => dest.estadoOfDto, opt => opt.MapFrom(src => src.idEstadoOfNavigation))
+                .ForMember(dest => dest.etiquetaDto, opt => opt.MapFrom(src => src.etiqueta))
+                .ForMember(dest => dest.tarjetaCampoDto, opt => opt.MapFrom(src => src.tarjetaCampo))
+                .ReverseMap();
+
             CreateMap<tarjetaOf, AddTarjetaOfDto>().ReverseMap();
             CreateMap<UpdateTarjetaOfDto, tarjetaOf>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            CreateMap<estadosOf, EstadoOfDto>().ReverseMap();
+            CreateMap<etiqueta, EtiquetaDto>().ReverseMap();
+            CreateMap<tarjetaCampo, TarjetaCampoDto>()
+                .ForMember(dest => dest.camposPersonalizadosDto, opt => opt.MapFrom(src => src.idCampoNavigation))
+                .ReverseMap();
+
+            CreateMap<camposPersonalizados, CamposPersonalizadosDto>().ReverseMap();
 
             // ASIGNACION DE TARJETAS OF
             CreateMap<asignacion, AsignarOfDto>()

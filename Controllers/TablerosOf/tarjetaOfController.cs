@@ -18,7 +18,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
     {
         private readonly base_nuevaContext _context;
         private readonly IMapper _mapper;
-                   
+
         public tarjetaOfController(base_nuevaContext context, IMapper mapper)
         {
             _context = context;
@@ -29,7 +29,12 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         [HttpGet("get")]
         public async Task<ActionResult<IEnumerable<TarjetaOfDto>>> GettarjetaOf()
         {
-            var tarjetaOf = await _context.tarjetaOf.ToListAsync();
+            var tarjetaOf = await _context.tarjetaOf
+                .Include(u => u.idEstadoOfNavigation)
+                .Include(r => r.etiqueta)
+                .Include(p => p.tarjetaCampo)
+                .ToListAsync();
+
             var tarjetaOfDto = _mapper.Map<List<TarjetaOfDto>>(tarjetaOf);
 
             return Ok(tarjetaOfDto);
@@ -39,7 +44,11 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         [HttpGet("get/id/")]
         public async Task<ActionResult<TarjetaOfDto>> GettarjetaOf(int id)
         {
-            var tarjetaOf = await _context.tarjetaOf.FindAsync(id);
+            var tarjetaOf = await _context.tarjetaOf
+                .Include(u => u.idEstadoOfNavigation)
+                .Include(r => r.etiqueta)
+                .Include(p => p.tarjetaCampo)
+                .FirstOrDefaultAsync(u => u.idTarjetaOf == id);
             var tarjetaOfDto = _mapper.Map<TarjetaOfDto>(tarjetaOf);
             
             if (tarjetaOfDto == null)

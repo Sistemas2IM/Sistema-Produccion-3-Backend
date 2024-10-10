@@ -43,15 +43,12 @@ namespace Sistema_Produccion_3_Backend.DTO.TarjetasOF
         [InverseProperty("idTarjetaOfNavigation")]
         public virtual ICollection<certificadoDeCalidad> certificadoDeCalidad { get; set; } = new List<certificadoDeCalidad>();
 
-        [InverseProperty("idTarjetaOfNavigation")]
-        public virtual ICollection<etiqueta> etiqueta { get; set; } = new List<etiqueta>();
+        public List<EtiquetaDto>? etiquetaDto { get; set; }
 
         [InverseProperty("idTarjetaOfNavigation")]
         public virtual ICollection<fichaTecnica> fichaTecnica { get; set; } = new List<fichaTecnica>();
 
-        [ForeignKey("idEstadoOf")]
-        [InverseProperty("tarjetaOf")]
-        public virtual estadosOf? idEstadoOfNavigation { get; set; }
+        public EstadoOfDto? estadoOfDto { get; set; }
 
         [ForeignKey("idPostura")]
         [InverseProperty("tarjetaOf")]
@@ -60,7 +57,6 @@ namespace Sistema_Produccion_3_Backend.DTO.TarjetasOF
         [InverseProperty("idTarjetaOfNavigation")]
         public virtual ICollection<procesoOf> procesoOf { get; set; } = new List<procesoOf>();
 
-        [InverseProperty("idTarjetaOfNavigation")]
-        public virtual ICollection<tarjetaCampo> tarjetaCampo { get; set; } = new List<tarjetaCampo>();
+        public List<TarjetaCampoDto>? tarjetaCampoDto { get; set; }
     }
 }
