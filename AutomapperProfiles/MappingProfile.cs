@@ -34,6 +34,17 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
 
             CreateMap<camposPersonalizados, CamposPersonalizadosDto>().ReverseMap();
 
+            // PROCESOS OF - TARJETAS
+            CreateMap<procesoOf, ProcesoOfDto>().ReverseMap();
+            CreateMap<procesoOf, AddProcesoOfDto>().ReverseMap();
+            CreateMap<UpdateProcesoOfDto, procesoOf>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            CreateMap<detalleOperacionProceso, DetalleProcesoDto>().ReverseMap();
+            CreateMap<detalleOperacionProceso, AddDetalleProcesoDto>().ReverseMap();
+            CreateMap<UpdateDetalleProcesoDto, detalleOperacionProceso>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
             // ASIGNACION DE TARJETAS OF
             CreateMap<asignacion, AsignarOfDto>()
                 .ForMember(dest => dest.NombreDisenador, opt => opt.MapFrom(src => src.idDisenadorNavigation.nombreDisenador))
