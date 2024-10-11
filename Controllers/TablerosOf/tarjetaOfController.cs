@@ -33,6 +33,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 .Include(u => u.idEstadoOfNavigation)
                 .Include(r => r.etiqueta)
                 .Include(p => p.tarjetaCampo)
+                .ThenInclude(m => m.idCampoNavigation)
                 .ToListAsync();
 
             var tarjetaOfDto = _mapper.Map<List<TarjetaOfDto>>(tarjetaOf);
@@ -48,6 +49,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 .Include(u => u.idEstadoOfNavigation)
                 .Include(r => r.etiqueta)
                 .Include(p => p.tarjetaCampo)
+                .ThenInclude(m => m.idCampoNavigation)
                 .FirstOrDefaultAsync(u => u.idTarjetaOf == id);
             var tarjetaOfDto = _mapper.Map<TarjetaOfDto>(tarjetaOf);
             
