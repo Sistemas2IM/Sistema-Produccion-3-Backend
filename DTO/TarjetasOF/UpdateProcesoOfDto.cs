@@ -5,10 +5,6 @@ namespace Sistema_Produccion_3_Backend.DTO.TarjetasOF
 {
     public class UpdateProcesoOfDto
     {
-        public int idProceso { get; set; }
-
-        public int? idTarjetaOf { get; set; }
-
         public int? idTablero { get; set; }
 
         public int? idPostura { get; set; }
@@ -39,19 +35,5 @@ namespace Sistema_Produccion_3_Backend.DTO.TarjetasOF
 
         public int? tipoObjeto { get; set; }
 
-        [InverseProperty("idProcesoNavigation")]
-        public virtual ICollection<detalleOperacionProceso> detalleOperacionProceso { get; set; } = new List<detalleOperacionProceso>();
-
-        [ForeignKey("idPostura")]
-        [InverseProperty("procesoOf")]
-        public virtual posturasOf idPosturaNavigation { get; set; }
-
-        [ForeignKey("idTablero")]
-        [InverseProperty("procesoOf")]
-        public virtual tablerosOf idTableroNavigation { get; set; }
-
-        [ForeignKey("idTarjetaOf")]
-        [InverseProperty("procesoOf")]
-        public virtual tarjetaOf idTarjetaOfNavigation { get; set; }
     }
 }

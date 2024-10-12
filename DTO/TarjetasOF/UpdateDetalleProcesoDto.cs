@@ -14,8 +14,8 @@
 
         public string? operador { get; set; }
 
-        public int? secuencia { get; set; }0
+        public int? secuencia { get; set; }
 
-public int? operacion { get; set; }
+        public int? operacion { get; set; }
     }
 }

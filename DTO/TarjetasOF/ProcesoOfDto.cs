@@ -39,8 +39,7 @@ namespace Sistema_Produccion_3_Backend.DTO.TarjetasOF
 
         public int? tipoObjeto { get; set; }
 
-        [InverseProperty("idProcesoNavigation")]
-        public virtual ICollection<detalleOperacionProceso> detalleOperacionProceso { get; set; } = new List<detalleOperacionProceso>();
+        public List<DetalleProcesoDto>? detalleProcesoOfDto { get; set; }
 
         [ForeignKey("idPostura")]
         [InverseProperty("procesoOf")]
