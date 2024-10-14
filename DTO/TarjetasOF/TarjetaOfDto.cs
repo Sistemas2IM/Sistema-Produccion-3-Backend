@@ -1,23 +1,24 @@
 ﻿using Sistema_Produccion_3_Backend.Models;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Sistema_Produccion_3_Backend.DTO.TarjetasOF
 {
     public class TarjetaOfDto
     {
-        public int idTarjetaOf { get; set; }
+        public int oF { get; set; }
 
         public int? idOv { get; set; }
 
-        public int? idPostura { get; set; }
-
         public int? idEstadoOf { get; set; }
 
-        public int oF { get; set; }
+        public string tipoDeOrden { get; set; }
 
         public string nombreOf { get; set; }
 
         public string productoOf { get; set; }
+
+        public string lineaDeNegocio { get; set; }
 
         public string clienteOf { get; set; }
 
@@ -27,36 +28,32 @@ namespace Sistema_Produccion_3_Backend.DTO.TarjetasOF
 
         public decimal? cantidadOf { get; set; }
 
-        public int? posicion { get; set; }
-
         public DateTime? fechaEntrega { get; set; }
 
         public DateTime? fechaCreacion { get; set; }
 
         public DateTime? fechaUltimaActualizacion { get; set; }
 
-        public bool? archivado { get; set; }
+        public int? posicion { get; set; }
 
-        [InverseProperty("idTarjetaOfNavigation")]
-        public virtual ICollection<asignacion> asignacion { get; set; } = new List<asignacion>();
+        public bool? archivada { get; set; }
 
-        [InverseProperty("idTarjetaOfNavigation")]
-        public virtual ICollection<certificadoDeCalidad> certificadoDeCalidad { get; set; } = new List<certificadoDeCalidad>();
+        public decimal? porcentajeCompletado { get; set; }
+
+        public int? procesosCompletados { get; set; }
+
+        public int? procesosPendientes { get; set; }
+
+        public int? totalProcesos { get; set; }
+
+        public bool? cerrada { get; set; }
 
         public List<EtiquetaDto>? etiquetaDto { get; set; }
 
-        [InverseProperty("idTarjetaOfNavigation")]
-        public virtual ICollection<fichaTecnica> fichaTecnica { get; set; } = new List<fichaTecnica>();
-
         public EstadoOfDto? estadoOfDto { get; set; }
-
-        [ForeignKey("idPostura")]
-        [InverseProperty("tarjetaOf")]
-        public virtual posturasOf? idPosturaNavigation { get; set; }
 
         [InverseProperty("idTarjetaOfNavigation")]
         public virtual ICollection<procesoOf> procesoOf { get; set; } = new List<procesoOf>();
 
-        public List<TarjetaCampoDto>? tarjetaCampoDto { get; set; }
     }
 }

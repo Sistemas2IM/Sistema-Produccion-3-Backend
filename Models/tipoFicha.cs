@@ -8,15 +8,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Sistema_Produccion_3_Backend.Models;
 
-[Index("idFichaTecnica", Name = "FICHA_DETALLE_FK")]
-public partial class detalleFicha
+public partial class tipoFicha
 {
     [Key]
-    public int idDetalleFicha { get; set; }
+    public int idTipoFicha { get; set; }
 
-    public int? idFichaTecnica { get; set; }
+    [StringLength(200)]
+    public string nombre { get; set; }
 
-    [ForeignKey("idFichaTecnica")]
-    [InverseProperty("detalleFicha")]
-    public virtual fichaTecnica idFichaTecnicaNavigation { get; set; }
+    [InverseProperty("idTipoFichaNavigation")]
+    public virtual ICollection<fichaTecnica> fichaTecnica { get; set; } = new List<fichaTecnica>();
 }

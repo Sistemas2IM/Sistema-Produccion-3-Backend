@@ -8,7 +8,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Sistema_Produccion_3_Backend.Models;
 
-[Index("idProceso", Name = "DETALLE_OPERACION_FK")]
+[Index("idProceso", Name = "PROCESO_OPERACIONES_FK")]
+[Index("idOperacion", Name = "TIPO_OPERACION_FK")]
 public partial class detalleOperacionProceso
 {
     [Key]
@@ -16,11 +17,14 @@ public partial class detalleOperacionProceso
 
     public int? idProceso { get; set; }
 
-    [Column(TypeName = "datetime")]
-    public DateTime? inicio { get; set; }
+    public int? idOperacion { get; set; }
+
+    public int? numeroFila { get; set; }
+
+    public int? secuencia { get; set; }
 
     [Column(TypeName = "datetime")]
-    public DateTime? pausa { get; set; }
+    public DateTime? inicio { get; set; }
 
     [Column(TypeName = "datetime")]
     public DateTime? finalizacion { get; set; }
@@ -28,9 +32,13 @@ public partial class detalleOperacionProceso
     [StringLength(50)]
     public string operador { get; set; }
 
-    public int? secuencia { get; set; }
-
     public int? operacion { get; set; }
+
+    public bool? accionPorAuxiliar { get; set; }
+
+    [ForeignKey("idOperacion")]
+    [InverseProperty("detalleOperacionProceso")]
+    public virtual operaciones idOperacionNavigation { get; set; }
 
     [ForeignKey("idProceso")]
     [InverseProperty("detalleOperacionProceso")]

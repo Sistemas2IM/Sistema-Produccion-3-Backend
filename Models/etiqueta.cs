@@ -8,13 +8,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Sistema_Produccion_3_Backend.Models;
 
-[Index("idTarjetaOf", Name = "TARJETA_ETIQUETA_FK")]
 public partial class etiqueta
 {
     [Key]
     public int idEtiqueta { get; set; }
-
-    public int? idTarjetaOf { get; set; }
 
     [StringLength(20)]
     public string color { get; set; }
@@ -24,7 +21,11 @@ public partial class etiqueta
 
     public int? secuencia { get; set; }
 
-    [ForeignKey("idTarjetaOf")]
-    [InverseProperty("etiqueta")]
-    public virtual tarjetaOf idTarjetaOfNavigation { get; set; }
+    public int? flag { get; set; }
+
+    [InverseProperty("idEtiquetaNavigation")]
+    public virtual ICollection<etiquetaOf> etiquetaOf { get; set; } = new List<etiquetaOf>();
+
+    [InverseProperty("idEtiquetaNavigation")]
+    public virtual ICollection<tarjetaEtiqueta> tarjetaEtiqueta { get; set; } = new List<tarjetaEtiqueta>();
 }

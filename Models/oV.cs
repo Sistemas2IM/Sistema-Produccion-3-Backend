@@ -14,11 +14,10 @@ public partial class oV
     public int idOv { get; set; }
 
     [Column("oV")]
-    [StringLength(200)]
-    public string oV1 { get; set; }
+    public int? oV1 { get; set; }
 
     [StringLength(100)]
-    public string codCliente { get; set; }
+    public string codigoCliente { get; set; }
 
     [StringLength(200)]
     public string cliente { get; set; }

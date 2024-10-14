@@ -19,9 +19,6 @@ public partial class motorista
     [StringLength(200)]
     public string apellidos { get; set; }
 
-    [StringLength(4)]
-    public string codigo { get; set; }
-
     [InverseProperty("idMotoristaNavigation")]
     public virtual ICollection<gira> gira { get; set; } = new List<gira>();
 }

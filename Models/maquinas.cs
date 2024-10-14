@@ -19,6 +19,8 @@ public partial class maquinas
     [StringLength(100)]
     public string nombreMaquina { get; set; }
 
+    public int? familiaId { get; set; }
+
     [InverseProperty("idMaquinaNavigation")]
     public virtual ICollection<entregasProductoTerminado> entregasProductoTerminado { get; set; } = new List<entregasProductoTerminado>();
 

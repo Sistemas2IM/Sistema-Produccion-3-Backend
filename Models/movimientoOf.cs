@@ -20,15 +20,13 @@ public partial class movimientoOf
     [Column(TypeName = "datetime")]
     public DateTime? fechaMovimiento { get; set; }
 
-    public int? tableroAnterior { get; set; }
-
-    public int? posturaAnterior { get; set; }
+    public int? listaAnterior { get; set; }
 
     public int? posicionAnterior { get; set; }
 
-    public int? tableroNuevo { get; set; }
+    public int? tablero { get; set; }
 
-    public int? posturaNueva { get; set; }
+    public int? listaNueva { get; set; }
 
     public int? posicionNueva { get; set; }
 

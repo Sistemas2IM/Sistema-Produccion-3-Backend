@@ -33,7 +33,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
                 .Include(u => u.idOperacionNavigation)
                 .Include(r => r.idMaterialNavigation)
                 .Include(p => p.idTipoCierreNavigation)
-                .Include(sm => sm.idTarjetaOfNavigation)
+                .Include(sm => sm.oFNavigation)
                 .ToArrayAsync();
 
             if (detalleReporte == null || detalleReporte.Length == 0)
@@ -54,8 +54,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
                 .Include(u => u.idOperacionNavigation)
                 .Include(r => r.idMaterialNavigation)
                 .Include(p => p.idTipoCierreNavigation)
-                .Include(sm => sm.idTarjetaOfNavigation)
-                .FirstOrDefaultAsync(u => u.idDetalle == id);
+                .Include(sm => sm.oFNavigation)
+                .FirstOrDefaultAsync(u => u.idDetalleReporte == id);
 
             var detalleReporteDto = _mapper.Map<DetalleReporteDto>(detalleReporte);
 
@@ -118,12 +118,12 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
             _context.detalleReporte.Add(detalleReporte);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetdetalleReporte", new { id = detalleReporte.idDetalle }, detalleReporte);
+            return CreatedAtAction("GetdetalleReporte", new { id = detalleReporte.idDetalleReporte }, detalleReporte);
         }
 
         private bool detalleReporteExists(int id)
         {
-            return _context.detalleReporte.Any(e => e.idDetalle == id);
+            return _context.detalleReporte.Any(e => e.idDetalleReporte == id);
         }
 
     }

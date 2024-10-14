@@ -29,7 +29,6 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
         public async Task<ActionResult<IEnumerable<ReporteOperadorDto>>> GetreportesDeOperadores()
         {
             var reporteOperador = await _context.reportesDeOperadores
-                .Include(u => u.idOperadorNavigation)
                 .Include(r => r.idEstadoReporteNavigation)
                 .Include(p => p.idMaquinaNavigation)
                 .Include(sm => sm.idTipoReporteNavigation)
@@ -40,7 +39,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
                 .Include(m => m.detalleReporte)
                     .ThenInclude(d => d.idTipoCierreNavigation) // Incluye la relación con 'idTipoCierre'
                 .Include(m => m.detalleReporte)
-                    .ThenInclude(d => d.idTarjetaOfNavigation) // Incluye la relación con 'idTarjetaOf'
+                    .ThenInclude(d => d.oFNavigation) // Incluye la relación con 'idTarjetaOf'
                 .ToArrayAsync();
 
             var reporteOperadorDto = _mapper.Map<List<ReporteOperadorDto>>(reporteOperador);
@@ -53,7 +52,6 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
         public async Task<ActionResult<ReporteOperadorDto>> GetreportesDeOperadores(string id)
         {
             var reporteOperador = await _context.reportesDeOperadores
-                .Include(u => u.idOperadorNavigation)
                 .Include(r => r.idEstadoReporteNavigation)
                 .Include(p => p.idMaquinaNavigation)
                 .Include(sm => sm.idTipoReporteNavigation)
@@ -64,7 +62,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
                 .Include(m => m.detalleReporte)
                     .ThenInclude(d => d.idTipoCierreNavigation) // Incluye la relación con 'idTipoCierre'
                 .Include(m => m.detalleReporte)
-                    .ThenInclude(d => d.idTarjetaOfNavigation) // Incluye la relación con 'idTarjetaOf'
+                    .ThenInclude(d => d.oFNavigation) // Incluye la relación con 'idTarjetaOf'
                 .FirstOrDefaultAsync(u => u.idReporte == id);
 
             if (reporteOperador == null)

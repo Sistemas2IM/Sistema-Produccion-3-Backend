@@ -19,6 +19,7 @@ public partial class camposPersonalizados
     [StringLength(50)]
     public string tipo { get; set; }
 
+    [StringLength(1)]
     public string valoresPosibles { get; set; }
 
     [InverseProperty("idCampoNavigation")]

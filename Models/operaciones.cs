@@ -20,6 +20,9 @@ public partial class operaciones
     public string nombreOperacion { get; set; }
 
     [InverseProperty("idOperacionNavigation")]
+    public virtual ICollection<detalleOperacionProceso> detalleOperacionProceso { get; set; } = new List<detalleOperacionProceso>();
+
+    [InverseProperty("idOperacionNavigation")]
     public virtual ICollection<detalleReporte> detalleReporte { get; set; } = new List<detalleReporte>();
 
     [ForeignKey("idMaquina")]

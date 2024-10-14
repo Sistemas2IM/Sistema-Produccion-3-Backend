@@ -8,36 +8,40 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Sistema_Produccion_3_Backend.Models;
 
-[Index("idTarjetaOf", Name = "TARJETA_CERTIFICADO_FK")]
+[Index("oF", Name = "OF_CERTIFICADO_FK")]
 public partial class certificadoDeCalidad
 {
     [Key]
     public int idCertificado { get; set; }
 
-    public int? idTarjetaOf { get; set; }
+    public int? oF { get; set; }
+
+    [StringLength(10)]
+    public string numeroDeLote { get; set; }
 
     [StringLength(100)]
     public string numeroFactura { get; set; }
 
-    public int? numeroOf { get; set; }
-
     public int? numeroOv { get; set; }
-
-    [StringLength(100)]
-    public string creadoPor { get; set; }
-
-    [Column(TypeName = "datetime")]
-    public DateTime? fechaCertificado { get; set; }
 
     [StringLength(200)]
     public string cliente { get; set; }
 
+    [StringLength(100)]
+    public string codigoProducto { get; set; }
+
     [StringLength(254)]
     public string producto { get; set; }
+
+    [StringLength(200)]
+    public string tipoDeProducto { get; set; }
 
     public int? cantidadEntregada { get; set; }
 
     public int? cantidadDespachada { get; set; }
+
+    [Column(TypeName = "datetime")]
+    public DateTime? fechaCertificado { get; set; }
 
     [Column(TypeName = "datetime")]
     public DateTime? fechaProduccion { get; set; }
@@ -48,12 +52,19 @@ public partial class certificadoDeCalidad
     [Column(TypeName = "datetime")]
     public DateTime? fechaCreacion { get; set; }
 
+    public string observaciones { get; set; }
+
+    [StringLength(100)]
+    public string creadoPor { get; set; }
+
     public int? tipoObjeto { get; set; }
+
+    public int? version { get; set; }
 
     [InverseProperty("idCertificadoNavigation")]
     public virtual ICollection<detalleCertificado> detalleCertificado { get; set; } = new List<detalleCertificado>();
 
-    [ForeignKey("idTarjetaOf")]
+    [ForeignKey("oF")]
     [InverseProperty("certificadoDeCalidad")]
-    public virtual tarjetaOf idTarjetaOfNavigation { get; set; }
+    public virtual tarjetaOf oFNavigation { get; set; }
 }

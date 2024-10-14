@@ -10,24 +10,28 @@ namespace Sistema_Produccion_3_Backend.Models;
 
 [Index("idTipoCierre", Name = "DETALLE_TIPO_CIERRE_FK")]
 [Index("idMaterial", Name = "MATERIAL_DETALLE_FK")]
+[Index("oF", Name = "OF_DETALLE_REPORTE_FK")]
 [Index("idOperacion", Name = "OPERACION_DETALLE_FK")]
+[Index("idProceso", Name = "PROCESO_REPORTE_FK")]
 [Index("idReporte", Name = "REPORTE_DETALLE_FK")]
-[Index("idTarjetaOf", Name = "TARJETA_DETALLE_REPORTE_FK")]
 public partial class detalleReporte
 {
     [Key]
-    public int idDetalle { get; set; }
+    public int idDetalleReporte { get; set; }
 
     [StringLength(50)]
     public string idReporte { get; set; }
 
     public int? idOperacion { get; set; }
 
-    public int? idMaterial { get; set; }
+    [StringLength(25)]
+    public string idMaterial { get; set; }
 
-    public int? idTarjetaOf { get; set; }
+    public int? idProceso { get; set; }
 
     public int? idTipoCierre { get; set; }
+
+    public int? oF { get; set; }
 
     public int? numeroFila { get; set; }
 
@@ -46,7 +50,6 @@ public partial class detalleReporte
     public string cliente { get; set; }
 
     [StringLength(1)]
-    [Unicode(false)]
     public string tiroRetiro { get; set; }
 
     public int? cantidadRecibida { get; set; }
@@ -69,10 +72,10 @@ public partial class detalleReporte
 
     public int? cantidadEnRollos { get; set; }
 
-    [Column(TypeName = "numeric(18, 2)")]
+    [Column(TypeName = "numeric(20, 2)")]
     public decimal? anchoBobina { get; set; }
 
-    [Column(TypeName = "numeric(18, 2)")]
+    [Column(TypeName = "numeric(20, 2)")]
     public decimal? velocidadMaquina { get; set; }
 
     public string observaciones { get; set; }
@@ -87,18 +90,20 @@ public partial class detalleReporte
 
     public int? largoMt { get; set; }
 
-    [Column(TypeName = "numeric(18, 2)")]
+    [Column(TypeName = "numeric(20, 2)")]
     public decimal? ancho { get; set; }
 
-    [Column(TypeName = "numeric(18, 2)")]
+    [Column(TypeName = "numeric(20, 2)")]
     public decimal? alto { get; set; }
 
     public int? repeticiones { get; set; }
 
     public int? cantidadSobrante { get; set; }
 
-    [Column(TypeName = "numeric(18, 2)")]
+    [Column(TypeName = "numeric(20, 2)")]
     public decimal? udCorrugados { get; set; }
+
+    public bool? accionPorAuxiliar { get; set; }
 
     [ForeignKey("idMaterial")]
     [InverseProperty("detalleReporte")]
@@ -108,15 +113,19 @@ public partial class detalleReporte
     [InverseProperty("detalleReporte")]
     public virtual operaciones idOperacionNavigation { get; set; }
 
+    [ForeignKey("idProceso")]
+    [InverseProperty("detalleReporte")]
+    public virtual procesoOf idProcesoNavigation { get; set; }
+
     [ForeignKey("idReporte")]
     [InverseProperty("detalleReporte")]
     public virtual reportesDeOperadores idReporteNavigation { get; set; }
 
-    [ForeignKey("idTarjetaOf")]
-    [InverseProperty("detalleReporte")]
-    public virtual tarjetaOf idTarjetaOfNavigation { get; set; }
-
     [ForeignKey("idTipoCierre")]
     [InverseProperty("detalleReporte")]
     public virtual tipoCierre idTipoCierreNavigation { get; set; }
+
+    [ForeignKey("oF")]
+    [InverseProperty("detalleReporte")]
+    public virtual tarjetaOf oFNavigation { get; set; }
 }

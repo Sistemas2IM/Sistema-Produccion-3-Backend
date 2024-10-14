@@ -16,9 +16,8 @@ namespace Sistema_Produccion_3_Backend.DTO.ReporteOperador
 
         public int? idMaquina { get; set; }
 
-        public string? idOperador { get; set; }
+        public string? user { get; set; }
 
-        [Column(TypeName = "datetime")]
         public DateTime? fechaDeCreacion { get; set; }
 
         public string? turno { get; set; }
@@ -44,8 +43,6 @@ namespace Sistema_Produccion_3_Backend.DTO.ReporteOperador
         public EstadoReporteDto? estadoReporteDto { get; set; }
 
         public MaquinaDto? maquinaDto { get; set; }
-
-        public OperadorDto? operadorDto { get; set; }
 
         public TipoReporteDto? tipoReporteDto { get; set; }
     }

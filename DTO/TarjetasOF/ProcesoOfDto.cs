@@ -1,4 +1,5 @@
 ﻿using Sistema_Produccion_3_Backend.Models;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Sistema_Produccion_3_Backend.DTO.TarjetasOF
@@ -7,11 +8,19 @@ namespace Sistema_Produccion_3_Backend.DTO.TarjetasOF
     {
         public int idProceso { get; set; }
 
-        public int? idTarjetaOf { get; set; }
+        public int? oF { get; set; }
 
         public int? idTablero { get; set; }
 
         public int? idPostura { get; set; }
+
+        public string? idMaterial { get; set; }
+
+        public string? nombreTarjeta { get; set; }
+
+        public string? productoOf { get; set; }
+
+        public string? descripcionOf { get; set; }
 
         public int? secuencia { get; set; }
 
@@ -29,6 +38,8 @@ namespace Sistema_Produccion_3_Backend.DTO.TarjetasOF
 
         public DateTime? fechaFinalizacion { get; set; }
 
+        public decimal? tiempoEstimado { get; set; }
+
         public decimal? horasTotales { get; set; }
 
         public int? posicion { get; set; }
@@ -39,18 +50,9 @@ namespace Sistema_Produccion_3_Backend.DTO.TarjetasOF
 
         public int? tipoObjeto { get; set; }
 
+        public bool? archivada { get; set; }
+
         public List<DetalleProcesoDto>? detalleProcesoOfDto { get; set; }
 
-        [ForeignKey("idPostura")]
-        [InverseProperty("procesoOf")]
-        public virtual posturasOf idPosturaNavigation { get; set; }
-
-        [ForeignKey("idTablero")]
-        [InverseProperty("procesoOf")]
-        public virtual tablerosOf idTableroNavigation { get; set; }
-
-        [ForeignKey("idTarjetaOf")]
-        [InverseProperty("procesoOf")]
-        public virtual tarjetaOf idTarjetaOfNavigation { get; set; }
     }
 }

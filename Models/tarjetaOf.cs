@@ -10,25 +10,26 @@ namespace Sistema_Produccion_3_Backend.Models;
 
 [Index("idEstadoOf", Name = "ESTADO_TARJETA_FK")]
 [Index("idOv", Name = "OV_TARJETA_FK")]
-[Index("idPostura", Name = "POSTURA__TARJETA_FK")]
 public partial class tarjetaOf
 {
     [Key]
-    public int idTarjetaOf { get; set; }
+    public int oF { get; set; }
 
     public int? idOv { get; set; }
 
-    public int? idPostura { get; set; }
-
     public int? idEstadoOf { get; set; }
 
-    public int oF { get; set; }
+    [StringLength(50)]
+    public string tipoDeOrden { get; set; }
 
     [StringLength(500)]
     public string nombreOf { get; set; }
 
     [StringLength(200)]
     public string productoOf { get; set; }
+
+    [StringLength(50)]
+    public string lineaDeNegocio { get; set; }
 
     [StringLength(200)]
     public string clienteOf { get; set; }
@@ -38,10 +39,8 @@ public partial class tarjetaOf
     [StringLength(50)]
     public string vendedorOf { get; set; }
 
-    [Column(TypeName = "numeric(18, 0)")]
+    [Column(TypeName = "numeric(20, 2)")]
     public decimal? cantidadOf { get; set; }
-
-    public int? posicion { get; set; }
 
     [Column(TypeName = "datetime")]
     public DateTime? fechaEntrega { get; set; }
@@ -52,27 +51,37 @@ public partial class tarjetaOf
     [Column(TypeName = "datetime")]
     public DateTime? fechaUltimaActualizacion { get; set; }
 
-    public bool? archivado { get; set; }
+    public int? posicion { get; set; }
 
-    [InverseProperty("idTarjetaOfNavigation")]
-    public virtual ICollection<asignacion> asignacion { get; set; } = new List<asignacion>();
+    public bool? archivada { get; set; }
 
-    [InverseProperty("idTarjetaOfNavigation")]
+    [Column(TypeName = "numeric(20, 2)")]
+    public decimal? porcentajeCompletado { get; set; }
+
+    public int? procesosCompletados { get; set; }
+
+    public int? procesosPendientes { get; set; }
+
+    public int? totalProcesos { get; set; }
+
+    public bool? cerrada { get; set; }
+
+    [InverseProperty("oFNavigation")]
     public virtual ICollection<certificadoDeCalidad> certificadoDeCalidad { get; set; } = new List<certificadoDeCalidad>();
 
-    [InverseProperty("idTarjetaOfNavigation")]
+    [InverseProperty("oFNavigation")]
     public virtual ICollection<detalleGira> detalleGira { get; set; } = new List<detalleGira>();
 
-    [InverseProperty("idTarjetaOfNavigation")]
+    [InverseProperty("oFNavigation")]
     public virtual ICollection<detalleReporte> detalleReporte { get; set; } = new List<detalleReporte>();
 
-    [InverseProperty("idTarjetaOfNavigation")]
+    [InverseProperty("oFNavigation")]
     public virtual ICollection<entregasProductoTerminado> entregasProductoTerminado { get; set; } = new List<entregasProductoTerminado>();
 
-    [InverseProperty("idTarjetaOfNavigation")]
-    public virtual ICollection<etiqueta> etiqueta { get; set; } = new List<etiqueta>();
+    [InverseProperty("oFNavigation")]
+    public virtual ICollection<etiquetaOf> etiquetaOf { get; set; } = new List<etiquetaOf>();
 
-    [InverseProperty("idTarjetaOfNavigation")]
+    [InverseProperty("oFNavigation")]
     public virtual ICollection<fichaTecnica> fichaTecnica { get; set; } = new List<fichaTecnica>();
 
     [ForeignKey("idEstadoOf")]
@@ -83,13 +92,6 @@ public partial class tarjetaOf
     [InverseProperty("tarjetaOf")]
     public virtual oV idOvNavigation { get; set; }
 
-    [ForeignKey("idPostura")]
-    [InverseProperty("tarjetaOf")]
-    public virtual posturasOf idPosturaNavigation { get; set; }
-
-    [InverseProperty("idTarjetaOfNavigation")]
+    [InverseProperty("oFNavigation")]
     public virtual ICollection<procesoOf> procesoOf { get; set; } = new List<procesoOf>();
-
-    [InverseProperty("idTarjetaOfNavigation")]
-    public virtual ICollection<tarjetaCampo> tarjetaCampo { get; set; } = new List<tarjetaCampo>();
 }

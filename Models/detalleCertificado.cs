@@ -8,13 +8,28 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Sistema_Produccion_3_Backend.Models;
 
-[Index("idCertificado", Name = "CERTIFICADO_DETALLE_FK")]
+[Index("idCertificado", Name = "DETALLE_CERTIFICADO_FK")]
+[Index("idCaracterista", Name = "ESPECIFICACION_FK")]
 public partial class detalleCertificado
 {
     [Key]
     public int idDetalleCertificado { get; set; }
 
     public int? idCertificado { get; set; }
+
+    public int? idCaracterista { get; set; }
+
+    public int? numeroFila { get; set; }
+
+    [StringLength(250)]
+    public string especificacion { get; set; }
+
+    [StringLength(10)]
+    public string resultado { get; set; }
+
+    [ForeignKey("idCaracterista")]
+    [InverseProperty("detalleCertificado")]
+    public virtual especificaciones idCaracteristaNavigation { get; set; }
 
     [ForeignKey("idCertificado")]
     [InverseProperty("detalleCertificado")]

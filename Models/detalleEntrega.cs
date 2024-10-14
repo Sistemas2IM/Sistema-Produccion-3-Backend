@@ -8,11 +8,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Sistema_Produccion_3_Backend.Models;
 
-[Index("idEntregaPt", Name = "ENTREGADETALLE_FK")]
+[Index("idEntregaPt", Name = "ENTREGA_DETALLE_FK")]
 public partial class detalleEntrega
 {
     [Key]
-    public int idDetalleEtrega { get; set; }
+    public int idDetalleEntrega { get; set; }
 
     public int? idEntregaPt { get; set; }
 

@@ -24,7 +24,7 @@ public partial class articuloOv
 
     public string detalleArticulo { get; set; }
 
-    [Column(TypeName = "decimal(18, 0)")]
+    [Column(TypeName = "numeric(20, 2)")]
     public decimal? precioUnidad { get; set; }
 
     [StringLength(50)]

@@ -18,4 +18,7 @@ public partial class areas
 
     [InverseProperty("idAreaNavigation")]
     public virtual ICollection<tablerosOf> tablerosOf { get; set; } = new List<tablerosOf>();
+
+    [InverseProperty("idAreaNavigation")]
+    public virtual ICollection<usuario> usuario { get; set; } = new List<usuario>();
 }

@@ -110,12 +110,12 @@ namespace Sistema_Produccion_3_Backend.Controllers.ProductoTerminado
             _context.detalleEntrega.Add(detalleEntrega);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetdetalleEntrega", new { id = detalleEntrega.idDetalleEtrega }, detalleEntrega);
+            return CreatedAtAction("GetdetalleEntrega", new { id = detalleEntrega.idDetalleEntrega }, detalleEntrega);
         }
 
         private bool detalleEntregaExists(int id)
         {
-            return _context.detalleEntrega.Any(e => e.idDetalleEtrega == id);
+            return _context.detalleEntrega.Any(e => e.idDetalleEntrega == id);
         }
     }
 }

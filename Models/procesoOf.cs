@@ -8,19 +8,31 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Sistema_Produccion_3_Backend.Models;
 
+[Index("idMaterial", Name = "MATERIAL_PROCESO_FK")]
+[Index("oF", Name = "OF_PROCESO_FK")]
 [Index("idPostura", Name = "POSTURA_PROCESO_FK")]
 [Index("idTablero", Name = "TABLERO_PROCESO_FK")]
-[Index("idTarjetaOf", Name = "TARJETA_PROCESO_FK")]
 public partial class procesoOf
 {
     [Key]
     public int idProceso { get; set; }
 
-    public int? idTarjetaOf { get; set; }
+    public int? oF { get; set; }
 
     public int? idTablero { get; set; }
 
     public int? idPostura { get; set; }
+
+    [StringLength(25)]
+    public string idMaterial { get; set; }
+
+    [StringLength(254)]
+    public string nombreTarjeta { get; set; }
+
+    [StringLength(200)]
+    public string productoOf { get; set; }
+
+    public string descripcionOf { get; set; }
 
     public int? secuencia { get; set; }
 
@@ -40,7 +52,10 @@ public partial class procesoOf
     [Column(TypeName = "datetime")]
     public DateTime? fechaFinalizacion { get; set; }
 
-    [Column(TypeName = "numeric(18, 2)")]
+    [Column(TypeName = "numeric(20, 2)")]
+    public decimal? tiempoEstimado { get; set; }
+
+    [Column(TypeName = "numeric(20, 2)")]
     public decimal? horasTotales { get; set; }
 
     public int? posicion { get; set; }
@@ -53,8 +68,20 @@ public partial class procesoOf
 
     public int? tipoObjeto { get; set; }
 
+    public bool? archivada { get; set; }
+
+    [InverseProperty("idProcesoNavigation")]
+    public virtual ICollection<asignacion> asignacion { get; set; } = new List<asignacion>();
+
     [InverseProperty("idProcesoNavigation")]
     public virtual ICollection<detalleOperacionProceso> detalleOperacionProceso { get; set; } = new List<detalleOperacionProceso>();
+
+    [InverseProperty("idProcesoNavigation")]
+    public virtual ICollection<detalleReporte> detalleReporte { get; set; } = new List<detalleReporte>();
+
+    [ForeignKey("idMaterial")]
+    [InverseProperty("procesoOf")]
+    public virtual material idMaterialNavigation { get; set; }
 
     [ForeignKey("idPostura")]
     [InverseProperty("procesoOf")]
@@ -64,7 +91,13 @@ public partial class procesoOf
     [InverseProperty("procesoOf")]
     public virtual tablerosOf idTableroNavigation { get; set; }
 
-    [ForeignKey("idTarjetaOf")]
+    [ForeignKey("oF")]
     [InverseProperty("procesoOf")]
-    public virtual tarjetaOf idTarjetaOfNavigation { get; set; }
+    public virtual tarjetaOf oFNavigation { get; set; }
+
+    [InverseProperty("idProcesoNavigation")]
+    public virtual ICollection<tarjetaCampo> tarjetaCampo { get; set; } = new List<tarjetaCampo>();
+
+    [InverseProperty("idProcesoNavigation")]
+    public virtual ICollection<tarjetaEtiqueta> tarjetaEtiqueta { get; set; } = new List<tarjetaEtiqueta>();
 }

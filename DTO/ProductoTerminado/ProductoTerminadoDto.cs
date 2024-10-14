@@ -11,7 +11,7 @@ namespace Sistema_Produccion_3_Backend.DTO.ProductoTerminado
     {
         public int idEntregaPt { get; set; }
 
-        public int? idTarjetaOf { get; set; }
+        public int? oF { get; set; }
 
         public int? idMaquina { get; set; }
 

@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Sistema_Produccion_3_Backend.Models;
 
+[Index("idArea", Name = "AREA_USUARIO_FK")]
+[Index("idCargo", Name = "CARGO_USUARIO_FK")]
 [Index("idRol", Name = "ROL_USUARIO_FK")]
 public partial class usuario
 {
@@ -16,6 +18,10 @@ public partial class usuario
     public string user { get; set; }
 
     public int? idRol { get; set; }
+
+    public int? idCargo { get; set; }
+
+    public int? idArea { get; set; }
 
     [StringLength(1)]
     [Unicode(false)]
@@ -43,15 +49,23 @@ public partial class usuario
     public string actualizadoPor { get; set; }
 
     [InverseProperty("userNavigation")]
-    public virtual ICollection<disenador> disenador { get; set; } = new List<disenador>();
+    public virtual ICollection<asignacion> asignacion { get; set; } = new List<asignacion>();
+
+    [ForeignKey("idArea")]
+    [InverseProperty("usuario")]
+    public virtual areas idAreaNavigation { get; set; }
+
+    [ForeignKey("idCargo")]
+    [InverseProperty("usuario")]
+    public virtual cargo idCargoNavigation { get; set; }
 
     [ForeignKey("idRol")]
     [InverseProperty("usuario")]
     public virtual rol idRolNavigation { get; set; }
 
     [InverseProperty("userNavigation")]
-    public virtual ICollection<operador> operador { get; set; } = new List<operador>();
+    public virtual ICollection<refreshToken> refreshToken { get; set; } = new List<refreshToken>();
 
     [InverseProperty("userNavigation")]
-    public virtual ICollection<refreshToken> refreshToken { get; set; } = new List<refreshToken>();
+    public virtual ICollection<reportesDeOperadores> reportesDeOperadores { get; set; } = new List<reportesDeOperadores>();
 }

@@ -16,6 +16,8 @@ public partial class estadosReporte
     [StringLength(100)]
     public string nombreEstado { get; set; }
 
+    public int? tipoReporte { get; set; }
+
     [InverseProperty("idEstadoReporteNavigation")]
     public virtual ICollection<entregasProductoTerminado> entregasProductoTerminado { get; set; } = new List<entregasProductoTerminado>();
 

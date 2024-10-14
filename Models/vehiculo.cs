@@ -21,7 +21,10 @@ public partial class vehiculo
 
     public bool? activo { get; set; }
 
-    public bool? gps { get; set; }
+    [StringLength(25)]
+    public string codigoActivo { get; set; }
+
+    public bool? gPS { get; set; }
 
     [InverseProperty("idVehiculoNavigation")]
     public virtual ICollection<gira> gira { get; set; } = new List<gira>();

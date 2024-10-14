@@ -8,34 +8,74 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Sistema_Produccion_3_Backend.Models;
 
-[Index("idTarjetaOf", Name = "TARJETA_FICHA_FK")]
+[Index("oF", Name = "OF_FICHA_FK")]
+[Index("idTipoFicha", Name = "TIPO_DE_FICHA_FK")]
 public partial class fichaTecnica
 {
     [Key]
     public int idFichaTecnica { get; set; }
 
-    public int? idTarjetaOf { get; set; }
+    public int? oF { get; set; }
 
-    [StringLength(100)]
-    public string creadoPor { get; set; }
-
-    [Column(TypeName = "datetime")]
-    public DateTime? fechaFicha { get; set; }
+    public int? idTipoFicha { get; set; }
 
     [StringLength(200)]
     public string cliente { get; set; }
 
+    [StringLength(100)]
+    public string codigoProducto { get; set; }
+
     [StringLength(254)]
     public string producto { get; set; }
 
-    public int? numeroOf { get; set; }
+    [StringLength(200)]
+    public string tipoDeProducto { get; set; }
+
+    [Column(TypeName = "datetime")]
+    public DateTime? fechaFicha { get; set; }
+
+    [StringLength(150)]
+    public string tipoMaterial { get; set; }
+
+    [StringLength(100)]
+    public string toleranciaMaterial { get; set; }
+
+    [StringLength(100)]
+    public string marcarMaterial { get; set; }
+
+    [StringLength(25)]
+    public string calibreMaterial { get; set; }
+
+    [StringLength(50)]
+    public string proveedorMaterial { get; set; }
+
+    [StringLength(100)]
+    public string encargadoCalidad { get; set; }
+
+    [Column(TypeName = "datetime")]
+    public DateTime? fechaCalidad { get; set; }
 
     public int? tipoObjeto { get; set; }
 
-    [InverseProperty("idFichaTecnicaNavigation")]
-    public virtual ICollection<detalleFicha> detalleFicha { get; set; } = new List<detalleFicha>();
+    [StringLength(100)]
+    public string creadoPor { get; set; }
 
-    [ForeignKey("idTarjetaOf")]
+    public int? version { get; set; }
+
+    [InverseProperty("idFichaTecnicaNavigation")]
+    public virtual ICollection<detalleImpresion> detalleImpresion { get; set; } = new List<detalleImpresion>();
+
+    [InverseProperty("idFichaTecnicaNavigation")]
+    public virtual ICollection<detallePegado> detallePegado { get; set; } = new List<detallePegado>();
+
+    [InverseProperty("idFichaTecnicaNavigation")]
+    public virtual ICollection<detalleTroquelado> detalleTroquelado { get; set; } = new List<detalleTroquelado>();
+
+    [ForeignKey("idTipoFicha")]
     [InverseProperty("fichaTecnica")]
-    public virtual tarjetaOf idTarjetaOfNavigation { get; set; }
+    public virtual tipoFicha idTipoFichaNavigation { get; set; }
+
+    [ForeignKey("oF")]
+    [InverseProperty("fichaTecnica")]
+    public virtual tarjetaOf oFNavigation { get; set; }
 }

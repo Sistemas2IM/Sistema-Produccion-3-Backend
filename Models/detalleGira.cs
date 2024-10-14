@@ -8,25 +8,36 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Sistema_Produccion_3_Backend.Models;
 
+[Index("idGira", Name = "DETALLE_GIRA_FK")]
+[Index("oF", Name = "OF_GIRA_FK")]
 public partial class detalleGira
 {
     [Key]
-    public int idDetalleGira { get; set; }
+    public int idDetalleFactura { get; set; }
 
     public int? idGira { get; set; }
 
-    [StringLength(300)]
-    public string resumen { get; set; }
+    public int? oF { get; set; }
 
-    public int? factura { get; set; }
+    [StringLength(50)]
+    public string numeroDeFactura { get; set; }
 
-    public int? idTarjetaOf { get; set; }
+    [StringLength(200)]
+    public string otros { get; set; }
+
+    [StringLength(200)]
+    public string cliente { get; set; }
+
+    [Column(TypeName = "numeric(20, 2)")]
+    public decimal? monto { get; set; }
+
+    public string observaciones { get; set; }
 
     [ForeignKey("idGira")]
     [InverseProperty("detalleGira")]
     public virtual gira idGiraNavigation { get; set; }
 
-    [ForeignKey("idTarjetaOf")]
+    [ForeignKey("oF")]
     [InverseProperty("detalleGira")]
-    public virtual tarjetaOf idTarjetaOfNavigation { get; set; }
+    public virtual tarjetaOf oFNavigation { get; set; }
 }

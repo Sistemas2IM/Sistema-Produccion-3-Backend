@@ -4,11 +4,15 @@
     {
         public int? idOperacion { get; set; }
 
-        public int? idMaterial { get; set; }
+        public string? idMaterial { get; set; }
 
-        public int? idTarjetaOf { get; set; }
+        public int? idProceso { get; set; }
 
         public int? idTipoCierre { get; set; }
+
+        public int? oF { get; set; }
+
+        public int? numeroFila { get; set; }
 
         public DateTime? horaInicio { get; set; }
 
@@ -67,5 +71,7 @@
         public int? cantidadSobrante { get; set; }
 
         public decimal? udCorrugados { get; set; }
+
+        public bool? accionPorAuxiliar { get; set; }
     }
 }

@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Sistema_Produccion_3_Backend.Models;
 
+[Index("idMotorista", Name = "MOTORISTA_GIRA_FK")]
+[Index("idVehiculo", Name = "VEHICULO_GIRA_FK")]
 public partial class gira
 {
     [Key]
@@ -17,11 +19,16 @@ public partial class gira
 
     public int? idVehiculo { get; set; }
 
-    [StringLength(200)]
-    public string resumen { get; set; }
+    [Column(TypeName = "datetime")]
+    public DateTime? fechaCreacion { get; set; }
 
     [Column(TypeName = "datetime")]
-    public DateTime? fecha { get; set; }
+    public DateTime? fechaGira { get; set; }
+
+    [Column(TypeName = "datetime")]
+    public DateTime? horaDeSaida { get; set; }
+
+    public bool? abierto { get; set; }
 
     [InverseProperty("idGiraNavigation")]
     public virtual ICollection<detalleGira> detalleGira { get; set; } = new List<detalleGira>();

@@ -11,11 +11,15 @@ namespace Sistema_Produccion_3_Backend.Models;
 public partial class material
 {
     [Key]
-    public int idMaterial { get; set; }
+    [StringLength(25)]
+    public string idMaterial { get; set; }
 
     [StringLength(200)]
     public string nombreMaterial { get; set; }
 
     [InverseProperty("idMaterialNavigation")]
     public virtual ICollection<detalleReporte> detalleReporte { get; set; } = new List<detalleReporte>();
+
+    [InverseProperty("idMaterialNavigation")]
+    public virtual ICollection<procesoOf> procesoOf { get; set; } = new List<procesoOf>();
 }

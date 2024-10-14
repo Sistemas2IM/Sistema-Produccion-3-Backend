@@ -31,9 +31,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         {
             var tarjetaOf = await _context.tarjetaOf
                 .Include(u => u.idEstadoOfNavigation)
-                .Include(r => r.etiqueta)
-                .Include(p => p.tarjetaCampo)
-                .ThenInclude(m => m.idCampoNavigation)
+                .Include(r => r.etiquetaOf)
                 .ToListAsync();
 
             var tarjetaOfDto = _mapper.Map<List<TarjetaOfDto>>(tarjetaOf);
@@ -47,10 +45,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         {
             var tarjetaOf = await _context.tarjetaOf
                 .Include(u => u.idEstadoOfNavigation)
-                .Include(r => r.etiqueta)
-                .Include(p => p.tarjetaCampo)
-                .ThenInclude(m => m.idCampoNavigation)
-                .FirstOrDefaultAsync(u => u.idTarjetaOf == id);
+                .Include(r => r.etiquetaOf)
+                .FirstOrDefaultAsync(u => u.oF == id);
             var tarjetaOfDto = _mapper.Map<TarjetaOfDto>(tarjetaOf);
             
             if (tarjetaOfDto == null)
@@ -105,7 +101,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             _context.tarjetaOf.Add(tarjetaOf);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetTarjetaOf", new { id = tarjetaOf.idTarjetaOf }, tarjetaOf);
+            return CreatedAtAction("GetTarjetaOf", new { id = tarjetaOf.oF }, tarjetaOf);
         }
 
         // DELETE: api/tarjetaOf/5
@@ -126,7 +122,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
 
         private bool tarjetaOfExists(int id)
         {
-            return _context.tarjetaOf.Any(e => e.idTarjetaOf == id);
+            return _context.tarjetaOf.Any(e => e.oF == id);
         }
     }
 }

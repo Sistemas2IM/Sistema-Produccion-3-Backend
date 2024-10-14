@@ -2,7 +2,7 @@
 {
     public class DetalleEntregaDto
     {
-        public int idDetalleEtrega { get; set; }
+        public int idDetalleEntrega { get; set; }
 
         public int? idEntregaPt { get; set; }
 

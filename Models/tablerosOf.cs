@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Sistema_Produccion_3_Backend.Models;
 
 [Index("idArea", Name = "AREAS_TABLEROS_FK")]
-[Index("idMaquina", Name = "MAQUINAS_TABLEROS_FK")]
+[Index("idMaquina", Name = "MAQUINA_TABLERO_FK")]
 public partial class tablerosOf
 {
     [Key]

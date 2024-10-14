@@ -9,25 +9,26 @@ using Microsoft.EntityFrameworkCore;
 namespace Sistema_Produccion_3_Backend.Models;
 
 [Index("idCampo", Name = "CAMPO_TARJETA_FK")]
-[Index("idTarjetaOf", Name = "TARJETA_CAMPO_FK")]
+[Index("idProceso", Name = "TARJETA_CAMPO_FK")]
 public partial class tarjetaCampo
 {
     [Key]
-    public int tcampoId { get; set; }
+    public int idCamposTarjeta { get; set; }
 
-    public int? idTarjetaOf { get; set; }
+    public int? idProceso { get; set; }
 
     public int? idCampo { get; set; }
 
-    [StringLength(256)]
+    [StringLength(254)]
     public string valorTexto { get; set; }
 
-    [Column(TypeName = "decimal(18, 0)")]
+    [Column(TypeName = "numeric(20, 2)")]
     public decimal? valorNumero { get; set; }
 
     [Column(TypeName = "datetime")]
     public DateTime? valorFecha { get; set; }
 
+    [StringLength(1)]
     public string valorLista { get; set; }
 
     public bool? valorCasilla { get; set; }
@@ -36,7 +37,7 @@ public partial class tarjetaCampo
     [InverseProperty("tarjetaCampo")]
     public virtual camposPersonalizados idCampoNavigation { get; set; }
 
-    [ForeignKey("idTarjetaOf")]
+    [ForeignKey("idProceso")]
     [InverseProperty("tarjetaCampo")]
-    public virtual tarjetaOf idTarjetaOfNavigation { get; set; }
+    public virtual procesoOf idProcesoNavigation { get; set; }
 }

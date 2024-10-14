@@ -8,22 +8,23 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Sistema_Produccion_3_Backend.Models;
 
-[Index("idDisenador", Name = "DISENADOR_ASIGNADO_FK")]
-[Index("idTarjetaOf", Name = "OF_ASIGNADA_FK")]
+[Index("user", Name = "DISENADOR_ASIGNADO_FK")]
+[Index("idProceso", Name = "OF_ASIGNADA_FK")]
 public partial class asignacion
 {
     [Key]
     public int idAsignacion { get; set; }
 
-    public int? idDisenador { get; set; }
+    [StringLength(50)]
+    public string user { get; set; }
 
-    public int? idTarjetaOf { get; set; }
+    public int? idProceso { get; set; }
 
-    [ForeignKey("idDisenador")]
+    [ForeignKey("idProceso")]
     [InverseProperty("asignacion")]
-    public virtual disenador idDisenadorNavigation { get; set; }
+    public virtual procesoOf idProcesoNavigation { get; set; }
 
-    [ForeignKey("idTarjetaOf")]
+    [ForeignKey("user")]
     [InverseProperty("asignacion")]
-    public virtual tarjetaOf idTarjetaOfNavigation { get; set; }
+    public virtual usuario userNavigation { get; set; }
 }

@@ -35,11 +35,19 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[cargo]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[certificadoDeCalidad]",
          "ObjectType": 0
       },
       {
          "Name": "[dbo].[contenidoEntrega]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[detalleBarniz]",
          "ObjectType": 0
       },
       {
@@ -51,11 +59,11 @@
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[detalleFicha]",
+         "Name": "[dbo].[detalleGira]",
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[detalleGira]",
+         "Name": "[dbo].[detalleImpresion]",
          "ObjectType": 0
       },
       {
@@ -63,15 +71,31 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[detallePegado]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[detalleReporte]",
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[disenador]",
+         "Name": "[dbo].[detalleSecado]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[detalleTroquelado]",
          "ObjectType": 0
       },
       {
          "Name": "[dbo].[entregasProductoTerminado]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[espacioColor]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[especificaciones]",
          "ObjectType": 0
       },
       {
@@ -87,11 +111,27 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[etiquetaOf]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[familliaDeMaquina]",
          "ObjectType": 0
       },
       {
          "Name": "[dbo].[fichaTecnica]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[filtros]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[formulacionTintas]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[generalidadColor]",
          "ObjectType": 0
       },
       {
@@ -127,10 +167,6 @@
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[operador]",
-         "ObjectType": 0
-      },
-      {
          "Name": "[dbo].[oV]",
          "ObjectType": 0
       },
@@ -140,6 +176,10 @@
       },
       {
          "Name": "[dbo].[posturasOf]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[potenciaLamparaUv]",
          "ObjectType": 0
       },
       {
@@ -159,6 +199,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[secuenciaDeColor]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[subModulo]",
          "ObjectType": 0
       },
@@ -171,7 +215,15 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[tarjetaEtiqueta]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[tarjetaOf]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[tipoAcabado]",
          "ObjectType": 0
       },
       {
@@ -180,6 +232,22 @@
       },
       {
          "Name": "[dbo].[tipoDeObjetos]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[tipoFicha]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[tipoPega]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[tipoPegado]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[tipoPleca]",
          "ObjectType": 0
       },
       {

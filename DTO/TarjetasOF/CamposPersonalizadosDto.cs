@@ -1,4 +1,6 @@
-﻿namespace Sistema_Produccion_3_Backend.DTO.TarjetasOF
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Sistema_Produccion_3_Backend.DTO.TarjetasOF
 {
     public class CamposPersonalizadosDto
     {

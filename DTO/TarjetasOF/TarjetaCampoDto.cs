@@ -1,13 +1,14 @@
 ﻿using Sistema_Produccion_3_Backend.Models;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Sistema_Produccion_3_Backend.DTO.TarjetasOF
 {
     public class TarjetaCampoDto
     {
-        public int tcampoId { get; set; }
+        public int idCamposTarjeta { get; set; }
 
-        public int? idTarjetaOf { get; set; }
+        public int? idProceso { get; set; }
 
         public int? idCampo { get; set; }
 
@@ -17,7 +18,7 @@ namespace Sistema_Produccion_3_Backend.DTO.TarjetasOF
 
         public DateTime? valorFecha { get; set; }
 
-        public string valorLista { get; set; }
+        public string? valorLista { get; set; }
 
         public bool? valorCasilla { get; set; }
 
