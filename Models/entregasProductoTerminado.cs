@@ -11,7 +11,7 @@ namespace Sistema_Produccion_3_Backend.Models;
 [Index("idEstadoReporte", Name = "ESTADO_ENTREGA_FK")]
 [Index("idMaquina", Name = "MAQUINA_ENTREGA_FK")]
 [Index("oF", Name = "OF_ENTREGA_FK")]
-[Index("idOv", Name = "OV_ENTREGA_FK")]
+[Index("oV", Name = "OV_ENTREGA_FK")]
 public partial class entregasProductoTerminado
 {
     [Key]
@@ -21,7 +21,7 @@ public partial class entregasProductoTerminado
 
     public int? idMaquina { get; set; }
 
-    public int? idOv { get; set; }
+    public int? oV { get; set; }
 
     public int? idEstadoReporte { get; set; }
 
@@ -86,11 +86,11 @@ public partial class entregasProductoTerminado
     [InverseProperty("entregasProductoTerminado")]
     public virtual maquinas idMaquinaNavigation { get; set; }
 
-    [ForeignKey("idOv")]
-    [InverseProperty("entregasProductoTerminado")]
-    public virtual oV idOvNavigation { get; set; }
-
     [ForeignKey("oF")]
     [InverseProperty("entregasProductoTerminado")]
     public virtual tarjetaOf oFNavigation { get; set; }
+
+    [ForeignKey("oV")]
+    [InverseProperty("entregasProductoTerminado")]
+    public virtual oV oVNavigation { get; set; }
 }

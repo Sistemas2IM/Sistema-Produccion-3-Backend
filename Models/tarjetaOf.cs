@@ -9,13 +9,13 @@ using Microsoft.EntityFrameworkCore;
 namespace Sistema_Produccion_3_Backend.Models;
 
 [Index("idEstadoOf", Name = "ESTADO_TARJETA_FK")]
-[Index("idOv", Name = "OV_TARJETA_FK")]
+[Index("oV", Name = "OV_TARJETA_FK")]
 public partial class tarjetaOf
 {
     [Key]
     public int oF { get; set; }
 
-    public int? idOv { get; set; }
+    public int? oV { get; set; }
 
     public int? idEstadoOf { get; set; }
 
@@ -43,7 +43,13 @@ public partial class tarjetaOf
     public decimal? cantidadOf { get; set; }
 
     [Column(TypeName = "datetime")]
-    public DateTime? fechaEntrega { get; set; }
+    public DateTime? fechaVencimiento { get; set; }
+
+    [Column(TypeName = "datetime")]
+    public DateTime? inicio { get; set; }
+
+    [Column(TypeName = "datetime")]
+    public DateTime? finalizacion { get; set; }
 
     [Column(TypeName = "datetime")]
     public DateTime? fechaCreacion { get; set; }
@@ -88,9 +94,9 @@ public partial class tarjetaOf
     [InverseProperty("tarjetaOf")]
     public virtual estadosOf idEstadoOfNavigation { get; set; }
 
-    [ForeignKey("idOv")]
+    [ForeignKey("oV")]
     [InverseProperty("tarjetaOf")]
-    public virtual oV idOvNavigation { get; set; }
+    public virtual oV oVNavigation { get; set; }
 
     [InverseProperty("oFNavigation")]
     public virtual ICollection<procesoOf> procesoOf { get; set; } = new List<procesoOf>();

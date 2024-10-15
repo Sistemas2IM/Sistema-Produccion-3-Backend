@@ -6,7 +6,7 @@ namespace Sistema_Produccion_3_Backend.DTO.OV
 {
     public class AddArticuloDto
     {
-        public int? idOv { get; set; }
+        public int? oV { get; set; }
 
         public string articulo { get; set; }
 

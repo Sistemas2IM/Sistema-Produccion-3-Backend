@@ -142,24 +142,18 @@ public partial class base_nuevaContext : DbContext
         modelBuilder.Entity<areas>(entity =>
         {
             entity.HasKey(e => e.idArea).HasName("PK_AREAS");
-
-            entity.Property(e => e.idArea).ValueGeneratedNever();
         });
 
         modelBuilder.Entity<articuloOv>(entity =>
         {
             entity.HasKey(e => e.idArticulo).HasName("PK_ARTICULOOV");
 
-            entity.Property(e => e.idArticulo).ValueGeneratedNever();
-
-            entity.HasOne(d => d.idOvNavigation).WithMany(p => p.articuloOv).HasConstraintName("FK_ARTICULO_OV");
+            entity.HasOne(d => d.oVNavigation).WithMany(p => p.articuloOv).HasConstraintName("FK_ARTICULO_OV");
         });
 
         modelBuilder.Entity<asignacion>(entity =>
         {
             entity.HasKey(e => e.idAsignacion).HasName("PK_ASIGNACION");
-
-            entity.Property(e => e.idAsignacion).ValueGeneratedNever();
 
             entity.HasOne(d => d.idProcesoNavigation).WithMany(p => p.asignacion).HasConstraintName("FK_ASIGN_PROCESOO");
 
@@ -169,29 +163,21 @@ public partial class base_nuevaContext : DbContext
         modelBuilder.Entity<bitacora>(entity =>
         {
             entity.HasKey(e => e.idBitacora).HasName("PK_BITACORA");
-
-            entity.Property(e => e.idBitacora).ValueGeneratedNever();
         });
 
         modelBuilder.Entity<camposPersonalizados>(entity =>
         {
             entity.HasKey(e => e.idCampo).HasName("PK_CAMPOSPERSONALIZADOS");
-
-            entity.Property(e => e.idCampo).ValueGeneratedNever();
         });
 
         modelBuilder.Entity<cargo>(entity =>
         {
             entity.HasKey(e => e.idCargo).HasName("PK_CARGO");
-
-            entity.Property(e => e.idCargo).ValueGeneratedNever();
         });
 
         modelBuilder.Entity<certificadoDeCalidad>(entity =>
         {
             entity.HasKey(e => e.idCertificado).HasName("PK_CERTIFICADODECALIDAD");
-
-            entity.Property(e => e.idCertificado).ValueGeneratedNever();
 
             entity.HasOne(d => d.oFNavigation).WithMany(p => p.certificadoDeCalidad).HasConstraintName("FK_CERTIFIC_OF");
         });
@@ -200,8 +186,6 @@ public partial class base_nuevaContext : DbContext
         {
             entity.HasKey(e => e.idContenidoEntrega).HasName("PK_CONTENIDOENTREGA");
 
-            entity.Property(e => e.idContenidoEntrega).ValueGeneratedNever();
-
             entity.HasOne(d => d.idEntregaPtNavigation).WithMany(p => p.contenidoEntrega).HasConstraintName("FK_CONTENI_ENTREGA");
         });
 
@@ -209,16 +193,12 @@ public partial class base_nuevaContext : DbContext
         {
             entity.HasKey(e => e.idBarniz).HasName("PK_DETALLEBARNIZ");
 
-            entity.Property(e => e.idBarniz).ValueGeneratedNever();
-
             entity.HasOne(d => d.idDetalleImpresionNavigation).WithMany(p => p.detalleBarniz).HasConstraintName("FK_DETALLE_BANIZ");
         });
 
         modelBuilder.Entity<detalleCertificado>(entity =>
         {
             entity.HasKey(e => e.idDetalleCertificado).HasName("PK_DETALLECERTIFICADO");
-
-            entity.Property(e => e.idDetalleCertificado).ValueGeneratedNever();
 
             entity.HasOne(d => d.idCaracteristaNavigation).WithMany(p => p.detalleCertificado).HasConstraintName("FK_ESPECIFICACION");
 
@@ -229,16 +209,12 @@ public partial class base_nuevaContext : DbContext
         {
             entity.HasKey(e => e.idDetalleEntrega).HasName("PK_DETALLEENTREGA");
 
-            entity.Property(e => e.idDetalleEntrega).ValueGeneratedNever();
-
             entity.HasOne(d => d.idEntregaPtNavigation).WithMany(p => p.detalleEntrega).HasConstraintName("FK_DETALLE_ENTREGA");
         });
 
         modelBuilder.Entity<detalleGira>(entity =>
         {
             entity.HasKey(e => e.idDetalleFactura).HasName("PK_DETALLEGIRA");
-
-            entity.Property(e => e.idDetalleFactura).ValueGeneratedNever();
 
             entity.HasOne(d => d.idGiraNavigation).WithMany(p => p.detalleGira).HasConstraintName("FK_DETALLE_GIRA");
 
@@ -249,16 +225,12 @@ public partial class base_nuevaContext : DbContext
         {
             entity.HasKey(e => e.idDetalleImpresion).HasName("PK_DETALLEIMPRESION");
 
-            entity.Property(e => e.idDetalleImpresion).ValueGeneratedNever();
-
             entity.HasOne(d => d.idFichaTecnicaNavigation).WithMany(p => p.detalleImpresion).HasConstraintName("FK_DETALLE_IMP");
         });
 
         modelBuilder.Entity<detalleOperacionProceso>(entity =>
         {
             entity.HasKey(e => e.idDetalleOperacion).HasName("PK_DETALLEOPERACIONPROCESO");
-
-            entity.Property(e => e.idDetalleOperacion).ValueGeneratedNever();
 
             entity.HasOne(d => d.idOperacionNavigation).WithMany(p => p.detalleOperacionProceso).HasConstraintName("FK_DETALLEO_OPERACION");
 
@@ -269,16 +241,12 @@ public partial class base_nuevaContext : DbContext
         {
             entity.HasKey(e => e.idDetallePegado).HasName("PK_DETALLEPEGADO");
 
-            entity.Property(e => e.idDetallePegado).ValueGeneratedNever();
-
             entity.HasOne(d => d.idFichaTecnicaNavigation).WithMany(p => p.detallePegado).HasConstraintName("FK_DETALLE_PEG");
         });
 
         modelBuilder.Entity<detalleReporte>(entity =>
         {
             entity.HasKey(e => e.idDetalleReporte).HasName("PK_DETALLEREPORTE");
-
-            entity.Property(e => e.idDetalleReporte).ValueGeneratedNever();
 
             entity.HasOne(d => d.idMaterialNavigation).WithMany(p => p.detalleReporte).HasConstraintName("FK_DETALLE_MATERIAL");
 
@@ -297,16 +265,12 @@ public partial class base_nuevaContext : DbContext
         {
             entity.HasKey(e => e.idSecadoMaquina).HasName("PK_DETALLESECADO");
 
-            entity.Property(e => e.idSecadoMaquina).ValueGeneratedNever();
-
             entity.HasOne(d => d.idDetalleImpresionNavigation).WithMany(p => p.detalleSecado).HasConstraintName("FK_DETALLE_SEC");
         });
 
         modelBuilder.Entity<detalleTroquelado>(entity =>
         {
             entity.HasKey(e => e.idDetalleTroquelado).HasName("PK_DETALLETROQUELADO");
-
-            entity.Property(e => e.idDetalleTroquelado).ValueGeneratedNever();
 
             entity.HasOne(d => d.idFichaTecnicaNavigation).WithMany(p => p.detalleTroquelado).HasConstraintName("FK_FICHA_TRO");
         });
@@ -315,22 +279,19 @@ public partial class base_nuevaContext : DbContext
         {
             entity.HasKey(e => e.idEntregaPt).HasName("PK_ENTREGASPRODUCTOTERMINADO");
 
-            entity.Property(e => e.idEntregaPt).ValueGeneratedNever();
-
             entity.HasOne(d => d.idEstadoReporteNavigation).WithMany(p => p.entregasProductoTerminado).HasConstraintName("FK_ENTREGAS_ESTADO");
 
             entity.HasOne(d => d.idMaquinaNavigation).WithMany(p => p.entregasProductoTerminado).HasConstraintName("FK_ENTREGAS_MAQUINA");
 
-            entity.HasOne(d => d.idOvNavigation).WithMany(p => p.entregasProductoTerminado).HasConstraintName("FK_ENTREGAS_OV");
-
             entity.HasOne(d => d.oFNavigation).WithMany(p => p.entregasProductoTerminado).HasConstraintName("FK_ENTREGAS_OF");
+
+            entity.HasOne(d => d.oVNavigation).WithMany(p => p.entregasProductoTerminado).HasConstraintName("FK_ENTREGAS_OV");
         });
 
         modelBuilder.Entity<espacioColor>(entity =>
         {
             entity.HasKey(e => e.idEspacioColor).HasName("PK_ESPACIOCOLOR");
 
-            entity.Property(e => e.idEspacioColor).ValueGeneratedNever();
             entity.Property(e => e.tipoEspacioColor).IsFixedLength();
 
             entity.HasOne(d => d.idFormulacionTintaNavigation).WithMany(p => p.espacioColor).HasConstraintName("FK_TINTAS_CIE");
@@ -339,36 +300,26 @@ public partial class base_nuevaContext : DbContext
         modelBuilder.Entity<especificaciones>(entity =>
         {
             entity.HasKey(e => e.idCaracterista).HasName("PK_ESPECIFICACIONES");
-
-            entity.Property(e => e.idCaracterista).ValueGeneratedNever();
         });
 
         modelBuilder.Entity<estadosOf>(entity =>
         {
             entity.HasKey(e => e.idEstadoOf).HasName("PK_ESTADOSOF");
-
-            entity.Property(e => e.idEstadoOf).ValueGeneratedNever();
         });
 
         modelBuilder.Entity<estadosReporte>(entity =>
         {
             entity.HasKey(e => e.idEstadoReporte).HasName("PK_ESTADOSREPORTE");
-
-            entity.Property(e => e.idEstadoReporte).ValueGeneratedNever();
         });
 
         modelBuilder.Entity<etiqueta>(entity =>
         {
             entity.HasKey(e => e.idEtiqueta).HasName("PK_ETIQUETA");
-
-            entity.Property(e => e.idEtiqueta).ValueGeneratedNever();
         });
 
         modelBuilder.Entity<etiquetaOf>(entity =>
         {
             entity.HasKey(e => e.idEtiquetaOf).HasName("PK_ETIQUETAOF");
-
-            entity.Property(e => e.idEtiquetaOf).ValueGeneratedNever();
 
             entity.HasOne(d => d.idEtiquetaNavigation).WithMany(p => p.etiquetaOf).HasConstraintName("FK_ETIQUETAS");
 
@@ -378,15 +329,11 @@ public partial class base_nuevaContext : DbContext
         modelBuilder.Entity<familliaDeMaquina>(entity =>
         {
             entity.HasKey(e => e.idFamilia).HasName("PK_FAMILLIADEMAQUINA");
-
-            entity.Property(e => e.idFamilia).ValueGeneratedNever();
         });
 
         modelBuilder.Entity<fichaTecnica>(entity =>
         {
             entity.HasKey(e => e.idFichaTecnica).HasName("PK_FICHATECNICA");
-
-            entity.Property(e => e.idFichaTecnica).ValueGeneratedNever();
 
             entity.HasOne(d => d.idTipoFichaNavigation).WithMany(p => p.fichaTecnica).HasConstraintName("FK_TIPOFICHA");
 
@@ -397,16 +344,12 @@ public partial class base_nuevaContext : DbContext
         {
             entity.HasKey(e => e.idFiltro).HasName("PK_FILTROS");
 
-            entity.Property(e => e.idFiltro).ValueGeneratedNever();
-
             entity.HasOne(d => d.idDetalleImpresionNavigation).WithMany(p => p.filtros).HasConstraintName("FK_FILTROS");
         });
 
         modelBuilder.Entity<formulacionTintas>(entity =>
         {
             entity.HasKey(e => e.idFormulacionTinta).HasName("PK_FORMULACIONTINTAS");
-
-            entity.Property(e => e.idFormulacionTinta).ValueGeneratedNever();
 
             entity.HasOne(d => d.idDetalleImpresionNavigation).WithMany(p => p.formulacionTintas).HasConstraintName("FK_FORMULACION_TINTAS");
         });
@@ -415,16 +358,12 @@ public partial class base_nuevaContext : DbContext
         {
             entity.HasKey(e => e.idGeneralidad).HasName("PK_GENERALIDADCOLOR");
 
-            entity.Property(e => e.idGeneralidad).ValueGeneratedNever();
-
             entity.HasOne(d => d.idEspacioColorNavigation).WithMany(p => p.generalidadColor).HasConstraintName("FK_COLOR_TINTA");
         });
 
         modelBuilder.Entity<gira>(entity =>
         {
             entity.HasKey(e => e.idGira).HasName("PK_GIRA");
-
-            entity.Property(e => e.idGira).ValueGeneratedNever();
 
             entity.HasOne(d => d.idMotoristaNavigation).WithMany(p => p.gira).HasConstraintName("FK_GIRA_MOTORISTA");
 
@@ -434,8 +373,6 @@ public partial class base_nuevaContext : DbContext
         modelBuilder.Entity<maquinas>(entity =>
         {
             entity.HasKey(e => e.idMaquina).HasName("PK_MAQUINAS");
-
-            entity.Property(e => e.idMaquina).ValueGeneratedNever();
 
             entity.HasOne(d => d.idFamiliaNavigation).WithMany(p => p.maquinas).HasConstraintName("FK_MAQUINAS_FAMILIA");
         });
@@ -448,15 +385,11 @@ public partial class base_nuevaContext : DbContext
         modelBuilder.Entity<menu>(entity =>
         {
             entity.HasKey(e => e.idMenu).HasName("PK_MENU");
-
-            entity.Property(e => e.idMenu).ValueGeneratedNever();
         });
 
         modelBuilder.Entity<modulo>(entity =>
         {
             entity.HasKey(e => e.idModulo).HasName("PK_MODULO");
-
-            entity.Property(e => e.idModulo).ValueGeneratedNever();
 
             entity.HasOne(d => d.idMenuNavigation).WithMany(p => p.modulo).HasConstraintName("FK_MODULO_MENU");
         });
@@ -464,29 +397,23 @@ public partial class base_nuevaContext : DbContext
         modelBuilder.Entity<motorista>(entity =>
         {
             entity.HasKey(e => e.idMotorista).HasName("PK_MOTORISTA");
-
-            entity.Property(e => e.idMotorista).ValueGeneratedNever();
         });
 
         modelBuilder.Entity<movimientoOf>(entity =>
         {
             entity.HasKey(e => e.idMovimiento).HasName("PK_MOVIMIENTOOF");
-
-            entity.Property(e => e.idMovimiento).ValueGeneratedNever();
         });
 
         modelBuilder.Entity<oV>(entity =>
         {
-            entity.HasKey(e => e.idOv).HasName("PK_OV");
+            entity.HasKey(e => e.oV1).HasName("PK_OV");
 
-            entity.Property(e => e.idOv).ValueGeneratedNever();
+            entity.Property(e => e.oV1).ValueGeneratedNever();
         });
 
         modelBuilder.Entity<operaciones>(entity =>
         {
             entity.HasKey(e => e.idOperacion).HasName("PK_OPERACIONES");
-
-            entity.Property(e => e.idOperacion).ValueGeneratedNever();
 
             entity.HasOne(d => d.idMaquinaNavigation).WithMany(p => p.operaciones).HasConstraintName("FK_OPERACIO_MAQUINA");
         });
@@ -494,8 +421,6 @@ public partial class base_nuevaContext : DbContext
         modelBuilder.Entity<permiso>(entity =>
         {
             entity.HasKey(e => e.idPermiso).HasName("PK_PERMISO");
-
-            entity.Property(e => e.idPermiso).ValueGeneratedNever();
 
             entity.HasOne(d => d.idRolNavigation).WithMany(p => p.permiso).HasConstraintName("FK_PERMISO_ROL");
 
@@ -506,8 +431,6 @@ public partial class base_nuevaContext : DbContext
         {
             entity.HasKey(e => e.idPostura).HasName("PK_POSTURASOF");
 
-            entity.Property(e => e.idPostura).ValueGeneratedNever();
-
             entity.HasOne(d => d.idTableroNavigation).WithMany(p => p.posturasOf).HasConstraintName("FK_POSTURAS_TABLEROS");
         });
 
@@ -515,16 +438,12 @@ public partial class base_nuevaContext : DbContext
         {
             entity.HasKey(e => e.idPotencia).HasName("PK_POTENCIALAMPARAUV");
 
-            entity.Property(e => e.idPotencia).ValueGeneratedNever();
-
             entity.HasOne(d => d.idBarnizNavigation).WithMany(p => p.potenciaLamparaUv).HasConstraintName("FK_POTENCIAL_BARNIZ");
         });
 
         modelBuilder.Entity<procesoOf>(entity =>
         {
             entity.HasKey(e => e.idProceso).HasName("PK_PROCESOOF");
-
-            entity.Property(e => e.idProceso).ValueGeneratedNever();
 
             entity.HasOne(d => d.idMaterialNavigation).WithMany(p => p.procesoOf).HasConstraintName("FK_PROCESO_MATERIAL");
 
@@ -558,15 +477,11 @@ public partial class base_nuevaContext : DbContext
         modelBuilder.Entity<rol>(entity =>
         {
             entity.HasKey(e => e.idRol).HasName("PK_ROL");
-
-            entity.Property(e => e.idRol).ValueGeneratedNever();
         });
 
         modelBuilder.Entity<secuenciaDeColor>(entity =>
         {
             entity.HasKey(e => e.idSecuencia).HasName("PK_SECUENCIADECOLOR");
-
-            entity.Property(e => e.idSecuencia).ValueGeneratedNever();
 
             entity.HasOne(d => d.idDetalleImpresionNavigation).WithMany(p => p.secuenciaDeColor).HasConstraintName("FK_SECUENCIA_COLOR");
         });
@@ -575,16 +490,12 @@ public partial class base_nuevaContext : DbContext
         {
             entity.HasKey(e => e.idSubModulo).HasName("PK_SUBMODULO");
 
-            entity.Property(e => e.idSubModulo).ValueGeneratedNever();
-
             entity.HasOne(d => d.idModuloNavigation).WithMany(p => p.subModulo).HasConstraintName("FK_SUBMODUL_MODULO");
         });
 
         modelBuilder.Entity<tablerosOf>(entity =>
         {
             entity.HasKey(e => e.idTablero).HasName("PK_TABLEROSOF");
-
-            entity.Property(e => e.idTablero).ValueGeneratedNever();
 
             entity.HasOne(d => d.idAreaNavigation).WithMany(p => p.tablerosOf).HasConstraintName("FK_TABLEROS_AREAS");
 
@@ -595,8 +506,6 @@ public partial class base_nuevaContext : DbContext
         {
             entity.HasKey(e => e.idCamposTarjeta).HasName("PK_TARJETACAMPO");
 
-            entity.Property(e => e.idCamposTarjeta).ValueGeneratedNever();
-
             entity.HasOne(d => d.idCampoNavigation).WithMany(p => p.tarjetaCampo).HasConstraintName("FK_CAMPO_TARJETA");
 
             entity.HasOne(d => d.idProcesoNavigation).WithMany(p => p.tarjetaCampo).HasConstraintName("FK_TARJETAC_TARJETA");
@@ -605,8 +514,6 @@ public partial class base_nuevaContext : DbContext
         modelBuilder.Entity<tarjetaEtiqueta>(entity =>
         {
             entity.HasKey(e => e.idTarjetaEtiqueta).HasName("PK_TARJETAETIQUETA");
-
-            entity.Property(e => e.idTarjetaEtiqueta).ValueGeneratedNever();
 
             entity.HasOne(d => d.idEtiquetaNavigation).WithMany(p => p.tarjetaEtiqueta).HasConstraintName("FK_TARJETA_ETIQUETAS");
 
@@ -621,14 +528,12 @@ public partial class base_nuevaContext : DbContext
 
             entity.HasOne(d => d.idEstadoOfNavigation).WithMany(p => p.tarjetaOf).HasConstraintName("FK_TARJETA_ESTADO");
 
-            entity.HasOne(d => d.idOvNavigation).WithMany(p => p.tarjetaOf).HasConstraintName("FK_TARJETAO_OV");
+            entity.HasOne(d => d.oVNavigation).WithMany(p => p.tarjetaOf).HasConstraintName("FK_TARJETAO_OV");
         });
 
         modelBuilder.Entity<tipoAcabado>(entity =>
         {
             entity.HasKey(e => e.idTipoAcabado).HasName("PK_TIPOACABADO");
-
-            entity.Property(e => e.idTipoAcabado).ValueGeneratedNever();
 
             entity.HasOne(d => d.idDetalleTroqueladoNavigation).WithMany(p => p.tipoAcabado).HasConstraintName("FK_TIPOACABADO_TROQUEL");
         });
@@ -636,29 +541,21 @@ public partial class base_nuevaContext : DbContext
         modelBuilder.Entity<tipoCierre>(entity =>
         {
             entity.HasKey(e => e.idTipoCierre).HasName("PK_TIPOCIERRE");
-
-            entity.Property(e => e.idTipoCierre).ValueGeneratedNever();
         });
 
         modelBuilder.Entity<tipoDeObjetos>(entity =>
         {
             entity.HasKey(e => e.idTipoDeObjetos).HasName("PK_TIPODEOBJETOS");
-
-            entity.Property(e => e.idTipoDeObjetos).ValueGeneratedNever();
         });
 
         modelBuilder.Entity<tipoFicha>(entity =>
         {
             entity.HasKey(e => e.idTipoFicha).HasName("PK_TIPOFICHA");
-
-            entity.Property(e => e.idTipoFicha).ValueGeneratedNever();
         });
 
         modelBuilder.Entity<tipoPega>(entity =>
         {
             entity.HasKey(e => e.idTipoPega).HasName("PK_TIPOPEGA");
-
-            entity.Property(e => e.idTipoPega).ValueGeneratedNever();
 
             entity.HasOne(d => d.idDetallePegadoNavigation).WithMany(p => p.tipoPega).HasConstraintName("FK_TIPO_PEGADO");
         });
@@ -667,8 +564,6 @@ public partial class base_nuevaContext : DbContext
         {
             entity.HasKey(e => e.idTipoPegado).HasName("PK_TIPOPEGADO");
 
-            entity.Property(e => e.idTipoPegado).ValueGeneratedNever();
-
             entity.HasOne(d => d.idDetallePegadoNavigation).WithMany(p => p.tipoPegado).HasConstraintName("FK_TIPO_PEGA");
         });
 
@@ -676,16 +571,12 @@ public partial class base_nuevaContext : DbContext
         {
             entity.HasKey(e => e.idTipoPleca).HasName("PK_TIPOPLECA");
 
-            entity.Property(e => e.idTipoPleca).ValueGeneratedNever();
-
             entity.HasOne(d => d.idDetalleTroqueladoNavigation).WithMany(p => p.tipoPleca).HasConstraintName("FK_TIPOPLECA_TRO");
         });
 
         modelBuilder.Entity<tipoReporte>(entity =>
         {
             entity.HasKey(e => e.idTipoReporte).HasName("PK_TIPOREPORTE");
-
-            entity.Property(e => e.idTipoReporte).ValueGeneratedNever();
         });
 
         modelBuilder.Entity<usuario>(entity =>
@@ -704,8 +595,6 @@ public partial class base_nuevaContext : DbContext
         modelBuilder.Entity<vehiculo>(entity =>
         {
             entity.HasKey(e => e.idVehiculo).HasName("PK_VEHICULO");
-
-            entity.Property(e => e.idVehiculo).ValueGeneratedNever();
         });
 
         OnModelCreatingPartial(modelBuilder);

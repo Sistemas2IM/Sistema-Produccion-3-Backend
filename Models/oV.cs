@@ -11,10 +11,8 @@ namespace Sistema_Produccion_3_Backend.Models;
 public partial class oV
 {
     [Key]
-    public int idOv { get; set; }
-
     [Column("oV")]
-    public int? oV1 { get; set; }
+    public int oV1 { get; set; }
 
     [StringLength(100)]
     public string codigoCliente { get; set; }
@@ -36,12 +34,12 @@ public partial class oV
     [StringLength(50)]
     public string tipoOrden { get; set; }
 
-    [InverseProperty("idOvNavigation")]
+    [InverseProperty("oVNavigation")]
     public virtual ICollection<articuloOv> articuloOv { get; set; } = new List<articuloOv>();
 
-    [InverseProperty("idOvNavigation")]
+    [InverseProperty("oVNavigation")]
     public virtual ICollection<entregasProductoTerminado> entregasProductoTerminado { get; set; } = new List<entregasProductoTerminado>();
 
-    [InverseProperty("idOvNavigation")]
+    [InverseProperty("oVNavigation")]
     public virtual ICollection<tarjetaOf> tarjetaOf { get; set; } = new List<tarjetaOf>();
 }

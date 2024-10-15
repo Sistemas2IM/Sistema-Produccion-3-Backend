@@ -33,7 +33,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.ProductoTerminado
                 .Include(r => r.detalleEntrega)
                 .Include(p => p.idEstadoReporteNavigation)
                 .Include(sm => sm.idMaquinaNavigation)
-                .Include(m => m.idOvNavigation)
+                .Include(m => m.oVNavigation)
                 .Include(d => d.oFNavigation)
                 .ToListAsync();
 
@@ -51,7 +51,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.ProductoTerminado
                 .Include(r => r.detalleEntrega)
                 .Include(p => p.idEstadoReporteNavigation)
                 .Include(sm => sm.idMaquinaNavigation)
-                .Include(m => m.idOvNavigation)
+                .Include(m => m.oVNavigation)
                 .Include(d => d.oFNavigation)
                 .FirstOrDefaultAsync(u => u.idEntregaPt == id);
 

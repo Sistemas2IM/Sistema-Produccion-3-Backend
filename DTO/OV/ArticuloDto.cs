@@ -9,7 +9,7 @@ namespace Sistema_Produccion_3_Backend.DTO.OV
     {
         public int idArticulo { get; set; }
 
-        public int? idOv { get; set; }
+        public int? oV { get; set; }
 
         public string articulo { get; set; }
 

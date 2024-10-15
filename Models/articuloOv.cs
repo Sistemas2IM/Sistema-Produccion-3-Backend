@@ -8,13 +8,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Sistema_Produccion_3_Backend.Models;
 
-[Index("idOv", Name = "OV_ARTICULO_FK")]
+[Index("oV", Name = "OV_ARTICULO_FK")]
 public partial class articuloOv
 {
     [Key]
     public int idArticulo { get; set; }
 
-    public int? idOv { get; set; }
+    public int? oV { get; set; }
 
     [StringLength(300)]
     public string articulo { get; set; }
@@ -33,7 +33,7 @@ public partial class articuloOv
     [StringLength(50)]
     public string departamento { get; set; }
 
-    [ForeignKey("idOv")]
+    [ForeignKey("oV")]
     [InverseProperty("articuloOv")]
-    public virtual oV idOvNavigation { get; set; }
+    public virtual oV oVNavigation { get; set; }
 }

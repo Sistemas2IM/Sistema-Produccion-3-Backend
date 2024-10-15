@@ -43,7 +43,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Ov
         {
             var oV = await _context.oV
                 .Include(u => u.articuloOv)
-                .FirstOrDefaultAsync(u => u.idOv == id);
+                .FirstOrDefaultAsync(u => u.oV1 == id);
             var oVDto = _mapper.Map<OVDto>(oV);
 
             if (oVDto == null)
@@ -94,7 +94,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Ov
             _context.oV.Add(oV);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetoV", new { id = oV.idOv }, oV);
+            return CreatedAtAction("GetoV", new { id = oV.oV1 }, oV);
         }
 
         // DELETE: api/oV/5
@@ -115,7 +115,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Ov
 
         private bool oVExists(int id)
         {
-            return _context.oV.Any(e => e.idOv == id);
+            return _context.oV.Any(e => e.oV1 == id);
         }
     }
 }

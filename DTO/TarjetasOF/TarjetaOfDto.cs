@@ -8,7 +8,7 @@ namespace Sistema_Produccion_3_Backend.DTO.TarjetasOF
     {
         public int oF { get; set; }
 
-        public int? idOv { get; set; }
+        public int? oV { get; set; }
 
         public int? idEstadoOf { get; set; }
 
@@ -28,7 +28,11 @@ namespace Sistema_Produccion_3_Backend.DTO.TarjetasOF
 
         public decimal? cantidadOf { get; set; }
 
-        public DateTime? fechaEntrega { get; set; }
+        public DateTime? fechaVencimiento { get; set; }
+
+        public DateTime? inicio { get; set; }
+
+        public DateTime? finalizacion { get; set; }
 
         public DateTime? fechaCreacion { get; set; }
 
