@@ -7,8 +7,6 @@ namespace Sistema_Produccion_3_Backend.DTO.OV
 {
     public class OVDto
     {
-        public int idOv { get; set; }
-
         [Column("oV")]
         [StringLength(200)]
         [Unicode(false)]
