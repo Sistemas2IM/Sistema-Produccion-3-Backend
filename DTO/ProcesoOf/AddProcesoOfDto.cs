@@ -1,13 +1,7 @@
-﻿using Sistema_Produccion_3_Backend.Models;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace Sistema_Produccion_3_Backend.DTO.TarjetasOF
+﻿namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
 {
-    public class ProcesoOfDto
+    public class AddProcesoOfDto
     {
-        public int idProceso { get; set; }
-
         public int? oF { get; set; }
 
         public int? idTablero { get; set; }
@@ -51,8 +45,5 @@ namespace Sistema_Produccion_3_Backend.DTO.TarjetasOF
         public int? tipoObjeto { get; set; }
 
         public bool? archivada { get; set; }
-
-        public List<DetalleProcesoDto>? detalleProcesoOfDto { get; set; }
-
     }
 }

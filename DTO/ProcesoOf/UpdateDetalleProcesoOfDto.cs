@@ -1,6 +1,6 @@
-﻿namespace Sistema_Produccion_3_Backend.DTO.TarjetasOF
+﻿namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
 {
-    public class UpdateDetalleProcesoDto
+    public class UpdateDetalleProcesoOfDto
     {
         public int? idOperacion { get; set; }
 

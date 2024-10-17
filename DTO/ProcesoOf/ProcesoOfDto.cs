@@ -1,13 +1,24 @@
-﻿using Sistema_Produccion_3_Backend.Models;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using Sistema_Produccion_3_Backend.DTO.TarjetasOF;
 
-namespace Sistema_Produccion_3_Backend.DTO.TarjetasOF
+namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
 {
-    public class UpdateProcesoOfDto
+    public class ProcesoOfDto
     {
+        public int idProceso { get; set; }
+
+        public int? oF { get; set; }
+
         public int? idTablero { get; set; }
 
         public int? idPostura { get; set; }
+
+        public string? idMaterial { get; set; }
+
+        public string? nombreTarjeta { get; set; }
+
+        public string? productoOf { get; set; }
+
+        public string? descripcionOf { get; set; }
 
         public int? secuencia { get; set; }
 
@@ -25,6 +36,8 @@ namespace Sistema_Produccion_3_Backend.DTO.TarjetasOF
 
         public DateTime? fechaFinalizacion { get; set; }
 
+        public decimal? tiempoEstimado { get; set; }
+
         public decimal? horasTotales { get; set; }
 
         public int? posicion { get; set; }
@@ -35,5 +48,10 @@ namespace Sistema_Produccion_3_Backend.DTO.TarjetasOF
 
         public int? tipoObjeto { get; set; }
 
+        public bool? archivada { get; set; }
+
+        public List<DetalleProcesoOfDto>? detalleProcesoOf { get; set; }
+
+        public List<TarjetaCampoDto>? tarjetaCampoDto { get; set; }
     }
 }

@@ -2,6 +2,7 @@
 using Sistema_Produccion_3_Backend.DTO.Catalogo;
 using Sistema_Produccion_3_Backend.DTO.OV;
 using Sistema_Produccion_3_Backend.DTO.PermisosUsuario;
+using Sistema_Produccion_3_Backend.DTO.ProcesoOf;
 using Sistema_Produccion_3_Backend.DTO.ProductoTerminado;
 using Sistema_Produccion_3_Backend.DTO.ReporteOperador;
 using Sistema_Produccion_3_Backend.DTO.TarjetasOF;
@@ -26,26 +27,28 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             CreateMap<estadosOf, EstadoOfDto>().ReverseMap();
-            CreateMap<etiqueta, EtiquetaDto>().ReverseMap();
-            CreateMap<tarjetaCampo, TarjetaCampoDto>()
-                .ForMember(dest => dest.camposPersonalizadosDto, opt => opt.MapFrom(src => src.idCampoNavigation))
-                .ReverseMap();
+            CreateMap<etiqueta, EtiquetaDto>().ReverseMap();          
 
-            CreateMap<camposPersonalizados, CamposPersonalizadosDto>().ReverseMap();
-
-            // PROCESOS OF - TARJETAS
+            // PROCESOS OF
             CreateMap<procesoOf, ProcesoOfDto>()
-                .ForMember(dest => dest.detalleProcesoOfDto, opt => opt.MapFrom(src => src.detalleOperacionProceso))
+                .ForMember(dest => dest.detalleProcesoOf, opt => opt.MapFrom(src => src.detalleOperacionProceso))
+                .ForMember(dest => dest.tarjetaCampoDto, opt => opt.MapFrom(src => src.tarjetaCampo))
                 .ReverseMap();
 
             CreateMap<procesoOf, AddProcesoOfDto>().ReverseMap();
             CreateMap<UpdateProcesoOfDto, procesoOf>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
-            CreateMap<detalleOperacionProceso, DetalleProcesoDto>().ReverseMap();
-            CreateMap<detalleOperacionProceso, AddDetalleProcesoDto>().ReverseMap();
-            CreateMap<UpdateDetalleProcesoDto, detalleOperacionProceso>()
-                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));           
+            CreateMap<detalleOperacionProceso, DetalleProcesoOfDto>().ReverseMap();
+            CreateMap<detalleOperacionProceso, AddDetalleProcesoOfDto>().ReverseMap();
+            CreateMap<UpdateDetalleProcesoOfDto, detalleOperacionProceso>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            CreateMap<tarjetaCampo, TarjetaCampoDto>()
+               .ForMember(dest => dest.camposPersonalizadosDto, opt => opt.MapFrom(src => src.idCampoNavigation))
+               .ReverseMap();
+
+            CreateMap<camposPersonalizados, CamposPersonalizadosDto>().ReverseMap();
 
             // OV - DTO
             CreateMap<oV, OVDto>()

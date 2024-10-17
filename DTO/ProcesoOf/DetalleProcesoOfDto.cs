@@ -1,9 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-
-namespace Sistema_Produccion_3_Backend.DTO.TarjetasOF
+﻿namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
 {
-    public class DetalleProcesoDto
+    public class DetalleProcesoOfDto
     {
         public int idDetalleOperacion { get; set; }
 
