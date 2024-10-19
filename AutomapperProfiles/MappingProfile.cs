@@ -16,7 +16,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
         {
             // ACA PARA MAPEAR LOS MODELOS->DTO
 
-            // TARJETAS OF - DTO
+            // TARJETAS OF - DTO ====================================================================================
             CreateMap<tarjetaOf, TarjetaOfDto>()
                 .ForMember(dest => dest.estadoOfDto, opt => opt.MapFrom(src => src.idEstadoOfNavigation))
                 .ForMember(dest => dest.etiquetaDto, opt => opt.MapFrom(src => src.etiquetaOf))
@@ -27,12 +27,13 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             CreateMap<estadosOf, EstadoOfDto>().ReverseMap();
-            CreateMap<etiqueta, EtiquetaDto>().ReverseMap();          
+            CreateMap<etiqueta, EtiquetaDto>().ReverseMap();
 
-            // PROCESOS OF
+            // PROCESOS OF ==========================================================================================
             CreateMap<procesoOf, ProcesoOfDto>()
                 .ForMember(dest => dest.detalleProcesoOf, opt => opt.MapFrom(src => src.detalleOperacionProceso))
                 .ForMember(dest => dest.tarjetaCampoDto, opt => opt.MapFrom(src => src.tarjetaCampo))
+                .ForMember(dest => dest.tarjetaEtiquetaDto, opt => opt.MapFrom(src => src.tarjetaEtiqueta))
                 .ReverseMap();
 
             CreateMap<procesoOf, AddProcesoOfDto>().ReverseMap();
@@ -50,18 +51,18 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
 
             CreateMap<camposPersonalizados, CamposPersonalizadosDto>().ReverseMap();
 
-            // OV - DTO
+            // OV - DTO =============================================================================================
             CreateMap<oV, OVDto>()
                 .ForMember(dest => dest.articulo, opt => opt.MapFrom(src => src.articuloOv))
                 .ReverseMap();
 
             CreateMap<oV, AddOVDto>().ReverseMap();
 
-            // Articulo - DTO
+            // Articulo - DTO =======================================================================================
             CreateMap<articuloOv, ArticuloDto>().ReverseMap();
             CreateMap<articuloOv, AddArticuloDto>().ReverseMap();
 
-            // PRODUCTO TERMINADO
+            // PRODUCTO TERMINADO ====================================================================================
             CreateMap<entregasProductoTerminado, ProductoTerminadoDto>()
                 .ForMember(dest => dest.contenidoEntregado, opt => opt.MapFrom(src => src.contenidoEntrega))
                 .ForMember(dest => dest.detalleEntrega, opt => opt.MapFrom(src => src.detalleEntrega))
@@ -84,7 +85,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             CreateMap<UpdateDetalleEntregaDto, detalleEntrega>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
-            // REPORTES POR OPERADOR
+            // REPORTES POR OPERADOR ==================================================================================
             CreateMap<reportesDeOperadores, ReporteOperadorDto>()
                 .ForMember(dest => dest.estadoReporteDto, opt => opt.MapFrom(src => src.idEstadoReporteNavigation))
                 .ForMember(dest => dest.tipoReporteDto, opt => opt.MapFrom(src => src.idTipoReporteNavigation))
@@ -117,10 +118,10 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             CreateMap<material, MaterialDto>().ReverseMap();
             CreateMap<tipoCierre, TipoCierreDto>().ReverseMap();
 
-            // CATALOGOS
+            // CATALOGOS ==============================================================================================
             CreateMap<maquinas, MaquinaDto>().ReverseMap();
 
-            // PERMISOS / USUARIO
+            // PERMISOS / USUARIO ====================================================================================
             CreateMap<usuario, UsuarioDto>()
                 .ForMember(dest => dest.rol, opt => opt.MapFrom(src => src.idRolNavigation))
                 .ReverseMap();
