@@ -1,4 +1,5 @@
-﻿using Sistema_Produccion_3_Backend.DTO.TarjetasOF;
+﻿using Sistema_Produccion_3_Backend.DTO.ReporteOperador;
+using Sistema_Produccion_3_Backend.DTO.TarjetasOF;
 
 namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
 {
@@ -59,5 +60,7 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
         public PosturasOfDto? posturasOfDto { get; set; }
 
         public TablerosOfDto? tablerosOfDto { get; set; }
+
+        public MaterialDto? materialDto { get; set; }
     }
 }

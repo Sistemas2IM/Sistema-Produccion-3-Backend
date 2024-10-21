@@ -31,8 +31,12 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         {
             var procesoOf = await _context.procesoOf
                 .Include(u => u.detalleOperacionProceso)
+                .ThenInclude(o => o.idOperacionNavigation)
                 .Include(m => m.tarjetaCampo)
                 .Include(s => s.tarjetaEtiqueta)
+                .Include(d => d.idPosturaNavigation)
+                .Include(c => c.idTableroNavigation)
+                .Include(v => v.idMaterialNavigation)
                 .ToListAsync();
 
             var procesoOfDto = _mapper.Map<List<ProcesoOfDto>>(procesoOf);
@@ -46,8 +50,12 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         {
             var procesoOf = await _context.procesoOf
                 .Include(u => u.detalleOperacionProceso)
+                .ThenInclude(o => o.idOperacionNavigation)
                 .Include(m => m.tarjetaCampo)
                 .Include(s => s.tarjetaEtiqueta)
+                .Include(d => d.idPosturaNavigation)
+                .Include(c => c.idTableroNavigation)
+                .Include(v => v.idMaterialNavigation)
                 .FirstOrDefaultAsync(u => u.idProceso == id);
 
             var procesoOfDto = _mapper.Map<ProcesoOfDto>(procesoOf);

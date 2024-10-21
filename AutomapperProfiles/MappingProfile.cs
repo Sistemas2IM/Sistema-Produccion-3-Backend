@@ -34,13 +34,19 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForMember(dest => dest.detalleProcesoOf, opt => opt.MapFrom(src => src.detalleOperacionProceso))
                 .ForMember(dest => dest.tarjetaCampoDto, opt => opt.MapFrom(src => src.tarjetaCampo))
                 .ForMember(dest => dest.tarjetaEtiquetaDto, opt => opt.MapFrom(src => src.tarjetaEtiqueta))
+                .ForMember(dest => dest.posturasOfDto, opt => opt.MapFrom(src => src.idPosturaNavigation))
+                .ForMember(dest => dest.tablerosOfDto, opt => opt.MapFrom(src => src.idTableroNavigation))
+                .ForMember(dest => dest.materialDto, opt => opt.MapFrom(src => src.idMaterialNavigation))
                 .ReverseMap();
 
             CreateMap<procesoOf, AddProcesoOfDto>().ReverseMap();
             CreateMap<UpdateProcesoOfDto, procesoOf>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
-            CreateMap<detalleOperacionProceso, DetalleProcesoOfDto>().ReverseMap();
+            CreateMap<detalleOperacionProceso, DetalleProcesoOfDto>()
+                .ForMember(dest => dest.operacionesDto, opt => opt.MapFrom(src => src.idOperacionNavigation))
+                .ReverseMap();
+
             CreateMap<detalleOperacionProceso, AddDetalleProcesoOfDto>().ReverseMap();
             CreateMap<UpdateDetalleProcesoOfDto, detalleOperacionProceso>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));

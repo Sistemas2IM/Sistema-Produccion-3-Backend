@@ -1,4 +1,6 @@
-﻿namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
+﻿using Sistema_Produccion_3_Backend.DTO.ReporteOperador;
+
+namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
 {
     public class DetalleProcesoOfDto
     {
@@ -21,5 +23,7 @@
         public int? operacion { get; set; }
 
         public bool? accionPorAuxiliar { get; set; }
+
+        public OperacionesDto? operacionesDto { get; set; }
     }
 }
