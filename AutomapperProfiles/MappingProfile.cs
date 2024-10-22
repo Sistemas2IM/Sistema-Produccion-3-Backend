@@ -18,15 +18,19 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
 
             // TARJETAS OF - DTO ====================================================================================
             CreateMap<tarjetaOf, TarjetaOfDto>()
-                .ForMember(dest => dest.estadoOfDto, opt => opt.MapFrom(src => src.idEstadoOfNavigation))
+                .ForMember(dest => dest.estadonombre, opt => opt.MapFrom(src => src.idEstadoOfNavigation.nombreEstado))
                 .ForMember(dest => dest.etiquetaDto, opt => opt.MapFrom(src => src.etiquetaOf))
                 .ReverseMap();
+                //.ForPath(src => src.idEstadoOfNavigation, opt => opt.Ignore());
 
             CreateMap<tarjetaOf, AddTarjetaOfDto>().ReverseMap();
             CreateMap<UpdateTarjetaOfDto, tarjetaOf>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
-            CreateMap<estadosOf, EstadoOfDto>().ReverseMap();
+            CreateMap<estadosOf, EstadoOfDto>()
+                .ForMember(dest => dest.tarjetaOfDtos, opt => opt.MapFrom(src => src.tarjetaOf)) // Mapea tarjetasOf a su DTO
+                .ReverseMap();
+
             CreateMap<etiqueta, EtiquetaDto>().ReverseMap();
 
             // PROCESOS OF ==========================================================================================
