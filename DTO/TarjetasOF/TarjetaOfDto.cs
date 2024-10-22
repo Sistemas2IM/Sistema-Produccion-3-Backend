@@ -54,7 +54,9 @@ namespace Sistema_Produccion_3_Backend.DTO.TarjetasOF
 
         public List<EtiquetaDto>? etiquetaDto { get; set; }
 
-        public EstadoOfDto? estadoOfDto { get; set; }
+        public string estadonombre { get; set; }
+
+        //public EstadoOfDto? estadoOfDto { get; set; }
 
         [InverseProperty("idTarjetaOfNavigation")]
         public virtual ICollection<procesoOf> procesoOf { get; set; } = new List<procesoOf>();
