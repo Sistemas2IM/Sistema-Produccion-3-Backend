@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Text.Json.Serialization;
 
 namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
 {
@@ -8,6 +8,12 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
 
         public string? user { get; set; }
 
+        public string? nombreUsuario { get; set; }
+
         public int? idProceso { get; set; }
+
+        public int? oF { get; set; }
+
+        public string? articuloOf {  get; set; }
     }
 }
