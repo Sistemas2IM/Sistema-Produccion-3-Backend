@@ -154,6 +154,18 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
 
             CreateMap<menu, MenuDto>().ReverseMap();
 
+            // ASIGNACION: PROCESO OF - USUARIO =======================================================================
+            CreateMap<asignacion, AsignacionDto>()
+                .ForMember(dest => dest.nombreUsuario, opt => opt.MapFrom(src => src.userNavigation.nombres + " " + src.userNavigation.apellidos))
+                .ForMember(dest => dest.oF, opt => opt.MapFrom(src => src.idProcesoNavigation.oF))
+                .ForMember(dest => dest.articuloOf, opt => opt.MapFrom(src => src.idProcesoNavigation.productoOf))
+                .ReverseMap();
+
+            CreateMap<asignacion, AddAsignacionDto>().ReverseMap();
+
+            CreateMap<UpdateAsignacionDto, asignacion>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
         }
     }
 }
