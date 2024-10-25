@@ -12,8 +12,6 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
 
         public int? idProceso { get; set; }
 
-        public int? oF { get; set; }
-
-        public string? articuloOf {  get; set; }
+        public ProcesoOfDto? procesoOf { get; set; }
     }
 }

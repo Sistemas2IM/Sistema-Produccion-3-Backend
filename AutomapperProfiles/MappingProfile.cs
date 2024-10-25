@@ -157,8 +157,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             // ASIGNACION: PROCESO OF - USUARIO =======================================================================
             CreateMap<asignacion, AsignacionDto>()
                 .ForMember(dest => dest.nombreUsuario, opt => opt.MapFrom(src => src.userNavigation.nombres + " " + src.userNavigation.apellidos))
-                .ForMember(dest => dest.oF, opt => opt.MapFrom(src => src.idProcesoNavigation.oF))
-                .ForMember(dest => dest.articuloOf, opt => opt.MapFrom(src => src.idProcesoNavigation.productoOf))
+                .ForMember(dest => dest.procesoOf, opt => opt.MapFrom(src => src.idProcesoNavigation))
                 .ReverseMap();
 
             CreateMap<asignacion, AddAsignacionDto>().ReverseMap();
