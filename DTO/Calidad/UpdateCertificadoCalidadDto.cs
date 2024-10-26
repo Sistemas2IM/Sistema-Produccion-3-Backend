@@ -1,24 +1,24 @@
 ﻿namespace Sistema_Produccion_3_Backend.DTO.Calidad
 {
-    public class CertificadoCalidadDto
+    public class UpdateCertificadoCalidadDto
     {
         public int idCertificado { get; set; }
 
         public int? oF { get; set; }
 
-        public string numeroDeLote { get; set; }
+        public string? numeroDeLote { get; set; }
 
-        public string numeroFactura { get; set; }
+        public string? numeroFactura { get; set; }
 
         public int? numeroOv { get; set; }
 
-        public string cliente { get; set; }
+        public string? cliente { get; set; }
 
-        public string codigoProducto { get; set; }
+        public string? codigoProducto { get; set; }
 
-        public string producto { get; set; }
+        public string? producto { get; set; }
 
-        public string tipoDeProducto { get; set; }
+        public string? tipoDeProducto { get; set; }
 
         public int? cantidadEntregada { get; set; }
 
@@ -32,15 +32,12 @@
 
         public DateTime? fechaCreacion { get; set; }
 
-        public string observaciones { get; set; }
+        public string? observaciones { get; set; }
 
-        public string creadoPor { get; set; }
+        public string? creadoPor { get; set; }
 
         public int? tipoObjeto { get; set; }
 
         public int? version { get; set; }
-
-        public List<DetalleCertificadoDto>? detalleCertificado { get; set; }
-
     }
 }
