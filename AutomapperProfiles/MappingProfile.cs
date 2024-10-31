@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Sistema_Produccion_3_Backend.DTO.Calidad;
 using Sistema_Produccion_3_Backend.DTO.Catalogo;
 using Sistema_Produccion_3_Backend.DTO.OV;
 using Sistema_Produccion_3_Backend.DTO.PermisosUsuario;
@@ -159,12 +160,29 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForMember(dest => dest.nombreUsuario, opt => opt.MapFrom(src => src.userNavigation.nombres + " " + src.userNavigation.apellidos))
                 .ForMember(dest => dest.procesoOf, opt => opt.MapFrom(src => src.idProcesoNavigation))
                 .ReverseMap();
-
             CreateMap<asignacion, AddAsignacionDto>().ReverseMap();
-
             CreateMap<UpdateAsignacionDto, asignacion>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
+            // CERTIFICADO DE CALIDAD
+            CreateMap<certificadoDeCalidad, CertificadoCalidadDto>()
+                .ForMember(dest => dest.detalleCertificado, opt => opt.MapFrom(src => src.detalleCertificado))
+                .ReverseMap();
+            CreateMap<certificadoDeCalidad, AddCertificadoCalidadDto>().ReverseMap();
+            CreateMap<UpdateCertificadoCalidadDto, certificadoDeCalidad>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            CreateMap<detalleCertificado, DetalleCertificadoDto>()
+                .ForMember(dest => dest.especificaciones, opt => opt.MapFrom(src => src.idCaracteristaNavigation))
+                .ReverseMap();
+            CreateMap<detalleCertificado, AddDetalleCertificadoDto>().ReverseMap();
+            CreateMap<UpdateDetalleCertificadoDto, detalleCertificado>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            CreateMap<especificaciones, EspecificacionesCerDto>().ReverseMap();
+            CreateMap<especificaciones, AddEspecificacionesCerDto>().ReverseMap();
+            CreateMap<UpdateEspecificacionesCerDto, especificaciones>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
         }
     }
 }

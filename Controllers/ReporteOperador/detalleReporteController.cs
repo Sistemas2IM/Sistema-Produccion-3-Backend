@@ -125,6 +125,5 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
         {
             return _context.detalleReporte.Any(e => e.idDetalleReporte == id);
         }
-
     }
 }
