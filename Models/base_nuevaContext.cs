@@ -187,6 +187,8 @@ public partial class base_nuevaContext : DbContext
             entity.HasKey(e => e.idContenidoEntrega).HasName("PK_CONTENIDOENTREGA");
 
             entity.HasOne(d => d.idEntregaPtNavigation).WithMany(p => p.contenidoEntrega).HasConstraintName("FK_CONTENI_ENTREGA");
+
+            entity.HasOne(d => d.idMaquinaNavigation).WithMany(p => p.contenidoEntrega).HasConstraintName("FK_MAQUINA_ENTREGA");
         });
 
         modelBuilder.Entity<detalleBarniz>(entity =>

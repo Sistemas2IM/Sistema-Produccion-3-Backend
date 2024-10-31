@@ -30,7 +30,13 @@ public partial class contenidoEntrega
     [StringLength(100)]
     public string codigoProducto { get; set; }
 
+    public int? idMaquina { get; set; }
+
     [ForeignKey("idEntregaPt")]
     [InverseProperty("contenidoEntrega")]
     public virtual entregasProductoTerminado idEntregaPtNavigation { get; set; }
+
+    [ForeignKey("idMaquina")]
+    [InverseProperty("contenidoEntrega")]
+    public virtual maquinas idMaquinaNavigation { get; set; }
 }

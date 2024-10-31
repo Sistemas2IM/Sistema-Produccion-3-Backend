@@ -22,6 +22,9 @@ public partial class maquinas
     public int? familiaId { get; set; }
 
     [InverseProperty("idMaquinaNavigation")]
+    public virtual ICollection<contenidoEntrega> contenidoEntrega { get; set; } = new List<contenidoEntrega>();
+
+    [InverseProperty("idMaquinaNavigation")]
     public virtual ICollection<entregasProductoTerminado> entregasProductoTerminado { get; set; } = new List<entregasProductoTerminado>();
 
     [ForeignKey("idFamilia")]

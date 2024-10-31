@@ -2,10 +2,6 @@
 {
     public class UpdateDetalleCertificadoDto
     {
-        public int idDetalleCertificado { get; set; }
-
-        public int? idCertificado { get; set; }
-
         public int? idCaracterista { get; set; }
 
         public int? numeroFila { get; set; }

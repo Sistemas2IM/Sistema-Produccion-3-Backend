@@ -2,12 +2,6 @@
 {
     public class AddDetalleCertificadoDto
     {
-        public int idDetalleCertificado { get; set; }
-
-        public int? idCertificado { get; set; }
-
-        public int? idCaracterista { get; set; }
-
         public int? numeroFila { get; set; }
 
         public string? especificacion { get; set; }

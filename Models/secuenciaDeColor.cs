@@ -30,7 +30,7 @@ public partial class secuenciaDeColor
     public string densidadTiro { get; set; }
 
     [StringLength(50)]
-    public string porcentajeaguaTiro { get; set; }
+    public string porcentajeAguaTiro { get; set; }
 
     [StringLength(50)]
     public string retiro { get; set; }
@@ -43,6 +43,42 @@ public partial class secuenciaDeColor
 
     [StringLength(50)]
     public string porcentajeAguaRetiro { get; set; }
+
+    [StringLength(50)]
+    public string anguloColorTiro { get; set; }
+
+    [StringLength(50)]
+    public string varianteFlujoTiro { get; set; }
+
+    [StringLength(50)]
+    public string rodilloEntintadorTiro { get; set; }
+
+    [StringLength(50)]
+    public string distribuciónLateralTiro { get; set; }
+
+    [StringLength(50)]
+    public string tomadorTintaTiro { get; set; }
+
+    [StringLength(50)]
+    public string vueltasTiro { get; set; }
+
+    [StringLength(50)]
+    public string anguloColorRetiro { get; set; }
+
+    [StringLength(50)]
+    public string varianteFlujoRetiro { get; set; }
+
+    [StringLength(50)]
+    public string rodilloEntintadorRetiro { get; set; }
+
+    [StringLength(50)]
+    public string distribuciónLateralRetiro { get; set; }
+
+    [StringLength(50)]
+    public string tomadorTintaRetiro { get; set; }
+
+    [StringLength(50)]
+    public string vueltasRetiro { get; set; }
 
     [ForeignKey("idDetalleImpresion")]
     [InverseProperty("secuenciaDeColor")]
