@@ -112,7 +112,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad
 
             _context.detalleCertificado.Add(detalleCertficado);
             await _context.SaveChangesAsync();
-            0
+            
             return CreatedAtAction("GetdetalleCertificado", new { id = detalleCertficado.idDetalleCertificado });
         }
 
