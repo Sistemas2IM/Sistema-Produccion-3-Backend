@@ -104,6 +104,57 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             return CreatedAtAction("GetTarjetaOf", new { id = tarjetaOf.oF }, tarjetaOf);
         }
 
+
+        // DASHBOARD =========================================================================
+
+        // GET: api/tarjetaOf/lineaNegocio
+        [HttpGet("get/lineaNegocio")]
+        public async Task<ActionResult<IEnumerable<object>>> GetTarjetaOfCountByLineaNegocio()
+        {
+            var tarjetaOf = await _context.tarjetaOf.ToListAsync();
+
+            // Agrupar las tarjetas por línea de negocio y contar cada grupo
+            var tarjetaOfGrouped = tarjetaOf.GroupBy(t => t.lineaDeNegocio)
+                                            .Select(group => new {
+                                                LineaNegocio = group.Key,
+                                                CantidadTarjetas = group.Count()
+                                            });
+
+            return Ok(tarjetaOfGrouped);
+        }
+
+        // GET: api/tarjetaOf/vencidas
+        [HttpGet("get/vencidas")]
+        public async Task<ActionResult<IEnumerable<TarjetaOfDto>>> GettarjetaOfVencidas()
+        {
+            var tarjetaOf = await _context.tarjetaOf
+                .Where(d => d.fechaVencimiento < DateTime.Today)
+                .Include(u => u.idEstadoOfNavigation)
+                .Include(r => r.etiquetaOf)
+                .ToListAsync();
+
+            var tarjetaOfDto = _mapper.Map<List<TarjetaOfDto>>(tarjetaOf);
+
+            return Ok(tarjetaOfDto);
+        }
+
+        // GET: api/tarjetaOf/cerradasHoy
+        [HttpGet("get/cerradasHoy")]
+        public async Task<ActionResult<int>> GetTarjetaOfCerradasHoy()
+        {
+            var today = DateTime.Now.Date;
+
+            // Contar las tarjetas que se cerraron hoy y tienen el estado cerrado (idEstadoOf == 4)
+            var cantidadTarjetasCerradasHoy = await _context.tarjetaOf
+                .Where(d => d.finalizacion.HasValue && d.finalizacion.Value.Date == today && d.idEstadoOf == 4)
+                .CountAsync();
+
+            return Ok(new { CantidadTarjetasCerradasHoy = cantidadTarjetasCerradasHoy });
+        }
+
+
+        // ======================================================================================
+
         // DELETE: api/tarjetaOf/5
         /*[HttpDelete("{id}")]
         public async Task<IActionResult> DeletetarjetaOf(int id)
