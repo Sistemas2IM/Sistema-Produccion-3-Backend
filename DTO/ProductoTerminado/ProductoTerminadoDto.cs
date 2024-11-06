@@ -3,7 +3,9 @@ using Sistema_Produccion_3_Backend.DTO.OV;
 using Sistema_Produccion_3_Backend.DTO.ReporteOperador;
 using Sistema_Produccion_3_Backend.DTO.TarjetasOF;
 using Sistema_Produccion_3_Backend.Models;
+using Sistema_Produccion_3_Backend.Services;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace Sistema_Produccion_3_Backend.DTO.ProductoTerminado
 {
@@ -25,6 +27,7 @@ namespace Sistema_Produccion_3_Backend.DTO.ProductoTerminado
 
         public string descripcionOf { get; set; }
 
+        [JsonConverter(typeof(JsonDateConverter))]
         public DateTime? fechaEntrega { get; set; }
 
         public string areaEntrega { get; set; }

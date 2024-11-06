@@ -1,4 +1,7 @@
-﻿namespace Sistema_Produccion_3_Backend.DTO.Calidad
+﻿using Sistema_Produccion_3_Backend.Services;
+using System.Text.Json.Serialization;
+
+namespace Sistema_Produccion_3_Backend.DTO.Calidad
 {
     public class CertificadoCalidadDto
     {
@@ -24,12 +27,16 @@
 
         public int? cantidadDespachada { get; set; }
 
+        [JsonConverter(typeof(JsonDateConverter))]
         public DateTime? fechaCertificado { get; set; }
 
+        [JsonConverter(typeof(JsonDateConverter))]
         public DateTime? fechaProduccion { get; set; }
 
+        [JsonConverter(typeof(JsonDateConverter))]
         public DateTime? fechaDespacho { get; set; }
 
+        [JsonConverter(typeof(JsonDateConverter))]
         public DateTime? fechaCreacion { get; set; }
 
         public string observaciones { get; set; }
