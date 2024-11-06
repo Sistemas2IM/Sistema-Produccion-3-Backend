@@ -1,6 +1,8 @@
 ﻿using Sistema_Produccion_3_Backend.Models;
+using Sistema_Produccion_3_Backend.Services;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace Sistema_Produccion_3_Backend.DTO.TarjetasOF
 {
@@ -28,14 +30,19 @@ namespace Sistema_Produccion_3_Backend.DTO.TarjetasOF
 
         public decimal? cantidadOf { get; set; }
 
+        [JsonConverter(typeof(JsonDateConverter))]
         public DateTime? fechaVencimiento { get; set; }
 
+        [JsonConverter(typeof(JsonDateConverter))]
         public DateTime? inicio { get; set; }
 
+        [JsonConverter(typeof(JsonDateConverter))]
         public DateTime? finalizacion { get; set; }
 
+        [JsonConverter(typeof(JsonDateConverter))]
         public DateTime? fechaCreacion { get; set; }
 
+        [JsonConverter(typeof(JsonDateConverter))]
         public DateTime? fechaUltimaActualizacion { get; set; }
 
         public int? posicion { get; set; }

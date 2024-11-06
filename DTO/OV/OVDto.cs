@@ -2,6 +2,8 @@
 using Sistema_Produccion_3_Backend.Models;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using Sistema_Produccion_3_Backend.Services;
+using System.Text.Json.Serialization;
 
 namespace Sistema_Produccion_3_Backend.DTO.OV
 {
@@ -16,8 +18,10 @@ namespace Sistema_Produccion_3_Backend.DTO.OV
 
         public string? cliente { get; set; }
 
+        [JsonConverter(typeof(JsonDateConverter))]
         public DateTime? fechaOv { get; set; }
 
+        [JsonConverter(typeof(JsonDateConverter))]
         public DateTime? fechaEntrega { get; set; }
 
         public string? comentario { get; set; }
