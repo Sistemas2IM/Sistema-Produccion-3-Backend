@@ -39,7 +39,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad
         }
 
         // GET: api/certificadoDeCalidad/5
-        [HttpGet("get/id/")]
+        [HttpGet("get/{id}")]
         public async Task<ActionResult<CertificadoCalidadDto>> GetcertificadoDeCalidad(int id)
         {
             var certificadoDeCalidad = await _context.certificadoDeCalidad
@@ -58,7 +58,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad
 
         // PUT: api/certificadoDeCalidad/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("put/")]
+        [HttpPut("put/{id}")]
         public async Task<IActionResult> PutcertificadoDeCalidad(int id, UpdateCertificadoCalidadDto updateCertificadoCalidad)
         {
             var certificado = await _context.certificadoDeCalidad.FindAsync(id);

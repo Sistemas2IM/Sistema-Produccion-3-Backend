@@ -43,7 +43,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.ProductoTerminado
         }
 
         // GET: api/detalleEntrega/5
-        [HttpGet("get/id/")]
+        [HttpGet("get/{id}")]
         public async Task<ActionResult<DetalleEntregaDto>> GetdetalleEntregaId(int id)
         {
             var detalleEntrega = await _context.detalleEntrega.FindAsync(id);
@@ -60,7 +60,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.ProductoTerminado
 
         // PUT: api/detalleEntrega/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("put/id/")]
+        [HttpPut("put/{id}")]
         public async Task<IActionResult> PutdetalleEntrega(int id, UpdateDetalleEntregaDto updateDetalleEntrega)
         {
             var detalleEntrega = await _context.detalleEntrega.FindAsync(id);

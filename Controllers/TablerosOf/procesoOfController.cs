@@ -26,7 +26,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         }
 
         // GET: api/procesoOf
-        [HttpGet]
+        [HttpGet("get")]
         public async Task<ActionResult<IEnumerable<ProcesoOfDto>>> GetprocesoOf()
         {
             var procesoOf = await _context.procesoOf
@@ -45,7 +45,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         }
 
         // GET: api/procesoOf/5
-        [HttpGet("{id}")]
+        [HttpGet("get/{id}")]
         public async Task<ActionResult<ProcesoOfDto>> GetprocesoOf(int id)
         {
             var procesoOf = await _context.procesoOf
@@ -70,7 +70,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
 
         // PUT: api/procesoOf/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
+        [HttpPut("put/{id}")]
         public async Task<IActionResult> PutprocesoOf(int id, UpdateProcesoOfDto updateProcesoOf)
         {
             var procesoOf = await _context.procesoOf.FindAsync(id);
@@ -104,7 +104,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
 
         // POST: api/procesoOf
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
+        [HttpPost("post")]
         public async Task<ActionResult<procesoOf>> PostprocesoOf(procesoOf procesoOf)
         {
             _context.procesoOf.Add(procesoOf);
@@ -114,7 +114,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         }
 
         // DELETE: api/procesoOf/5
-        [HttpDelete("{id}")]
+        /*[HttpDelete("{id}")]
         public async Task<IActionResult> DeleteprocesoOf(int id)
         {
             var procesoOf = await _context.procesoOf.FindAsync(id);
@@ -127,7 +127,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             await _context.SaveChangesAsync();
 
             return NoContent();
-        }
+        }*/
 
         private bool procesoOfExists(int id)
         {

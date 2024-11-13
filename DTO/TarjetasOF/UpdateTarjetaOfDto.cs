@@ -4,19 +4,19 @@
     {
         public int? idEstadoOf { get; set; }
 
-        public string tipoDeOrden { get; set; }
+        public string? tipoDeOrden { get; set; }
 
-        public string nombreOf { get; set; }
+        public string? nombreOf { get; set; }
 
-        public string productoOf { get; set; }
+        public string? productoOf { get; set; }
 
-        public string lineaDeNegocio { get; set; }
+        public string? lineaDeNegocio { get; set; }
 
-        public string clienteOf { get; set; }
+        public string? clienteOf { get; set; }
 
-        public string descipcionOf { get; set; }
+        public string? descipcionOf { get; set; }
 
-        public string vendedorOf { get; set; }
+        public string? vendedorOf { get; set; }
 
         public decimal? cantidadOf { get; set; }
 

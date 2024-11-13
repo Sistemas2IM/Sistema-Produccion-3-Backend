@@ -48,7 +48,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
         }
 
         // GET: api/reportesDeOperadores/5
-        [HttpGet("get/id/")]
+        [HttpGet("get/{id}")]
         public async Task<ActionResult<ReporteOperadorDto>> GetreportesDeOperadores(string id)
         {
             var reporteOperador = await _context.reportesDeOperadores
@@ -76,7 +76,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
         }
 
         // PUT: api/reportesDeOperadores/5
-        [HttpPut("put")]
+        [HttpPut("put/{id}")]
         public async Task<IActionResult> PutreportesDeOperadores(string id, UpdateReporteOperadorDto updateReporteOperador)
         {
             var reporteOperador = await _context.reportesDeOperadores.FindAsync(id);

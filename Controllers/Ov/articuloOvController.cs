@@ -35,7 +35,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Ov
         }
 
         // GET: api/articuloOv/5
-        [HttpGet("get/id/")]
+        [HttpGet("get/{id}")]
         public async Task<ActionResult<ArticuloDto>> GetarticuloOv(int id)
         {
             var articuloOv = await _context.articuloOv.FindAsync(id);

@@ -49,7 +49,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.EstadoOf
         }
 
         // GET: api/estadosOf/5
-        [HttpGet("{id}")]
+        [HttpGet("get/{id}")]
         public async Task<ActionResult<estadosOf>> GetestadosOf(int id)
         {
             var estadosOf = await _context.estadosOf.FindAsync(id);
@@ -64,7 +64,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.EstadoOf
 
         // PUT: api/estadosOf/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
+        [HttpPut("put/{id}")]
         public async Task<IActionResult> PutestadosOf(int id, estadosOf estadosOf)
         {
             if (id != estadosOf.idEstadoOf)
@@ -105,7 +105,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.EstadoOf
         }
 
         // DELETE: api/estadosOf/5
-        [HttpDelete("{id}")]
+        /*[HttpDelete("{id}")]
         public async Task<IActionResult> DeleteestadosOf(int id)
         {
             var estadosOf = await _context.estadosOf.FindAsync(id);
@@ -118,7 +118,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.EstadoOf
             await _context.SaveChangesAsync();
 
             return NoContent();
-        }
+        }*/
 
         private bool estadosOfExists(int id)
         {

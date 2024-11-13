@@ -43,7 +43,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.ProductoTerminado
         }
 
         // GET: api/entregaProductoTerminado/5
-        [HttpGet("get/id/")]
+        [HttpGet("get/{id}")]
         public async Task<ActionResult<ProductoTerminadoDto>> GetentregasProductoTerminado(int id)
         {
             var entregasProductoTerminado = await _context.entregasProductoTerminado
@@ -67,7 +67,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.ProductoTerminado
 
         // PUT: api/entregaProductoTerminado/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("put/")]
+        [HttpPut("put/{id}")]
         public async Task<IActionResult> PutentregasProductoTerminado(int id, UpdateProductoTerminadoDto updateProductoTerminado)
         {
             var productoTerminado = await _context.entregasProductoTerminado.FindAsync(id);

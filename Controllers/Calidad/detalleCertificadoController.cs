@@ -25,7 +25,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad
         }
 
         // GET: api/detalleCertificado
-        [HttpGet("get")]
+        [HttpGet("get/certificado/{idCertificado}")]
         public async Task<ActionResult<IEnumerable<DetalleCertificadoDto>>> GetdetalleCertificado(int idCertificado)
         {
             var detalleCertificado = await _context.detalleCertificado
@@ -44,7 +44,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad
         }
 
         // GET: api/detalleCertificado/5
-        [HttpGet("get/id/")]
+        [HttpGet("get/{id}")]
         public async Task<ActionResult<DetalleCertificadoDto>> GetdetalleCertificadoId(int id)
         {
             var detalleCertificado = await _context.detalleCertificado
@@ -63,7 +63,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad
 
         // PUT: api/detalleCertificado/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("put")]
+        [HttpPut("put{id}")]
         public async Task<IActionResult> PutdetalleCertificado(int id, UpdateDetalleCertificadoDto updateDetalleCertificado)
         {
             var detalleCertificado = await _context.detalleCertificado.FindAsync(id);

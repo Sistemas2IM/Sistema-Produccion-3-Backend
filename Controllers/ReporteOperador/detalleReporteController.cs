@@ -25,7 +25,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
         }
 
         // GET: api/detalleReporte - BUSCA TODOS LOS DETALLES EN BASE AL ID DE UN REPORTE DE OPERADOR
-        [HttpGet("get/reporte/")]
+        [HttpGet("get/reporte/{idReporte}")]
         public async Task<ActionResult<IEnumerable<DetalleReporteDto>>> GetdetalleReporteByReporteId(string idReporte)
         {
             var detalleReporte = await _context.detalleReporte
@@ -47,7 +47,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
         }
 
         // GET: api/detalleReporte/5
-        [HttpGet("get/id/")]
+        [HttpGet("get/{id}")]
         public async Task<ActionResult<DetalleReporteDto>> GetdetalleReporte(int id)
         {
             var detalleReporte = await _context.detalleReporte
@@ -69,7 +69,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
 
         // PUT: api/detalleReporte/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("put/id/")]
+        [HttpPut("put/{id}")]
         public async Task<IActionResult> PutdetalleReporte(int id, UpdateDetalleReporteDto updateDetalleReporte)
         {
             var detalleReporte = await _context.detalleReporte.FindAsync(id);
