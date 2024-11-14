@@ -135,10 +135,11 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             // PERMISOS / USUARIO ====================================================================================
             CreateMap<usuario, UsuarioDto>()
                 .ForMember(dest => dest.rol, opt => opt.MapFrom(src => src.idRolNavigation))
+                .ForMember(dest => dest.cargo, opt => opt.MapFrom(src => src.idCargoNavigation.nombreCargo))
                 .ReverseMap();
 
             CreateMap<rol, RolDto>()
-                .ForMember(dest => dest.permisos, opt => opt.MapFrom(src => src.permiso)) // Map permissions collection
+                .ForMember(dest => dest.permisos, opt => opt.MapFrom(src => src.permiso))
                 .ReverseMap();
 
             CreateMap<permiso, PermisoDto>()
@@ -155,6 +156,10 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
 
             CreateMap<menu, MenuDto>().ReverseMap();
 
+            CreateMap<cargo, CargoDto>()
+                .ForMember(dest => dest.usuarios, opt => opt.MapFrom(src => src.usuario))
+                .ReverseMap();
+
             // ASIGNACION: PROCESO OF - USUARIO =======================================================================
             CreateMap<asignacion, AsignacionDto>()
                 .ForMember(dest => dest.nombreUsuario, opt => opt.MapFrom(src => src.userNavigation.nombres + " " + src.userNavigation.apellidos))
@@ -164,7 +169,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             CreateMap<UpdateAsignacionDto, asignacion>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
-            // CERTIFICADO DE CALIDAD
+            // CERTIFICADO DE CALIDAD =================================================================================
             CreateMap<certificadoDeCalidad, CertificadoCalidadDto>()
                 .ForMember(dest => dest.detalleCertificado, opt => opt.MapFrom(src => src.detalleCertificado))
                 .ReverseMap();

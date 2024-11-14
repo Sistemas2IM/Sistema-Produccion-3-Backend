@@ -36,5 +36,7 @@ namespace Sistema_Produccion_3_Backend.DTO.PermisosUsuario
 
         public RolDto? rol { get; set; }
 
+        public string? cargo { get; set; }
+
     }
 }

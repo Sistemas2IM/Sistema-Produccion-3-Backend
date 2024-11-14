@@ -6,10 +6,10 @@ namespace Sistema_Produccion_3_Backend.DTO.PermisosUsuario
     {
         public int idRol { get; set; }
 
-        public string nombreRol { get; set; }
+        public string? nombreRol { get; set; }
 
-        public string descripcion { get; set; }
+        public string? descripcion { get; set; }
 
-        public List<PermisoDto> permisos { get; set; }
+        public List<PermisoDto>? permisos { get; set; }
     }
 }
