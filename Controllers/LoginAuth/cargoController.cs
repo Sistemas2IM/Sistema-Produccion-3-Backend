@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Sistema_Produccion_3_Backend.DTO.PermisosUsuario;
 using Sistema_Produccion_3_Backend.Models;
 
 namespace Sistema_Produccion_3_Backend.Controllers.LoginAuth
@@ -14,36 +16,53 @@ namespace Sistema_Produccion_3_Backend.Controllers.LoginAuth
     public class cargoController : ControllerBase
     {
         private readonly base_nuevaContext _context;
+        private readonly IMapper _mapper;
 
-        public cargoController(base_nuevaContext context)
+        public cargoController(base_nuevaContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         // GET: api/cargo
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<cargo>>> Getcargo()
+        [HttpGet("get")]
+        public async Task<ActionResult<IEnumerable<CargoDto>>> Getcargo()
         {
-            return await _context.cargo.ToListAsync();
+            var cargo = await _context.cargo.ToListAsync();
+            var cargoDto = _mapper.Map<List<CargoDto>>(cargo);
+
+            return Ok(cargoDto);
         }
 
         // GET: api/cargo/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<cargo>> Getcargo(int id)
+        [HttpGet("get/{id}")]
+        public async Task<ActionResult<CargoDto>> Getcargo(int id)
         {
             var cargo = await _context.cargo.FindAsync(id);
+            var cargoDto = _mapper.Map<CargoDto>(cargo);
 
-            if (cargo == null)
+            if (cargoDto == null)
             {
-                return NotFound();
+                return NotFound("no se encontro el cargo con id: " + id);
             }
 
-            return cargo;
+            return Ok(cargoDto);
+        }
+
+        // GET: api/cargo/usuarios
+        [HttpGet("get/usuarios")]
+        public async Task<ActionResult<IEnumerable<CargoDto>>> GetcargoUsuarios()
+        {
+            var cargo = await _context.cargo
+                .Include(t => t.usuario)
+                .ToListAsync();
+            var cargoDto = _mapper.Map<List<CargoDto>>(cargo);
+
+            return Ok(cargoDto);
         }
 
         // PUT: api/cargo/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
+        /**[HttpPut("{id}")]
         public async Task<IActionResult> Putcargo(int id, cargo cargo)
         {
             if (id != cargo.idCargo)
@@ -70,11 +89,10 @@ namespace Sistema_Produccion_3_Backend.Controllers.LoginAuth
             }
 
             return NoContent();
-        }
+        }*/
 
         // POST: api/cargo
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
+        /*[HttpPost]
         public async Task<ActionResult<cargo>> Postcargo(cargo cargo)
         {
             _context.cargo.Add(cargo);
@@ -97,7 +115,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.LoginAuth
             await _context.SaveChangesAsync();
 
             return NoContent();
-        }
+        }*/
 
         private bool cargoExists(int id)
         {

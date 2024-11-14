@@ -25,7 +25,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.EstadoOf
         }
 
         // GET: api/estadosOf
-        [HttpGet]
+        [HttpGet("get")]
         public async Task<ActionResult<IEnumerable<EstadoOfDto>>> GetestadosOf()
         {
             //return await _context.estadosOf.ToListAsync();
@@ -95,7 +95,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.EstadoOf
 
         // POST: api/estadosOf
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
+        [HttpPost("post")]
         public async Task<ActionResult<estadosOf>> PostestadosOf(estadosOf estadosOf)
         {
             _context.estadosOf.Add(estadosOf);
