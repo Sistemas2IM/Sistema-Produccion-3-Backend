@@ -74,6 +74,25 @@ namespace Sistema_Produccion_3_Backend.Controllers.LoginAuth
             return Ok(registerResult);
         }
 
+        [HttpPut("update")]
+        public async Task<IActionResult> Update([FromBody] UpdateUserDto update)
+        {
+            if (update == null || string.IsNullOrEmpty(update.User))
+            {
+                return BadRequest(new { result = false, message = "El identificador del usuario es obligatorio." });
+            }
+
+            var registerResult = await _authService.UpdateUser(update);
+
+            if (!registerResult.result)
+            {
+                return BadRequest(registerResult);
+            }
+
+            return Ok(registerResult);
+        }
+
+
         [HttpDelete("revoke")]
         public async Task<IActionResult> Revoke([FromBody] string id)
         {
