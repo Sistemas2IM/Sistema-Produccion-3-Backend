@@ -101,7 +101,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.ProductoTerminado
 
             if (detallePt == null)
             {
-                return BadRequest("Id de detalle no valido: " + idEntregaPt);
+                return BadRequest("Id de reporte no valido: " + idEntregaPt);
             }
 
             var detalleEntrega = _mapper.Map<detalleEntrega>(addDetalleEntrega);
