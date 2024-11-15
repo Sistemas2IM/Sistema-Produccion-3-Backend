@@ -25,7 +25,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.LoginAuth
         }
 
         // GET: api/rol
-        [HttpGet("rol")]
+        [HttpGet("get")]
         public async Task<ActionResult<IEnumerable<RolDto>>> Getrol()
         {
             var rol = await _context.rol.ToListAsync();

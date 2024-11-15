@@ -1,9 +1,9 @@
 ﻿namespace Sistema_Produccion_3_Backend.DTO.LoginAuth
 {
-    public class RegisterDto
+    public class UpdateUserDto
     {
-        public int idRol {  get; set; }
-        public int idCargo { get; set; }
+        public int? idRol { get; set; }
+        public int? idCargo { get; set; }
         public string User { get; set; }
         public string Password { get; set; }
         public string Nombres { get; set; }

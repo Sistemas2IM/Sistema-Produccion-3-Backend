@@ -68,6 +68,8 @@ namespace Sistema_Produccion_3_Backend.Services
 
             var newUser = new usuario
             {
+                idRol = register.idRol,
+                idCargo = register.idCargo,
                 user = register.User,
                 nombres = register.Nombres,
                 apellidos = register.Apellidos,
@@ -85,6 +87,43 @@ namespace Sistema_Produccion_3_Backend.Services
 
             return new RegisterResponse { result = true, message = "Usuario Registrado" };
         }
+
+        // -----------------------------------------------------------------------------------------------
+
+        public async Task<RegisterResponse> UpdateUser(UpdateUserDto update)
+        {
+            // Buscar el usuario existente
+            var existingUser = await _context.usuario.FindAsync(update.User);
+
+            if (existingUser == null)
+            {
+                return new RegisterResponse { result = false, message = "Usuario no encontrado" };
+            }
+
+            // Actualizar los campos necesarios
+            existingUser.idRol = update.idRol ?? existingUser.idRol;
+            existingUser.idCargo = update.idCargo ?? existingUser.idCargo;
+            existingUser.nombres = update.Nombres ?? existingUser.nombres;
+            existingUser.apellidos = update.Apellidos ?? existingUser.apellidos;
+            existingUser.email = update.Email ?? existingUser.email;
+
+            // Si se incluye una nueva contraseña, se actualiza
+            if (!string.IsNullOrEmpty(update.Password))
+            {
+                existingUser.password = BCrypt.Net.BCrypt.HashPassword(update.Password);
+            }
+
+            // Actualizar la fecha de modificación (opcional)
+            existingUser.ultimaActualizacion = DateTime.Now;
+
+            // Guardar cambios
+            _context.usuario.Update(existingUser);
+            await _context.SaveChangesAsync();
+
+            // Retornar respuesta
+            return new RegisterResponse { result = true, message = "Usuario actualizado con éxito" };
+        }
+
 
         // ------------------------------------------------------------------------------------------------------
 
