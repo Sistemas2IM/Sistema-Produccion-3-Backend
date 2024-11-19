@@ -8,7 +8,7 @@
 
         public int? idRol { get; set; }
 
-        public string descripcion { get; set; }
+        public string? descripcion { get; set; }
 
         public bool? canRead { get; set; }
 
@@ -18,6 +18,6 @@
 
         public bool? canDelete { get; set; }
 
-        public SubModuloDto subModulo { get; set; }
+        public SubModuloDto? subModulo { get; set; }
     }
 }
