@@ -27,6 +27,18 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[auditoriaDeCalidad]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[auditoriaDeProcesos]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[auditoriaDeProductos]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[bitacora]",
          "ObjectType": 0
       },
@@ -175,6 +187,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[porcentajeDeAgua]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[posturasOf]",
          "ObjectType": 0
       },
@@ -188,6 +204,10 @@
       },
       {
          "Name": "[dbo].[refreshToken]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[reporteDeAuditoria]",
          "ObjectType": 0
       },
       {
@@ -259,6 +279,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[variablesDeAgua]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[vehiculo]",
          "ObjectType": 0
       }
@@ -286,5 +310,6 @@
    "UseSchemaFolders": false,
    "UseSchemaNamespaces": false,
    "UseSpatial": false,
-   "UseT4": false
+   "UseT4": false,
+   "UseT4Split": false
 }

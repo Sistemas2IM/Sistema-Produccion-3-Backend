@@ -19,6 +19,12 @@ public partial class base_nuevaContext : DbContext
 
     public virtual DbSet<asignacion> asignacion { get; set; }
 
+    public virtual DbSet<auditoriaDeCalidad> auditoriaDeCalidad { get; set; }
+
+    public virtual DbSet<auditoriaDeProcesos> auditoriaDeProcesos { get; set; }
+
+    public virtual DbSet<auditoriaDeProductos> auditoriaDeProductos { get; set; }
+
     public virtual DbSet<bitacora> bitacora { get; set; }
 
     public virtual DbSet<camposPersonalizados> camposPersonalizados { get; set; }
@@ -93,6 +99,8 @@ public partial class base_nuevaContext : DbContext
 
     public virtual DbSet<permiso> permiso { get; set; }
 
+    public virtual DbSet<porcentajeDeAgua> porcentajeDeAgua { get; set; }
+
     public virtual DbSet<posturasOf> posturasOf { get; set; }
 
     public virtual DbSet<potenciaLamparaUv> potenciaLamparaUv { get; set; }
@@ -100,6 +108,8 @@ public partial class base_nuevaContext : DbContext
     public virtual DbSet<procesoOf> procesoOf { get; set; }
 
     public virtual DbSet<refreshToken> refreshToken { get; set; }
+
+    public virtual DbSet<reporteDeAuditoria> reporteDeAuditoria { get; set; }
 
     public virtual DbSet<reportesDeOperadores> reportesDeOperadores { get; set; }
 
@@ -135,6 +145,8 @@ public partial class base_nuevaContext : DbContext
 
     public virtual DbSet<usuario> usuario { get; set; }
 
+    public virtual DbSet<variablesDeAgua> variablesDeAgua { get; set; }
+
     public virtual DbSet<vehiculo> vehiculo { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -158,6 +170,99 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.idProcesoNavigation).WithMany(p => p.asignacion).HasConstraintName("FK_ASIGN_PROCESOO");
 
             entity.HasOne(d => d.userNavigation).WithMany(p => p.asignacion).HasConstraintName("FK_ASIGN_DISENADOR");
+        });
+
+        modelBuilder.Entity<auditoriaDeCalidad>(entity =>
+        {
+            entity.HasKey(e => e.idAuditoria).HasName("PK_AUDITORIADECALIDAD");
+
+            entity.HasOne(d => d.userNavigation).WithMany(p => p.auditoriaDeCalidad).HasConstraintName("FK_AUDITOR");
+        });
+
+        modelBuilder.Entity<auditoriaDeProcesos>(entity =>
+        {
+            entity.HasKey(e => e.idAuditoriaDeProcesos).HasName("PK_AUDITORIADEPROCESOS");
+
+            entity.Property(e => e.adhesivoCorrecto).IsFixedLength();
+            entity.Property(e => e.aprobacionDeArranque).IsFixedLength();
+            entity.Property(e => e.armadoDePieza).IsFixedLength();
+            entity.Property(e => e.arranqueDeFibra).IsFixedLength();
+            entity.Property(e => e.arteOPlotter).IsFixedLength();
+            entity.Property(e => e.bobinaGolpeada).IsFixedLength();
+            entity.Property(e => e.bolsaDeTrabajo).IsFixedLength();
+            entity.Property(e => e.calibre).IsFixedLength();
+            entity.Property(e => e.codigoDeBarra).IsFixedLength();
+            entity.Property(e => e.contaminacion).IsFixedLength();
+            entity.Property(e => e.corrugadoIdentificado).IsFixedLength();
+            entity.Property(e => e.corrugadoSellado).IsFixedLength();
+            entity.Property(e => e.curadoDeBarniz).IsFixedLength();
+            entity.Property(e => e.delaminada).IsFixedLength();
+            entity.Property(e => e.escuadra).IsFixedLength();
+            entity.Property(e => e.fibra).IsFixedLength();
+            entity.Property(e => e.fichaTecnica).IsFixedLength();
+            entity.Property(e => e.guiaDeColor).IsFixedLength();
+            entity.Property(e => e.guiaDeCorte).IsFixedLength();
+            entity.Property(e => e.huellaTroquel).IsFixedLength();
+            entity.Property(e => e.identificacionDeProducto).IsFixedLength();
+            entity.Property(e => e.lecturaDeArte).IsFixedLength();
+            entity.Property(e => e.malCortado).IsFixedLength();
+            entity.Property(e => e.malOlor).IsFixedLength();
+            entity.Property(e => e.matrizSegunCalibre).IsFixedLength();
+            entity.Property(e => e.mecanicoODummy).IsFixedLength();
+            entity.Property(e => e.pruebaDeCurado).IsFixedLength();
+            entity.Property(e => e.referenciaImpresion).IsFixedLength();
+            entity.Property(e => e.solicitudDeCorte).IsFixedLength();
+            entity.Property(e => e.tamanoDeMateriaPrima).IsFixedLength();
+            entity.Property(e => e.tarimaPlastificada).IsFixedLength();
+            entity.Property(e => e.unidadesDeCorrugado).IsFixedLength();
+            entity.Property(e => e.usoDeEspectro).IsFixedLength();
+
+            entity.HasOne(d => d.idReporteAuditoriaNavigation).WithMany(p => p.auditoriaDeProcesos).HasConstraintName("FK__PROCESOS_REPORTE");
+        });
+
+        modelBuilder.Entity<auditoriaDeProductos>(entity =>
+        {
+            entity.HasKey(e => e.idAuditoriaDeProductos).HasName("PK_AUDITORIADEPRODUCTOS");
+
+            entity.Property(e => e.ancho).IsFixedLength();
+            entity.Property(e => e.banizDeficiente).IsFixedLength();
+            entity.Property(e => e.basuras).IsFixedLength();
+            entity.Property(e => e.brillos).IsFixedLength();
+            entity.Property(e => e.calibre).IsFixedLength();
+            entity.Property(e => e.cuadratura).IsFixedLength();
+            entity.Property(e => e.despegado).IsFixedLength();
+            entity.Property(e => e.doblado).IsFixedLength();
+            entity.Property(e => e.engraseYVelo).IsFixedLength();
+            entity.Property(e => e.expulse).IsFixedLength();
+            entity.Property(e => e.fallosDeRegistro).IsFixedLength();
+            entity.Property(e => e.faltanteDeSisa).IsFixedLength();
+            entity.Property(e => e.faltanteDeTexto).IsFixedLength();
+            entity.Property(e => e.foil).IsFixedLength();
+            entity.Property(e => e.golpeDeHule).IsFixedLength();
+            entity.Property(e => e.largo).IsFixedLength();
+            entity.Property(e => e.malContado).IsFixedLength();
+            entity.Property(e => e.malDoblado).IsFixedLength();
+            entity.Property(e => e.manchasYMarcas).IsFixedLength();
+            entity.Property(e => e.materiaPrimaCorrecta).IsFixedLength();
+            entity.Property(e => e.medida).IsFixedLength();
+            entity.Property(e => e.otro).IsFixedLength();
+            entity.Property(e => e.pegadoDeCorte).IsFixedLength();
+            entity.Property(e => e.perforado).IsFixedLength();
+            entity.Property(e => e.pestanuda).IsFixedLength();
+            entity.Property(e => e.planchaSegunColor).IsFixedLength();
+            entity.Property(e => e.rayones).IsFixedLength();
+            entity.Property(e => e.realzado).IsFixedLength();
+            entity.Property(e => e.rebava).IsFixedLength();
+            entity.Property(e => e.registroDeBarniz).IsFixedLength();
+            entity.Property(e => e.repinte).IsFixedLength();
+            entity.Property(e => e.reventado).IsFixedLength();
+            entity.Property(e => e.roto).IsFixedLength();
+            entity.Property(e => e.sinGrapa).IsFixedLength();
+            entity.Property(e => e.sisaDefinida).IsFixedLength();
+            entity.Property(e => e.sucio).IsFixedLength();
+            entity.Property(e => e.variacionDeTono).IsFixedLength();
+
+            entity.HasOne(d => d.idReporteAuditoriaNavigation).WithMany(p => p.auditoriaDeProductos).HasConstraintName("FK_PRODUCTOS_REPORTE");
         });
 
         modelBuilder.Entity<bitacora>(entity =>
@@ -429,6 +534,13 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.idSubModuloNavigation).WithMany(p => p.permiso).HasConstraintName("FK_PERMISO_SUBMODULO");
         });
 
+        modelBuilder.Entity<porcentajeDeAgua>(entity =>
+        {
+            entity.HasKey(e => e.idPorcentaje).HasName("PK_PORCENTAJEDEAGUA");
+
+            entity.HasOne(d => d.idReporteAuditoriaNavigation).WithMany(p => p.porcentajeDeAgua).HasConstraintName("FK_PORCENTAJ_REPORTE");
+        });
+
         modelBuilder.Entity<posturasOf>(entity =>
         {
             entity.HasKey(e => e.idPostura).HasName("PK_POSTURASOF");
@@ -461,6 +573,16 @@ public partial class base_nuevaContext : DbContext
             entity.HasKey(e => e.token).HasName("PK_REFRESHTOKEN");
 
             entity.HasOne(d => d.userNavigation).WithMany(p => p.refreshToken).HasConstraintName("FK_REFRESHT_USUARIO");
+        });
+
+        modelBuilder.Entity<reporteDeAuditoria>(entity =>
+        {
+            entity.HasKey(e => e.idReporteAuditoria).HasName("PK_REPORTEDEAUDITORIA");
+
+            entity.Property(e => e.procesosArrelgo).IsFixedLength();
+            entity.Property(e => e.tiroRetiro).IsFixedLength();
+
+            entity.HasOne(d => d.idAuditoriaNavigation).WithMany(p => p.reporteDeAuditoria).HasConstraintName("FK_REPORTES_AUDIT");
         });
 
         modelBuilder.Entity<reportesDeOperadores>(entity =>
@@ -592,6 +714,13 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.idCargoNavigation).WithMany(p => p.usuario).HasConstraintName("FK_USUARIO_CARGO");
 
             entity.HasOne(d => d.idRolNavigation).WithMany(p => p.usuario).HasConstraintName("FK_USUARIO_ROL");
+        });
+
+        modelBuilder.Entity<variablesDeAgua>(entity =>
+        {
+            entity.HasKey(e => e.idVariables).HasName("PK_VARIABLESDEAGUA");
+
+            entity.HasOne(d => d.idReporteAuditoriaNavigation).WithMany(p => p.variablesDeAgua).HasConstraintName("FK_VARIABLES_REPORTE");
         });
 
         modelBuilder.Entity<vehiculo>(entity =>

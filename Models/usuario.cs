@@ -51,6 +51,9 @@ public partial class usuario
     [InverseProperty("userNavigation")]
     public virtual ICollection<asignacion> asignacion { get; set; } = new List<asignacion>();
 
+    [InverseProperty("userNavigation")]
+    public virtual ICollection<auditoriaDeCalidad> auditoriaDeCalidad { get; set; } = new List<auditoriaDeCalidad>();
+
     [ForeignKey("idArea")]
     [InverseProperty("usuario")]
     public virtual areas idAreaNavigation { get; set; }
