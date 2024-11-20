@@ -8,8 +8,8 @@ namespace Sistema_Produccion_3_Backend.DTO.PermisosUsuario
 
         public int? idModulo { get; set; }
 
-        public string nombreSubModulo { get; set; }
+        public string? nombreSubModulo { get; set; }
 
-        public ModuloDto modulo { get; set; }
+        public ModuloDto? modulo { get; set; }
     }
 }

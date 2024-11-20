@@ -17,7 +17,5 @@
         public bool? canEdit { get; set; }
 
         public bool? canDelete { get; set; }
-
-        public SubModuloDto? subModulo { get; set; }
     }
 }
