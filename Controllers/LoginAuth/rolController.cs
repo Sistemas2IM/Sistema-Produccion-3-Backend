@@ -34,11 +34,30 @@ namespace Sistema_Produccion_3_Backend.Controllers.LoginAuth
             return Ok(rolDto);
         }
 
+        [HttpGet("get/permisos")]
+        public async Task<ActionResult<IEnumerable<RolDto>>> GetRolPermisos()
+        {
+            var rol = await _context.rol
+                .Include(u => u.permiso)
+                .ThenInclude(s => s.idSubModuloNavigation)
+                .ThenInclude(m => m.idModuloNavigation)
+                .ThenInclude(e => e.idMenuNavigation)
+                .ToListAsync();
+            var rolDto = _mapper.Map<List<RolDto>>(rol);
+
+            return Ok(rolDto);
+        }
+
         // GET: api/rol/5
         [HttpGet("get/{id}")]
         public async Task<ActionResult<RolDto>> Getrol(int id)
         {
-            var rol = await _context.rol.FindAsync(id);
+            var rol = await _context.rol
+                .Include(u => u.permiso)
+                .ThenInclude(s => s.idSubModuloNavigation)
+                .ThenInclude(m => m.idModuloNavigation)
+                .ThenInclude(e => e.idMenuNavigation)
+                .FirstOrDefaultAsync(u => u.idRol == id);
             var rolDto = _mapper.Map<RolDto>(rol);
 
             if (rolDto == null)
@@ -51,14 +70,17 @@ namespace Sistema_Produccion_3_Backend.Controllers.LoginAuth
 
         // PUT: api/rol/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        /*[HttpPut("{id}")]
-        public async Task<IActionResult> Putrol(int id, rol rol)
+        [HttpPut("put/{id}")]
+        public async Task<IActionResult> Putrol(int id, UpdateRolDto updateRol)
         {
-            if (id != rol.idRol)
+            var rol = await _context.rol.FindAsync(id);
+
+            if (rol == null)
             {
-                return BadRequest();
+                return NotFound("No se encontro el rol con el ID: " + id);
             }
 
+            _mapper.Map(updateRol, rol);
             _context.Entry(rol).State = EntityState.Modified;
 
             try
@@ -69,7 +91,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.LoginAuth
             {
                 if (!rolExists(id))
                 {
-                    return NotFound();
+                    return BadRequest($"ID = {id} no coincide con el registro");
                 }
                 else
                 {
@@ -77,19 +99,20 @@ namespace Sistema_Produccion_3_Backend.Controllers.LoginAuth
                 }
             }
 
-            return NoContent();
-        }*/
+            return Ok(updateRol);
+        }
 
         // POST: api/rol
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        /*[HttpPost]
-        public async Task<ActionResult<rol>> Postrol(rol rol)
+        [HttpPost("post")]
+        public async Task<ActionResult<rol>> Postrol(AddRolDto addRol)
         {
+            var rol = _mapper.Map<rol>(addRol);
             _context.rol.Add(rol);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("Getrol", new { id = rol.idRol }, rol);
-        }*/
+        }
 
         private bool rolExists(int id)
         {

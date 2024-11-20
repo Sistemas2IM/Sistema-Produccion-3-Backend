@@ -6,6 +6,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Sistema_Produccion_3_Backend.DTO.PermisosUsuario;
 using Sistema_Produccion_3_Backend.Models;
 
 namespace Sistema_Produccion_3_Backend.Controllers.LoginAuth
@@ -24,37 +25,51 @@ namespace Sistema_Produccion_3_Backend.Controllers.LoginAuth
         }
 
         // GET: api/permiso
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<permiso>>> Getpermiso()
+        [HttpGet("get")]
+        public async Task<ActionResult<IEnumerable<PermisoDto>>> Getpermiso()
         {
+            var permiso = await _context.permiso
+                .Include(u => u.idSubModuloNavigation)
+                .ThenInclude(s => s.idModuloNavigation)
+                .ThenInclude(m => m.idMenuNavigation)
+                .ToListAsync();
+            var permisoDto = _mapper.Map<List<PermisoDto>>(permiso);
 
-            return await _context.permiso.ToListAsync();
+            return Ok(permisoDto);
         }
 
         // GET: api/permiso/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<permiso>> Getpermiso(int id)
+        [HttpGet("get/{id}")]
+        public async Task<ActionResult<PermisoDto>> Getpermiso(int id)
+        {
+            var permiso = await _context.permiso
+                .Include(u => u.idSubModuloNavigation)
+                .ThenInclude(s => s.idModuloNavigation)
+                .ThenInclude(m => m.idMenuNavigation)
+                .FirstOrDefaultAsync(u => u.idPermiso == id);
+            var permisoDto = _mapper.Map<PermisoDto>(permiso);
+
+            if (permisoDto == null)
+            {
+                return NotFound("No se encontro nigun registro de Permiso con el ID: " + id);
+            }
+
+            return Ok(permisoDto);
+        }
+
+        // PUT: api/permiso/5
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPut("put/{id}")]
+        public async Task<IActionResult> Putpermiso(int id, UpdatePermisoDto updatePermiso)
         {
             var permiso = await _context.permiso.FindAsync(id);
 
             if (permiso == null)
             {
-                return NotFound();
+                return NotFound("No se encontro el registro de Permiso con el ID: " + id);
             }
 
-            return permiso;
-        }
-
-        // PUT: api/permiso/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Putpermiso(int id, permiso permiso)
-        {
-            if (id != permiso.idPermiso)
-            {
-                return BadRequest();
-            }
-
+            _mapper.Map(updatePermiso, permiso);
             _context.Entry(permiso).State = EntityState.Modified;
 
             try
@@ -65,7 +80,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.LoginAuth
             {
                 if (!permisoExists(id))
                 {
-                    return NotFound();
+                    return BadRequest($"ID = {id} no coincide con el registro");
                 }
                 else
                 {
@@ -73,14 +88,15 @@ namespace Sistema_Produccion_3_Backend.Controllers.LoginAuth
                 }
             }
 
-            return NoContent();
+            return Ok(updatePermiso);
         }
 
         // POST: api/permiso
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<permiso>> Postpermiso(permiso permiso)
+        [HttpPost("post")]
+        public async Task<ActionResult<permiso>> Postpermiso(AddPermisoDto addPermiso)
         {
+            var permiso = _mapper.Map<permiso>(addPermiso);
             _context.permiso.Add(permiso);
             await _context.SaveChangesAsync();
 
