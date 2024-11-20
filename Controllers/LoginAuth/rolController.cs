@@ -70,7 +70,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.LoginAuth
 
         // PUT: api/rol/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
+        [HttpPut("put/{id}")]
         public async Task<IActionResult> Putrol(int id, UpdateRolDto updateRol)
         {
             var rol = await _context.rol.FindAsync(id);
@@ -104,7 +104,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.LoginAuth
 
         // POST: api/rol
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
+        [HttpPost("post")]
         public async Task<ActionResult<rol>> Postrol(AddRolDto addRol)
         {
             var rol = _mapper.Map<rol>(addRol);
