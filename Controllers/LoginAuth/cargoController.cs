@@ -62,14 +62,17 @@ namespace Sistema_Produccion_3_Backend.Controllers.LoginAuth
         }
 
         // PUT: api/cargo/5
-        /**[HttpPut("{id}")]
-        public async Task<IActionResult> Putcargo(int id, cargo cargo)
+        [HttpPut("put/{id}")]
+        public async Task<IActionResult> Putcargo(int id, UpdateCargoDto updateCargo)
         {
-            if (id != cargo.idCargo)
+            var cargo = await _context.cargo.FindAsync(id);
+
+            if (cargo == null)
             {
-                return BadRequest();
+                return NotFound("No se encontro el Cargo con el ID: " + id);
             }
 
+            _mapper.Map(updateCargo, cargo);
             _context.Entry(cargo).State = EntityState.Modified;
 
             try
@@ -80,7 +83,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.LoginAuth
             {
                 if (!cargoExists(id))
                 {
-                    return NotFound();
+                    return BadRequest($"ID = {id} no coindide con el registro");
                 }
                 else
                 {
@@ -88,35 +91,20 @@ namespace Sistema_Produccion_3_Backend.Controllers.LoginAuth
                 }
             }
 
-            return NoContent();
-        }*/
+            return Ok(updateCargo);
+        }
 
         // POST: api/cargo
-        /*[HttpPost]
-        public async Task<ActionResult<cargo>> Postcargo(cargo cargo)
+        [HttpPost]
+        public async Task<ActionResult<cargo>> Postcargo(AddCargoDto addCargo)
         {
+            var cargo = _mapper.Map<cargo>(addCargo);
             _context.cargo.Add(cargo);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("Getcargo", new { id = cargo.idCargo }, cargo);
         }
-
-        // DELETE: api/cargo/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Deletecargo(int id)
-        {
-            var cargo = await _context.cargo.FindAsync(id);
-            if (cargo == null)
-            {
-                return NotFound();
-            }
-
-            _context.cargo.Remove(cargo);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }*/
-
+       
         private bool cargoExists(int id)
         {
             return _context.cargo.Any(e => e.idCargo == id);

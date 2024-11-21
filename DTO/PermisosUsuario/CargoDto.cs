@@ -11,6 +11,7 @@ namespace Sistema_Produccion_3_Backend.DTO.PermisosUsuario
 
         public string? descripcion { get; set; }
 
+        [JsonIgnore]
         public List<UsuarioDto>? usuarios { get; set; }
     }
 }

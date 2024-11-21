@@ -4,9 +4,9 @@
     {
         public int idPermiso { get; set; }
 
-        public int? idSubModulo { get; set; }
+        public int idSubModulo { get; set; }
 
-        public int? idRol { get; set; }
+        public int idRol { get; set; }
 
         public string? descripcion { get; set; }
 
