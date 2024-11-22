@@ -13,7 +13,7 @@ namespace Sistema_Produccion_3_Backend.Models;
 public partial class detalleGira
 {
     [Key]
-    public int idDetalleFactura { get; set; }
+    public int idDetalleGira { get; set; }
 
     public int? idGira { get; set; }
 

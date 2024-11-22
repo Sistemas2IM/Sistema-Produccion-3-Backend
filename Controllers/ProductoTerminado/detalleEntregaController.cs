@@ -25,7 +25,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.ProductoTerminado
         }
 
         // GET: api/detalleEntrega
-        [HttpGet("get")]
+        [HttpGet("get/entrega/{idEntregaPt}")]
         public async Task<ActionResult<IEnumerable<DetalleEntregaDto>>> GetdetalleEntrega(int idEntregaPt)
         {
             var detalleEntrega = await _context.detalleEntrega
@@ -95,17 +95,10 @@ namespace Sistema_Produccion_3_Backend.Controllers.ProductoTerminado
         // POST: api/detalleEntrega
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("post")]
-        public async Task<ActionResult<detalleEntrega>> PostdetalleEntrega(AddDetalleEntregaDto addDetalleEntrega, int idEntregaPt)
+        public async Task<ActionResult<detalleEntrega>> PostdetalleEntrega(AddDetalleEntregaDto addDetalleEntrega)
         {
-            var detallePt = await _context.detalleEntrega.FindAsync(idEntregaPt);
-
-            if (detallePt == null)
-            {
-                return BadRequest("Id de reporte no valido: " + idEntregaPt);
-            }
-
+       
             var detalleEntrega = _mapper.Map<detalleEntrega>(addDetalleEntrega);
-            detalleEntrega.idEntregaPt = idEntregaPt;
 
             _context.detalleEntrega.Add(detalleEntrega);
             await _context.SaveChangesAsync();

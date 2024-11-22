@@ -1,0 +1,21 @@
+﻿using Sistema_Produccion_3_Backend.Models;
+
+namespace Sistema_Produccion_3_Backend.DTO.Logistica
+{
+    public class AddDetalleGiraDto
+    {
+        public int? idGira { get; set; }
+
+        public int? oF { get; set; }
+
+        public string? numeroDeFactura { get; set; }
+
+        public string? otros { get; set; }
+
+        public string? cliente { get; set; }
+
+        public decimal? monto { get; set; }
+
+        public string? observaciones { get; set; }
+    }
+}

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Sistema_Produccion_3_Backend.DTO.Calidad;
 using Sistema_Produccion_3_Backend.DTO.Catalogo;
+using Sistema_Produccion_3_Backend.DTO.Logistica;
 using Sistema_Produccion_3_Backend.DTO.OV;
 using Sistema_Produccion_3_Backend.DTO.PermisosUsuario;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf;
@@ -191,6 +192,27 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             CreateMap<especificaciones, AddEspecificacionesCerDto>().ReverseMap();
             CreateMap<UpdateEspecificacionesCerDto, especificaciones>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            // LOGISTICA - GIRA
+            CreateMap<gira, GiraDto>()
+                .ForMember(dest => dest.detalleGiraDto, opt => opt.MapFrom(src => src.detalleGira))
+                .ForMember(dest => dest.vehiculoDto, opt => opt.MapFrom(src => src.idVehiculoNavigation))
+                .ForMember(dest => dest.motoristaDto, opt => opt.MapFrom(src => src.idMotoristaNavigation))
+                .ReverseMap();
+            CreateMap<gira, AddGiraDto>().ReverseMap();
+            CreateMap<UpdateGiraDto, gira>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            CreateMap<detalleGira, DetalleGiraDto>()
+                .ForMember(dest => dest.giraDto, opt => opt.MapFrom(src => src.idGiraNavigation))
+                .ReverseMap();
+            CreateMap<detalleGira, DetalleGiraDto>().ReverseMap();
+            CreateMap<UpdateDetalleGiraDto, detalleGira>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            CreateMap<vehiculo, VehiculoDto>().ReverseMap();
+
+            CreateMap<motorista, MotoristaDto>().ReverseMap();
         }
     }
 }

@@ -321,7 +321,7 @@ public partial class base_nuevaContext : DbContext
 
         modelBuilder.Entity<detalleGira>(entity =>
         {
-            entity.HasKey(e => e.idDetalleFactura).HasName("PK_DETALLEGIRA");
+            entity.HasKey(e => e.idDetalleGira).HasName("PK_DETALLEGIRA");
 
             entity.HasOne(d => d.idGiraNavigation).WithMany(p => p.detalleGira).HasConstraintName("FK_DETALLE_GIRA");
 
