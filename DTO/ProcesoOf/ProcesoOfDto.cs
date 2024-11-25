@@ -1,4 +1,5 @@
 ﻿using Sistema_Produccion_3_Backend.DTO.ReporteOperador;
+using Sistema_Produccion_3_Backend.DTO.Tableros;
 using Sistema_Produccion_3_Backend.DTO.TarjetasOF;
 
 namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf

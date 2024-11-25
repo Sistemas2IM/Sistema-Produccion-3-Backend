@@ -7,6 +7,7 @@ using Sistema_Produccion_3_Backend.DTO.PermisosUsuario;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf;
 using Sistema_Produccion_3_Backend.DTO.ProductoTerminado;
 using Sistema_Produccion_3_Backend.DTO.ReporteOperador;
+using Sistema_Produccion_3_Backend.DTO.Tableros;
 using Sistema_Produccion_3_Backend.DTO.TarjetasOF;
 using Sistema_Produccion_3_Backend.Models;
 
@@ -218,6 +219,13 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             CreateMap<motorista, MotoristaDto>().ReverseMap();
             CreateMap<motorista, AddMotoristaDto>().ReverseMap();
             CreateMap<UpdateMotoristaDto, motorista>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            // TABLERO / AREA / POSTURA
+
+            CreateMap<tablerosOf, TablerosOfDto>().ReverseMap();
+            CreateMap<tablerosOf, AddTablerosOfDto>().ReverseMap();
+            CreateMap<UpdateTablerosOfDto, tablerosOf>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
         }
     }
