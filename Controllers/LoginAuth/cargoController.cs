@@ -43,7 +43,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.LoginAuth
 
             if (cargoDto == null)
             {
-                return NotFound("no se encontro el cargo con id: " + id);
+                return NotFound("No se encontro el cargo con id: " + id);
             }
 
             return Ok(cargoDto);

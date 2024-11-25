@@ -211,8 +211,14 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             CreateMap<vehiculo, VehiculoDto>().ReverseMap();
+            CreateMap<vehiculo, AddVehiculoDto>().ReverseMap();
+            CreateMap<UpdateVehiculoDto, vehiculo>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             CreateMap<motorista, MotoristaDto>().ReverseMap();
+            CreateMap<motorista, AddMotoristaDto>().ReverseMap();
+            CreateMap<UpdateMotoristaDto, motorista>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
         }
     }
 }
