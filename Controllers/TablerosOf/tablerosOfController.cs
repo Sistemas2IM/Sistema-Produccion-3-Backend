@@ -101,7 +101,6 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             return CreatedAtAction("GettablerosOf", new { id = tablero.idTablero }, tablero);
         }
 
-
         private bool tablerosOfExists(int id)
         {
             return _context.tablerosOf.Any(e => e.idTablero == id);

@@ -229,6 +229,13 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             CreateMap<tablerosOf, AddTablerosOfDto>().ReverseMap();
             CreateMap<UpdateTablerosOfDto, tablerosOf>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            CreateMap<posturasOf, PosturasOfDto>()
+                .ForMember(dest => dest.tablerosOfDto, opt => opt.MapFrom(src => src.idTableroNavigation.nombreTablero))
+                .ReverseMap();
+            CreateMap<posturasOf, AddPosturasOfDto>().ReverseMap();
+            CreateMap<UpdatePosturasOfDto, posturasOf>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
         }
     }
 }
