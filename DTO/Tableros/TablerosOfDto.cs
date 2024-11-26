@@ -18,6 +18,5 @@ namespace Sistema_Produccion_3_Backend.DTO.Tableros
 
         public List<PosturasOfDto>? posturasOfDto { get; set; }
 
-        public virtual ICollection<procesoOf> procesoOf { get; set; } = new List<procesoOf>();
     }
 }
