@@ -1,4 +1,4 @@
-﻿namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
+﻿namespace Sistema_Produccion_3_Backend.DTO.Tableros
 {
     public class PosturasOfDto
     {

@@ -223,7 +223,9 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
 
             // TABLERO / AREA / POSTURA
 
-            CreateMap<tablerosOf, TablerosOfDto>().ReverseMap();
+            CreateMap<tablerosOf, TablerosOfDto>()
+                .ForMember(dest => dest.posturasOfDto, opt => opt.MapFrom(src => src.posturasOf))
+                .ReverseMap();
             CreateMap<tablerosOf, AddTablerosOfDto>().ReverseMap();
             CreateMap<UpdateTablerosOfDto, tablerosOf>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
