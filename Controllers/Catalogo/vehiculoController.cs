@@ -25,7 +25,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Catalogo
         }
 
         // GET: api/vehiculo
-        [HttpGet]
+        [HttpGet("get")]
         public async Task<ActionResult<IEnumerable<VehiculoDto>>> Getvehiculo()
         {
             var vehiculo = await _context.vehiculo.ToListAsync();
@@ -41,7 +41,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Catalogo
             var vehiculo = await _context.vehiculo.FindAsync(id);
             var vehiculoDto = _mapper.Map<VehiculoDto>(vehiculo);
 
-            if (vehiculo == null)
+            if (vehiculoDto == null)
             {
                 return NotFound("No se encontro el vehiculo con el ID: " + id);
             }

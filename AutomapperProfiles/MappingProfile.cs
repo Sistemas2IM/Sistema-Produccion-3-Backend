@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Sistema_Produccion_3_Backend.DTO.Bitacora;
 using Sistema_Produccion_3_Backend.DTO.Calidad;
 using Sistema_Produccion_3_Backend.DTO.Catalogo;
 using Sistema_Produccion_3_Backend.DTO.LoginAuth;
@@ -195,7 +196,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             CreateMap<UpdateEspecificacionesCerDto, especificaciones>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
-            // LOGISTICA - GIRA
+            // LOGISTICA - GIRA =======================================================================================
             CreateMap<gira, GiraDto>()
                 .ForMember(dest => dest.detalleGiraDto, opt => opt.MapFrom(src => src.detalleGira))
                 .ForMember(dest => dest.vehiculoDto, opt => opt.MapFrom(src => src.idVehiculoNavigation))
@@ -222,7 +223,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             CreateMap<UpdateMotoristaDto, motorista>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
-            // TABLERO / AREA / POSTURA
+            // TABLERO / AREA / POSTURA ================================================================================
             // Tablero
             CreateMap<tablerosOf, TablerosOfDto>()
                 .ForMember(dest => dest.posturasOfDto, opt => opt.MapFrom(src => src.posturasOf))
@@ -249,6 +250,12 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ReverseMap();
             CreateMap<areas, AddAreasDto>().ReverseMap();
             CreateMap<UpdateAreasDto, areas>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            // BITACORA =================================================================================================
+            CreateMap<bitacora, BitacoraDto>().ReverseMap();
+            CreateMap<bitacora, AddBitacoraDto>().ReverseMap();
+            CreateMap<UpdateBitacoraDto, bitacora>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
         }
     }
