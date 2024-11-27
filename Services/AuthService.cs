@@ -70,6 +70,7 @@ namespace Sistema_Produccion_3_Backend.Services
             {
                 idRol = register.idRol,
                 idCargo = register.idCargo,
+                idArea = register.idArea,
                 user = register.User,
                 nombres = register.Nombres,
                 apellidos = register.Apellidos,
@@ -103,6 +104,7 @@ namespace Sistema_Produccion_3_Backend.Services
             // Actualizar los campos necesarios
             existingUser.idRol = update.idRol ?? existingUser.idRol;
             existingUser.idCargo = update.idCargo ?? existingUser.idCargo;
+            existingUser.idArea = update.idArea ?? existingUser.idArea;
             existingUser.nombres = update.Nombres ?? existingUser.nombres;
             existingUser.apellidos = update.Apellidos ?? existingUser.apellidos;
             existingUser.email = update.Email ?? existingUser.email;

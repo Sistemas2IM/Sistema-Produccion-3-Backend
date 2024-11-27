@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Sistema_Produccion_3_Backend.DTO.Calidad;
 using Sistema_Produccion_3_Backend.DTO.Catalogo;
+using Sistema_Produccion_3_Backend.DTO.LoginAuth;
 using Sistema_Produccion_3_Backend.DTO.Logistica;
 using Sistema_Produccion_3_Backend.DTO.OV;
 using Sistema_Produccion_3_Backend.DTO.PermisosUsuario;
@@ -222,7 +223,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             // TABLERO / AREA / POSTURA
-
+            // Tablero
             CreateMap<tablerosOf, TablerosOfDto>()
                 .ForMember(dest => dest.posturasOfDto, opt => opt.MapFrom(src => src.posturasOf))
                 .ReverseMap();
@@ -230,11 +231,24 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             CreateMap<UpdateTablerosOfDto, tablerosOf>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
+            //Postura
             CreateMap<posturasOf, PosturasOfDto>()
                 .ForMember(dest => dest.tablerosOfDto, opt => opt.MapFrom(src => src.idTableroNavigation.nombreTablero))
                 .ReverseMap();
             CreateMap<posturasOf, AddPosturasOfDto>().ReverseMap();
             CreateMap<UpdatePosturasOfDto, posturasOf>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            // Area
+            CreateMap<areas, AreasDto>().ReverseMap(); // <------ General
+            CreateMap<areas, AreasTablerosDto>()
+                .ForMember(dest => dest.tablerosOfDto, opt => opt.MapFrom(src => src.tablerosOf)) // <---- Para Tableros
+                .ReverseMap();
+            CreateMap<areas, AreasUsuariosDto>()
+                .ForMember(dest => dest.usuarios, opt => opt.MapFrom(src => src.usuario)) // <---- Para Usuarios
+                .ReverseMap();
+            CreateMap<areas, AddAreasDto>().ReverseMap();
+            CreateMap<UpdateAreasDto, areas>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
         }
     }

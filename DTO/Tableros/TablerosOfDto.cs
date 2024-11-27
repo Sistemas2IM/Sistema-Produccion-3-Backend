@@ -12,10 +12,6 @@ namespace Sistema_Produccion_3_Backend.DTO.Tableros
 
         public string? nombreTablero { get; set; }
 
-        public virtual areas? idAreaNavigation { get; set; }
-
-        public virtual maquinas? idMaquinaNavigation { get; set; }
-
         public List<PosturasOfDto>? posturasOfDto { get; set; }
 
     }
