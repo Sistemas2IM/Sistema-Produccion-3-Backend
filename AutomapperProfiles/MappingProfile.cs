@@ -2,6 +2,7 @@
 using Sistema_Produccion_3_Backend.DTO.Bitacora;
 using Sistema_Produccion_3_Backend.DTO.Calidad;
 using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica;
+using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica.DetalleImpresion;
 using Sistema_Produccion_3_Backend.DTO.Catalogo;
 using Sistema_Produccion_3_Backend.DTO.LoginAuth;
 using Sistema_Produccion_3_Backend.DTO.Logistica;
@@ -198,10 +199,19 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             // FICHA TECNICA DE CALIDAD ==============================================================================
-            CreateMap<fichaTecnica, FichaTecnicaDto>().ReverseMap();
+            CreateMap<fichaTecnica, FichaTecnicaDto>()
+                .ForMember(dest => dest.TipoFicha, opt => opt.MapFrom(src => src.idTipoFichaNavigation.nombre))
+                .ReverseMap();
             CreateMap<fichaTecnica, AddFichaTecnicaDto>().ReverseMap();
             CreateMap<UpdateFichaTecnicaDto, fichaTecnica>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember == null));
+
+            // Detalle de Impresion - Ficha
+            CreateMap<detalleImpresion, DetalleImpresionDto>()
+                .ReverseMap();
+            CreateMap<detalleImpresion, AddDetalleImpresionDto>().ReverseMap();
+            CreateMap<UpdateDetalleImpresionDto, detalleImpresion>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMemberr) => srcMemberr != null));
 
             // LOGISTICA - GIRA =======================================================================================
             CreateMap<gira, GiraDto>()

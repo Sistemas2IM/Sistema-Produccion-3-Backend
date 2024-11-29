@@ -29,6 +29,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.FichaTecnica
         public async Task<ActionResult<IEnumerable<FichaTecnicaDto>>> GetfichaTecnica()
         {
             var fichaTecnica = await _context.fichaTecnica
+                .Include(u => u.idTipoFichaNavigation)
                 .ToListAsync();
 
             var fichaTecnicaDto = _mapper.Map<List<FichaTecnicaDto>>(fichaTecnica);
@@ -41,6 +42,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.FichaTecnica
         public async Task<ActionResult<FichaTecnicaDto>> GetfichaTecnica(int id)
         {
             var fichaTecnica = await _context.fichaTecnica
+                .Include(u => u.idTipoFichaNavigation)
                 .FirstOrDefaultAsync(u => u.idFichaTecnica == id);
 
             var fichaTecnicaDto = _mapper.Map<FichaTecnicaDto>(fichaTecnica);

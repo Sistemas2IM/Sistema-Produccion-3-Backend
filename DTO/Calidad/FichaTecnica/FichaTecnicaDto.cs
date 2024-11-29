@@ -8,6 +8,8 @@
 
         public int? idTipoFicha { get; set; }
 
+        public string? TipoFicha { get; set; }
+
         public string? cliente { get; set; }
 
         public string? codigoProducto { get; set; }
