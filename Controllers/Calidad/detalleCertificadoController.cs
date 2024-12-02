@@ -116,21 +116,6 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad
             return CreatedAtAction("GetdetalleCertificado", new { id = detalleCertficado.idDetalleCertificado });
         }
 
-        // DELETE: api/detalleCertificado/5
-        /*[HttpDelete("{id}")]
-        public async Task<IActionResult> DeletedetalleCertificado(int id)
-        {
-            var detalleCertificado = await _context.detalleCertificado.FindAsync(id);
-            if (detalleCertificado == null)
-            {
-                return NotFound();
-            }
-
-            _context.detalleCertificado.Remove(detalleCertificado);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }*/
 
         private bool detalleCertificadoExists(int id)
         {

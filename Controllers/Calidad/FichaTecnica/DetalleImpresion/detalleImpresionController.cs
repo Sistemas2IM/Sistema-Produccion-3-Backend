@@ -89,29 +89,14 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.FichaTecnica.DetalleI
         // POST: api/detalleImpresion
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("post")]
-        public async Task<ActionResult<detalleImpresion>> PostdetalleImpresion(detalleImpresion detalleImpresion)
+        public async Task<ActionResult<detalleImpresion>> PostdetalleImpresion(AddDetalleImpresionDto addDetalleImpresion)
         {
+            var detalleImpresion = _mapper.Map<detalleImpresion>(addDetalleImpresion);
             _context.detalleImpresion.Add(detalleImpresion);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetdetalleImpresion", new { id = detalleImpresion.idDetalleImpresion }, detalleImpresion);
-        }
-
-        // DELETE: api/detalleImpresion/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletedetalleImpresion(int id)
-        {
-            var detalleImpresion = await _context.detalleImpresion.FindAsync(id);
-            if (detalleImpresion == null)
-            {
-                return NotFound();
-            }
-
-            _context.detalleImpresion.Remove(detalleImpresion);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
+        }    
 
         private bool detalleImpresionExists(int id)
         {
