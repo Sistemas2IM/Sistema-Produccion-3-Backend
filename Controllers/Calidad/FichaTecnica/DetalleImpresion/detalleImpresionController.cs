@@ -28,7 +28,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.FichaTecnica.DetalleI
         [HttpGet("get")]
         public async Task<ActionResult<IEnumerable<DetalleImpresionDto>>> GetdetalleImpresion()
         {
-            var detalleImpresion = await _context.fichaTecnica
+            var detalleImpresion = await _context.detalleImpresion
+                .Include(u => u.detalleBarniz)
                 .ToListAsync();
 
             var detalleImpresionDto = _mapper.Map<List<DetalleImpresionDto>>(detalleImpresion);
@@ -41,6 +42,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.FichaTecnica.DetalleI
         public async Task<ActionResult<DetalleImpresionDto>> GetdetalleImpresion(int id)
         {
             var detalleImpresion = await _context.detalleImpresion
+                .Include(u => u.detalleBarniz)
                 .FirstOrDefaultAsync(u => u.idDetalleImpresion == id);
 
             var detalleImpresionDto = _mapper.Map<DetalleImpresionDto>(detalleImpresion);

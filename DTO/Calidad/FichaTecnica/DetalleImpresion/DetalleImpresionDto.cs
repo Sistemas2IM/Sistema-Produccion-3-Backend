@@ -1,4 +1,6 @@
-﻿namespace Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica.DetalleImpresion
+﻿using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica.DetalleImpresion.DetalleBarniz;
+
+namespace Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica.DetalleImpresion
 {
     public class DetalleImpresionDto
     {
@@ -57,5 +59,7 @@
         public string? datoInstrumento { get; set; }
 
         public bool? calibracionPapel { get; set; }     
+
+        public List<DetalleBarnizDto> detalleBarnizDto { get; set; }
     }
 }

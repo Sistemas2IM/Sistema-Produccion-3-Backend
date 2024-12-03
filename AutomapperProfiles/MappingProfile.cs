@@ -3,6 +3,8 @@ using Sistema_Produccion_3_Backend.DTO.Bitacora;
 using Sistema_Produccion_3_Backend.DTO.Calidad;
 using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica;
 using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica.DetalleImpresion;
+using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica.DetalleImpresion.DetalleBarniz;
+using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica.DetalleImpresion.DetalleSecado;
 using Sistema_Produccion_3_Backend.DTO.Catalogo;
 using Sistema_Produccion_3_Backend.DTO.LoginAuth;
 using Sistema_Produccion_3_Backend.DTO.Logistica;
@@ -208,10 +210,31 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
 
             // Detalle de Impresion - Ficha
             CreateMap<detalleImpresion, DetalleImpresionDto>()
+                .ForMember(dest => dest.detalleBarnizDto, opt => opt.MapFrom(src => src.detalleBarniz))
                 .ReverseMap();
             CreateMap<detalleImpresion, AddDetalleImpresionDto>().ReverseMap();
             CreateMap<UpdateDetalleImpresionDto, detalleImpresion>()
-                .ForAllMembers(opts => opts.Condition((src, dest, srcMemberr) => srcMemberr != null));
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+                        
+                // Detalle de Barniz - impresion --------------------------------------------------------
+                CreateMap<detalleBarniz, DetalleBarnizDto>()
+                     .ForMember(dest => dest.potenciaLamparaUvDto, opt => opt.MapFrom(src => src.potenciaLamparaUv))
+                     .ReverseMap();
+                CreateMap<detalleBarniz, AddDetalleBarnizDto>().ReverseMap();
+                CreateMap<UpdateDetalleBarnizDto, detalleBarniz>()
+                     .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+                        
+                      // Potencia Lampara Uv
+                      CreateMap<potenciaLamparaUv, PotenciaLamparaUvDto>().ReverseMap();
+                      CreateMap<potenciaLamparaUv, AddPotenciaLamparaUvDto>().ReverseMap();
+                      CreateMap<UpdatePotenciaLamparaUvDto, potenciaLamparaUv>()
+                           .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+                // Detalle Secado - Impresion -----------------------------------------------------------
+                CreateMap<detalleSecado, DetalleSecadoDto>().ReverseMap();
+                CreateMap<detalleSecado, AddDetalleSecado>().ReverseMap();
+                CreateMap<UpdateDetalleSecado, detalleSecado>()
+                     .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             // LOGISTICA - GIRA =======================================================================================
             CreateMap<gira, GiraDto>()
