@@ -5,6 +5,8 @@ using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica;
 using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica.DetalleImpresion;
 using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica.DetalleImpresion.DetalleBarniz;
 using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica.DetalleImpresion.DetalleSecado;
+using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica.DetalleImpresion.Filtros;
+using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica.DetalleImpresion.SecuenciaDeColor;
 using Sistema_Produccion_3_Backend.DTO.Catalogo;
 using Sistema_Produccion_3_Backend.DTO.LoginAuth;
 using Sistema_Produccion_3_Backend.DTO.Logistica;
@@ -228,13 +230,25 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                       CreateMap<potenciaLamparaUv, PotenciaLamparaUvDto>().ReverseMap();
                       CreateMap<potenciaLamparaUv, AddPotenciaLamparaUvDto>().ReverseMap();
                       CreateMap<UpdatePotenciaLamparaUvDto, potenciaLamparaUv>()
-                           .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+                        .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
                 // Detalle Secado - Impresion -----------------------------------------------------------
                 CreateMap<detalleSecado, DetalleSecadoDto>().ReverseMap();
                 CreateMap<detalleSecado, AddDetalleSecado>().ReverseMap();
                 CreateMap<UpdateDetalleSecado, detalleSecado>()
-                     .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+                    .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+                // Filtros - Impresion ------------------------------------------------------------------
+                CreateMap<filtros, FiltrosDto>().ReverseMap();
+                CreateMap<filtros, AddFiltrosDto>().ReverseMap();
+                CreateMap<UpdateFiltrosDto, filtros>()
+                    .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+                // Secuencia de Color -----------------------------------------------------------------
+                CreateMap<secuenciaDeColor, SecuenciaDeColorDto>().ReverseMap();
+                CreateMap<secuenciaDeColor, AddSecuenciaDeColorDto>().ReverseMap();
+                CreateMap<UpdateSecuenciaDeColorDto, secuenciaDeColor>()
+                    .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             // LOGISTICA - GIRA =======================================================================================
             CreateMap<gira, GiraDto>()

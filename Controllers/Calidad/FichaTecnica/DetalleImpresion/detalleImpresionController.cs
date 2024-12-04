@@ -25,10 +25,11 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.FichaTecnica.DetalleI
         }
 
         // GET: api/detalleImpresion
-        [HttpGet("get")]
-        public async Task<ActionResult<IEnumerable<DetalleImpresionDto>>> GetdetalleImpresion()
+        [HttpGet("get/IdFicha/{id}")]
+        public async Task<ActionResult<IEnumerable<DetalleImpresionDto>>> GetdetalleImpresionFicha(int id)
         {
             var detalleImpresion = await _context.detalleImpresion
+                .Where(u => u.idFichaTecnica == id)
                 .Include(u => u.detalleBarniz)
                 .ToListAsync();
 
