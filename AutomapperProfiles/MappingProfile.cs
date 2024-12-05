@@ -10,6 +10,7 @@ using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica.DetalleImpresion.For
 using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica.DetalleImpresion.FormulacionTintas.EspacioColor;
 using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica.DetalleImpresion.FormulacionTintas.GeneralidadColor;
 using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica.DetalleImpresion.SecuenciaDeColor;
+using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica.DetallePegado;
 using Sistema_Produccion_3_Backend.DTO.Catalogo;
 using Sistema_Produccion_3_Backend.DTO.LoginAuth;
 using Sistema_Produccion_3_Backend.DTO.Logistica;
@@ -210,75 +211,85 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             CreateMap<UpdateFichaTecnicaDto, fichaTecnica>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember == null));
 
-            // Detalle de Impresion - Ficha
-            CreateMap<detalleImpresion, DetalleImpresionDto>()
-                .ForMember(dest => dest.detalleBarnizDto, opt => opt.MapFrom(src => src.detalleBarniz))
-                .ForMember(dest => dest.detalleSecadoDto, opt => opt.MapFrom(src => src.detalleSecado))
-                .ForMember(dest => dest.filtrosDto, opt => opt.MapFrom(src => src.filtros))
-                .ForMember(dest => dest.formulacionTintasDto, opt => opt.MapFrom(src => src.formulacionTintas))
-                .ForMember(dest => dest.secuenciaDeColorDto, opt => opt.MapFrom(src => src.secuenciaDeColor))
-                .ReverseMap();
-            CreateMap<detalleImpresion, AddDetalleImpresionDto>().ReverseMap();
-            CreateMap<UpdateDetalleImpresionDto, detalleImpresion>()
-                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             {
-                // Detalle de Barniz - impresion --------------------------------------------------------
-                CreateMap<detalleBarniz, DetalleBarnizDto>()
-                     .ForMember(dest => dest.potenciaLamparaUvDto, opt => opt.MapFrom(src => src.potenciaLamparaUv))
-                     .ReverseMap();
-                CreateMap<detalleBarniz, AddDetalleBarnizDto>().ReverseMap();
-                CreateMap<UpdateDetalleBarnizDto, detalleBarniz>()
-                     .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
-                {
-                    // Potencia Lampara Uv
-                    CreateMap<potenciaLamparaUv, PotenciaLamparaUvDto>().ReverseMap();
-                    CreateMap<potenciaLamparaUv, AddPotenciaLamparaUvDto>().ReverseMap();
-                    CreateMap<UpdatePotenciaLamparaUvDto, potenciaLamparaUv>()
-                      .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
-                }
-                    
-
-                // Detalle Secado - Impresion -----------------------------------------------------------
-                CreateMap<detalleSecado, DetalleSecadoDto>().ReverseMap();
-                CreateMap<detalleSecado, AddDetalleSecado>().ReverseMap();
-                CreateMap<UpdateDetalleSecado, detalleSecado>()
-                    .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
-
-                // Filtros - Impresion ------------------------------------------------------------------
-                CreateMap<filtros, FiltrosDto>().ReverseMap();
-                CreateMap<filtros, AddFiltrosDto>().ReverseMap();
-                CreateMap<UpdateFiltrosDto, filtros>()
-                    .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
-
-                // Secuencia de Color -----------------------------------------------------------------
-                CreateMap<secuenciaDeColor, SecuenciaDeColorDto>().ReverseMap();
-                CreateMap<secuenciaDeColor, AddSecuenciaDeColorDto>().ReverseMap();
-                CreateMap<UpdateSecuenciaDeColorDto, secuenciaDeColor>()
-                    .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
-
-                // Formulacion de Tintas --------------------------------------------------------------
-                CreateMap<formulacionTintas, FormulacionTintasDto>()
-                    .ForMember(dest => dest.espacioColorDto, opt => opt.MapFrom(src => src.espacioColor))
+                // Detalle de Impresion - Ficha Tecnica
+                CreateMap<detalleImpresion, DetalleImpresionDto>()
+                    .ForMember(dest => dest.detalleBarnizDto, opt => opt.MapFrom(src => src.detalleBarniz))
+                    .ForMember(dest => dest.detalleSecadoDto, opt => opt.MapFrom(src => src.detalleSecado))
+                    .ForMember(dest => dest.filtrosDto, opt => opt.MapFrom(src => src.filtros))
+                    .ForMember(dest => dest.formulacionTintasDto, opt => opt.MapFrom(src => src.formulacionTintas))
+                    .ForMember(dest => dest.secuenciaDeColorDto, opt => opt.MapFrom(src => src.secuenciaDeColor))
                     .ReverseMap();
-                CreateMap<formulacionTintas, AddFormulacionTintasDto>().ReverseMap();
-                CreateMap<UpdateFormulacionTintasDto, formulacionTintas>()
+                CreateMap<detalleImpresion, AddDetalleImpresionDto>().ReverseMap();
+                CreateMap<UpdateDetalleImpresionDto, detalleImpresion>()
                     .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
                 {
-                    // Espacio de color
-                    CreateMap<espacioColor, EspacioColorDto>()
-                        .ForMember(dest => dest.generalidadColorDto, opt => opt.MapFrom(src => src.generalidadColor))
-                        .ReverseMap();
-                    CreateMap<espacioColor, AddEspacioColorDto>().ReverseMap();
-                    CreateMap<UpdateEspacioColorDto, espacioColor>()
+                    // Detalle de Barniz - impresion --------------------------------------------------------
+                    CreateMap<detalleBarniz, DetalleBarnizDto>()
+                         .ForMember(dest => dest.potenciaLamparaUvDto, opt => opt.MapFrom(src => src.potenciaLamparaUv))
+                         .ReverseMap();
+                    CreateMap<detalleBarniz, AddDetalleBarnizDto>().ReverseMap();
+                    CreateMap<UpdateDetalleBarnizDto, detalleBarniz>()
+                         .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+                    {
+                        // Potencia Lampara Uv
+                        CreateMap<potenciaLamparaUv, PotenciaLamparaUvDto>().ReverseMap();
+                        CreateMap<potenciaLamparaUv, AddPotenciaLamparaUvDto>().ReverseMap();
+                        CreateMap<UpdatePotenciaLamparaUvDto, potenciaLamparaUv>()
+                          .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+                    }
+
+
+                    // Detalle Secado - Impresion -----------------------------------------------------------
+                    CreateMap<detalleSecado, DetalleSecadoDto>().ReverseMap();
+                    CreateMap<detalleSecado, AddDetalleSecado>().ReverseMap();
+                    CreateMap<UpdateDetalleSecado, detalleSecado>()
                         .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
-                    // Generalidad de color
-                    CreateMap<generalidadColor, GeneralidadColorDto>().ReverseMap();
-                    CreateMap<generalidadColor, AddGeneralidadColorDto>().ReverseMap();
-                    CreateMap<UpdateGeneralidadColorDto, generalidadColor>()
+                    // Filtros - Impresion ------------------------------------------------------------------
+                    CreateMap<filtros, FiltrosDto>().ReverseMap();
+                    CreateMap<filtros, AddFiltrosDto>().ReverseMap();
+                    CreateMap<UpdateFiltrosDto, filtros>()
                         .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
-                }                  
+
+                    // Secuencia de Color -----------------------------------------------------------------
+                    CreateMap<secuenciaDeColor, SecuenciaDeColorDto>().ReverseMap();
+                    CreateMap<secuenciaDeColor, AddSecuenciaDeColorDto>().ReverseMap();
+                    CreateMap<UpdateSecuenciaDeColorDto, secuenciaDeColor>()
+                        .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+                    // Formulacion de Tintas --------------------------------------------------------------
+                    CreateMap<formulacionTintas, FormulacionTintasDto>()
+                        .ForMember(dest => dest.espacioColorDto, opt => opt.MapFrom(src => src.espacioColor))
+                        .ReverseMap();
+                    CreateMap<formulacionTintas, AddFormulacionTintasDto>().ReverseMap();
+                    CreateMap<UpdateFormulacionTintasDto, formulacionTintas>()
+                        .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+                    {
+                        // Espacio de color
+                        CreateMap<espacioColor, EspacioColorDto>()
+                            .ForMember(dest => dest.generalidadColorDto, opt => opt.MapFrom(src => src.generalidadColor))
+                            .ReverseMap();
+                        CreateMap<espacioColor, AddEspacioColorDto>().ReverseMap();
+                        CreateMap<UpdateEspacioColorDto, espacioColor>()
+                            .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+                        // Generalidad de color
+                        CreateMap<generalidadColor, GeneralidadColorDto>().ReverseMap();
+                        CreateMap<generalidadColor, AddGeneralidadColorDto>().ReverseMap();
+                        CreateMap<UpdateGeneralidadColorDto, generalidadColor>()
+                            .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+                    }
+                }
+
+                // Detalle de Pegado - Ficha Tecnica
+                CreateMap<detallePegado, DetallePegadoDto>()
+                    .ReverseMap();
+                CreateMap<detallePegado, AddDetallePegadoDto>().ReverseMap();
+                CreateMap<UpdateDetallePegadoDto, detallePegado>()
+                    .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             }
+
 
             // LOGISTICA - GIRA =======================================================================================
             CreateMap<gira, GiraDto>()

@@ -43,7 +43,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="DTO\Calidad\FichaTecnica\DetallePegado\" />
     <Folder Include="DTO\Calidad\FichaTecnica\DetalleTroquelado\" />
   </ItemGroup>
 
