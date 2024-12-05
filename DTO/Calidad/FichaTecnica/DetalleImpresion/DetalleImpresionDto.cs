@@ -1,4 +1,8 @@
 ﻿using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica.DetalleImpresion.DetalleBarniz;
+using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica.DetalleImpresion.DetalleSecado;
+using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica.DetalleImpresion.Filtros;
+using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica.DetalleImpresion.FormulacionTintas;
+using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica.DetalleImpresion.SecuenciaDeColor;
 
 namespace Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica.DetalleImpresion
 {
@@ -61,5 +65,13 @@ namespace Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica.DetalleImpresion
         public bool? calibracionPapel { get; set; }     
 
         public List<DetalleBarnizDto> detalleBarnizDto { get; set; }
+
+        public List<DetalleSecadoDto> detalleSecadoDto { get; set; }
+
+        public List<FiltrosDto> filtrosDto { get; set; }
+
+        public List <FormulacionTintasDto> formulacionTintasDto { get; set; }
+
+        public List <SecuenciaDeColorDto> secuenciaDeColorDto { get; set; }
     }
 }

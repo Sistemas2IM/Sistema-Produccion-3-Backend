@@ -29,8 +29,15 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.FichaTecnica.DetalleI
         public async Task<ActionResult<IEnumerable<DetalleImpresionDto>>> GetdetalleImpresionFicha(int id)
         {
             var detalleImpresion = await _context.detalleImpresion
-                .Where(u => u.idFichaTecnica == id)
+                .Where(i => i.idFichaTecnica == id)
                 .Include(u => u.detalleBarniz)
+                .ThenInclude(o => o.potenciaLamparaUv)
+                .Include(a => a.detalleSecado)
+                .Include(s => s.filtros)
+                .Include(d => d.secuenciaDeColor)
+                .Include(f => f.formulacionTintas)
+                .ThenInclude(g => g.espacioColor)
+                .ThenInclude(h => h.generalidadColor)
                 .ToListAsync();
 
             var detalleImpresionDto = _mapper.Map<List<DetalleImpresionDto>>(detalleImpresion);
@@ -44,6 +51,13 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.FichaTecnica.DetalleI
         {
             var detalleImpresion = await _context.detalleImpresion
                 .Include(u => u.detalleBarniz)
+                .ThenInclude(o => o.potenciaLamparaUv)
+                .Include(a => a.detalleSecado)
+                .Include(s => s.filtros)
+                .Include(d => d.secuenciaDeColor)
+                .Include(f => f.formulacionTintas)
+                .ThenInclude(g => g.espacioColor)
+                .ThenInclude(h => h.generalidadColor)
                 .FirstOrDefaultAsync(u => u.idDetalleImpresion == id);
 
             var detalleImpresionDto = _mapper.Map<DetalleImpresionDto>(detalleImpresion);
