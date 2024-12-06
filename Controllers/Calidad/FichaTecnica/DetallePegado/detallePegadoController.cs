@@ -30,6 +30,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.FichaTecnica.DetalleP
         {
             var detallePegado = await _context.detallePegado
                 .Where(i => i.idFichaTecnica == id)
+                .Include(u => u.tipoPega)
+                .Include(o => o.tipoPegado)
                 .ToListAsync();
 
             var detallePegadoDto = _mapper.Map<List<DetallePegadoDto>>(detallePegado);
@@ -42,6 +44,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.FichaTecnica.DetalleP
         public async Task<ActionResult<DetallePegadoDto>> GetdetallePegado(int id)
         {
             var detallePegado = await _context.detallePegado
+                .Include(u => u.tipoPega)
+                .Include(o => o.tipoPegado)
                 .FirstOrDefaultAsync(u => u.idDetallePegado == id);
 
             var detallePegadoDto = _mapper.Map<DetallePegadoDto>(detallePegado);

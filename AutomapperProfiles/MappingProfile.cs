@@ -11,6 +11,8 @@ using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica.DetalleImpresion.For
 using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica.DetalleImpresion.FormulacionTintas.GeneralidadColor;
 using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica.DetalleImpresion.SecuenciaDeColor;
 using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica.DetallePegado;
+using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica.DetallePegado.TipoPega;
+using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica.DetallePegado.TipoPegado;
 using Sistema_Produccion_3_Backend.DTO.Catalogo;
 using Sistema_Produccion_3_Backend.DTO.LoginAuth;
 using Sistema_Produccion_3_Backend.DTO.Logistica;
@@ -284,10 +286,23 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
 
                 // Detalle de Pegado - Ficha Tecnica
                 CreateMap<detallePegado, DetallePegadoDto>()
+                    .ForMember(dest => dest.tipoPegaDto, opt => opt.MapFrom(src => src.tipoPega))
+                    .ForMember(dest => dest.tipoPegadoDto, opt => opt.MapFrom(src => src.tipoPegado))
                     .ReverseMap();
                 CreateMap<detallePegado, AddDetallePegadoDto>().ReverseMap();
                 CreateMap<UpdateDetallePegadoDto, detallePegado>()
                     .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+                {
+                    CreateMap<tipoPega, TipoPegaDto>().ReverseMap();
+                    CreateMap<tipoPega, AddTipoPegaDto>().ReverseMap();
+                    CreateMap<UpdateTipoPegaDto, tipoPega>()
+                        .ForAllMembers(opts => opts.Condition((src, dest, srcMmeber) => srcMmeber != null));
+
+                    CreateMap<tipoPegado, TipoPegadoDto>().ReverseMap();
+                    CreateMap<tipoPegado, AddTipoPegadoDto>().ReverseMap();
+                    CreateMap<UpdateTipoPegadoDto, tipoPegado>()
+                        .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember == null));
+                }
             }
 
 

@@ -1,4 +1,7 @@
-﻿namespace Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica.DetallePegado
+﻿using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica.DetallePegado.TipoPega;
+using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica.DetallePegado.TipoPegado;
+
+namespace Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica.DetallePegado
 {
     public class DetallePegadoDto
     {
@@ -48,6 +51,10 @@
 
         public int? unidadesFajadas { get; set; }
 
-        public string observaciones { get; set; }       
+        public string? observaciones { get; set; }  
+        
+        public List<TipoPegaDto>? tipoPegaDto { get; set; }
+
+        public List<TipoPegadoDto>? tipoPegadoDto { get; set; }
     }
 }
