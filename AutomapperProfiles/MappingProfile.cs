@@ -13,6 +13,8 @@ using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica.DetalleImpresion.Sec
 using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica.DetallePegado;
 using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica.DetallePegado.TipoPega;
 using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica.DetallePegado.TipoPegado;
+using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica.DetalleTroquelado;
+using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica.DetalleTroquelado.TipoAcabado;
 using Sistema_Produccion_3_Backend.DTO.Catalogo;
 using Sistema_Produccion_3_Backend.DTO.LoginAuth;
 using Sistema_Produccion_3_Backend.DTO.Logistica;
@@ -309,7 +311,22 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                     CreateMap<tipoPegado, TipoPegadoDto>().ReverseMap();
                     CreateMap<tipoPegado, AddTipoPegadoDto>().ReverseMap();
                     CreateMap<UpdateTipoPegadoDto, tipoPegado>()
-                        .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember == null));
+                        .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+                }
+
+                // Detalle de Troquelado - Ficha Tecnica
+                CreateMap<detalleTroquelado, DetalleTroqueladoDto>()
+                    .ForMember( dest => dest.tipoAcabadoDto, opt => opt.MapFrom(src => src.tipoAcabado))
+                    .ReverseMap();
+                CreateMap<detalleTroquelado, AddDetalleTroqueladoDto>().ReverseMap();
+                CreateMap<UpdateDetalleTroqueladoDto, detalleTroquelado>()
+                    .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+                {
+                    CreateMap<tipoAcabado, TipoAcabadoDto>().ReverseMap();
+                    CreateMap<tipoAcabado, AddTipoAcabadoDto>().ReverseMap();
+                    CreateMap<UpdateTipoAcabadoDto, tipoAcabado>()
+                        .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
                 }
             }
 
