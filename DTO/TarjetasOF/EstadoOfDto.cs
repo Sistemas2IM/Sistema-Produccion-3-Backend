@@ -15,7 +15,7 @@ namespace Sistema_Produccion_3_Backend.DTO.TarjetasOF
         public int? secuencia { get; set; }
 
 
-        //[JsonIgnore]
+        [JsonIgnore]
         public List<TarjetaOfDto> ?tarjetaOfDtos { get; set; }
     }
 }

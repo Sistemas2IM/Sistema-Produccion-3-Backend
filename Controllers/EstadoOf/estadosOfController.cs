@@ -40,7 +40,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.EstadoOf
             return Ok(tarjetaOfDto);
              */
             var estadoof = await _context.estadosOf
-                .Include(t => t.tarjetaOf)
+                //.Include(t => t.tarjetaOf)
                 .ToListAsync();
 
             var estadoOfDto = _mapper.Map<List<EstadoOfDto>>(estadoof);

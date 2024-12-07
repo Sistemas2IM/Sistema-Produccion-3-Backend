@@ -71,17 +71,54 @@ namespace Sistema_Produccion_3_Backend.Controllers.LoginAuth
         // PUT: api/rol/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("put/{id}")]
-        public async Task<IActionResult> Putrol(int id, UpdateRolDto updateRol)
+        public async Task<IActionResult> PutRol(int id, UpdateRolDto updateRol)
         {
-            var rol = await _context.rol.FindAsync(id);
+            // Buscar el rol existente
+            var existingRol = await _context.rol
+                .Include(r => r.permiso) // Incluir la relación con permisos
+                .FirstOrDefaultAsync(r => r.idRol == id);
 
-            if (rol == null)
+            if (existingRol == null)
             {
-                return NotFound("No se encontro el rol con el ID: " + id);
+                return NotFound($"No se encontró el rol con el ID: {id}");
             }
 
-            _mapper.Map(updateRol, rol);
-            _context.Entry(rol).State = EntityState.Modified;
+            // Actualizar los campos del rol principal
+            _mapper.Map(updateRol, existingRol);
+
+            // Actualizar la lista de permisos
+            if (updateRol.updatePermisoDto != null && updateRol.updatePermisoDto.Any())
+            {
+                // Eliminar permisos que ya no están en el DTO
+                var permisosIds = updateRol.updatePermisoDto.Select(p => p.idSubModulo).ToList();
+                var permisosARemover = existingRol.permiso
+                    .Where(p => !permisosIds.Contains(p.idSubModulo))
+                    .ToList();
+
+                _context.permiso.RemoveRange(permisosARemover);
+
+                // Actualizar o agregar nuevos permisos
+                foreach (var permisoDto in updateRol.updatePermisoDto)
+                {
+                    var existingPermiso = existingRol.permiso
+                        .FirstOrDefault(p => p.idSubModulo == permisoDto.idSubModulo);
+
+                    if (existingPermiso != null)
+                    {
+                        // Actualizar el permiso existente
+                        _mapper.Map(permisoDto, existingPermiso);
+                    }
+                    else
+                    {
+                        // Agregar un nuevo permiso
+                        var newPermiso = _mapper.Map<permiso>(permisoDto);
+                        existingRol.permiso.Add(newPermiso);
+                    }
+                }
+            }
+
+            // Marcar el rol como modificado
+            _context.Entry(existingRol).State = EntityState.Modified;
 
             try
             {
@@ -91,7 +128,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.LoginAuth
             {
                 if (!rolExists(id))
                 {
-                    return BadRequest($"ID = {id} no coincide con el registro");
+                    return NotFound($"ID = {id} no coincide con el registro");
                 }
                 else
                 {
@@ -102,17 +139,28 @@ namespace Sistema_Produccion_3_Backend.Controllers.LoginAuth
             return Ok(updateRol);
         }
 
+
         // POST: api/rol
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("post")]
-        public async Task<ActionResult<rol>> Postrol(AddRolDto addRol)
+        public async Task<ActionResult<rol>> PostRol(AddRolDto addRol)
         {
+            // Mapear el DTO a la entidad principal (rol)
             var rol = _mapper.Map<rol>(addRol);
+
+            // Asegurarse de que los permisos estén vinculados al rol
+            if (addRol.addPermisos != null && addRol.addPermisos.Any())
+            {
+                rol.permiso = addRol.addPermisos.Select(dto => _mapper.Map<permiso>(dto)).ToList();
+            }
+
+            // Agregar el rol con sus permisos a la base de datos
             _context.rol.Add(rol);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("Getrol", new { id = rol.idRol }, rol);
+            // Retornar la respuesta
+            return CreatedAtAction("GetRol", new { id = rol.idRol }, rol);
         }
+
 
         private bool rolExists(int id)
         {

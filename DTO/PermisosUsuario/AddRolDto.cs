@@ -7,5 +7,7 @@
         public string? nombreRol { get; set; }
 
         public string? descripcion { get; set; }
+
+        public List<AddPermisoDto>? addPermisos { get; set; }
     }
 }

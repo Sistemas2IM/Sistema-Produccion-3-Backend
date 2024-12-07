@@ -2,10 +2,10 @@
 {
     public class UpdateRolDto
     {
-        public int idRol { get; set; }
-
         public string? nombreRol { get; set; }
 
         public string? descripcion { get; set; }
+
+        public List<UpdatePermisoDto>? updatePermisoDto {  get; set; } 
     }
 }
