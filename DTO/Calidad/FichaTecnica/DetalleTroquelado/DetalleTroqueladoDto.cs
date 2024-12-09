@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica.DetalleTroquelado.TipoAcabado;
+using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica.DetalleTroquelado.TipoPleca;
 
 namespace Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica.DetalleTroquelado
 {
@@ -38,5 +39,7 @@ namespace Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica.DetalleTroquelad
         public string? observaciones { get; set; }
 
         public List<TipoAcabadoDto>? tipoAcabadoDto { get; set; }
+
+        public List<TipoPlecaDto>? tipoPlecaDto { get; set; }
     }
 }

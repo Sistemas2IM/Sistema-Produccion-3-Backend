@@ -15,6 +15,7 @@ using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica.DetallePegado.TipoPe
 using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica.DetallePegado.TipoPegado;
 using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica.DetalleTroquelado;
 using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica.DetalleTroquelado.TipoAcabado;
+using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica.DetalleTroquelado.TipoPleca;
 using Sistema_Produccion_3_Backend.DTO.Catalogo;
 using Sistema_Produccion_3_Backend.DTO.LoginAuth;
 using Sistema_Produccion_3_Backend.DTO.Logistica;
@@ -317,6 +318,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 // Detalle de Troquelado - Ficha Tecnica
                 CreateMap<detalleTroquelado, DetalleTroqueladoDto>()
                     .ForMember( dest => dest.tipoAcabadoDto, opt => opt.MapFrom(src => src.tipoAcabado))
+                    .ForMember( dest => dest.tipoPlecaDto, opt => opt.MapFrom(src => src.tipoPleca))
                     .ReverseMap();
                 CreateMap<detalleTroquelado, AddDetalleTroqueladoDto>().ReverseMap();
                 CreateMap<UpdateDetalleTroqueladoDto, detalleTroquelado>()
@@ -326,6 +328,11 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                     CreateMap<tipoAcabado, TipoAcabadoDto>().ReverseMap();
                     CreateMap<tipoAcabado, AddTipoAcabadoDto>().ReverseMap();
                     CreateMap<UpdateTipoAcabadoDto, tipoAcabado>()
+                        .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+                    CreateMap<tipoPleca, TipoPlecaDto>().ReverseMap();
+                    CreateMap<tipoPleca, AddTipoPlecaDto>().ReverseMap();
+                    CreateMap<UpdateTipoPlecaDto, tipoPleca>()
                         .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
                 }
             }

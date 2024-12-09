@@ -31,6 +31,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.FichaTecnica.DetalleT
             var detalleTroquelado = await _context.detalleTroquelado
                 .Where(u => u.idFichaTecnica == id)
                 .Include(i => i.tipoAcabado)
+                .Include(o => o.tipoPleca)
                 .ToListAsync();
 
             var detalleTroqueladoDto = _mapper.Map<List<DetalleTroqueladoDto>>(detalleTroquelado);
@@ -44,6 +45,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.FichaTecnica.DetalleT
         {
             var detalleTroquelado = await _context.detalleTroquelado
                 .Include(i => i.tipoAcabado)
+                .Include(o => o.tipoPleca)
                 .FirstOrDefaultAsync(u => u.idDetalleTroquelado == id);
 
             var detalleTroqueladoDto = _mapper.Map<DetalleTroqueladoDto>(detalleTroquelado);

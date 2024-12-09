@@ -25,10 +25,11 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.FichaTecnica.DetalleI
         }
 
         // GET: api/potenciaLamparaUv
-        [HttpGet("get")]
-        public async Task<ActionResult<IEnumerable<PotenciaLamparaUvDto>>> GetpotenciaLamparaUv()
+        [HttpGet("get/Barniz/{id}")]
+        public async Task<ActionResult<IEnumerable<PotenciaLamparaUvDto>>> GetpotenciaLamparaUvBarniz(int id)
         {
             var potencialLamparaUv = await _context.potenciaLamparaUv
+                .Where(u => u.idBarniz == id)
                 .ToListAsync();
 
             var potencialLamparaUvDto = _mapper.Map<List<PotenciaLamparaUvDto>>(potencialLamparaUv);

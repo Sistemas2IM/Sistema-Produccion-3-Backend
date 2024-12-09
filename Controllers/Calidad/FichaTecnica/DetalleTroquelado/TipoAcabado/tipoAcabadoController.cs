@@ -38,29 +38,35 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.FichaTecnica.DetalleT
         }
 
         // GET: api/tipoAcabado/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<tipoAcabado>> GettipoAcabado(int id)
+        [HttpGet("get/{id}")]
+        public async Task<ActionResult<TipoAcabadoDto>> GettipoAcabado(int id)
+        {
+            var tipoAcabado = await _context.tipoAcabado
+                .FindAsync(id);
+
+            var tipoAcabadoDto = _mapper.Map<TipoAcabadoDto>(tipoAcabado);
+
+            if (tipoAcabadoDto == null)
+            {
+                return NotFound($"No se encontro el tipo de acabado con el ID {id}");
+            }
+
+            return Ok(tipoAcabadoDto);
+        }
+
+        // PUT: api/tipoAcabado/5
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPut("put/{id}")]
+        public async Task<IActionResult> PuttipoAcabado(int id, UpdateTipoAcabadoDto updateTipoAcabado)
         {
             var tipoAcabado = await _context.tipoAcabado.FindAsync(id);
 
             if (tipoAcabado == null)
             {
-                return NotFound();
+                return NotFound($"No se encontro el tipo de acabado con el ID: {id}");
             }
 
-            return tipoAcabado;
-        }
-
-        // PUT: api/tipoAcabado/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PuttipoAcabado(int id, tipoAcabado tipoAcabado)
-        {
-            if (id != tipoAcabado.idTipoAcabado)
-            {
-                return BadRequest();
-            }
-
+            _mapper.Map(updateTipoAcabado, tipoAcabado);
             _context.Entry(tipoAcabado).State = EntityState.Modified;
 
             try
@@ -71,44 +77,28 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.FichaTecnica.DetalleT
             {
                 if (!tipoAcabadoExists(id))
                 {
-                    return NotFound();
+                    return BadRequest($"El ID {id} no coincide con ningun registro");
                 }
                 else
                 {
                     throw;
                 }
             }
-
-            return NoContent();
+            return Ok(updateTipoAcabado);
         }
 
         // POST: api/tipoAcabado
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<tipoAcabado>> PosttipoAcabado(tipoAcabado tipoAcabado)
+        [HttpPost("post")]
+        public async Task<ActionResult<tipoAcabado>> PosttipoAcabado(AddTipoAcabadoDto addTipoAcabado)
         {
+            var tipoAcabado = _mapper.Map<tipoAcabado>(addTipoAcabado);
             _context.tipoAcabado.Add(tipoAcabado);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GettipoAcabado", new { id = tipoAcabado.idTipoAcabado }, tipoAcabado);
         }
-
-        // DELETE: api/tipoAcabado/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletetipoAcabado(int id)
-        {
-            var tipoAcabado = await _context.tipoAcabado.FindAsync(id);
-            if (tipoAcabado == null)
-            {
-                return NotFound();
-            }
-
-            _context.tipoAcabado.Remove(tipoAcabado);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
+      
         private bool tipoAcabadoExists(int id)
         {
             return _context.tipoAcabado.Any(e => e.idTipoAcabado == id);
