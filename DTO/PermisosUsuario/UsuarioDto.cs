@@ -18,8 +18,6 @@ namespace Sistema_Produccion_3_Backend.DTO.PermisosUsuario
 
         public string? status { get; set; }
 
-        public string? password { get; set; }
-
         public string? nombres { get; set; }
 
         public string? apellidos { get; set; }

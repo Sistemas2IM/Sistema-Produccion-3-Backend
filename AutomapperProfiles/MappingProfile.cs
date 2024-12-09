@@ -178,10 +178,10 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ReverseMap();
 
             CreateMap<modulo, ModuloDto>()
-                .ForMember(dest => dest.menu, opt => opt.MapFrom(src => src.idMenuNavigation))
+                //.ForMember(dest => dest.menu, opt => opt.MapFrom(src => src.idMenuNavigation))
                 .ReverseMap();
 
-            CreateMap<menu, MenuDto>().ReverseMap();
+            //CreateMap<menu, MenuDto>().ReverseMap();
 
             CreateMap<cargo, CargoDto>()
                 .ForMember(dest => dest.usuarios, opt => opt.MapFrom(src => src.usuario))

@@ -9,7 +9,5 @@ namespace Sistema_Produccion_3_Backend.DTO.PermisosUsuario
         public int? idMenu { get; set; }
 
         public string? nombreModulo { get; set; }
-
-        public MenuDto? menu { get; set; }
     }
 }

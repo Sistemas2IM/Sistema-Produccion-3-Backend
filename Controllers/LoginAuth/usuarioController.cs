@@ -28,7 +28,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.LoginAuth
                 .ThenInclude(r => r.permiso)            // Include the permissions for each role
                 .ThenInclude(p => p.idSubModuloNavigation) // Include the sub-modules for each permission
                 .ThenInclude(sm => sm.idModuloNavigation)  // Include the modules for each sub-module
-                .ThenInclude(m => m.idMenuNavigation)   // Include the menu for each module
+                //.ThenInclude(m => m.idMenuNavigation)   // Include the menu for each module
                 .Include(c => c.idCargoNavigation)
                 .ToListAsync();
 
@@ -46,7 +46,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.LoginAuth
                 .ThenInclude(r => r.permiso)
                 .ThenInclude(p => p.idSubModuloNavigation)
                 .ThenInclude(sm => sm.idModuloNavigation)
-                .ThenInclude(m => m.idMenuNavigation)
+                //.ThenInclude(m => m.idMenuNavigation)
                 .Include(c => c.idCargoNavigation)
                 .FirstOrDefaultAsync(u => u.user == user); // Filtrar por el campo "user" (string)
 
