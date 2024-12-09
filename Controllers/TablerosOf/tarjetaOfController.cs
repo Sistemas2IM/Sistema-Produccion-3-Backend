@@ -91,6 +91,52 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             return Ok(updateTarjetaOf);
         }
 
+        [HttpPut("put/BatchUpdate")]
+        public async Task<IActionResult> BatchUpdateTarjetas([FromBody] BatchUpdatePosicionTarjetaOfDto batchUpdateDto)
+        {
+            if (batchUpdateDto == null || batchUpdateDto.Tarjetas == null || !batchUpdateDto.Tarjetas.Any())
+            {
+                return BadRequest("No se enviaron datos para actualizar.");
+            }
+
+            var ids = batchUpdateDto.Tarjetas.Select(t => t.oF).ToList();
+
+            // Obtener todas las tarjetas relacionadas
+            var tarjetas = await _context.tarjetaOf.Where(t => ids.Contains(t.oF)).ToListAsync();
+
+            if (!tarjetas.Any())
+            {
+                return NotFound("No se encontraron tarjetas para los IDs proporcionados.");
+            }
+
+            foreach (var dto in batchUpdateDto.Tarjetas)
+            {
+                var tarjeta = tarjetas.FirstOrDefault(t => t.oF == dto.oF);
+                if (tarjeta != null)
+                {
+                    // Actualizar la posición si es proporcionada
+                    if (dto.posicion.HasValue)
+                    {
+                        tarjeta.posicion = dto.posicion.Value;
+                    }
+
+                    _context.Entry(tarjeta).State = EntityState.Modified;
+                }
+            }
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error al actualizar las tarjetas.");
+            }
+
+            return Ok("Actualización realizada correctamente.");
+        }
+
+
         // POST: api/tarjetaOf
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("post")]
@@ -155,21 +201,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
 
         // ======================================================================================
 
-        // DELETE: api/tarjetaOf/5
-        /*[HttpDelete("{id}")]
-        public async Task<IActionResult> DeletetarjetaOf(int id)
-        {
-            var tarjetaOf = await _context.tarjetaOf.FindAsync(id);
-            if (tarjetaOf == null)
-            {
-                return NotFound();
-            }
-
-            _context.tarjetaOf.Remove(tarjetaOf);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }*/
+        
 
         private bool tarjetaOfExists(int id)
         {
