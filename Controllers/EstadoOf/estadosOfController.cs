@@ -28,19 +28,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.EstadoOf
         [HttpGet("get")]
         public async Task<ActionResult<IEnumerable<EstadoOfDto>>> GetestadosOf()
         {
-            //return await _context.estadosOf.ToListAsync();
-            /*
-             var tarjetaOf = await _context.tarjetaOf
-                .Include(u => u.idEstadoOfNavigation)
-                .Include(r => r.etiquetaOf)
-                .ToListAsync();
-
-            var tarjetaOfDto = _mapper.Map<List<TarjetaOfDto>>(tarjetaOf);
-
-            return Ok(tarjetaOfDto);
-             */
             var estadoof = await _context.estadosOf
-                //.Include(t => t.tarjetaOf)
                 .ToListAsync();
 
             var estadoOfDto = _mapper.Map<List<EstadoOfDto>>(estadoof);
@@ -50,29 +38,34 @@ namespace Sistema_Produccion_3_Backend.Controllers.EstadoOf
 
         // GET: api/estadosOf/5
         [HttpGet("get/{id}")]
-        public async Task<ActionResult<estadosOf>> GetestadosOf(int id)
+        public async Task<ActionResult<EstadoOfDto>> GetestadosOf(int id)
         {
             var estadosOf = await _context.estadosOf.FindAsync(id);
 
-            if (estadosOf == null)
+            var estadoOfDto = _mapper.Map<EstadoOfDto>(estadosOf);
+
+            if (estadoOfDto == null)
             {
-                return NotFound();
+                return NotFound($"No se encontro el estado con el ID: {id}");
             }
 
-            return estadosOf;
+            return Ok(estadoOfDto);
         }
 
         // PUT: api/estadosOf/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("put/{id}")]
-        public async Task<IActionResult> PutestadosOf(int id, estadosOf estadosOf)
+        public async Task<IActionResult> PutestadosOf(int id, UpdateEstadoOfDto updateEstadosOf)
         {
-            if (id != estadosOf.idEstadoOf)
+            var estadoOf = await _context.estadosOf.FindAsync(id);
+
+            if (estadoOf == null)
             {
-                return BadRequest();
+                return NotFound($"No se encontro el estado con el ID");
             }
 
-            _context.Entry(estadosOf).State = EntityState.Modified;
+            _mapper.Map(updateEstadosOf, estadoOf);
+            _context.Entry(estadoOf).State = EntityState.Modified;
 
             try
             {
@@ -82,43 +75,27 @@ namespace Sistema_Produccion_3_Backend.Controllers.EstadoOf
             {
                 if (!estadosOfExists(id))
                 {
-                    return NotFound();
+                    return BadRequest($"El ID {id}, no coincide con el registro");
                 }
                 else
                 {
                     throw;
                 }
             }
-
-            return NoContent();
+            return Ok(updateEstadosOf);
         }
 
         // POST: api/estadosOf
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("post")]
-        public async Task<ActionResult<estadosOf>> PostestadosOf(estadosOf estadosOf)
+        public async Task<ActionResult<estadosOf>> PostestadosOf(AddEstadoOfDto addEstadosOf)
         {
-            _context.estadosOf.Add(estadosOf);
+            var estadoOf = _mapper.Map<estadosOf>(addEstadosOf);
+            _context.estadosOf.Add(estadoOf);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetestadosOf", new { id = estadosOf.idEstadoOf }, estadosOf);
+            return CreatedAtAction("GetestadosOf", new { id = estadoOf.idEstadoOf }, estadoOf);
         }
-
-        // DELETE: api/estadosOf/5
-        /*[HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteestadosOf(int id)
-        {
-            var estadosOf = await _context.estadosOf.FindAsync(id);
-            if (estadosOf == null)
-            {
-                return NotFound();
-            }
-
-            _context.estadosOf.Remove(estadosOf);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }*/
 
         private bool estadosOfExists(int id)
         {
