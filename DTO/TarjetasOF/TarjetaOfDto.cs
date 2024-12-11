@@ -1,6 +1,6 @@
-﻿using Sistema_Produccion_3_Backend.Models;
+﻿using Sistema_Produccion_3_Backend.DTO.TarjetasOF.EtiquetaOf;
+using Sistema_Produccion_3_Backend.Models;
 using Sistema_Produccion_3_Backend.Services;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 

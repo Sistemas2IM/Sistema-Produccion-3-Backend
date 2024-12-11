@@ -6,7 +6,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Sistema_Produccion_3_Backend.DTO.Calidad;
+using Sistema_Produccion_3_Backend.DTO.Calidad.CertificadoCalidad.DetalleCertificado;
 using Sistema_Produccion_3_Backend.Models;
 
 namespace Sistema_Produccion_3_Backend.Controllers.Calidad

@@ -6,7 +6,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Sistema_Produccion_3_Backend.DTO.ProductoTerminado;
+using Sistema_Produccion_3_Backend.DTO.ProductoTerminado.DetalleEntrega;
 using Sistema_Produccion_3_Backend.Models;
 
 namespace Sistema_Produccion_3_Backend.Controllers.ProductoTerminado

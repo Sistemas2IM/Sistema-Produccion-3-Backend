@@ -1,4 +1,6 @@
-﻿using Sistema_Produccion_3_Backend.DTO.Catalogo;
+﻿using Sistema_Produccion_3_Backend.DTO.Catalogo.Motoristas;
+using Sistema_Produccion_3_Backend.DTO.Catalogo.Vehiculos;
+using Sistema_Produccion_3_Backend.DTO.Logistica.DetalleGira;
 using Sistema_Produccion_3_Backend.Models;
 
 namespace Sistema_Produccion_3_Backend.DTO.Logistica

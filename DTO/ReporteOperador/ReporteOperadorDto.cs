@@ -2,7 +2,7 @@
 using Sistema_Produccion_3_Backend.Models;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
-using Sistema_Produccion_3_Backend.DTO.Catalogo;
+using Sistema_Produccion_3_Backend.DTO.Catalogo.Maquinas;
 
 namespace Sistema_Produccion_3_Backend.DTO.ReporteOperador
 {

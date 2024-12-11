@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Sistema_Produccion_3_Backend.DTO.Bitacora;
-using Sistema_Produccion_3_Backend.DTO.Calidad;
+using Sistema_Produccion_3_Backend.DTO.Calidad.CertificadoCalidad;
+using Sistema_Produccion_3_Backend.DTO.Calidad.CertificadoCalidad.DetalleCertificado;
+using Sistema_Produccion_3_Backend.DTO.Calidad.CertificadoCalidad.Especificaciones;
 using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica;
 using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica.DetalleImpresion;
 using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica.DetalleImpresion.DetalleBarniz;
@@ -16,16 +18,26 @@ using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica.DetallePegado.TipoPe
 using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica.DetalleTroquelado;
 using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica.DetalleTroquelado.TipoAcabado;
 using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica.DetalleTroquelado.TipoPleca;
-using Sistema_Produccion_3_Backend.DTO.Catalogo;
+using Sistema_Produccion_3_Backend.DTO.Catalogo.Maquinas;
+using Sistema_Produccion_3_Backend.DTO.Catalogo.Motoristas;
+using Sistema_Produccion_3_Backend.DTO.Catalogo.Vehiculos;
 using Sistema_Produccion_3_Backend.DTO.LoginAuth;
 using Sistema_Produccion_3_Backend.DTO.Logistica;
+using Sistema_Produccion_3_Backend.DTO.Logistica.DetalleGira;
 using Sistema_Produccion_3_Backend.DTO.OV;
 using Sistema_Produccion_3_Backend.DTO.PermisosUsuario;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf;
+using Sistema_Produccion_3_Backend.DTO.ProcesoOf.Asignacion;
+using Sistema_Produccion_3_Backend.DTO.ProcesoOf.CamposPersonalizados;
+using Sistema_Produccion_3_Backend.DTO.ProcesoOf.DetalleProceso;
 using Sistema_Produccion_3_Backend.DTO.ProductoTerminado;
+using Sistema_Produccion_3_Backend.DTO.ProductoTerminado.ContenidoEntrega;
+using Sistema_Produccion_3_Backend.DTO.ProductoTerminado.DetalleEntrega;
 using Sistema_Produccion_3_Backend.DTO.ReporteOperador;
 using Sistema_Produccion_3_Backend.DTO.Tableros;
 using Sistema_Produccion_3_Backend.DTO.TarjetasOF;
+using Sistema_Produccion_3_Backend.DTO.TarjetasOF.EstadoOf;
+using Sistema_Produccion_3_Backend.DTO.TarjetasOF.EtiquetaOf;
 using Sistema_Produccion_3_Backend.Models;
 
 namespace Sistema_Produccion_3_Backend.AutomapperProfiles
