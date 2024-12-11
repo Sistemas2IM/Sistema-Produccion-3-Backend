@@ -11,6 +11,7 @@ using FluentValidation.AspNetCore;
 using FluentValidation;
 using Sistema_Produccion_3_Backend.Validators.Auth;
 using Microsoft.AspNetCore.Mvc;
+using Sistema_Produccion_3_Backend.Validators.ProductoTerminado;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -91,6 +92,7 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
 
 //Definir los validadores
 builder.Services.AddValidatorsFromAssemblyContaining<RegisterValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<PTerminadoValidator>();
 builder.Services.AddFluentValidationAutoValidation();
 
 

@@ -2,8 +2,6 @@
 {
     public class UpdateCertificadoCalidadDto
     {
-        public int idCertificado { get; set; }
-
         public int? oF { get; set; }
 
         public string? numeroDeLote { get; set; }

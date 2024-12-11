@@ -54,6 +54,12 @@ namespace Sistema_Produccion_3_Backend.Validators.ProductoTerminado
 
             RuleFor(x => x.actualizadoPor)
                 .NotEmpty().WithMessage("{PropertyName} es requerida");
+
+            RuleFor(x => x.ultimaActualizacion)
+                .NotEmpty().WithMessage("{PropertyName} es requerida");               
+
+            RuleFor(x => x.tipoObjeto)
+                .NotEmpty().WithMessage("{PropertyName} es requerido");
         }
     }
 }
