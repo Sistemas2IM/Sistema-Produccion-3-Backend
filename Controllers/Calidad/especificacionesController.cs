@@ -35,7 +35,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad
 
             return Ok(especificacionesCerDto);
         }
-        /
+        
         // GET: api/especificaciones/5
         [HttpGet("get/{id}")]
         public async Task<ActionResult<EspecificacionesCerDto>> Getespecificaciones(int id)

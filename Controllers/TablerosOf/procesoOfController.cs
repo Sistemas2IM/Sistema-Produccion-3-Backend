@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf;
-using Sistema_Produccion_3_Backend.DTO.TarjetasOF;
 using Sistema_Produccion_3_Backend.Models;
 
 namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
@@ -102,32 +101,63 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             return Ok(updateProcesoOf);
         }
 
+        [HttpPut("put/BatchUpdate")]
+        public async Task<IActionResult> BatchUpdateProcesos([FromBody] BatchUpdateProcesoOfDto batchUpdateDto)
+        {
+            if (batchUpdateDto == null || batchUpdateDto.ProcesosOf == null || !batchUpdateDto.ProcesosOf.Any())
+            {
+                return BadRequest("No se enviaron datos para actualizar.");
+            }
+
+            var ids = batchUpdateDto.ProcesosOf.Select(t => t.oF).ToList();
+
+            // Obtener todas los procesos of relacionadas
+            var procesos = await _context.procesoOf.Where(t => ids.Contains(t.oF)).ToListAsync();
+
+            if (!procesos.Any())
+            {
+                return NotFound("No se encontraron procesos para los IDs proporcionados.");
+            }
+
+            foreach (var dto in batchUpdateDto.ProcesosOf)
+            {
+                var proceso = procesos.FirstOrDefault(t => t.oF == dto.oF);
+                if (proceso != null)
+                {
+                    // Actualizar la posición si es proporcionada
+                    if (dto.posicion.HasValue)
+                    {
+                        proceso.posicion = dto.posicion.Value;
+                    }
+
+                    _context.Entry(proceso).State = EntityState.Modified;
+                }
+            }
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error al actualizar los procesos.");
+            }
+
+            return Ok("Actualización realizada correctamente.");
+        }
+
         // POST: api/procesoOf
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("post")]
-        public async Task<ActionResult<procesoOf>> PostprocesoOf(procesoOf procesoOf)
+        public async Task<ActionResult<procesoOf>> PostprocesoOf(AddProcesoOfDto addProcesoOf)
         {
+            var procesoOf = _mapper.Map<procesoOf>(addProcesoOf);
             _context.procesoOf.Add(procesoOf);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetprocesoOf", new { id = procesoOf.idProceso }, procesoOf);
         }
 
-        // DELETE: api/procesoOf/5
-        /*[HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteprocesoOf(int id)
-        {
-            var procesoOf = await _context.procesoOf.FindAsync(id);
-            if (procesoOf == null)
-            {
-                return NotFound();
-            }
-
-            _context.procesoOf.Remove(procesoOf);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }*/
 
         private bool procesoOfExists(int id)
         {
