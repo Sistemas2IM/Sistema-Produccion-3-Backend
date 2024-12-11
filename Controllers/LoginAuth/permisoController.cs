@@ -91,6 +91,45 @@ namespace Sistema_Produccion_3_Backend.Controllers.LoginAuth
             return Ok(updatePermiso);
         }
 
+        [HttpPut("put/BatchUpdate")]
+        public async Task<IActionResult> BatchUpdatePermisos([FromBody] BatchUpdatePermisoDto batchUpdateDto)
+        {
+            if (batchUpdateDto == null || batchUpdateDto.Permisos == null || !batchUpdateDto.Permisos.Any())
+            {
+                return BadRequest("No se enviaron datos para actualizar.");
+            }
+
+            var ids = batchUpdateDto.Permisos.Select(t => t.idPermiso).ToList();
+
+            // Obtener todas los permisos relacionadas
+            var permisos = await _context.permiso.Where(t => ids.Contains(t.idPermiso)).ToListAsync();
+
+            if (!permisos.Any())
+            {
+                return NotFound("No se encontraron permisos para los IDs proporcionados.");
+            }
+
+            foreach (var dto in batchUpdateDto.Permisos)
+            {
+                var permiso = permisos.FirstOrDefault(t => t.idPermiso == dto.idPermiso);
+                if (permiso != null)
+                {                 
+                    _context.Entry(permiso).State = EntityState.Modified;
+                }
+            }
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error al actualizar los permisos.");
+            }
+
+            return Ok("Actualización realizada correctamente.");
+        }
+
         // POST: api/permiso
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("post")]
@@ -102,22 +141,6 @@ namespace Sistema_Produccion_3_Backend.Controllers.LoginAuth
 
             return CreatedAtAction("Getpermiso", new { id = permiso.idPermiso }, permiso);
         }
-
-        // DELETE: api/permiso/5
-        /*[HttpDelete("{id}")]
-        public async Task<IActionResult> Deletepermiso(int id)
-        {
-            var permiso = await _context.permiso.FindAsync(id);
-            if (permiso == null)
-            {
-                return NotFound();
-            }
-
-            _context.permiso.Remove(permiso);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }*/
 
         private bool permisoExists(int id)
         {

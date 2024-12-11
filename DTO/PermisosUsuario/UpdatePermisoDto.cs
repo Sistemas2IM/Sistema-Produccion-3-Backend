@@ -1,7 +1,12 @@
-﻿namespace Sistema_Produccion_3_Backend.DTO.PermisosUsuario
+﻿using System.Text.Json.Serialization;
+
+namespace Sistema_Produccion_3_Backend.DTO.PermisosUsuario
 {
     public class UpdatePermisoDto
     {
+        [JsonIgnore]
+        public int idPermiso { get; set; }
+
         public int? idSubModulo { get; set; }
 
         public int? idRol { get; set; }
