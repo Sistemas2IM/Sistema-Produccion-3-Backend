@@ -1,6 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Sistema_Produccion_3_Backend.DTO.PermisosUsuario.Modulo;
+using System.ComponentModel.DataAnnotations;
 
-namespace Sistema_Produccion_3_Backend.DTO.PermisosUsuario
+namespace Sistema_Produccion_3_Backend.DTO.PermisosUsuario.Modulo.SubModulo
 {
     public class SubModuloDto
     {

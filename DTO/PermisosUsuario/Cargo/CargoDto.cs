@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-namespace Sistema_Produccion_3_Backend.DTO.PermisosUsuario
+namespace Sistema_Produccion_3_Backend.DTO.PermisosUsuario.Cargo
 {
     public class CargoDto
     {

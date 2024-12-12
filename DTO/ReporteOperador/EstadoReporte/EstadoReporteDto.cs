@@ -1,6 +1,6 @@
 ﻿using Sistema_Produccion_3_Backend.Models;
 
-namespace Sistema_Produccion_3_Backend.DTO.ReporteOperador
+namespace Sistema_Produccion_3_Backend.DTO.ReporteOperador.EstadoReporte
 {
     public class EstadoReporteDto
     {

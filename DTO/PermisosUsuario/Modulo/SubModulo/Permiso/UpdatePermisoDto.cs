@@ -1,7 +1,10 @@
-﻿namespace Sistema_Produccion_3_Backend.DTO.PermisosUsuario
+﻿using System.Text.Json.Serialization;
+
+namespace Sistema_Produccion_3_Backend.DTO.PermisosUsuario.Modulo.SubModulo.Permiso
 {
-    public class PermisoDto
+    public class UpdatePermisoDto
     {
+        [JsonIgnore]
         public int idPermiso { get; set; }
 
         public int? idSubModulo { get; set; }
@@ -17,7 +20,5 @@
         public bool? canEdit { get; set; }
 
         public bool? canDelete { get; set; }
-
-        public SubModuloDto? subModulo { get; set; }
     }
 }

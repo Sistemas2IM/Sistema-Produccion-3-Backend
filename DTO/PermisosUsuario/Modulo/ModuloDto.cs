@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Sistema_Produccion_3_Backend.DTO.PermisosUsuario
+namespace Sistema_Produccion_3_Backend.DTO.PermisosUsuario.Modulo
 {
     public class ModuloDto
     {

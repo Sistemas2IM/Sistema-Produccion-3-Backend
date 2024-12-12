@@ -1,4 +1,4 @@
-﻿namespace Sistema_Produccion_3_Backend.DTO.ReporteOperador
+﻿namespace Sistema_Produccion_3_Backend.DTO.ReporteOperador.DetalleReporte
 {
     public class AddDetalleReporteDto
     {

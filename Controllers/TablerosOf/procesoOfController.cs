@@ -158,6 +158,38 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             return CreatedAtAction("GetprocesoOf", new { id = procesoOf.idProceso }, procesoOf);
         }
 
+        // POST BATCH
+        [HttpPost("post/BatchAdd")]
+        public async Task<IActionResult> BatchAddProcesoOf([FromBody] BatchAddProcesoOf batchAddDto)
+        {
+            if (batchAddDto == null || batchAddDto.addBatchProcesoDto == null || !batchAddDto.addBatchProcesoDto.Any())
+            {
+                return BadRequest("No se enviaron datos para agregar.");
+            }
+
+            // Mapear los DTOs a las entidades
+            var procesos = batchAddDto.addBatchProcesoDto.Select(dto => _mapper.Map<procesoOf>(dto)).ToList();
+
+            // Agregar los procesos a la base de datos
+            await _context.procesoOf.AddRangeAsync(procesos);
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Ocurrió un error al guardar los procesos: {ex.Message}");
+            }
+
+            // Retornar los registros creados
+            return Ok(new
+            {
+                Message = "Procesos agregados exitosamente.",
+                ProcesosAgregados = procesos
+            });
+        }
+
 
         private bool procesoOfExists(int id)
         {

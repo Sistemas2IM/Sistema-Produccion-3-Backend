@@ -1,4 +1,4 @@
-﻿namespace Sistema_Produccion_3_Backend.DTO.PermisosUsuario
+﻿namespace Sistema_Produccion_3_Backend.DTO.PermisosUsuario.Modulo.SubModulo.Permiso
 {
     public class BatchUpdatePermisoDto
     {

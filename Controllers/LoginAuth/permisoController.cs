@@ -6,7 +6,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Sistema_Produccion_3_Backend.DTO.PermisosUsuario;
+using Sistema_Produccion_3_Backend.DTO.PermisosUsuario.Modulo.SubModulo.Permiso;
 using Sistema_Produccion_3_Backend.Models;
 
 namespace Sistema_Produccion_3_Backend.Controllers.LoginAuth
@@ -91,6 +91,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.LoginAuth
             return Ok(updatePermiso);
         }
 
+        // PUT BATCH
         [HttpPut("put/BatchUpdate")]
         public async Task<IActionResult> BatchUpdatePermisos([FromBody] BatchUpdatePermisoDto batchUpdateDto)
         {
@@ -141,6 +142,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.LoginAuth
 
             return CreatedAtAction("Getpermiso", new { id = permiso.idPermiso }, permiso);
         }
+
+
 
         private bool permisoExists(int id)
         {

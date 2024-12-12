@@ -1,19 +1,10 @@
-﻿using Sistema_Produccion_3_Backend.DTO.TarjetasOF;
-using Sistema_Produccion_3_Backend.Models;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace Sistema_Produccion_3_Backend.DTO.ReporteOperador
+﻿namespace Sistema_Produccion_3_Backend.DTO.ReporteOperador.DetalleReporte
 {
-    public class DetalleReporteDto
+    public class UpdateDetalleReporteDto
     {
-        public int idDetalleReporte { get; set; }
-
-        public string? idReporte { get; set; }
-
         public int? idOperacion { get; set; }
 
-        public string idMaterial { get; set; }
+        public string? idMaterial { get; set; }
 
         public int? idProceso { get; set; }
 
@@ -82,17 +73,5 @@ namespace Sistema_Produccion_3_Backend.DTO.ReporteOperador
         public decimal? udCorrugados { get; set; }
 
         public bool? accionPorAuxiliar { get; set; }
-
-        public MaterialDto? materialDto { get; set; }
-
-        public OperacionesDto? operacionesDto { get; set; }
-
-        public string? numOf {  get; set; }
-
-        public string? descripcionOf { get; set; }
-
-        public string? clienteOf { get; set; } 
-
-        public TipoCierreDto? tipoCierreDto { get; set; }
     }
 }

@@ -1,8 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-using Sistema_Produccion_3_Backend.Services;
+﻿using Sistema_Produccion_3_Backend.Services;
 using System.Text.Json.Serialization;
+using Sistema_Produccion_3_Backend.DTO.PermisosUsuario.Rol;
 
 namespace Sistema_Produccion_3_Backend.DTO.PermisosUsuario
 {
