@@ -67,6 +67,30 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             return Ok(procesoOfDto);
         }
 
+        // GET: api/procesoOf/5
+        [HttpGet("get/oF/{of}")]
+        public async Task<ActionResult<ProcesoOfDto>> GetprocesoOfTarjeta(int of)
+        {
+            var procesoOf = await _context.procesoOf
+                .Include(u => u.detalleOperacionProceso)
+                .ThenInclude(o => o.idOperacionNavigation)
+                .Include(m => m.tarjetaCampo)
+                .Include(s => s.tarjetaEtiqueta)
+                .Include(d => d.idPosturaNavigation)
+                .Include(c => c.idTableroNavigation)
+                .Include(v => v.idMaterialNavigation)
+                .FirstOrDefaultAsync(u => u.oF == of);
+
+            var procesoOfDto = _mapper.Map<ProcesoOfDto>(procesoOf);
+
+            if (procesoOfDto == null)
+            {
+                return NotFound("No se encontro el proceso de la Of con el numero de of: " + of);
+            }
+
+            return Ok(procesoOfDto);
+        }
+
         // PUT: api/procesoOf/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("put/{id}")]
@@ -158,7 +182,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             return CreatedAtAction("GetprocesoOf", new { id = procesoOf.idProceso }, procesoOf);
         }
 
-        // POST BATCH
+        // POST: BATCH
         [HttpPost("post/BatchAdd")]
         public async Task<IActionResult> BatchAddProcesoOf([FromBody] BatchAddProcesoOf batchAddDto)
         {

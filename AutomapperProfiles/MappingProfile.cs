@@ -175,6 +175,10 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
 
             // CATALOGOS ==============================================================================================
             CreateMap<maquinas, MaquinaDto>().ReverseMap();
+            CreateMap<maquinas, AddMaquinaDto>().ReverseMap();
+            CreateMap<UpdateMaquinaDto, maquinas>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
 
             // PERMISOS / USUARIO ====================================================================================
             CreateMap<usuario, UsuarioDto>()
