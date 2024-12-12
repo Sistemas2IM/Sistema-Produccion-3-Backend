@@ -92,6 +92,8 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             CreateMap<procesoOf, AddProcesoOfDto>().ReverseMap();
             CreateMap<UpdateProcesoOfDto, procesoOf>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<AddBatchProcesoDto, procesoOf>().ReverseMap();
+
 
             CreateMap<detalleOperacionProceso, DetalleProcesoOfDto>()
                 .ForMember(dest => dest.operacionesDto, opt => opt.MapFrom(src => src.idOperacionNavigation))

@@ -18,6 +18,8 @@ public partial class rol
 
     public string descripcion { get; set; }
 
+    public bool? status { get; set; }
+
     [InverseProperty("idRolNavigation")]
     public virtual ICollection<permiso> permiso { get; set; } = new List<permiso>();
 

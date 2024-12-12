@@ -559,6 +559,8 @@ public partial class base_nuevaContext : DbContext
         {
             entity.HasKey(e => e.idProceso).HasName("PK_PROCESOOF");
 
+            entity.ToTable(tb => tb.HasTrigger("trg_UpdateTarjetaOf"));
+
             entity.HasOne(d => d.idMaterialNavigation).WithMany(p => p.procesoOf).HasConstraintName("FK_PROCESO_MATERIAL");
 
             entity.HasOne(d => d.idPosturaNavigation).WithMany(p => p.procesoOf).HasConstraintName("FK_PROCESO_POSTURA_");
