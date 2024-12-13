@@ -18,6 +18,7 @@ using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica.DetallePegado.TipoPe
 using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica.DetalleTroquelado;
 using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica.DetalleTroquelado.TipoAcabado;
 using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica.DetalleTroquelado.TipoPleca;
+using Sistema_Produccion_3_Backend.DTO.Catalogo.FamiliaMaquina;
 using Sistema_Produccion_3_Backend.DTO.Catalogo.Maquinas;
 using Sistema_Produccion_3_Backend.DTO.Catalogo.Motoristas;
 using Sistema_Produccion_3_Backend.DTO.Catalogo.Vehiculos;
@@ -88,7 +89,11 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForMember(dest => dest.tablerosOfDto, opt => opt.MapFrom(src => src.idTableroNavigation))
                 .ForMember(dest => dest.materialDto, opt => opt.MapFrom(src => src.idMaterialNavigation))
                 .ReverseMap();
-
+            CreateMap<procesoOf, ProcesoOfVistaTableroDto>()
+                .ForMember(dest => dest.detalleProcesoOf, opt => opt.MapFrom(src => src.detalleOperacionProceso))
+                .ForMember(dest => dest.tarjetaCampoDto, opt => opt.MapFrom(src => src.tarjetaCampo))
+                .ForMember(dest => dest.tarjetaEtiquetaDto, opt => opt.MapFrom(src => src.tarjetaEtiqueta))
+                .ReverseMap();
             CreateMap<procesoOf, AddProcesoOfDto>().ReverseMap();
             CreateMap<UpdateProcesoOfDto, procesoOf>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
@@ -178,6 +183,12 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             CreateMap<maquinas, AddMaquinaDto>().ReverseMap();
             CreateMap<UpdateMaquinaDto, maquinas>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            CreateMap<familliaDeMaquina, FamilliaDeMaquinaDto>().ReverseMap();
+
+            CreateMap<familliaDeMaquina, ListaFamilliaDeMaquinaDto>()
+                .ForMember(dest => dest.maquinas, opt => opt.MapFrom(src => src.maquinas))
+                .ReverseMap();
 
 
             // PERMISOS / USUARIO ====================================================================================

@@ -91,6 +91,23 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             return Ok(procesoOfDto);
         }
 
+        // GET: api/procesoOf
+        [HttpGet("get/tablero/{id}")]
+        public async Task<ActionResult<IEnumerable<ProcesoOfVistaTableroDto>>> GetprocesoOfTablero(int id)
+        {
+            var procesoOf = await _context.procesoOf
+                .Where(t => t.idTablero == id)
+                .Include(u => u.detalleOperacionProceso)
+                .ThenInclude(o => o.idOperacionNavigation)
+                .Include(m => m.tarjetaCampo)
+                .Include(s => s.tarjetaEtiqueta)
+                .ToListAsync();
+
+            var procesoOfDto = _mapper.Map<List<ProcesoOfVistaTableroDto>>(procesoOf);
+
+            return Ok(procesoOfDto);
+        }
+
         // PUT: api/procesoOf/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("put/{id}")]

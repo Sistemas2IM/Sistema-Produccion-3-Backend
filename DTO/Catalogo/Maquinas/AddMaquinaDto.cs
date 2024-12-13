@@ -6,6 +6,8 @@
 
         public string? nombreMaquina { get; set; }
 
+        public string? nombreCorto { get; set; }
+
         public int? familiaId { get; set; }
     }
 }

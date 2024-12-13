@@ -11,6 +11,8 @@ namespace Sistema_Produccion_3_Backend.DTO.Catalogo.Maquinas
 
         public string? nombreMaquina { get; set; }
 
+        public string? nombreCorto { get; set; }
+
         public int? familiaId { get; set; }
     }
 }
