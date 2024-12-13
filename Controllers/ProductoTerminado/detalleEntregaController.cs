@@ -106,6 +106,35 @@ namespace Sistema_Produccion_3_Backend.Controllers.ProductoTerminado
             return CreatedAtAction("GetdetalleEntrega", new { id = detalleEntrega.idDetalleEntrega }, detalleEntrega);
         }
 
+        // POST: BATCH
+        [HttpPost("post/BatchAdd")]
+        public async Task<IActionResult> BatchAddDetalleEntrega([FromBody] AddBatchDetalleDto batchAddDto)
+        {
+            if (batchAddDto == null || batchAddDto.DetallesEntregas == null || !batchAddDto.DetallesEntregas.Any())
+            {
+                return BadRequest("No se enviaron datos para agregar.");
+            }
+
+            var detalleEntregas = batchAddDto.DetallesEntregas.Select(dto => _mapper.Map<detalleEntrega>(dto)).ToList();
+
+            await _context.detalleEntrega.AddRangeAsync(detalleEntregas);
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Ocurrió un error al guardar los detalles: {ex.Message}");
+            }
+
+            return Ok(new
+            {
+                Message = "Detalles de la entrega agregados exitosamente.",
+                DetallesAgregados = detalleEntregas
+            });
+        }
+
         private bool detalleEntregaExists(int id)
         {
             return _context.detalleEntrega.Any(e => e.idDetalleEntrega == id);

@@ -145,6 +145,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
 
             CreateMap<detalleEntrega, DetalleEntregaDto>().ReverseMap();
             CreateMap<detalleEntrega, AddDetalleEntregaDto>().ReverseMap();
+            CreateMap<detalleEntrega, AddBatchDetalleDto>().ReverseMap();
             CreateMap<UpdateDetalleEntregaDto, detalleEntrega>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
