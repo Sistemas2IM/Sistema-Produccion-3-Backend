@@ -55,6 +55,24 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             return Ok(tableroDto);
         }
 
+        // GET: api/tablerosOf/5 POR ID DE MAQUINA
+        [HttpGet("get/maquina/{id}")]
+        public async Task<ActionResult<TablerosOfDto>> GettablerosOfMaquina(int id)
+        {
+            var tablero = await _context.tablerosOf
+                .Include(u => u.posturasOf)
+                .FirstOrDefaultAsync(u => u.idMaquina == id);
+
+            var tableroDto = _mapper.Map<TablerosOfDto>(tablero);
+
+            if (tableroDto == null)
+            {
+                return NotFound("No se encontro el Tablero con el ID de Maquina: " + id);
+            }
+
+            return Ok(tableroDto);
+        }
+
         // PUT: api/tablerosOf/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("put/{id}")]
