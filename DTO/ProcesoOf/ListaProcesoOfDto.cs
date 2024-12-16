@@ -4,38 +4,25 @@ using Sistema_Produccion_3_Backend.DTO.ProcesoOf.TarjetaEtiqueta;
 using Sistema_Produccion_3_Backend.DTO.ReporteOperador;
 using Sistema_Produccion_3_Backend.DTO.Tableros.Posturas;
 using Sistema_Produccion_3_Backend.DTO.Tableros;
+using Sistema_Produccion_3_Backend.DTO.Catalogo.Maquinas;
 
 namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
 {
-    public class ProcesoOfVistaTableroDto
+    public class ListaProcesoOfDto
     {
         public int idProceso { get; set; }
 
         public int? oF { get; set; }
 
-        public int? idTablero { get; set; }
-
-        public int? idPostura { get; set; }
-
-        public string? idMaterial { get; set; }
-
         public string? nombreTarjeta { get; set; }
 
         public string? productoOf { get; set; }
-
-        public string? descripcionOf { get; set; }
 
         public int? secuencia { get; set; }
 
         public bool? completada { get; set; }
 
         public bool? bloqueada { get; set; }
-
-        public int? pliegosRecibidos { get; set; }
-
-        public int? pliegosEntregados { get; set; }
-
-        public int? pliegosDanados { get; set; }
 
         public DateTime? fechaInicio { get; set; }
 
@@ -57,10 +44,9 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
 
         public DateTime? fechaVencimiento { get; set; }
 
-        public List<DetalleProcesoOfDto>? detalleProcesoOf { get; set; }
+        public ProcesoPosturasOfDto? PosturasOfDto { get; set; }
 
-        public List<TarjetaCampoDto>? tarjetaCampoDto { get; set; }
+        public ProcesoTablerosOfDto? TablerosOfDto { get; set; }
 
-        public List<TarjetaEtiquetaDto>? tarjetaEtiquetaDto { get; set; }
     }
 }

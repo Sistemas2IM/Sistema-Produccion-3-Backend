@@ -91,6 +91,29 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             return Ok(procesoOfDto);
         }
 
+        // GET: api/procesoOf/5 LISTA
+        [HttpGet("get/lista/oF/{of}")]
+        public async Task<ActionResult<ListaProcesoOfDto>> GetprocesoOfTarjetaLista(int of)
+        {
+            var procesoOf = await _context.procesoOf
+                .Where(o => o.oF == of)
+                .Include(d => d.idPosturaNavigation)
+                .Include(c => c.idTableroNavigation)
+                .ThenInclude(v => v.idAreaNavigation)
+                .Include(c => c.idTableroNavigation)
+                .ThenInclude(m => m.idMaquinaNavigation)
+                .ToListAsync();
+
+            var procesoOfDto = _mapper.Map<List<ListaProcesoOfDto>>(procesoOf);
+
+            if (procesoOfDto == null)
+            {
+                return NotFound("No se contraron los procesos de la Of con el numero de of: " + of);
+            }
+
+            return Ok(procesoOfDto);
+        }
+
         // GET: api/procesoOf
         [HttpGet("get/tablero/{id}")]
         public async Task<ActionResult<IEnumerable<ProcesoOfVistaTableroDto>>> GetprocesoOfTablero(int id)

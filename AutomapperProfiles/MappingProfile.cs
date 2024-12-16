@@ -94,6 +94,10 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForMember(dest => dest.tarjetaCampoDto, opt => opt.MapFrom(src => src.tarjetaCampo))
                 .ForMember(dest => dest.tarjetaEtiquetaDto, opt => opt.MapFrom(src => src.tarjetaEtiqueta))
                 .ReverseMap();
+            CreateMap<procesoOf, ListaProcesoOfDto>()
+                .ForMember(dest => dest.PosturasOfDto, opt => opt.MapFrom(src => src.idPosturaNavigation))
+                .ForMember(dest => dest.TablerosOfDto, opt => opt.MapFrom(src => src.idTableroNavigation))
+                .ReverseMap();
             CreateMap<procesoOf, AddProcesoOfDto>().ReverseMap();
             CreateMap<UpdateProcesoOfDto, procesoOf>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
@@ -181,6 +185,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
 
             // CATALOGOS ==============================================================================================
             CreateMap<maquinas, MaquinaDto>().ReverseMap();
+            CreateMap<maquinas, ProcesoMaquinaDto>().ReverseMap(); // <---- para lista procesos por OF
             CreateMap<maquinas, AddMaquinaDto>().ReverseMap();
             CreateMap<UpdateMaquinaDto, maquinas>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
@@ -414,6 +419,10 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             CreateMap<tablerosOf, TablerosOfDto>()
                 .ForMember(dest => dest.posturasOfDto, opt => opt.MapFrom(src => src.posturasOf))
                 .ReverseMap();
+            CreateMap<tablerosOf, ProcesoTablerosOfDto>()
+                .ForMember(dest => dest.AreasDto, opt => opt.MapFrom(src => src.idAreaNavigation))
+                .ForMember(dest => dest.Maquina, opt => opt.MapFrom(src => src.idMaquinaNavigation))
+                .ReverseMap();
             CreateMap<tablerosOf, AddTablerosOfDto>().ReverseMap();
             CreateMap<UpdateTablerosOfDto, tablerosOf>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
@@ -422,6 +431,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             CreateMap<posturasOf, PosturasOfDto>()
                 .ForMember(dest => dest.tablerosOfDto, opt => opt.MapFrom(src => src.idTableroNavigation.nombreTablero))
                 .ReverseMap();
+            CreateMap<posturasOf, ProcesoPosturasOfDto>().ReverseMap();
             CreateMap<posturasOf, AddPosturasOfDto>().ReverseMap();
             CreateMap<UpdatePosturasOfDto, posturasOf>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));

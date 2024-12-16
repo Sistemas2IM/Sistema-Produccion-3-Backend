@@ -43,5 +43,7 @@
         public int? tipoObjeto { get; set; }
 
         public bool? archivada { get; set; }
+
+        public DateTime? fechaVencimiento { get; set; }
     }
 }

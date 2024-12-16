@@ -70,6 +70,9 @@ public partial class procesoOf
 
     public bool? archivada { get; set; }
 
+    [Column(TypeName = "datetime")]
+    public DateTime? fechaVencimiento { get; set; }
+
     [InverseProperty("idProcesoNavigation")]
     public virtual ICollection<asignacion> asignacion { get; set; } = new List<asignacion>();
 
