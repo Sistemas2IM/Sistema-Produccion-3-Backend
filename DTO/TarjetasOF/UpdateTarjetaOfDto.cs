@@ -39,5 +39,7 @@
         public int? totalProcesos { get; set; }
 
         public bool? cerrada { get; set; }
+
+        public string? codArticulo { get; set; }
     }
 }

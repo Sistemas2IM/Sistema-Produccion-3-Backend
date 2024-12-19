@@ -10,7 +10,7 @@ namespace Sistema_Produccion_3_Backend.DTO.ReporteOperador
 
         public int? idMaquina { get; set; }
 
-        public string? idOperador { get; set; }
+        public string? operador { get; set; }
 
         public DateTime? fechaDeCreacion { get; set; }
 
@@ -22,7 +22,7 @@ namespace Sistema_Produccion_3_Backend.DTO.ReporteOperador
 
         public decimal? velocidadNominal { get; set; }
 
-        public DateTime? tiempoTotal { get; set; }
+        public TimeOnly? tiempoTotal { get; set; }
 
         public DateTime? ultimaActualizacion { get; set; }
 

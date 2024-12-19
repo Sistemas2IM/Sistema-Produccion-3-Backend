@@ -417,6 +417,8 @@ public partial class base_nuevaContext : DbContext
         modelBuilder.Entity<estadosReporte>(entity =>
         {
             entity.HasKey(e => e.idEstadoReporte).HasName("PK_ESTADOSREPORTE");
+
+            entity.HasOne(d => d.tipoReporteNavigation).WithMany(p => p.estadosReporte).HasConstraintName("FK_TIPO_REPORTE");
         });
 
         modelBuilder.Entity<etiqueta>(entity =>
@@ -597,7 +599,7 @@ public partial class base_nuevaContext : DbContext
 
             entity.HasOne(d => d.idTipoReporteNavigation).WithMany(p => p.reportesDeOperadores).HasConstraintName("FK_REPORTES_TIPO");
 
-            entity.HasOne(d => d.userNavigation).WithMany(p => p.reportesDeOperadores).HasConstraintName("FK_REPORTES_OPERADOR");
+            entity.HasOne(d => d.operadorNavigation).WithMany(p => p.reportesDeOperadores).HasConstraintName("FK_REPORTES_OPERADOR");
         });
 
         modelBuilder.Entity<rol>(entity =>

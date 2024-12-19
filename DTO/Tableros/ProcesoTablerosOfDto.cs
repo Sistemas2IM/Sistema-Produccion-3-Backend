@@ -10,7 +10,7 @@ namespace Sistema_Produccion_3_Backend.DTO.Tableros
 
         public string? nombreTablero { get; set; }
 
-        public AreasDto AreasDto { get; set; }
+        public AreasDto? AreasDto { get; set; }
 
         public ProcesoMaquinaDto? Maquina { get; set; }
     }

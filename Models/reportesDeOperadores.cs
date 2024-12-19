@@ -10,7 +10,7 @@ namespace Sistema_Produccion_3_Backend.Models;
 
 [Index("idEstadoReporte", Name = "ESTADO_REPORTE_FK")]
 [Index("idMaquina", Name = "MAQUINA_REPORTE_FK")]
-[Index("user", Name = "OPERADOR_REPORTE_FK")]
+[Index("operador", Name = "OPERADOR_REPORTE_FK")]
 [Index("idTipoReporte", Name = "TIPO_REPORTE_FK")]
 public partial class reportesDeOperadores
 {
@@ -25,7 +25,7 @@ public partial class reportesDeOperadores
     public int? idMaquina { get; set; }
 
     [StringLength(50)]
-    public string user { get; set; }
+    public string operador { get; set; }
 
     [Column(TypeName = "datetime")]
     public DateTime? fechaDeCreacion { get; set; }
@@ -41,8 +41,7 @@ public partial class reportesDeOperadores
     [Column(TypeName = "numeric(20, 2)")]
     public decimal? velocidadNominal { get; set; }
 
-    [Column(TypeName = "datetime")]
-    public DateTime? tiempoTotal { get; set; }
+    public TimeOnly? tiempoTotal { get; set; }
 
     [Column(TypeName = "datetime")]
     public DateTime? ultimaActualizacion { get; set; }
@@ -70,7 +69,7 @@ public partial class reportesDeOperadores
     [InverseProperty("reportesDeOperadores")]
     public virtual tipoReporte idTipoReporteNavigation { get; set; }
 
-    [ForeignKey("user")]
+    [ForeignKey("operador")]
     [InverseProperty("reportesDeOperadores")]
-    public virtual usuario userNavigation { get; set; }
+    public virtual usuario operadorNavigation { get; set; }
 }

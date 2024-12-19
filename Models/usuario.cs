@@ -69,6 +69,6 @@ public partial class usuario
     [InverseProperty("userNavigation")]
     public virtual ICollection<refreshToken> refreshToken { get; set; } = new List<refreshToken>();
 
-    [InverseProperty("userNavigation")]
+    [InverseProperty("operadorNavigation")]
     public virtual ICollection<reportesDeOperadores> reportesDeOperadores { get; set; } = new List<reportesDeOperadores>();
 }

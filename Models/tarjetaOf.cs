@@ -72,6 +72,9 @@ public partial class tarjetaOf
 
     public bool? cerrada { get; set; }
 
+    [StringLength(50)]
+    public string codArticulo { get; set; }
+
     [InverseProperty("oFNavigation")]
     public virtual ICollection<certificadoDeCalidad> certificadoDeCalidad { get; set; } = new List<certificadoDeCalidad>();
 

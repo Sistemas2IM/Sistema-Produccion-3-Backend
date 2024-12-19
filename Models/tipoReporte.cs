@@ -16,6 +16,9 @@ public partial class tipoReporte
     [StringLength(200)]
     public string nombreTipoReporte { get; set; }
 
+    [InverseProperty("tipoReporteNavigation")]
+    public virtual ICollection<estadosReporte> estadosReporte { get; set; } = new List<estadosReporte>();
+
     [InverseProperty("idTipoReporteNavigation")]
     public virtual ICollection<reportesDeOperadores> reportesDeOperadores { get; set; } = new List<reportesDeOperadores>();
 }

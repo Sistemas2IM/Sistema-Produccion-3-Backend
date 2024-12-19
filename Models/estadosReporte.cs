@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Sistema_Produccion_3_Backend.Models;
 
+[Index("tipoReporte", Name = "TIPO_REPORTE_FK")]
 public partial class estadosReporte
 {
     [Key]
@@ -23,4 +24,8 @@ public partial class estadosReporte
 
     [InverseProperty("idEstadoReporteNavigation")]
     public virtual ICollection<reportesDeOperadores> reportesDeOperadores { get; set; } = new List<reportesDeOperadores>();
+
+    [ForeignKey("tipoReporte")]
+    [InverseProperty("estadosReporte")]
+    public virtual tipoReporte tipoReporteNavigation { get; set; }
 }

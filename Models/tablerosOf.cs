@@ -22,6 +22,9 @@ public partial class tablerosOf
     [StringLength(500)]
     public string nombreTablero { get; set; }
 
+    [StringLength(500)]
+    public string idSapMaquina { get; set; }
+
     [ForeignKey("idArea")]
     [InverseProperty("tablerosOf")]
     public virtual areas idAreaNavigation { get; set; }

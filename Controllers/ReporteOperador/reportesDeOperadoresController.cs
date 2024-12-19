@@ -41,6 +41,30 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
                 .Include(m => m.detalleReporte)
                     .ThenInclude(d => d.oFNavigation) // Incluye la relación con 'idTarjetaOf'
                 .ToArrayAsync();
+            
+            var reporteOperadorDto = _mapper.Map<List<ReporteOperadorDto>>(reporteOperador);
+
+            return Ok(reporteOperadorDto);
+        }
+
+        // GET: api/reportesDeOperadores por maquina
+        [HttpGet("get/idMaquina/{id}")]
+        public async Task<ActionResult<IEnumerable<ReporteOperadorDto>>> GetreportesDeOperadoresMaquina(int id)
+        {
+            var reporteOperador = await _context.reportesDeOperadores
+                .Where(u => u.idMaquina == id)
+                .Include(r => r.idEstadoReporteNavigation)
+                .Include(p => p.idMaquinaNavigation)
+                .Include(sm => sm.idTipoReporteNavigation)
+                .Include(m => m.detalleReporte) // Incluye 'detalleReporte'
+                    .ThenInclude(d => d.idOperacionNavigation) // Incluye la relación con 'idOperacion'
+                .Include(m => m.detalleReporte)
+                    .ThenInclude(d => d.idMaterialNavigation) // Incluye la relación con 'idMaterial'
+                .Include(m => m.detalleReporte)
+                    .ThenInclude(d => d.idTipoCierreNavigation) // Incluye la relación con 'idTipoCierre'
+                .Include(m => m.detalleReporte)
+                    .ThenInclude(d => d.oFNavigation) // Incluye la relación con 'idTarjetaOf'
+                .ToArrayAsync();
 
             var reporteOperadorDto = _mapper.Map<List<ReporteOperadorDto>>(reporteOperador);
 

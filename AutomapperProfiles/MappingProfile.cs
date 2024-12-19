@@ -41,6 +41,8 @@ using Sistema_Produccion_3_Backend.DTO.ProductoTerminado.ContenidoEntrega;
 using Sistema_Produccion_3_Backend.DTO.ProductoTerminado.DetalleEntrega;
 using Sistema_Produccion_3_Backend.DTO.ReporteOperador;
 using Sistema_Produccion_3_Backend.DTO.ReporteOperador.DetalleReporte;
+using Sistema_Produccion_3_Backend.DTO.ReporteOperador.DetalleReporte.Operaciones;
+using Sistema_Produccion_3_Backend.DTO.ReporteOperador.DetalleReporte.Operaciones.DetalleOperacionProceso;
 using Sistema_Produccion_3_Backend.DTO.ReporteOperador.EstadoReporte;
 using Sistema_Produccion_3_Backend.DTO.Tableros;
 using Sistema_Produccion_3_Backend.DTO.Tableros.Areas;
@@ -159,7 +161,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForMember(dest => dest.tipoReporteDto, opt => opt.MapFrom(src => src.idTipoReporteNavigation))
                 .ForMember(dest => dest.maquinaDto, opt => opt.MapFrom(src => src.idMaquinaNavigation))
                 .ForMember(dest => dest.detalleReporte, opt => opt.MapFrom(src => src.detalleReporte))
-                .ReverseMap();         
+                .ReverseMap();
             CreateMap<reportesDeOperadores, AddReporteOperadorDto>().ReverseMap();
             CreateMap<UpdateReporteOperadorDto, reportesDeOperadores>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
@@ -175,11 +177,23 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 CreateMap<detalleReporte, UpdateDetalleReporteDto>()
                     .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
                 CreateMap<detalleReporte, AddDetalleReporteDto>().ReverseMap();
+
+                {
+                    CreateMap<operaciones, OperacionesDto>().ReverseMap();
+                    CreateMap<operaciones, AddOperacionesDto>().ReverseMap();
+                    CreateMap<UpdateOperacionesDto, operaciones>()
+                        .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+                    CreateMap<detalleOperacionProceso, OperacionProcesoDto>().ReverseMap();
+                    CreateMap<detalleOperacionProceso, AddOperacionProcesoDto>().ReverseMap();
+                    CreateMap<detalleOperacionProceso, BatchAddOperacionProcesoDto>().ReverseMap();
+                    CreateMap<UpdateOperacionProcesoDto ,detalleOperacionProceso>()
+                        .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+                }
             }
-                    
+                  
             CreateMap<estadosReporte, EstadoReporteDto>().ReverseMap();
             CreateMap<tipoReporte, TipoReporteDto>().ReverseMap();
-            CreateMap<operaciones, OperacionesDto>().ReverseMap();
             CreateMap<material, MaterialDto>().ReverseMap();
             CreateMap<tipoCierre, TipoCierreDto>().ReverseMap();
 

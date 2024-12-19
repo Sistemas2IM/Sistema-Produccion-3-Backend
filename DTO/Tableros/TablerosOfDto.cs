@@ -13,6 +13,8 @@ namespace Sistema_Produccion_3_Backend.DTO.Tableros
 
         public string? nombreTablero { get; set; }
 
+        public string? idSapMaquina { get; set; }
+
         public List<PosturasOfDto>? posturasOfDto { get; set; }
 
     }

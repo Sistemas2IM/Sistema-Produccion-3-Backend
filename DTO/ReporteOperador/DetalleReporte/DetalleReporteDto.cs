@@ -1,4 +1,5 @@
-﻿using Sistema_Produccion_3_Backend.DTO.TarjetasOF;
+﻿using Sistema_Produccion_3_Backend.DTO.ReporteOperador.DetalleReporte.Operaciones;
+using Sistema_Produccion_3_Backend.DTO.TarjetasOF;
 using Sistema_Produccion_3_Backend.Models;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;

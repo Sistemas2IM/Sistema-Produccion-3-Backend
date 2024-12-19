@@ -7,5 +7,7 @@
         public int? idMaquina { get; set; }
 
         public string? nombreTablero { get; set; }
+
+        public string? idSapMaquina { get; set; }
     }
 }
