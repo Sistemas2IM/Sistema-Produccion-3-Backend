@@ -23,11 +23,9 @@ public partial class detalleOperacionProceso
 
     public int? secuencia { get; set; }
 
-    [Column(TypeName = "datetime")]
-    public DateTime? inicio { get; set; }
+    public TimeOnly? inicio { get; set; }
 
-    [Column(TypeName = "datetime")]
-    public DateTime? finalizacion { get; set; }
+    public TimeOnly? finalizacion { get; set; }
 
     [StringLength(50)]
     public string operador { get; set; }

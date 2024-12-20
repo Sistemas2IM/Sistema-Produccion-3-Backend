@@ -15,9 +15,9 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf.DetalleProceso
 
         public int? secuencia { get; set; }
 
-        public DateTime? inicio { get; set; }
+        public TimeOnly? inicio { get; set; }
 
-        public DateTime? finalizacion { get; set; }
+        public TimeOnly? finalizacion { get; set; }
 
         public string? operador { get; set; }
 

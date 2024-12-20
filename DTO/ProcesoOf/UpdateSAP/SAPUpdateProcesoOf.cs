@@ -3,6 +3,7 @@
     public class SAPUpdateProcesoOf
     {
         public int idProceso {  get; set; }
+
         public int? oF { get; set; }
 
         public int? idTablero { get; set; }
@@ -22,6 +23,8 @@
         public bool? completada { get; set; }
 
         public bool? bloqueada { get; set; }
+
+        public int? pliegosRecibidos { get; set; }
 
         public int? posicion { get; set; }
 
