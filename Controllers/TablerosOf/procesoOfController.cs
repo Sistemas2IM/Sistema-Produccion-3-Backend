@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf;
+using Sistema_Produccion_3_Backend.DTO.ProcesoOf.UpdateSAP;
 using Sistema_Produccion_3_Backend.Models;
 
 namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
@@ -209,6 +210,52 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
 
             return Ok("Actualización realizada correctamente.");
         }
+
+        [HttpPut("put/BatchUpdateSAP")]
+        public async Task<IActionResult> BatchUpdateProcesosSAP([FromBody] ListSAPUpdateProcesoOf batchUpdateDto)
+        {
+            if (batchUpdateDto == null || batchUpdateDto.SAPProcesoOf == null || !batchUpdateDto.SAPProcesoOf.Any())
+            {
+                return BadRequest("No se enviaron datos para actualizar.");
+            }
+
+            // Obtener los IDs únicos de los procesos a actualizar
+            var ids = batchUpdateDto.SAPProcesoOf.Select(t => t.idProceso).Distinct().ToList();
+
+            // Obtener todas los procesos of relacionados
+            var procesos = await _context.procesoOf.Where(t => ids.Contains(t.idProceso)).ToListAsync();
+
+            if (!procesos.Any())
+            {
+                return NotFound("No se encontraron procesos para los IDs proporcionados.");
+            }
+
+            foreach (var dto in batchUpdateDto.SAPProcesoOf)
+            {
+                var proceso = procesos.FirstOrDefault(t => t.idProceso == dto.idProceso);
+                if (proceso != null)
+                {
+                    // Actualizar la posición si es proporcionada
+                    if (dto.posicion.HasValue)
+                    {
+                        proceso.posicion = dto.posicion.Value;
+                    }
+
+                    _context.Entry(proceso).State = EntityState.Modified;
+                }
+            }
+
+            // Guardar los cambios
+            await _context.SaveChangesAsync();
+
+            // Devolver resumen de la operación
+            return Ok(new
+            {
+                UpdatedCount = procesos.Count,
+                ProcessedIds = ids
+            });
+        }
+
 
         // POST: api/procesoOf
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754

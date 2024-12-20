@@ -36,6 +36,7 @@ using Sistema_Produccion_3_Backend.DTO.ProcesoOf;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.Asignacion;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.CamposPersonalizados;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.DetalleProceso;
+using Sistema_Produccion_3_Backend.DTO.ProcesoOf.UpdateSAP;
 using Sistema_Produccion_3_Backend.DTO.ProductoTerminado;
 using Sistema_Produccion_3_Backend.DTO.ProductoTerminado.ContenidoEntrega;
 using Sistema_Produccion_3_Backend.DTO.ProductoTerminado.DetalleEntrega;
@@ -104,6 +105,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             CreateMap<UpdateProcesoOfDto, procesoOf>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             CreateMap<AddBatchProcesoDto, procesoOf>().ReverseMap();
+            CreateMap<SAPUpdateProcesoOf, procesoOf>().ReverseMap();
 
 
             CreateMap<detalleOperacionProceso, DetalleProcesoOfDto>()

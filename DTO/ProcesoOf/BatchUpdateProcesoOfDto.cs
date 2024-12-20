@@ -2,6 +2,6 @@
 {
     public class BatchUpdateProcesoOfDto
     {
-        public List<UpdatePosicionProcesoOfDto> ProcesosOf {  get; set; }
+        public List<UpdatePosicionProcesoOfDto>? ProcesosOf {  get; set; }
     }
 }
