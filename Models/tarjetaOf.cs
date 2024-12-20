@@ -9,7 +9,6 @@ using Microsoft.EntityFrameworkCore;
 namespace Sistema_Produccion_3_Backend.Models;
 
 [Index("idEstadoOf", Name = "ESTADO_TARJETA_FK")]
-[Index("oV", Name = "OV_TARJETA_FK")]
 public partial class tarjetaOf
 {
     [Key]
@@ -96,10 +95,6 @@ public partial class tarjetaOf
     [ForeignKey("idEstadoOf")]
     [InverseProperty("tarjetaOf")]
     public virtual estadosOf idEstadoOfNavigation { get; set; }
-
-    [ForeignKey("oV")]
-    [InverseProperty("tarjetaOf")]
-    public virtual oV oVNavigation { get; set; }
 
     [InverseProperty("oFNavigation")]
     public virtual ICollection<procesoOf> procesoOf { get; set; } = new List<procesoOf>();

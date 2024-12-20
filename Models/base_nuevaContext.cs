@@ -655,8 +655,6 @@ public partial class base_nuevaContext : DbContext
             entity.Property(e => e.oF).ValueGeneratedNever();
 
             entity.HasOne(d => d.idEstadoOfNavigation).WithMany(p => p.tarjetaOf).HasConstraintName("FK_TARJETA_ESTADO");
-
-            entity.HasOne(d => d.oVNavigation).WithMany(p => p.tarjetaOf).HasConstraintName("FK_TARJETAO_OV");
         });
 
         modelBuilder.Entity<tipoAcabado>(entity =>

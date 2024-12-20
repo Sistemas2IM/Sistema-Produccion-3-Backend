@@ -19,5 +19,7 @@
         public int? operacion { get; set; }
 
         public bool? accionPorAuxiliar { get; set; }
+
+        public string? auxiliar { get; set; }
     }
 }

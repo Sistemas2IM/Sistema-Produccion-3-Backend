@@ -39,7 +39,4 @@ public partial class oV
 
     [InverseProperty("oVNavigation")]
     public virtual ICollection<entregasProductoTerminado> entregasProductoTerminado { get; set; } = new List<entregasProductoTerminado>();
-
-    [InverseProperty("oVNavigation")]
-    public virtual ICollection<tarjetaOf> tarjetaOf { get; set; } = new List<tarjetaOf>();
 }
