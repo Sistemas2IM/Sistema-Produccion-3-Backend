@@ -30,6 +30,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         public async Task<ActionResult<IEnumerable<TarjetaOfDto>>> GettarjetaOf()
         {
             var tarjetaOf = await _context.tarjetaOf
+                .OrderBy(p => p.posicion)
                 .Include(u => u.idEstadoOfNavigation)
                 .Include(r => r.etiquetaOf)
                 .ToListAsync();
