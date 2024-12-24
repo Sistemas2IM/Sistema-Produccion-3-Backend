@@ -68,6 +68,46 @@ namespace Sistema_Produccion_3_Backend.Controllers.LoginAuth
             return Ok(rolDto);
         }
 
+        // PUT BATCH
+        [HttpPut("put/BatchUpdate")]
+        public async Task<IActionResult> BatchUpdateRoles([FromBody] BatchUpdateRolDto batchUpdateDto)
+        {
+            if (batchUpdateDto == null || batchUpdateDto.updateBatchRol == null || !batchUpdateDto.updateBatchRol.Any())
+            {
+                return BadRequest("No se enviaron datos para actualizar.");
+            }
+
+            var ids = batchUpdateDto.updateBatchRol.Select(t => t.idRol).ToList();
+
+            // Obtener todas los roles relacionadas
+            var roles = await _context.rol.Where(t => ids.Contains(t.idRol)).ToListAsync();
+
+            if (!roles.Any())
+            {
+                return NotFound("No se encontraron roles para los IDs proporcionados.");
+            }
+
+            foreach (var dto in batchUpdateDto.updateBatchRol)
+            {
+                var rol = roles.FirstOrDefault(t => t.idRol == dto.idRol);
+                if (rol != null)
+                {
+                    _context.Entry(rol).State = EntityState.Modified;
+                }
+            }
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error al actualizar los roles.");
+            }
+
+            return Ok("Actualización realizada correctamente.");
+        }
+
         // PUT: api/rol/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("put/{id}")]

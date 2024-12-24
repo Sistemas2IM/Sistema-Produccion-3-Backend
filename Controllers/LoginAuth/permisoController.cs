@@ -143,7 +143,37 @@ namespace Sistema_Produccion_3_Backend.Controllers.LoginAuth
             return CreatedAtAction("Getpermiso", new { id = permiso.idPermiso }, permiso);
         }
 
+        // POST: BATCH
+        [HttpPost("post/BatchAdd")]
+        public async Task<IActionResult> BatchAddPermisoOf([FromBody] BatchAddPermisoDto batchAddDto)
+        {
+            if (batchAddDto == null || batchAddDto.addPermisos == null || !batchAddDto.addPermisos.Any())
+            {
+                return BadRequest("No se enviaron datos para agregar.");
+            }
 
+            // Mapear los DTOs a las entidades
+            var permisos = batchAddDto.addPermisos.Select(dto => _mapper.Map<permiso>(dto)).ToList();
+
+            // Agregar los permisos a la base de datos
+            await _context.permiso.AddRangeAsync(permisos);
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Ocurrió un error al guardar los permisos: {ex.Message}");
+            }
+
+            // Retornar los registros creados
+            return Ok(new
+            {
+                Message = "Permisos agregados exitosamente.",
+                PermisosAgregados = permisos
+            });
+        }
 
         private bool permisoExists(int id)
         {

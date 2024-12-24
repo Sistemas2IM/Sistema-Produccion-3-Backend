@@ -231,6 +231,8 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForMember(dest => dest.permiso, opt => opt.MapFrom(src => src.updatePermisoDto))
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
+            CreateMap<UpdateBatchRolDto, rol>().ReverseMap();
+
             CreateMap<permiso, PermisoDto>()
                 .ForMember(dest => dest.subModulo, opt => opt.MapFrom(src => src.idSubModuloNavigation))
                 .ReverseMap();
