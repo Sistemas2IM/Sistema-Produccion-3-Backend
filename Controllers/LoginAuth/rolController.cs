@@ -79,7 +79,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.LoginAuth
 
             var ids = batchUpdateDto.updateBatchRol.Select(t => t.idRol).ToList();
 
-            // Obtener todas los roles relacionadas
+            // Obtener todos los roles relacionados
             var roles = await _context.rol.Where(t => ids.Contains(t.idRol)).ToListAsync();
 
             if (!roles.Any())
@@ -92,6 +92,12 @@ namespace Sistema_Produccion_3_Backend.Controllers.LoginAuth
                 var rol = roles.FirstOrDefault(t => t.idRol == dto.idRol);
                 if (rol != null)
                 {
+                    // Actualizar propiedades específicas
+                    if (dto.status.HasValue)
+                    {
+                        rol.status = dto.status.Value;
+                    }
+
                     _context.Entry(rol).State = EntityState.Modified;
                 }
             }
@@ -107,6 +113,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.LoginAuth
 
             return Ok("Actualización realizada correctamente.");
         }
+
 
         // PUT: api/rol/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
