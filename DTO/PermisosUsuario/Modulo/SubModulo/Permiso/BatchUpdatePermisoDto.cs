@@ -2,6 +2,6 @@
 {
     public class BatchUpdatePermisoDto
     {
-        public List<UpdatePermisoDto> Permisos { get; set; }
+        public List<UpdateBatchPermisosDto> Permisos { get; set; }
     }
 }

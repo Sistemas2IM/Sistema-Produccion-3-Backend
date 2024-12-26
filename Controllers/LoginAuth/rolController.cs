@@ -120,52 +120,15 @@ namespace Sistema_Produccion_3_Backend.Controllers.LoginAuth
         [HttpPut("put/{id}")]
         public async Task<IActionResult> PutRol(int id, UpdateRolDto updateRol)
         {
-            // Buscar el rol existente
-            var existingRol = await _context.rol
-                .Include(r => r.permiso) // Incluir la relación con permisos
-                .FirstOrDefaultAsync(r => r.idRol == id);
+            var rol = await _context.rol.FindAsync(id);
 
-            if (existingRol == null)
+            if (rol ==  null)
             {
-                return NotFound($"No se encontró el rol con el ID: {id}");
+                return NotFound($"No se encontro el registro de Permiso con el ID: {id}");
             }
 
-            // Actualizar los campos del rol principal
-            _mapper.Map(updateRol, existingRol);
-
-            // Actualizar la lista de permisos
-            if (updateRol.updatePermisoDto != null && updateRol.updatePermisoDto.Any())
-            {
-                // Eliminar permisos que ya no están en el DTO
-                var permisosIds = updateRol.updatePermisoDto.Select(p => p.idSubModulo).ToList();
-                var permisosARemover = existingRol.permiso
-                    .Where(p => !permisosIds.Contains(p.idSubModulo))
-                    .ToList();
-
-                _context.permiso.RemoveRange(permisosARemover);
-
-                // Actualizar o agregar nuevos permisos
-                foreach (var permisoDto in updateRol.updatePermisoDto)
-                {
-                    var existingPermiso = existingRol.permiso
-                        .FirstOrDefault(p => p.idSubModulo == permisoDto.idSubModulo);
-
-                    if (existingPermiso != null)
-                    {
-                        // Actualizar el permiso existente
-                        _mapper.Map(permisoDto, existingPermiso);
-                    }
-                    else
-                    {
-                        // Agregar un nuevo permiso
-                        var newPermiso = _mapper.Map<permiso>(permisoDto);
-                        existingRol.permiso.Add(newPermiso);
-                    }
-                }
-            }
-
-            // Marcar el rol como modificado
-            _context.Entry(existingRol).State = EntityState.Modified;
+            _mapper.Map(updateRol, rol);
+            _context.Entry(rol).State = EntityState.Modified;
 
             try
             {
@@ -175,7 +138,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.LoginAuth
             {
                 if (!rolExists(id))
                 {
-                    return NotFound($"ID = {id} no coincide con el registro");
+                    return BadRequest($"ID = {id} no coincide con el registro");
                 }
                 else
                 {

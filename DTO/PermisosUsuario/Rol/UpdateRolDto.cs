@@ -7,9 +7,5 @@ namespace Sistema_Produccion_3_Backend.DTO.PermisosUsuario.Rol
         public string? nombreRol { get; set; }
 
         public string? descripcion { get; set; }
-
-        public bool? status { get; set; }
-
-        public List<UpdatePermisoDto>? updatePermisoDto { get; set; }
     }
 }

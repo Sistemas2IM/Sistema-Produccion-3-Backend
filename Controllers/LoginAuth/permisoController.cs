@@ -114,7 +114,22 @@ namespace Sistema_Produccion_3_Backend.Controllers.LoginAuth
             {
                 var permiso = permisos.FirstOrDefault(t => t.idPermiso == dto.idPermiso);
                 if (permiso != null)
-                {                 
+                {
+
+                    permiso.idSubModulo = dto.idSubModulo ?? permiso.idSubModulo;
+
+                    permiso.idRol = dto.idRol ?? permiso.idRol;
+
+                    permiso.descripcion = dto.descripcion ?? permiso.descripcion;
+
+                    permiso.canRead = dto.canRead ?? permiso.canRead;
+
+                    permiso.canAdd = dto.canAdd ?? permiso.canAdd;
+
+                    permiso.canEdit = dto.canEdit ?? permiso.canEdit;
+
+                    permiso.canDelete = dto.canDelete ?? permiso.canDelete;
+
                     _context.Entry(permiso).State = EntityState.Modified;
                 }
             }
