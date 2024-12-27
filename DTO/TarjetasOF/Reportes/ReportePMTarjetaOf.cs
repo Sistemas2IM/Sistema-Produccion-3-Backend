@@ -16,7 +16,10 @@ namespace Sistema_Produccion_3_Backend.DTO.TarjetasOF.Reportes
 
         public int oF { get; set; }      
 
-        public string? nombreOf { get; set; }       
+        public string? nombreOf { get; set; }
+
+        [JsonConverter(typeof(JsonDateConverter))]
+        public DateTime? fechaCreacion { get; set; }
 
         [JsonConverter(typeof(JsonDateConverter))]
         public DateTime? fechaVencimiento { get; set; }
@@ -25,10 +28,7 @@ namespace Sistema_Produccion_3_Backend.DTO.TarjetasOF.Reportes
         public DateTime? inicio { get; set; }
 
         [JsonConverter(typeof(JsonDateConverter))]
-        public DateTime? finalizacion { get; set; }
-
-        [JsonConverter(typeof(JsonDateConverter))]
-        public DateTime? fechaCreacion { get; set; }      
+        public DateTime? finalizacion { get; set; }       
 
         public decimal? porcentajeCompletado { get; set; }
 
