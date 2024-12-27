@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Sistema_Produccion_3_Backend.ApiKey;
 using Sistema_Produccion_3_Backend.DTO.TarjetasOF;
+using Sistema_Produccion_3_Backend.DTO.TarjetasOF.Reportes;
 using Sistema_Produccion_3_Backend.Models;
 
 namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
@@ -200,9 +201,35 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         }
 
 
-        // ======================================================================================
+        // - REPORTES - =======================================================================================
 
-        
+        // GET: api/tarjetaOf
+        [HttpGet("get/PM")]
+        public async Task<ActionResult<IEnumerable<ReportePMTarjetaOf>>> GettarjetaOfPM()
+        {
+            var tarjetas = await _context.tarjetaOf
+                .OrderBy(p => p.vendedorOf)
+                .ToListAsync();
+
+            var tarjetasDto = _mapper.Map<List<ReportePMTarjetaOf>>(tarjetas);
+
+            // Calcular días en planta y días a la entrega
+            foreach (var tarjeta in tarjetasDto)
+            {
+                if (tarjeta.fechaCreacion.HasValue)
+                {
+                    tarjeta.diasEnPlanta = (DateTime.Now - tarjeta.fechaCreacion.Value).Days;
+                }
+
+                if (tarjeta.fechaVencimiento.HasValue)
+                {
+                    tarjeta.diasALaEntrega = (tarjeta.fechaVencimiento.Value - DateTime.Now).Days;
+                }
+            }
+
+            return Ok(tarjetasDto);
+        }
+
 
         private bool tarjetaOfExists(int id)
         {

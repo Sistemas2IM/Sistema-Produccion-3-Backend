@@ -51,6 +51,7 @@ using Sistema_Produccion_3_Backend.DTO.Tableros.Posturas;
 using Sistema_Produccion_3_Backend.DTO.TarjetasOF;
 using Sistema_Produccion_3_Backend.DTO.TarjetasOF.EstadoOf;
 using Sistema_Produccion_3_Backend.DTO.TarjetasOF.EtiquetaOf;
+using Sistema_Produccion_3_Backend.DTO.TarjetasOF.Reportes;
 using Sistema_Produccion_3_Backend.Models;
 
 namespace Sistema_Produccion_3_Backend.AutomapperProfiles
@@ -66,7 +67,10 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForMember(dest => dest.estadonombre, opt => opt.MapFrom(src => src.idEstadoOfNavigation.nombreEstado))
                 .ForMember(dest => dest.etiquetaDto, opt => opt.MapFrom(src => src.etiquetaOf))
                 .ReverseMap();
-                //.ForPath(src => src.idEstadoOfNavigation, opt => opt.Ignore());
+            //.ForPath(src => src.idEstadoOfNavigation, opt => opt.Ignore());
+
+            CreateMap<tarjetaOf, ReportePMTarjetaOf>()
+                .ReverseMap();
 
             CreateMap<tarjetaOf, AddTarjetaOfDto>().ReverseMap();
             CreateMap<UpdateTarjetaOfDto, tarjetaOf>()
