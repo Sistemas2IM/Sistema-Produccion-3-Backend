@@ -187,6 +187,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[permisoMaquina]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[porcentajeDeAgua]",
          "ObjectType": 0
       },

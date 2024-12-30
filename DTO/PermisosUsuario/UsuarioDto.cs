@@ -1,6 +1,7 @@
 ﻿using Sistema_Produccion_3_Backend.Services;
 using System.Text.Json.Serialization;
 using Sistema_Produccion_3_Backend.DTO.PermisosUsuario.Rol;
+using Sistema_Produccion_3_Backend.DTO.PermisosUsuario.PermisoMaquina;
 
 namespace Sistema_Produccion_3_Backend.DTO.PermisosUsuario
 {
@@ -33,6 +34,8 @@ namespace Sistema_Produccion_3_Backend.DTO.PermisosUsuario
         public RolDto? rol { get; set; }
 
         public string? cargo { get; set; }
+
+        public List<PermisoMaquinaDto> permisosMaquina { get; set; }
 
     }
 }

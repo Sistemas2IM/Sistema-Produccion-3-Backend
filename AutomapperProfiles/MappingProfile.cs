@@ -31,6 +31,7 @@ using Sistema_Produccion_3_Backend.DTO.PermisosUsuario.Cargo;
 using Sistema_Produccion_3_Backend.DTO.PermisosUsuario.Modulo;
 using Sistema_Produccion_3_Backend.DTO.PermisosUsuario.Modulo.SubModulo;
 using Sistema_Produccion_3_Backend.DTO.PermisosUsuario.Modulo.SubModulo.Permiso;
+using Sistema_Produccion_3_Backend.DTO.PermisosUsuario.PermisoMaquina;
 using Sistema_Produccion_3_Backend.DTO.PermisosUsuario.Rol;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.Asignacion;
@@ -221,6 +222,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             CreateMap<usuario, UsuarioDto>()
                 .ForMember(dest => dest.rol, opt => opt.MapFrom(src => src.idRolNavigation))
                 .ForMember(dest => dest.cargo, opt => opt.MapFrom(src => src.idCargoNavigation.nombreCargo))
+                .ForMember(dest => dest.permisosMaquina, opt => opt.MapFrom(src => src.permisoMaquina))
                 .ReverseMap();
 
             CreateMap<rol, RolDto>()
@@ -248,6 +250,12 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             CreateMap<subModulo, SubModuloDto>()
                 .ForMember(dest => dest.modulo, opt => opt.MapFrom(src => src.idModuloNavigation))
                 .ReverseMap();
+
+            CreateMap<permisoMaquina, PermisoMaquinaDto>().ReverseMap();          
+            CreateMap<permisoMaquina, AddPermisoMaquinaDto>().ReverseMap();
+            CreateMap<UpdatePermisoMaquinaDto, permisoMaquina>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<UpdateBatchPermisoMaquina, permisoMaquina>().ReverseMap();
 
             CreateMap<modulo, ModuloDto>()
                 //.ForMember(dest => dest.menu, opt => opt.MapFrom(src => src.idMenuNavigation))

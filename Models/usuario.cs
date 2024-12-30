@@ -67,6 +67,9 @@ public partial class usuario
     public virtual rol idRolNavigation { get; set; }
 
     [InverseProperty("userNavigation")]
+    public virtual ICollection<permisoMaquina> permisoMaquina { get; set; } = new List<permisoMaquina>();
+
+    [InverseProperty("userNavigation")]
     public virtual ICollection<refreshToken> refreshToken { get; set; } = new List<refreshToken>();
 
     [InverseProperty("operadorNavigation")]

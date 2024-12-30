@@ -99,6 +99,8 @@ public partial class base_nuevaContext : DbContext
 
     public virtual DbSet<permiso> permiso { get; set; }
 
+    public virtual DbSet<permisoMaquina> permisoMaquina { get; set; }
+
     public virtual DbSet<porcentajeDeAgua> porcentajeDeAgua { get; set; }
 
     public virtual DbSet<posturasOf> posturasOf { get; set; }
@@ -534,6 +536,15 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.idRolNavigation).WithMany(p => p.permiso).HasConstraintName("FK_PERMISO_ROL");
 
             entity.HasOne(d => d.idSubModuloNavigation).WithMany(p => p.permiso).HasConstraintName("FK_PERMISO_SUBMODULO");
+        });
+
+        modelBuilder.Entity<permisoMaquina>(entity =>
+        {
+            entity.HasKey(e => e.idPermisoMaquina).HasName("PK__permisoM__14AF841E56D0504E");
+
+            entity.HasOne(d => d.maquinaNavigation).WithMany(p => p.permisoMaquina).HasConstraintName("FK_PERMISOS_MAQUINA");
+
+            entity.HasOne(d => d.userNavigation).WithMany(p => p.permisoMaquina).HasConstraintName("FK_PERMISOS_MAQUINA_USUARIO");
         });
 
         modelBuilder.Entity<porcentajeDeAgua>(entity =>
