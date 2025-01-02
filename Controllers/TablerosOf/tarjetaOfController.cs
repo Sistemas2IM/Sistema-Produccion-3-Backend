@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
-using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Sistema_Produccion_3_Backend.ApiKey;
 using Sistema_Produccion_3_Backend.DTO.TarjetasOF;
 using Sistema_Produccion_3_Backend.DTO.TarjetasOF.Reportes;
 using Sistema_Produccion_3_Backend.Models;
