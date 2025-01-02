@@ -720,8 +720,6 @@ public partial class base_nuevaContext : DbContext
         {
             entity.HasKey(e => e.user).HasName("PK_USUARIO");
 
-            entity.Property(e => e.status).IsFixedLength();
-
             entity.HasOne(d => d.idAreaNavigation).WithMany(p => p.usuario).HasConstraintName("FK_USUARIO_AREA");
 
             entity.HasOne(d => d.idCargoNavigation).WithMany(p => p.usuario).HasConstraintName("FK_USUARIO_CARGO");

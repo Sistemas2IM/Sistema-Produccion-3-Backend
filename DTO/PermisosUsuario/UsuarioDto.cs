@@ -15,7 +15,7 @@ namespace Sistema_Produccion_3_Backend.DTO.PermisosUsuario
 
         public int? idArea { get; set; }
 
-        public string? status { get; set; }
+        public bool? status { get; set; }
 
         public string? nombres { get; set; }
 

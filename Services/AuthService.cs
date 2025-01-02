@@ -77,7 +77,7 @@ namespace Sistema_Produccion_3_Backend.Services
                 email = register.Email,
                 password = hashedPassword,
                 fechaDeCreacion = DateTime.Now,
-                status = "1",
+                status = true,
             };
 
             await _context.usuario.AddAsync(newUser);
@@ -108,6 +108,7 @@ namespace Sistema_Produccion_3_Backend.Services
             existingUser.nombres = update.Nombres ?? existingUser.nombres;
             existingUser.apellidos = update.Apellidos ?? existingUser.apellidos;
             existingUser.email = update.Email ?? existingUser.email;
+            existingUser.status = update.status ?? existingUser.status;
 
             // Si se incluye una nueva contraseña, se actualiza
             if (!string.IsNullOrEmpty(update.Password))

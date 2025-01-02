@@ -23,9 +23,7 @@ public partial class usuario
 
     public int? idArea { get; set; }
 
-    [StringLength(1)]
-    [Unicode(false)]
-    public string status { get; set; }
+    public bool? status { get; set; }
 
     [StringLength(200)]
     public string password { get; set; }
