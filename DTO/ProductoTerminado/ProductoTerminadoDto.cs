@@ -15,19 +15,10 @@ namespace Sistema_Produccion_3_Backend.DTO.ProductoTerminado
     {
         public int idEntregaPt { get; set; }
 
-        public int? oF { get; set; }
-
         public int? idMaquina { get; set; }
-
-        public int? idOv { get; set; }
 
         public int? idEstadoReporte { get; set; }
 
-        public int? numeroOf { get; set; }
-
-        public string cliente { get; set; }
-
-        public string descripcionOf { get; set; }
 
         [JsonConverter(typeof(JsonDateConverter))]
         public DateTime? fechaEntrega { get; set; }
@@ -36,11 +27,12 @@ namespace Sistema_Produccion_3_Backend.DTO.ProductoTerminado
 
         public string areaRecibe { get; set; }
 
-        public int? numeroDeCorrugados { get; set; }
+        [JsonConverter(typeof(JsonDateConverter))]
+        public DateTime? fechaRecepcion { get; set; }
 
         public int? numeroDeTarimas { get; set; }
 
-        public int? numeroDeEntrega { get; set; }
+        public int? numeroDeCorrugados { get; set; }
 
         public string creadoPor { get; set; }
 

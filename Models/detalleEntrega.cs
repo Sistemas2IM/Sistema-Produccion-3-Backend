@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Sistema_Produccion_3_Backend.Models;
 
 [Index("idEntregaPt", Name = "ENTREGA_DETALLE_FK")]
+[Index("numeroOF", Name = "NUMERO_OF_FK")]
 public partial class detalleEntrega
 {
     [Key]
@@ -18,15 +19,30 @@ public partial class detalleEntrega
 
     public int? numeroFila { get; set; }
 
-    public int? cantidadBultos { get; set; }
+    public int? numeroOF { get; set; }
 
-    [StringLength(200)]
-    public string descripcionBultos { get; set; }
+    [StringLength(300)]
+    public string cliente { get; set; }
 
-    [StringLength(100)]
-    public string pesoBultos { get; set; }
+    [Column(TypeName = "numeric(18, 2)")]
+    public decimal? cantidad { get; set; }
+
+    [StringLength(50)]
+    public string codArticuloSAP { get; set; }
+
+    [StringLength(50)]
+    public string tipoEmpaque { get; set; }
+
+    public int? bultos { get; set; }
+
+    [Column(TypeName = "numeric(18, 2)")]
+    public decimal? peso { get; set; }
 
     [ForeignKey("idEntregaPt")]
     [InverseProperty("detalleEntrega")]
     public virtual entregasProductoTerminado idEntregaPtNavigation { get; set; }
+
+    [ForeignKey("numeroOF")]
+    [InverseProperty("detalleEntrega")]
+    public virtual tarjetaOf numeroOFNavigation { get; set; }
 }

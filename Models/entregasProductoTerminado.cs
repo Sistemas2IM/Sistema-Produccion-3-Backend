@@ -10,27 +10,14 @@ namespace Sistema_Produccion_3_Backend.Models;
 
 [Index("idEstadoReporte", Name = "ESTADO_ENTREGA_FK")]
 [Index("idMaquina", Name = "MAQUINA_ENTREGA_FK")]
-[Index("oF", Name = "OF_ENTREGA_FK")]
-[Index("oV", Name = "OV_ENTREGA_FK")]
 public partial class entregasProductoTerminado
 {
     [Key]
     public int idEntregaPt { get; set; }
 
-    public int? oF { get; set; }
-
     public int? idMaquina { get; set; }
 
-    public int? oV { get; set; }
-
     public int? idEstadoReporte { get; set; }
-
-    public int? numeroOf { get; set; }
-
-    [StringLength(200)]
-    public string cliente { get; set; }
-
-    public string descripcionOf { get; set; }
 
     [Column(TypeName = "datetime")]
     public DateTime? fechaEntrega { get; set; }
@@ -41,11 +28,12 @@ public partial class entregasProductoTerminado
     [StringLength(100)]
     public string areaRecibe { get; set; }
 
-    public int? numeroDeCorrugados { get; set; }
+    [Column(TypeName = "datetime")]
+    public DateTime? fechaRecepcion { get; set; }
 
     public int? numeroDeTarimas { get; set; }
 
-    public int? numeroDeEntrega { get; set; }
+    public int? numeroDeCorrugados { get; set; }
 
     [StringLength(100)]
     public string creadoPor { get; set; }
@@ -85,12 +73,4 @@ public partial class entregasProductoTerminado
     [ForeignKey("idMaquina")]
     [InverseProperty("entregasProductoTerminado")]
     public virtual maquinas idMaquinaNavigation { get; set; }
-
-    [ForeignKey("oF")]
-    [InverseProperty("entregasProductoTerminado")]
-    public virtual tarjetaOf oFNavigation { get; set; }
-
-    [ForeignKey("oV")]
-    [InverseProperty("entregasProductoTerminado")]
-    public virtual oV oVNavigation { get; set; }
 }

@@ -318,7 +318,11 @@ public partial class base_nuevaContext : DbContext
         {
             entity.HasKey(e => e.idDetalleEntrega).HasName("PK_DETALLEENTREGA");
 
-            entity.HasOne(d => d.idEntregaPtNavigation).WithMany(p => p.detalleEntrega).HasConstraintName("FK_DETALLE_ENTREGA");
+            entity.HasOne(d => d.idEntregaPtNavigation).WithMany(p => p.detalleEntrega)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK_DETALLE_ENTREGA");
+
+            entity.HasOne(d => d.numeroOFNavigation).WithMany(p => p.detalleEntrega).HasConstraintName("FK_NUMERO_OF");
         });
 
         modelBuilder.Entity<detalleGira>(entity =>
@@ -391,10 +395,6 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.idEstadoReporteNavigation).WithMany(p => p.entregasProductoTerminado).HasConstraintName("FK_ENTREGAS_ESTADO");
 
             entity.HasOne(d => d.idMaquinaNavigation).WithMany(p => p.entregasProductoTerminado).HasConstraintName("FK_ENTREGAS_MAQUINA");
-
-            entity.HasOne(d => d.oFNavigation).WithMany(p => p.entregasProductoTerminado).HasConstraintName("FK_ENTREGAS_OF");
-
-            entity.HasOne(d => d.oVNavigation).WithMany(p => p.entregasProductoTerminado).HasConstraintName("FK_ENTREGAS_OV");
         });
 
         modelBuilder.Entity<espacioColor>(entity =>
@@ -533,7 +533,9 @@ public partial class base_nuevaContext : DbContext
         {
             entity.HasKey(e => e.idPermiso).HasName("PK_PERMISO");
 
-            entity.HasOne(d => d.idRolNavigation).WithMany(p => p.permiso).HasConstraintName("FK_PERMISO_ROL");
+            entity.HasOne(d => d.idRolNavigation).WithMany(p => p.permiso)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK_PERMISO_ROL");
 
             entity.HasOne(d => d.idSubModuloNavigation).WithMany(p => p.permiso).HasConstraintName("FK_PERMISO_SUBMODULO");
         });
@@ -544,7 +546,9 @@ public partial class base_nuevaContext : DbContext
 
             entity.HasOne(d => d.maquinaNavigation).WithMany(p => p.permisoMaquina).HasConstraintName("FK_PERMISOS_MAQUINA");
 
-            entity.HasOne(d => d.userNavigation).WithMany(p => p.permisoMaquina).HasConstraintName("FK_PERMISOS_MAQUINA_USUARIO");
+            entity.HasOne(d => d.userNavigation).WithMany(p => p.permisoMaquina)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK_PERMISOS_MAQUINA_USUARIO");
         });
 
         modelBuilder.Entity<porcentajeDeAgua>(entity =>
