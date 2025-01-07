@@ -47,7 +47,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             
             if (tarjetaOfDto == null)
             {
-                return NotFound("No se encontro la tarjeta con el id: " + id);
+                return Ok("");
             }
 
             return Ok(tarjetaOfDto);

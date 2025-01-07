@@ -7,12 +7,6 @@ namespace Sistema_Produccion_3_Backend.Validators.ProductoTerminado
     {
         public PTerminadoValidator() 
         {
-            RuleFor(x => x.cliente)
-                .NotEmpty().WithMessage("{PropertyName} es requerido");
-
-            RuleFor(x => x.descripcionOf)
-                .NotEmpty().WithMessage("{PropertyName} es requerido");
-
             RuleFor(x => x.fechaEntrega)
                 .NotEmpty().WithMessage("{PropertyName} es requerida");
 
@@ -26,9 +20,6 @@ namespace Sistema_Produccion_3_Backend.Validators.ProductoTerminado
                 .NotEmpty().WithMessage("{PropertyName} es requerido");
 
             RuleFor(x => x.numeroDeTarimas)
-                .NotEmpty().WithMessage("{PropertyName} es requerida");
-
-            RuleFor(x => x.numeroDeEntrega)
                 .NotEmpty().WithMessage("{PropertyName} es requerida");
 
             RuleFor(x => x.creadoPor)

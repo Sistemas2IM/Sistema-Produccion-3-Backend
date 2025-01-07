@@ -144,8 +144,6 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForMember(dest => dest.detalleEntrega, opt => opt.MapFrom(src => src.detalleEntrega))
                 .ForMember(dest => dest.estadoReporteDto, opt => opt.MapFrom(src => src.idEstadoReporteNavigation))
                 .ForMember(dest => dest.maquinaDto, opt => opt.MapFrom(src => src.idMaquinaNavigation))
-                .ForMember(dest => dest.ovDto, opt => opt.MapFrom(src => src.oVNavigation))
-                .ForMember(dest => dest.tarjetaOfDto, opt => opt.MapFrom(src => src.oFNavigation))
                 .ReverseMap();
             CreateMap<entregasProductoTerminado, AddProductoTerminadoDto>().ReverseMap();
             CreateMap<UpdateProductoTerminadoDto, entregasProductoTerminado>()

@@ -4,9 +4,7 @@ using Sistema_Produccion_3_Backend.DTO.ProductoTerminado.ContenidoEntrega;
 using Sistema_Produccion_3_Backend.DTO.ProductoTerminado.DetalleEntrega;
 using Sistema_Produccion_3_Backend.DTO.ReporteOperador.EstadoReporte;
 using Sistema_Produccion_3_Backend.DTO.TarjetasOF;
-using Sistema_Produccion_3_Backend.Models;
 using Sistema_Produccion_3_Backend.Services;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 namespace Sistema_Produccion_3_Backend.DTO.ProductoTerminado
@@ -18,7 +16,6 @@ namespace Sistema_Produccion_3_Backend.DTO.ProductoTerminado
         public int? idMaquina { get; set; }
 
         public int? idEstadoReporte { get; set; }
-
 
         [JsonConverter(typeof(JsonDateConverter))]
         public DateTime? fechaEntrega { get; set; }

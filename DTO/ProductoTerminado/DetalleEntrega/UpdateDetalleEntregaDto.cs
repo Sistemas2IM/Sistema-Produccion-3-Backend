@@ -2,12 +2,22 @@
 {
     public class UpdateDetalleEntregaDto
     {
+        public int? idEntregaPt { get; set; }
+
         public int? numeroFila { get; set; }
 
-        public int? cantidadBultos { get; set; }
+        public int? numeroOF { get; set; }
 
-        public string? descripcionBultos { get; set; }
+        public string cliente { get; set; }
 
-        public string? pesoBultos { get; set; }
+        public decimal? cantidad { get; set; }
+
+        public string codArticuloSAP { get; set; }
+
+        public string tipoEmpaque { get; set; }
+
+        public int? bultos { get; set; }
+
+        public decimal? peso { get; set; }
     }
 }
