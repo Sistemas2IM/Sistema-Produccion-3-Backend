@@ -38,6 +38,12 @@ public partial class detalleEntrega
     [Column(TypeName = "numeric(18, 2)")]
     public decimal? peso { get; set; }
 
+    [StringLength(300)]
+    public string nombreArticulo { get; set; }
+
+    [Column(TypeName = "numeric(18, 2)")]
+    public decimal? cantidadTotal { get; set; }
+
     [ForeignKey("idEntregaPt")]
     [InverseProperty("detalleEntrega")]
     public virtual entregasProductoTerminado idEntregaPtNavigation { get; set; }

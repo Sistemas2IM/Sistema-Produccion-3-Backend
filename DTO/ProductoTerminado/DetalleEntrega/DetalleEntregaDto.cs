@@ -22,5 +22,9 @@
 
         public decimal? peso { get; set; }
 
+        public string nombreArticulo { get; set; }
+
+        public decimal? cantidadTotal { get; set; }
+
     }
 }

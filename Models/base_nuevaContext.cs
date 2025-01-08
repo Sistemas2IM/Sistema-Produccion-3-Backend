@@ -107,7 +107,15 @@ public partial class base_nuevaContext : DbContext
 
     public virtual DbSet<potenciaLamparaUv> potenciaLamparaUv { get; set; }
 
+    public virtual DbSet<procesoBarniz> procesoBarniz { get; set; }
+
+    public virtual DbSet<procesoImpresora> procesoImpresora { get; set; }
+
     public virtual DbSet<procesoOf> procesoOf { get; set; }
+
+    public virtual DbSet<procesoPegadora> procesoPegadora { get; set; }
+
+    public virtual DbSet<procesoTroqueladora> procesoTroqueladora { get; set; }
 
     public virtual DbSet<refreshToken> refreshToken { get; set; }
 
@@ -572,6 +580,24 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.idBarnizNavigation).WithMany(p => p.potenciaLamparaUv).HasConstraintName("FK_POTENCIAL_BARNIZ");
         });
 
+        modelBuilder.Entity<procesoBarniz>(entity =>
+        {
+            entity.HasKey(e => e.idProcesoBarniz).HasName("PK__procesoB__CCBE84C9B64298A9");
+
+            entity.Property(e => e.idProcesoBarniz).ValueGeneratedNever();
+
+            entity.HasOne(d => d.idProcesoOfNavigation).WithMany(p => p.procesoBarniz).HasConstraintName("ProcesoOfBarniz");
+        });
+
+        modelBuilder.Entity<procesoImpresora>(entity =>
+        {
+            entity.HasKey(e => e.idProcesoImpresora).HasName("PK__procesoI__25D23D8CAAD19189");
+
+            entity.Property(e => e.idProcesoImpresora).ValueGeneratedNever();
+
+            entity.HasOne(d => d.idProcesoOfNavigation).WithMany(p => p.procesoImpresora).HasConstraintName("procesoOfImpresora");
+        });
+
         modelBuilder.Entity<procesoOf>(entity =>
         {
             entity.HasKey(e => e.idProceso).HasName("PK_PROCESOOF");
@@ -585,6 +611,24 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.idTableroNavigation).WithMany(p => p.procesoOf).HasConstraintName("FK_PROCESO_TABLERO");
 
             entity.HasOne(d => d.oFNavigation).WithMany(p => p.procesoOf).HasConstraintName("FK_PROCESO_OF");
+        });
+
+        modelBuilder.Entity<procesoPegadora>(entity =>
+        {
+            entity.HasKey(e => e.idProcesoPegadora).HasName("PK__procesoP__D3D0E7379AFBE3DA");
+
+            entity.Property(e => e.idProcesoPegadora).ValueGeneratedNever();
+
+            entity.HasOne(d => d.idProcesoOfNavigation).WithMany(p => p.procesoPegadora).HasConstraintName("ProcesoOfPegadora");
+        });
+
+        modelBuilder.Entity<procesoTroqueladora>(entity =>
+        {
+            entity.HasKey(e => e.idProcesoTroqueladora).HasName("PK__procesoT__5F41CDA6FB72ABB6");
+
+            entity.Property(e => e.idProcesoTroqueladora).ValueGeneratedNever();
+
+            entity.HasOne(d => d.idProcesoOfNavigation).WithMany(p => p.procesoTroqueladora).HasConstraintName("ProcesoOfTroqueladora");
         });
 
         modelBuilder.Entity<refreshToken>(entity =>

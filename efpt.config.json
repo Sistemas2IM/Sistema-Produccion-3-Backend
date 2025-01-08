@@ -203,7 +203,23 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[procesoBarniz]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[procesoImpresora]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[procesoOf]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[procesoPegadora]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[procesoTroqueladora]",
          "ObjectType": 0
       },
       {
