@@ -41,6 +41,9 @@ public partial class detalleEntrega
     [Column(TypeName = "numeric(18, 2)")]
     public decimal? cantidadTotal { get; set; }
 
+    [StringLength(50)]
+    public string unidad { get; set; }
+
     [ForeignKey("idEntregaPt")]
     [InverseProperty("detalleEntrega")]
     public virtual entregasProductoTerminado idEntregaPtNavigation { get; set; }

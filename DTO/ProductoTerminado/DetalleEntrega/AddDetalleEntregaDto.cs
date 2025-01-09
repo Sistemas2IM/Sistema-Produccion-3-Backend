@@ -6,8 +6,6 @@
 
         public int? numeroFila { get; set; }
 
-        public int? numeroOF { get; set; }
-
         public string cliente { get; set; }
 
         public decimal? cantidad { get; set; }
@@ -23,5 +21,7 @@
         public string nombreArticulo { get; set; }
 
         public decimal? cantidadTotal { get; set; }
+
+        public string? unidad { get; set; }
     }
 }

@@ -2,6 +2,6 @@
 {
     public class AddBatchDetalleDto
     {
-        public List<AddDetalleEntregaDto> DetallesEntregas { get; set; }
+        public List<AddDetalleEntregaDto>? DetallesEntregas { get; set; }
     }
 }

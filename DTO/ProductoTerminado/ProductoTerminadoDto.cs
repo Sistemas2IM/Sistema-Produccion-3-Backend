@@ -63,8 +63,6 @@ namespace Sistema_Produccion_3_Backend.DTO.ProductoTerminado
 
         public MaquinaDto? maquinaDto { get; set; }
 
-        public OVDto? ovDto { get; set; }
-
         public TarjetaOfDto? tarjetaOfDto { get; set; }
     }
 }

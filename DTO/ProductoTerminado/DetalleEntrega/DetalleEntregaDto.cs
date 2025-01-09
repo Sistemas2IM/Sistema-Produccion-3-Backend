@@ -24,5 +24,7 @@
 
         public decimal? cantidadTotal { get; set; }
 
+        public string? unidad { get; set; }
+
     }
 }
