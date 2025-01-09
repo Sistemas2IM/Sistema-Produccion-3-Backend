@@ -10,6 +10,7 @@ namespace Sistema_Produccion_3_Backend.Models;
 
 [Index("idEstadoReporte", Name = "ESTADO_ENTREGA_FK")]
 [Index("idMaquina", Name = "MAQUINA_ENTREGA_FK")]
+[Index("of", Name = "OF_ENTREGA_FK")]
 public partial class entregasProductoTerminado
 {
     [Key]
@@ -35,7 +36,7 @@ public partial class entregasProductoTerminado
 
     public int? numeroDeCorrugados { get; set; }
 
-    [StringLength(100)]
+    [StringLength(50)]
     public string creadoPor { get; set; }
 
     [StringLength(100)]
@@ -60,6 +61,11 @@ public partial class entregasProductoTerminado
 
     public int? tipoObjeto { get; set; }
 
+    [StringLength(100)]
+    public string entregadoPor { get; set; }
+
+    public int? of { get; set; }
+
     [InverseProperty("idEntregaPtNavigation")]
     public virtual ICollection<contenidoEntrega> contenidoEntrega { get; set; } = new List<contenidoEntrega>();
 
@@ -73,4 +79,8 @@ public partial class entregasProductoTerminado
     [ForeignKey("idMaquina")]
     [InverseProperty("entregasProductoTerminado")]
     public virtual maquinas idMaquinaNavigation { get; set; }
+
+    [ForeignKey("of")]
+    [InverseProperty("entregasProductoTerminado")]
+    public virtual tarjetaOf ofNavigation { get; set; }
 }

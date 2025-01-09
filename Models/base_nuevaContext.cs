@@ -107,6 +107,8 @@ public partial class base_nuevaContext : DbContext
 
     public virtual DbSet<potenciaLamparaUv> potenciaLamparaUv { get; set; }
 
+    public virtual DbSet<procesoAcabado> procesoAcabado { get; set; }
+
     public virtual DbSet<procesoBarniz> procesoBarniz { get; set; }
 
     public virtual DbSet<procesoImpresora> procesoImpresora { get; set; }
@@ -403,6 +405,8 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.idEstadoReporteNavigation).WithMany(p => p.entregasProductoTerminado).HasConstraintName("FK_ENTREGAS_ESTADO");
 
             entity.HasOne(d => d.idMaquinaNavigation).WithMany(p => p.entregasProductoTerminado).HasConstraintName("FK_ENTREGAS_MAQUINA");
+
+            entity.HasOne(d => d.ofNavigation).WithMany(p => p.entregasProductoTerminado).HasConstraintName("FK_ENTREGAS_OF");
         });
 
         modelBuilder.Entity<espacioColor>(entity =>
@@ -578,6 +582,15 @@ public partial class base_nuevaContext : DbContext
             entity.HasKey(e => e.idPotencia).HasName("PK_POTENCIALAMPARAUV");
 
             entity.HasOne(d => d.idBarnizNavigation).WithMany(p => p.potenciaLamparaUv).HasConstraintName("FK_POTENCIAL_BARNIZ");
+        });
+
+        modelBuilder.Entity<procesoAcabado>(entity =>
+        {
+            entity.HasKey(e => e.idProcesoAcabado).HasName("PK__procesoA__50B6B3D371ECBC65");
+
+            entity.Property(e => e.idProcesoAcabado).ValueGeneratedNever();
+
+            entity.HasOne(d => d.idProcesoOfNavigation).WithMany(p => p.procesoAcabado).HasConstraintName("ProcesoOfAcabado");
         });
 
         modelBuilder.Entity<procesoBarniz>(entity =>

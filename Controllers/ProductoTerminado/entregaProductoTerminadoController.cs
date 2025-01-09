@@ -95,6 +95,52 @@ namespace Sistema_Produccion_3_Backend.Controllers.ProductoTerminado
             return Ok(updateProductoTerminado);
         }
 
+        // PUT BATCH
+        [HttpPut("put/BatchUpdate")]
+        public async Task<IActionResult> BatchUpdateEstadosPT([FromBody] BatchUpdateProductoTerminado batchUpdateDto)
+        {
+            if (batchUpdateDto == null || batchUpdateDto.updateBatchProductoTerminado == null || !batchUpdateDto.updateBatchProductoTerminado.Any())
+            {
+                return BadRequest("No se enviaron datos para actualizar.");
+            }
+
+            var ids = batchUpdateDto.updateBatchProductoTerminado.Select(t => t.idEntregaPt).ToList();
+
+            // Obtener todos los roles relacionados
+            var ept = await _context.entregasProductoTerminado.Where(t => ids.Contains(t.idEntregaPt)).ToListAsync();
+
+            if (!ept.Any())
+            {
+                return NotFound("No se encontraron los IDs proporcionados.");
+            }
+
+            foreach (var dto in batchUpdateDto.updateBatchProductoTerminado)
+            {
+                var pt = ept.FirstOrDefault(t => t.idEntregaPt == dto.idEntregaPt);
+                if (pt != null)
+                {
+                    // Actualizar propiedades específicas
+                    if (dto.idEstadoReporte.HasValue)
+                    {
+                        pt.idEstadoReporte = dto.idEstadoReporte.Value;
+                    }
+
+                    _context.Entry(pt).State = EntityState.Modified;
+                }
+            }
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error al actualizar los estados.");
+            }
+
+            return Ok("Actualización realizada correctamente.");
+        }
+
         // POST: api/entregaProductoTerminado
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("post")]

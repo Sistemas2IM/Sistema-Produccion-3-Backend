@@ -146,6 +146,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForMember(dest => dest.maquinaDto, opt => opt.MapFrom(src => src.idMaquinaNavigation))
                 .ReverseMap();
             CreateMap<entregasProductoTerminado, AddProductoTerminadoDto>().ReverseMap();
+            CreateMap<UpdateBatchProductoTerminado, entregasProductoTerminado>().ReverseMap();
             CreateMap<UpdateProductoTerminadoDto, entregasProductoTerminado>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 

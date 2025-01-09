@@ -20,9 +20,9 @@ namespace Sistema_Produccion_3_Backend.DTO.ProductoTerminado
         [JsonConverter(typeof(JsonDateConverter))]
         public DateTime? fechaEntrega { get; set; }
 
-        public string areaEntrega { get; set; }
+        public string? areaEntrega { get; set; }
 
-        public string areaRecibe { get; set; }
+        public string? areaRecibe { get; set; }
 
         [JsonConverter(typeof(JsonDateConverter))]
         public DateTime? fechaRecepcion { get; set; }
@@ -31,9 +31,9 @@ namespace Sistema_Produccion_3_Backend.DTO.ProductoTerminado
 
         public int? numeroDeCorrugados { get; set; }
 
-        public string creadoPor { get; set; }
+        public string? creadoPor { get; set; }
 
-        public string recibidoPor { get; set; }
+        public string? recibidoPor { get; set; }
 
         public bool? entregaParcial { get; set; }
 
@@ -45,11 +45,15 @@ namespace Sistema_Produccion_3_Backend.DTO.ProductoTerminado
 
         public DateTime? fechaCreacion { get; set; }
 
-        public string actualizadoPor { get; set; }
+        public string? actualizadoPor { get; set; }
 
         public DateTime? ultimaActualizacion { get; set; }
 
         public int? tipoObjeto { get; set; }
+
+        public string? entregadoPor { get; set; }
+
+        public int? of { get; set; }
 
         public List<ContenidoEntregaDto>? contenidoEntregado { get; set; }
 

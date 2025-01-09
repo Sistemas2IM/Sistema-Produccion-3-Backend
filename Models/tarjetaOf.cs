@@ -86,6 +86,9 @@ public partial class tarjetaOf
     [InverseProperty("oFNavigation")]
     public virtual ICollection<detalleReporte> detalleReporte { get; set; } = new List<detalleReporte>();
 
+    [InverseProperty("ofNavigation")]
+    public virtual ICollection<entregasProductoTerminado> entregasProductoTerminado { get; set; } = new List<entregasProductoTerminado>();
+
     [InverseProperty("oFNavigation")]
     public virtual ICollection<etiquetaOf> etiquetaOf { get; set; } = new List<etiquetaOf>();
 

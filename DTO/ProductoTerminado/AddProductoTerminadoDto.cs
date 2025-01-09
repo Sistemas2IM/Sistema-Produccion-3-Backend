@@ -43,5 +43,9 @@ namespace Sistema_Produccion_3_Backend.DTO.ProductoTerminado
         public DateTime? ultimaActualizacion { get; set; }
 
         public int? tipoObjeto { get; set; }
+
+        public string entregadoPor { get; set; }
+
+        public int? of { get; set; }
     }
 }

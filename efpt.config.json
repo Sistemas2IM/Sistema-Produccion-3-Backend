@@ -203,6 +203,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[procesoAcabado]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[procesoBarniz]",
          "ObjectType": 0
       },
