@@ -9,7 +9,6 @@ using Microsoft.EntityFrameworkCore;
 namespace Sistema_Produccion_3_Backend.Models;
 
 [Index("idEntregaPt", Name = "ENTREGA_DETALLE_FK")]
-[Index("numeroOF", Name = "NUMERO_OF_FK")]
 public partial class detalleEntrega
 {
     [Key]
@@ -18,8 +17,6 @@ public partial class detalleEntrega
     public int? idEntregaPt { get; set; }
 
     public int? numeroFila { get; set; }
-
-    public int? numeroOF { get; set; }
 
     [StringLength(300)]
     public string cliente { get; set; }
@@ -47,8 +44,4 @@ public partial class detalleEntrega
     [ForeignKey("idEntregaPt")]
     [InverseProperty("detalleEntrega")]
     public virtual entregasProductoTerminado idEntregaPtNavigation { get; set; }
-
-    [ForeignKey("numeroOF")]
-    [InverseProperty("detalleEntrega")]
-    public virtual tarjetaOf numeroOFNavigation { get; set; }
 }

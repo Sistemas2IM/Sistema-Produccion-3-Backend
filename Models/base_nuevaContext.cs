@@ -331,8 +331,6 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.idEntregaPtNavigation).WithMany(p => p.detalleEntrega)
                 .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_DETALLE_ENTREGA");
-
-            entity.HasOne(d => d.numeroOFNavigation).WithMany(p => p.detalleEntrega).HasConstraintName("FK_NUMERO_OF");
         });
 
         modelBuilder.Entity<detalleGira>(entity =>

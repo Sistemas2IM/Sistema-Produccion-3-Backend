@@ -8,8 +8,6 @@
 
         public int? numeroFila { get; set; }
 
-        public int? numeroOF { get; set; }
-
         public string cliente { get; set; }
 
         public decimal? cantidad { get; set; }
