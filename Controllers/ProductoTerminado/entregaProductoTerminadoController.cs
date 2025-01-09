@@ -61,6 +61,22 @@ namespace Sistema_Produccion_3_Backend.Controllers.ProductoTerminado
             return Ok(productoTerminado);
         }
 
+        [HttpGet("get/ultimoPT")]
+        public async Task<ActionResult<int>> GetentregasProductoTerminadoUltimo()
+        {
+            var ultimoId = await _context.entregasProductoTerminado
+                .OrderByDescending(u => u.idEntregaPt)
+                .Select(u => u.idEntregaPt)
+                .FirstOrDefaultAsync();
+
+            // Incrementar en 1
+            var siguienteId = ultimoId + 1;
+
+            // Devolver el siguiente ID a generar xd
+            return Ok(siguienteId);
+        }
+
+
         // PUT: api/entregaProductoTerminado/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("put/{id}")]
