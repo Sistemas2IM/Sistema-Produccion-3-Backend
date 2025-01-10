@@ -37,6 +37,12 @@ using Sistema_Produccion_3_Backend.DTO.ProcesoOf;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.Asignacion;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.CamposPersonalizados;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.DetalleProceso;
+using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.Acabado;
+using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.Barnizado;
+using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.Impresión;
+using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.Pegadora;
+using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.Preprensa;
+using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.Troquelado;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.UpdateSAP;
 using Sistema_Produccion_3_Backend.DTO.ProductoTerminado;
 using Sistema_Produccion_3_Backend.DTO.ProductoTerminado.ContenidoEntrega;
@@ -111,7 +117,14 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             CreateMap<AddBatchProcesoDto, procesoOf>().ReverseMap();
             CreateMap<SAPUpdateProcesoOf, procesoOf>().ReverseMap();
-
+            {
+                CreateMap<procesoAcabado, ProcesoAcabadoDto>().ReverseMap();
+                CreateMap<procesoBarniz, ProcesoBarnizDto>().ReverseMap();
+                CreateMap<procesoImpresora, ProcesoImpresoraDto>().ReverseMap();
+                CreateMap<procesoPegadora, ProcesoPegadoraDto>().ReverseMap();
+                CreateMap<procesoPreprensa, ProcesoPreprensaDto>().ReverseMap();
+                CreateMap<procesoTroqueladora, ProcesoTroqueladoraDto>().ReverseMap();
+            }
 
             CreateMap<detalleOperacionProceso, DetalleProcesoOfDto>()
                 .ForMember(dest => dest.operacionesDto, opt => opt.MapFrom(src => src.idOperacionNavigation))

@@ -117,6 +117,8 @@ public partial class base_nuevaContext : DbContext
 
     public virtual DbSet<procesoPegadora> procesoPegadora { get; set; }
 
+    public virtual DbSet<procesoPreprensa> procesoPreprensa { get; set; }
+
     public virtual DbSet<procesoTroqueladora> procesoTroqueladora { get; set; }
 
     public virtual DbSet<refreshToken> refreshToken { get; set; }
@@ -631,6 +633,15 @@ public partial class base_nuevaContext : DbContext
             entity.Property(e => e.idProcesoPegadora).ValueGeneratedNever();
 
             entity.HasOne(d => d.idProcesoOfNavigation).WithMany(p => p.procesoPegadora).HasConstraintName("ProcesoOfPegadora");
+        });
+
+        modelBuilder.Entity<procesoPreprensa>(entity =>
+        {
+            entity.HasKey(e => e.idProcesoPreprensa).HasName("PK__procesoP__5A9D90E2E21AE0CD");
+
+            entity.Property(e => e.idProcesoPreprensa).ValueGeneratedNever();
+
+            entity.HasOne(d => d.idProcesoOfNavigation).WithMany(p => p.procesoPreprensa).HasConstraintName("procesoOfPreprensa");
         });
 
         modelBuilder.Entity<procesoTroqueladora>(entity =>
