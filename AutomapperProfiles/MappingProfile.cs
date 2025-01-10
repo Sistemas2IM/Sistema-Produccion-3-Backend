@@ -148,7 +148,8 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ReverseMap();
             CreateMap<entregasProductoTerminado, UltimoProductoTerminadoDto>().ReverseMap(); // Para regresar el ultimo PT + 1
             CreateMap<entregasProductoTerminado, AddProductoTerminadoDto>().ReverseMap();
-            CreateMap<UpdateBatchProductoTerminado, entregasProductoTerminado>().ReverseMap();
+            CreateMap<UpdateBatchProductoTerminado, entregasProductoTerminado>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             CreateMap<UpdateProductoTerminadoDto, entregasProductoTerminado>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 

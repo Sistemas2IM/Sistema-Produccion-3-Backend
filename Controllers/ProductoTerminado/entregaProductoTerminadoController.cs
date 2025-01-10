@@ -139,6 +139,10 @@ namespace Sistema_Produccion_3_Backend.Controllers.ProductoTerminado
                     if (dto.idEstadoReporte.HasValue)
                     {
                         pt.idEstadoReporte = dto.idEstadoReporte.Value;
+                        pt.recibidoPor = dto.recibidoPor;
+                        pt.fechaRecepcion = dto.fechaRecepcion;
+                        pt.actualizadoPor = dto.actualizadoPor;
+                        pt.ultimaActualizacion = dto.ultimaActualizacion;
                     }
 
                     _context.Entry(pt).State = EntityState.Modified;

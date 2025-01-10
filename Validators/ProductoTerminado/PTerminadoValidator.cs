@@ -22,19 +22,7 @@ namespace Sistema_Produccion_3_Backend.Validators.ProductoTerminado
             RuleFor(x => x.numeroDeTarimas)
                 .NotEmpty().WithMessage("{PropertyName} es requerida");
 
-            RuleFor(x => x.creadoPor)
-                .NotEmpty().WithMessage("{PropertyName} es requerido");
-
-            RuleFor(x => x.recibidoPor)
-                .NotEmpty().WithMessage("{PropertyName} es requerido");
-
             RuleFor(x => x.entregaParcial)
-                .NotEmpty().WithMessage("{PropertyName} es requerida");
-
-            RuleFor(x => x.reportaSobrantes)
-                .NotEmpty().WithMessage("{PropertyName} es requerido");
-
-            RuleFor(x => x.cantidadSobrante)
                 .NotEmpty().WithMessage("{PropertyName} es requerida");
 
             RuleFor(x => x.cantidadEntregadaTotal)
