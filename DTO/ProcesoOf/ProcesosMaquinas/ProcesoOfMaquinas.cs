@@ -58,17 +58,9 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas
 
         public DateTime? fechaVencimiento { get; set; }
 
-        public List<ProcesoAcabadoDto> procesoAcabado { get; set; }
+        public string? tipoMaquinaSAP { get; set; }
 
-        public List<ProcesoBarnizDto> procesoBarniz { get; set; }
-
-        public List<ProcesoImpresoraDto> procesoImpresora { get; set; }
-
-        public List<ProcesoPegadoraDto> procesoPegadora { get; set; }
-
-        public List<ProcesoPreprensaDto> procesoPreprensa { get; set; }
-
-        public List<ProcesoTroqueladoraDto> procesoTroqueladora { get; set; }
+        public object? DetalleProceso { get; set; }
 
     }
 }

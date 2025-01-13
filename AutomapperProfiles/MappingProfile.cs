@@ -119,14 +119,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             CreateMap<AddBatchProcesoDto, procesoOf>().ReverseMap();
             CreateMap<SAPUpdateProcesoOf, procesoOf>().ReverseMap();
             {
-                CreateMap<procesoOf, ProcesoOfMaquinas>()
-                    .ForMember(dest => dest.procesoAcabado, opt => opt.MapFrom(src => src.procesoAcabado))
-                    .ForMember(dest => dest.procesoBarniz, opt => opt.MapFrom(src => src.procesoBarniz))
-                    .ForMember(dest => dest.procesoImpresora, opt => opt.MapFrom(src => src.procesoImpresora))
-                    .ForMember(dest => dest.procesoPegadora, opt => opt.MapFrom(src => src.procesoPegadora))
-                    .ForMember(dest => dest.procesoPreprensa, opt => opt.MapFrom(src => src.procesoPreprensa))
-                    .ForMember(dest => dest.procesoTroqueladora, opt => opt.MapFrom(src => src.procesoTroqueladora))
-                    .ReverseMap();
+                CreateMap<procesoOf, ProcesoOfMaquinas>().ReverseMap();
 
                 CreateMap<procesoAcabado, ProcesoAcabadoDto>().ReverseMap();
                 CreateMap<procesoBarniz, ProcesoBarnizDto>().ReverseMap();

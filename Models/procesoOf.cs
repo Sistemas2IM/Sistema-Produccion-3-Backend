@@ -73,6 +73,9 @@ public partial class procesoOf
     [Column(TypeName = "datetime")]
     public DateTime? fechaVencimiento { get; set; }
 
+    [StringLength(200)]
+    public string tipoMaquinaSAP { get; set; }
+
     [InverseProperty("idProcesoNavigation")]
     public virtual ICollection<asignacion> asignacion { get; set; } = new List<asignacion>();
 
