@@ -8,7 +8,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas;
+using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.Acabado;
+using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.Barnizado;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.Impresión;
+using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.Pegadora;
+using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.Preprensa;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.Troquelado;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.UpdateSAP;
 using Sistema_Produccion_3_Backend.Models;
@@ -137,98 +141,69 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
 
         // CONTROLADOR DINAMICO PARA OBTENER LOS DETALLES POR MAQUINA
 
-        [HttpGet("get/procesoOf/{id}")]
+        [HttpGet("get/procesoOfMaquina/{id}")]
         public async Task<ActionResult<ProcesoOfMaquinas>> GetProcesoOf(int id)
         {
             // Cargar datos generales del proceso
             var proceso = await _context.procesoOf.FindAsync(id);
             if (proceso == null) return NotFound();
 
-            // Crear el DTO principal
-            var dto = new ProcesoOfMaquinas
-            {
-                idProceso = proceso.idProceso,
-                oF = proceso.oF,
-                nombreTarjeta = proceso.nombreTarjeta,
-                productoOf = proceso.productoOf,
-                descripcionOf = proceso.descripcionOf,
-                secuencia = proceso.secuencia,
-                completada = proceso.completada,
-                bloqueada = proceso.bloqueada,
-                pliegosRecibidos = proceso.pliegosRecibidos,
-                pliegosEntregados = proceso.pliegosEntregados,
-                pliegosDanados = proceso.pliegosDanados,
-                fechaInicio = proceso.fechaInicio,
-                fechaFinalizacion = proceso.fechaFinalizacion,
-                tiempoEstimado = proceso.tiempoEstimado,
-                horasTotales = proceso.horasTotales,
-                posicion = proceso.posicion,
-                programadoPor = proceso.programadoPor,
-                fechaCreacion = proceso.fechaCreacion,
-                tipoObjeto = proceso.tipoObjeto,
-                archivada = proceso.archivada,
-                fechaVencimiento = proceso.fechaVencimiento,
-                tipoMaquinaSAP = proceso.tipoMaquinaSAP
-            };
+            // Mapear el modelo general al DTO principal
+            var dto = _mapper.Map<ProcesoOfMaquinas>(proceso);
 
             // Cargar detalles específicos según el tipo de máquina
             switch (proceso.tipoMaquinaSAP)
             {
-                case "Impresora":
+                case "impresion":
                     var detalleImpresora = await _context.procesoImpresora
                         .Where(p => p.idProcesoOf == id)
-                        .Select(p => new ProcesoImpresoraDto
-                        {
-                            // Mapear campos del modelo al DTO
-                            idProcesoImpresora = p.idProcesoImpresora,
-                            cantidadPliegosImprimir = p.cantidadPliegosImprimir,
-                            cantidadPliegosDemasia = p.cantidadPliegosDemasia,
-                            repeticionPliegos = p.repeticionPliegos,
-                            tiempoArreglo = p.tiempoArreglo,
-                            tiempoCorrida = p.tiempoCorrida,
-                            tipoMaterial = p.tipoMaterial,
-                            calibreBase = p.calibreBase,
-                            anchoPliego = p.anchoPliego,
-                            largoPliego = p.largoPliego,
-                            tintas = p.tintas
-                        })
                         .FirstOrDefaultAsync();
-                    dto.DetalleProceso = detalleImpresora;
+                    dto.DetalleProceso = _mapper.Map<ProcesoImpresoraDto>(detalleImpresora);
                     break;
 
-                case "Troqueladora":
+                case "troquel":
                     var detalleTroqueladora = await _context.procesoTroqueladora
                         .Where(p => p.idProcesoOf == id)
-                        .Select(p => new ProcesoTroqueladoraDto
-                        {
-                            // Mapear campos del modelo al DTO
-                            idProcesoTroqueladora = p.idProcesoTroqueladora,
-                            idTroquel = p.idTroquel,
-                            cantPliegosTroquelar = p.cantPliegosTroquelar,
-                            repeticionPliegos = p.repeticionPliegos,
-                            tiempoArreglo = p.tiempoArreglo,
-                            tiempoCorrida = p.tiempoCorrida,
-                            tipoMaterial = p.tipoMaterial,
-                            calibreBase = p.calibreBase                         
-                        })
                         .FirstOrDefaultAsync();
-                    dto.DetalleProceso = detalleTroqueladora;
+                    dto.DetalleProceso = _mapper.Map<ProcesoTroqueladoraDto>(detalleTroqueladora);
                     break;
 
-                case "Barnizadora":
+                case "barniz":
                     var detalleBarnizadora = await _context.procesoBarniz
                         .Where(p => p.idProcesoOf == id)
                         .FirstOrDefaultAsync();
-                    dto.DetalleProceso = detalleBarnizadora;
+                    dto.DetalleProceso = _mapper.Map<ProcesoBarnizDto>(detalleBarnizadora);
+                    break;
+
+                case "pegadora":
+                    var detallePegadora = await _context.procesoPegadora
+                        .Where(p => p.idProcesoOf == id)
+                        .FirstOrDefaultAsync();
+                    dto.DetalleProceso = _mapper.Map<ProcesoPegadoraDto>(detallePegadora);
+                    break;
+
+                case "acabado":
+                    var detalleAcabado = await _context.procesoAcabado
+                        .Where(p => p.idProcesoOf == id)
+                        .FirstOrDefaultAsync();
+                    dto.DetalleProceso = _mapper.Map<ProcesoAcabadoDto>(detalleAcabado);
+                    break;
+
+                case "preprensa":
+                    var detallePreprensa = await _context.procesoPreprensa
+                        .Where(p => p.idProcesoOf == id)
+                        .FirstOrDefaultAsync();
+                    dto.DetalleProceso = _mapper.Map<ProcesoPreprensaDto>(detallePreprensa);
                     break;
 
                 default:
-                    dto.DetalleProceso = "No hay detalles de maquina para este Proceso Of"; // Si no hay un tipo válido
+                    dto.DetalleProceso = null;
                     break;
             }
 
             return Ok(dto);
         }
+
 
 
         // PUT: api/procesoOf/5
