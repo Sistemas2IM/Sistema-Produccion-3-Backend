@@ -4,7 +4,7 @@
     {
         public int idProcesoTroqueladora { get; set; }
 
-        public int? idProcesoOf { get; set; }
+        public int? idProceso { get; set; }
 
         public string? idTroquel { get; set; }
 

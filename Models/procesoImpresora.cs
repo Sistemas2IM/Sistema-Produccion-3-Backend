@@ -8,13 +8,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Sistema_Produccion_3_Backend.Models;
 
-[Index("idProcesoImpresora", Name = "idProcesoImpresora", IsUnique = true)]
 public partial class procesoImpresora
 {
     [Key]
     public int idProcesoImpresora { get; set; }
 
-    public int? idProcesoOf { get; set; }
+    public int idProceso { get; set; }
 
     [StringLength(500)]
     public string cantidadPliegosImprimir { get; set; }
@@ -44,7 +43,7 @@ public partial class procesoImpresora
     [StringLength(200)]
     public string tintas { get; set; }
 
-    [ForeignKey("idProcesoOf")]
+    [ForeignKey("idProceso")]
     [InverseProperty("procesoImpresora")]
-    public virtual procesoOf idProcesoOfNavigation { get; set; }
+    public virtual procesoOf idProcesoNavigation { get; set; }
 }

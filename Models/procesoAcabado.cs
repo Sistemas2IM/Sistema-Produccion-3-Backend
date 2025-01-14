@@ -8,13 +8,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Sistema_Produccion_3_Backend.Models;
 
-[Index("idProcesoAcabado", Name = "idProcesoAcabado", IsUnique = true)]
 public partial class procesoAcabado
 {
     [Key]
     public int idProcesoAcabado { get; set; }
 
-    public int? idProcesoOf { get; set; }
+    public int idProceso { get; set; }
 
     [StringLength(500)]
     public string cantidadMrequerido { get; set; }
@@ -26,7 +25,7 @@ public partial class procesoAcabado
 
     public TimeOnly? tiempoCorrida { get; set; }
 
-    [ForeignKey("idProcesoOf")]
+    [ForeignKey("idProceso")]
     [InverseProperty("procesoAcabado")]
-    public virtual procesoOf idProcesoOfNavigation { get; set; }
+    public virtual procesoOf idProcesoNavigation { get; set; }
 }

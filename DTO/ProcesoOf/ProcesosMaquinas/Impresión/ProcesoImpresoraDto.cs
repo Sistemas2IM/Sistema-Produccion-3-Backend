@@ -1,10 +1,14 @@
-﻿namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.Impresión
+﻿using System.Text.Json.Serialization;
+
+namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.Impresión
 {
     public class ProcesoImpresoraDto
     {
+        [JsonIgnore]
         public int idProcesoImpresora { get; set; }
 
-        public int? idProcesoOf { get; set; }
+        [JsonIgnore]
+        public int? idProceso { get; set; }
 
         public string? cantidadPliegosImprimir { get; set; }
 

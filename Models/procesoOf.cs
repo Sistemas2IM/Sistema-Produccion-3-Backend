@@ -101,22 +101,22 @@ public partial class procesoOf
     [InverseProperty("procesoOf")]
     public virtual tarjetaOf oFNavigation { get; set; }
 
-    [InverseProperty("idProcesoOfNavigation")]
+    [InverseProperty("idProcesoNavigation")]
     public virtual ICollection<procesoAcabado> procesoAcabado { get; set; } = new List<procesoAcabado>();
 
-    [InverseProperty("idProcesoOfNavigation")]
+    [InverseProperty("idProcesoNavigation")]
     public virtual ICollection<procesoBarniz> procesoBarniz { get; set; } = new List<procesoBarniz>();
 
-    [InverseProperty("idProcesoOfNavigation")]
+    [InverseProperty("idProcesoNavigation")]
     public virtual ICollection<procesoImpresora> procesoImpresora { get; set; } = new List<procesoImpresora>();
 
-    [InverseProperty("idProcesoOfNavigation")]
+    [InverseProperty("idProcesoNavigation")]
     public virtual ICollection<procesoPegadora> procesoPegadora { get; set; } = new List<procesoPegadora>();
 
-    [InverseProperty("idProcesoOfNavigation")]
+    [InverseProperty("idProcesoNavigation")]
     public virtual ICollection<procesoPreprensa> procesoPreprensa { get; set; } = new List<procesoPreprensa>();
 
-    [InverseProperty("idProcesoOfNavigation")]
+    [InverseProperty("idProcesoNavigation")]
     public virtual ICollection<procesoTroqueladora> procesoTroqueladora { get; set; } = new List<procesoTroqueladora>();
 
     [InverseProperty("idProcesoNavigation")]

@@ -4,7 +4,7 @@
     {
         public int idProcesoPreprensa { get; set; }
 
-        public int? idProcesoOf { get; set; }
+        public int? idProceso { get; set; }
 
         public string? cantidadPlanchas { get; set; }
     }

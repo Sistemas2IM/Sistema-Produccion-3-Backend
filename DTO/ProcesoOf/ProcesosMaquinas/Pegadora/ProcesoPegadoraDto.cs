@@ -4,7 +4,7 @@
     {
         public int idProcesoPegadora { get; set; }
 
-        public int? idProcesoOf { get; set; }
+        public int? idProceso { get; set; }
 
         public string? cantidadAPegar { get; set; }
 

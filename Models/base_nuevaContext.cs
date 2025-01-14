@@ -586,29 +586,23 @@ public partial class base_nuevaContext : DbContext
 
         modelBuilder.Entity<procesoAcabado>(entity =>
         {
-            entity.HasKey(e => e.idProcesoAcabado).HasName("PK__procesoA__50B6B3D371ECBC65");
-
-            entity.Property(e => e.idProcesoAcabado).ValueGeneratedNever();
-
-            entity.HasOne(d => d.idProcesoOfNavigation).WithMany(p => p.procesoAcabado).HasConstraintName("ProcesoOfAcabado");
+            entity.HasOne(d => d.idProcesoNavigation).WithMany(p => p.procesoAcabado)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_procesoAcabado_procesoOf");
         });
 
         modelBuilder.Entity<procesoBarniz>(entity =>
         {
-            entity.HasKey(e => e.idProcesoBarniz).HasName("PK__procesoB__CCBE84C9B64298A9");
-
-            entity.Property(e => e.idProcesoBarniz).ValueGeneratedNever();
-
-            entity.HasOne(d => d.idProcesoOfNavigation).WithMany(p => p.procesoBarniz).HasConstraintName("ProcesoOfBarniz");
+            entity.HasOne(d => d.idProcesoNavigation).WithMany(p => p.procesoBarniz)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_procesoBarniz_procesoOf");
         });
 
         modelBuilder.Entity<procesoImpresora>(entity =>
         {
-            entity.HasKey(e => e.idProcesoImpresora).HasName("PK__procesoI__25D23D8CAAD19189");
-
-            entity.Property(e => e.idProcesoImpresora).ValueGeneratedNever();
-
-            entity.HasOne(d => d.idProcesoOfNavigation).WithMany(p => p.procesoImpresora).HasConstraintName("procesoOfImpresora");
+            entity.HasOne(d => d.idProcesoNavigation).WithMany(p => p.procesoImpresora)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_procesoImpresora_procesoOf");
         });
 
         modelBuilder.Entity<procesoOf>(entity =>
@@ -628,29 +622,23 @@ public partial class base_nuevaContext : DbContext
 
         modelBuilder.Entity<procesoPegadora>(entity =>
         {
-            entity.HasKey(e => e.idProcesoPegadora).HasName("PK__procesoP__D3D0E7379AFBE3DA");
-
-            entity.Property(e => e.idProcesoPegadora).ValueGeneratedNever();
-
-            entity.HasOne(d => d.idProcesoOfNavigation).WithMany(p => p.procesoPegadora).HasConstraintName("ProcesoOfPegadora");
+            entity.HasOne(d => d.idProcesoNavigation).WithMany(p => p.procesoPegadora)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_procesoPegadora_procesoOf");
         });
 
         modelBuilder.Entity<procesoPreprensa>(entity =>
         {
-            entity.HasKey(e => e.idProcesoPreprensa).HasName("PK__procesoP__5A9D90E2E21AE0CD");
-
-            entity.Property(e => e.idProcesoPreprensa).ValueGeneratedNever();
-
-            entity.HasOne(d => d.idProcesoOfNavigation).WithMany(p => p.procesoPreprensa).HasConstraintName("procesoOfPreprensa");
+            entity.HasOne(d => d.idProcesoNavigation).WithMany(p => p.procesoPreprensa)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_procesoPreprensa_procesoOf");
         });
 
         modelBuilder.Entity<procesoTroqueladora>(entity =>
         {
-            entity.HasKey(e => e.idProcesoTroqueladora).HasName("PK__procesoT__5F41CDA6FB72ABB6");
-
-            entity.Property(e => e.idProcesoTroqueladora).ValueGeneratedNever();
-
-            entity.HasOne(d => d.idProcesoOfNavigation).WithMany(p => p.procesoTroqueladora).HasConstraintName("ProcesoOfTroqueladora");
+            entity.HasOne(d => d.idProcesoNavigation).WithMany(p => p.procesoTroqueladora)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_procesoTroqueladora_procesoOf");
         });
 
         modelBuilder.Entity<refreshToken>(entity =>

@@ -1,12 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Text.Json.Serialization;
 
 namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.Acabado
 {
     public class ProcesoAcabadoDto
     {
+        [JsonIgnore]
         public int idProcesoAcabado { get; set; }
 
-        public int? idProcesoOf { get; set; }
+        [JsonIgnore]
+        public int? idProceso { get; set; }
 
         public string? cantidadMrequerido { get; set; }
 

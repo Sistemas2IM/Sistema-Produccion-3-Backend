@@ -8,13 +8,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Sistema_Produccion_3_Backend.Models;
 
-[Index("idProcesoTroqueladora", Name = "idProcesoTroqueladora", IsUnique = true)]
 public partial class procesoTroqueladora
 {
     [Key]
     public int idProcesoTroqueladora { get; set; }
 
-    public int? idProcesoOf { get; set; }
+    public int idProceso { get; set; }
 
     [StringLength(200)]
     public string idTroquel { get; set; }
@@ -35,7 +34,7 @@ public partial class procesoTroqueladora
     [StringLength(200)]
     public string calibreBase { get; set; }
 
-    [ForeignKey("idProcesoOf")]
+    [ForeignKey("idProceso")]
     [InverseProperty("procesoTroqueladora")]
-    public virtual procesoOf idProcesoOfNavigation { get; set; }
+    public virtual procesoOf idProcesoNavigation { get; set; }
 }

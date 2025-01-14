@@ -156,42 +156,42 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             {
                 case "impresion":
                     var detalleImpresora = await _context.procesoImpresora
-                        .Where(p => p.idProcesoOf == id)
+                        .Where(p => p.idProceso == id)
                         .FirstOrDefaultAsync();
                     dto.DetalleProceso = _mapper.Map<ProcesoImpresoraDto>(detalleImpresora);
                     break;
 
                 case "troquel":
                     var detalleTroqueladora = await _context.procesoTroqueladora
-                        .Where(p => p.idProcesoOf == id)
+                        .Where(p => p.idProceso == id)
                         .FirstOrDefaultAsync();
                     dto.DetalleProceso = _mapper.Map<ProcesoTroqueladoraDto>(detalleTroqueladora);
                     break;
 
                 case "barniz":
                     var detalleBarnizadora = await _context.procesoBarniz
-                        .Where(p => p.idProcesoOf == id)
+                        .Where(p => p.idProceso == id)
                         .FirstOrDefaultAsync();
                     dto.DetalleProceso = _mapper.Map<ProcesoBarnizDto>(detalleBarnizadora);
                     break;
 
                 case "pegadora":
                     var detallePegadora = await _context.procesoPegadora
-                        .Where(p => p.idProcesoOf == id)
+                        .Where(p => p.idProceso == id)
                         .FirstOrDefaultAsync();
                     dto.DetalleProceso = _mapper.Map<ProcesoPegadoraDto>(detallePegadora);
                     break;
 
                 case "acabado":
                     var detalleAcabado = await _context.procesoAcabado
-                        .Where(p => p.idProcesoOf == id)
+                        .Where(p => p.idProceso == id)
                         .FirstOrDefaultAsync();
                     dto.DetalleProceso = _mapper.Map<ProcesoAcabadoDto>(detalleAcabado);
                     break;
 
                 case "preprensa":
                     var detallePreprensa = await _context.procesoPreprensa
-                        .Where(p => p.idProcesoOf == id)
+                        .Where(p => p.idProceso == id)
                         .FirstOrDefaultAsync();
                     dto.DetalleProceso = _mapper.Map<ProcesoPreprensaDto>(detallePreprensa);
                     break;
@@ -338,6 +338,77 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             });
         }
 
+        [HttpPut("put/procesoOfMaquina/{id}")]
+        public async Task<ActionResult> UpdateProcesoOf(int id, ProcesoOfMaquinas dto)
+        {
+            // Buscar el proceso general
+            var proceso = await _context.procesoOf.FindAsync(id);
+            if (proceso == null) return NotFound("El proceso no existe.");
+
+            // Actualizar los datos generales
+            _mapper.Map(dto, proceso);
+            _context.procesoOf.Update(proceso);
+
+            // Actualizar los detalles específicos según el tipo de máquina
+            switch (dto.tipoMaquinaSAP)
+            {
+                case "preprensa":
+                    var detallePreprensa = await _context.procesoPreprensa
+                        .FirstOrDefaultAsync(p => p.idProceso == id);
+                    if (detallePreprensa == null) return NotFound("Detalles de preprensa no encontrados.");
+                    _mapper.Map(dto.DetalleProceso, detallePreprensa);
+                    _context.procesoPreprensa.Update(detallePreprensa);
+                    break;
+
+                case "impresion":
+                    var detalleImpresora = await _context.procesoImpresora
+                        .FirstOrDefaultAsync(p => p.idProceso == id);
+                    if (detalleImpresora == null) return NotFound("Detalles de impresión no encontrados.");
+                    _mapper.Map(dto.DetalleProceso, detalleImpresora);
+                    _context.procesoImpresora.Update(detalleImpresora);
+                    break;
+
+                case "troquel":
+                    var detalleTroqueladora = await _context.procesoTroqueladora
+                        .FirstOrDefaultAsync(p => p.idProceso == id);
+                    if (detalleTroqueladora == null) return NotFound("Detalles de troquel no encontrados.");
+                    _mapper.Map(dto.DetalleProceso, detalleTroqueladora);
+                    _context.procesoTroqueladora.Update(detalleTroqueladora);
+                    break;
+
+                case "pegadora":
+                    var detallePegadora = await _context.procesoPegadora
+                        .FirstOrDefaultAsync(p => p.idProceso == id);
+                    if (detallePegadora == null) return NotFound("Detalles de pegadora no encontrados.");
+                    _mapper.Map(dto.DetalleProceso, detallePegadora);
+                    _context.procesoPegadora.Update(detallePegadora);
+                    break;
+
+                case "acabado":
+                    var detalleAcabado = await _context.procesoAcabado
+                        .FirstOrDefaultAsync(p => p.idProceso == id);
+                    if (detalleAcabado == null) return NotFound("Detalles de acabado no encontrados.");
+                    _mapper.Map(dto.DetalleProceso, detalleAcabado);
+                    _context.procesoAcabado.Update(detalleAcabado);
+                    break;
+
+                case "barniz":
+                    var detalleBarniz = await _context.procesoBarniz
+                        .FirstOrDefaultAsync(p => p.idProceso == id);
+                    if (detalleBarniz == null) return NotFound("Deatlles de barniz no encontrados.");
+                    _mapper.Map(dto.DetalleProceso, detalleBarniz);
+                    _context.procesoBarniz.Update(detalleBarniz);
+                    break;
+
+                // Agregar otros tipos de máquina aquí según sea necesario
+                default:
+                    return BadRequest("Tipo de máquina no soportado.");
+            }
+
+            await _context.SaveChangesAsync();
+            return Ok("Proceso Of actualizado exitosamente.");
+        }
+
 
 
 
@@ -383,6 +454,66 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 Message = "Procesos agregados exitosamente.",
                 ProcesosAgregados = procesos
             });
+        }
+
+        // POST PARA DETALLES POR MAQUINA
+
+        [HttpPost("post/procesoOfMaquina")]
+        public async Task<ActionResult> CreateProcesoOf(ProcesoOfMaquinas dto)
+        {
+            // Mapear el DTO al modelo general
+            var proceso = _mapper.Map<procesoOf>(dto);
+
+            // Guardar los datos generales en la tabla `procesoOf`
+            _context.procesoOf.Add(proceso);
+            await _context.SaveChangesAsync();
+
+            // Insertar los detalles específicos según el tipo de máquina
+            switch (dto.tipoMaquinaSAP)
+            {
+                case "preprensa":
+                    var detallePreprensa = _mapper.Map<procesoPreprensa>(dto.DetalleProceso);
+                    detallePreprensa.idProceso = proceso.idProceso;
+                    _context.procesoPreprensa.Add(detallePreprensa);
+                    break;
+
+                case "impresion":
+                    var detalleImpresora = _mapper.Map<procesoImpresora>(dto.DetalleProceso);
+                    detalleImpresora.idProceso = proceso.idProceso;
+                    _context.procesoImpresora.Add(detalleImpresora);
+                    break;
+
+                case "troquel":
+                    var detalleTroqueladora = _mapper.Map<procesoTroqueladora>(dto.DetalleProceso);
+                    detalleTroqueladora.idProceso = proceso.idProceso;
+                    _context.procesoTroqueladora.Add(detalleTroqueladora);
+                    break;
+
+                case "pegadora":
+                    var detallePegadora = _mapper.Map<procesoPegadora>(dto.DetalleProceso);
+                    detallePegadora.idProceso = proceso.idProceso;
+                    _context.procesoPegadora.Add(detallePegadora);
+                    break;
+
+                case "acabado":
+                    var detalleAcabado = _mapper.Map<procesoAcabado>(dto.DetalleProceso);
+                    detalleAcabado.idProceso = proceso.idProceso;
+                    _context.procesoAcabado.Add(detalleAcabado);
+                    break;
+
+                case "barniz":
+                    var detalleBarniz = _mapper.Map<procesoBarniz>(dto.DetalleProceso);
+                    detalleBarniz.idProceso = proceso.idProceso;
+                    _context.procesoBarniz.Add(detalleBarniz);
+                    break;
+
+                // Agregar otros tipos de máquina aquí según sea necesario
+                default:
+                    return BadRequest("Tipo de máquina no soportado.");
+            }
+
+            await _context.SaveChangesAsync();
+            return Ok("Proceso Of creado exitosamente.");
         }
 
 

@@ -1,11 +1,4 @@
-﻿using Sistema_Produccion_3_Backend.DTO.Catalogo.Maquinas;
-using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.Acabado;
-using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.Barnizado;
-using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.Impresión;
-using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.Pegadora;
-using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.Preprensa;
-using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.Troquelado;
-
+﻿
 namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas
 {
     public class ProcesoOfMaquinas

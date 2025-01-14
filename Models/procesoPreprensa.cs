@@ -8,18 +8,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Sistema_Produccion_3_Backend.Models;
 
-[Index("idProcesoPreprensa", Name = "idProcesoPreprensa", IsUnique = true)]
 public partial class procesoPreprensa
 {
     [Key]
     public int idProcesoPreprensa { get; set; }
 
-    public int? idProcesoOf { get; set; }
+    public int idProceso { get; set; }
 
     [StringLength(500)]
     public string cantidadPlanchas { get; set; }
 
-    [ForeignKey("idProcesoOf")]
+    [ForeignKey("idProceso")]
     [InverseProperty("procesoPreprensa")]
-    public virtual procesoOf idProcesoOfNavigation { get; set; }
+    public virtual procesoOf idProcesoNavigation { get; set; }
 }
