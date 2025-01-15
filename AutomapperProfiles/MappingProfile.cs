@@ -190,6 +190,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             CreateMap<reportesDeOperadores, AddReporteOperadorDto>().ReverseMap();
             CreateMap<UpdateReporteOperadorDto, reportesDeOperadores>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<reportesDeOperadores, CountReporteOperadorDto>().ReverseMap();
             {
                 CreateMap<detalleReporte, DetalleReporteDto>()
                .ForMember(dest => dest.operacionesDto, opt => opt.MapFrom(src => src.idOperacionNavigation))

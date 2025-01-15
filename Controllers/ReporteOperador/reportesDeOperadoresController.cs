@@ -71,6 +71,26 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
             return Ok(reporteOperadorDto);
         }
 
+        // GET: api/reportesDeOperadores por maquina
+        [HttpGet("get/count/idMaquina/{id}")]
+        public async Task<ActionResult<CountReporteOperadorDto>> GetreportesDeOperadoresCount(int id)
+        {
+            // Obtener el número de registros asociados al idMaquina
+            var numeroReportes = await _context.reportesDeOperadores
+                .Where(u => u.idMaquina == id)
+                .CountAsync();
+
+            // Crear el objeto DTO con el conteo incrementado
+            var countReporteOperadorDto = new CountReporteOperadorDto
+            {
+                idMaquina = id,
+                NumeroReportes = numeroReportes + 1 // Sumar +1 al conteo
+            };
+
+            return Ok(countReporteOperadorDto);
+        }
+
+
         // GET: api/reportesDeOperadores/5
         [HttpGet("get/{id}")]
         public async Task<ActionResult<ReporteOperadorDto>> GetreportesDeOperadores(string id)

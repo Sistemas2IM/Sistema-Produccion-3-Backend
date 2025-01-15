@@ -10,7 +10,7 @@ namespace Sistema_Produccion_3_Backend.DTO.ReporteOperador
 {
     public class ReporteOperadorDto
     {
-        public string idReporte { get; set; }
+        public string? idReporte { get; set; }
 
         public int? idEstadoReporte { get; set; }
 
