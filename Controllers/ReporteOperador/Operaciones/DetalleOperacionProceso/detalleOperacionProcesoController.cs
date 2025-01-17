@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf;
 using Sistema_Produccion_3_Backend.DTO.ReporteOperador.DetalleReporte.Operaciones.DetalleOperacionProceso;
+using Sistema_Produccion_3_Backend.DTO.ReporteOperador.DetalleReporte.Operaciones.DetalleOperacionProceso.DetalleOperacionProcesoOF;
 using Sistema_Produccion_3_Backend.Models;
 
 namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador.Operaciones.DetalleOperacionProceso
@@ -61,6 +62,37 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador.Operaciones.D
 
             return detalleOperacionProceso;
         }
+
+        // GET: api/detalleOperacionProceso/5
+        [HttpGet("get/{ofId}/{idMaquina}")]
+        public async Task<ActionResult<IEnumerable<OperacionProcesoOfMaquina>>> GetOperacionProceso(int ofId, int idMaquina)
+        {
+            // Realizar el JOIN y filtrar según los parámetros
+            var query = from t0 in _context.tarjetaOf
+                        join t1 in _context.procesoOf on t0.oF equals t1.oF
+                        join t2 in _context.detalleOperacionProceso on t1.idProceso equals t2.idProceso
+                        join t3 in _context.tablerosOf on t1.idTablero equals t3.idTablero
+                        where t0.oF == ofId && t3.idMaquina == idMaquina
+                        select new OperacionProcesoOfMaquina
+                        {
+                            OF = t0.oF,
+                            ClienteOf = t0.clienteOf,
+                            ProductoOf = t0.productoOf,
+                            Inicio = t2.inicio,
+                            Finalizacion = t2.finalizacion,
+                            IdOperacion = t2.idOperacion
+                        };
+
+            var result = await query.ToListAsync();
+
+            if (!result.Any())
+            {
+                return NotFound("No se encontraron registros con los parámetros proporcionados.");
+            }
+
+            return Ok(result);
+        }
+
 
         // PUT: api/detalleOperacionProceso/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
