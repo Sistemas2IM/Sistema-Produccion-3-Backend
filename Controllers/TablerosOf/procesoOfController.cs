@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
@@ -461,6 +462,12 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         [HttpPost("post/procesoOfMaquina")]
         public async Task<ActionResult> CreateProcesoOf(ProcesoOfMaquinas dto)
         {
+            // Validar que el DTO contenga los datos necesarios
+            if (dto.DetalleProceso == null || string.IsNullOrEmpty(dto.tipoMaquinaSAP))
+            {
+                return BadRequest("El detalle del proceso o el tipo de máquina son inválidos.");
+            }
+
             // Mapear el DTO al modelo general
             var proceso = _mapper.Map<procesoOf>(dto);
 
@@ -469,45 +476,80 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             await _context.SaveChangesAsync();
 
             // Insertar los detalles específicos según el tipo de máquina
-            switch (dto.tipoMaquinaSAP)
+            switch (dto.tipoMaquinaSAP.ToLower()) // Convertir a minúsculas por seguridad
             {
                 case "preprensa":
-                    var detallePreprensa = _mapper.Map<procesoPreprensa>(dto.DetalleProceso);
-                    detallePreprensa.idProceso = proceso.idProceso;
-                    _context.procesoPreprensa.Add(detallePreprensa);
+                    if (dto.DetalleProceso is JsonElement jsonPreprensa)
+                    {
+                        var detallePreprensa = JsonSerializer.Deserialize<procesoPreprensa>(jsonPreprensa.GetRawText());
+                        if (detallePreprensa != null)
+                        {
+                            detallePreprensa.idProceso = proceso.idProceso;
+                            _context.procesoPreprensa.Add(detallePreprensa);
+                        }
+                    }
                     break;
 
                 case "impresion":
-                    var detalleImpresora = _mapper.Map<procesoImpresora>(dto.DetalleProceso);
-                    detalleImpresora.idProceso = proceso.idProceso;
-                    _context.procesoImpresora.Add(detalleImpresora);
+                    if (dto.DetalleProceso is JsonElement jsonImpresion)
+                    {
+                        var detalleImpresora = JsonSerializer.Deserialize<procesoImpresora>(jsonImpresion.GetRawText());
+                        if (detalleImpresora != null)
+                        {
+                            detalleImpresora.idProceso = proceso.idProceso;
+                            _context.procesoImpresora.Add(detalleImpresora);
+                        }
+                    }
                     break;
 
                 case "troquel":
-                    var detalleTroqueladora = _mapper.Map<procesoTroqueladora>(dto.DetalleProceso);
-                    detalleTroqueladora.idProceso = proceso.idProceso;
-                    _context.procesoTroqueladora.Add(detalleTroqueladora);
+                    if (dto.DetalleProceso is JsonElement jsonTroquel)
+                    {
+                        var detalleTroqueladora = JsonSerializer.Deserialize<procesoTroqueladora>(jsonTroquel.GetRawText());
+                        if (detalleTroqueladora != null)
+                        {
+                            detalleTroqueladora.idProceso = proceso.idProceso;
+                            _context.procesoTroqueladora.Add(detalleTroqueladora);
+                        }
+                    }
                     break;
 
                 case "pegadora":
-                    var detallePegadora = _mapper.Map<procesoPegadora>(dto.DetalleProceso);
-                    detallePegadora.idProceso = proceso.idProceso;
-                    _context.procesoPegadora.Add(detallePegadora);
+                    if (dto.DetalleProceso is JsonElement jsonPegadora)
+                    {
+                        var detallePegadora = JsonSerializer.Deserialize<procesoPegadora>(jsonPegadora.GetRawText());
+                        if (detallePegadora != null)
+                        {
+                            detallePegadora.idProceso = proceso.idProceso;
+                            _context.procesoPegadora.Add(detallePegadora);
+                        }
+                    }
                     break;
 
                 case "acabado":
-                    var detalleAcabado = _mapper.Map<procesoAcabado>(dto.DetalleProceso);
-                    detalleAcabado.idProceso = proceso.idProceso;
-                    _context.procesoAcabado.Add(detalleAcabado);
+                    if (dto.DetalleProceso is JsonElement jsonAcabado)
+                    {
+                        var detalleAcabado = JsonSerializer.Deserialize<procesoAcabado>(jsonAcabado.GetRawText());
+                        if (detalleAcabado != null)
+                        {
+                            detalleAcabado.idProceso = proceso.idProceso;
+                            _context.procesoAcabado.Add(detalleAcabado);
+                        }
+                    }
                     break;
 
                 case "barniz":
-                    var detalleBarniz = _mapper.Map<procesoBarniz>(dto.DetalleProceso);
-                    detalleBarniz.idProceso = proceso.idProceso;
-                    _context.procesoBarniz.Add(detalleBarniz);
+                    if (dto.DetalleProceso is JsonElement jsonBarniz)
+                    {
+                        var detalleBarniz = JsonSerializer.Deserialize<procesoBarniz>(jsonBarniz.GetRawText());
+                        if (detalleBarniz != null)
+                        {
+                            detalleBarniz.idProceso = proceso.idProceso;
+                            _context.procesoBarniz.Add(detalleBarniz);
+                        }
+                    }
                     break;
 
-                // Agregar otros tipos de máquina aquí según sea necesario
                 default:
                     return BadRequest("Tipo de máquina no soportado.");
             }
@@ -515,6 +557,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             await _context.SaveChangesAsync();
             return Ok("Proceso Of creado exitosamente.");
         }
+
 
 
         private bool procesoOfExists(int id)
