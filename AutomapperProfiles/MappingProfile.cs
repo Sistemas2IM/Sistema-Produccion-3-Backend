@@ -127,6 +127,19 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 CreateMap<procesoPegadora, ProcesoPegadoraDto>().ReverseMap();
                 CreateMap<procesoPreprensa, ProcesoPreprensaDto>().ReverseMap();
                 CreateMap<procesoTroqueladora, ProcesoTroqueladoraDto>().ReverseMap();
+
+                CreateMap<UpProcesoAcabadoDto, procesoAcabado>()
+                    .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+                CreateMap<UpProcesoBarnizDto, procesoBarniz>()
+                    .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+                CreateMap<UpProcesoImpresoraDto, procesoImpresora>()
+                    .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+                CreateMap<UpProcesoPegadoraDto, procesoPegadora>()
+                    .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+                CreateMap<UpProcesoPreprensaDto, procesoPreprensa>()
+                    .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+                CreateMap<UpProcesoTroqueladoDto, procesoTroqueladora>()
+                    .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             }
 
             CreateMap<detalleOperacionProceso, DetalleProcesoOfDto>()
