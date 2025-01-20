@@ -12,9 +12,9 @@
 
         public string? repeticionPliegos { get; set; }
 
-        public TimeOnly? tiempoArreglo { get; set; }
+        public string? tiempoArreglo { get; set; }
 
-        public TimeOnly? tiempoCorrida { get; set; }
+        public string? tiempoCorrida { get; set; }
 
         public string? tipoMaterial { get; set; }
 

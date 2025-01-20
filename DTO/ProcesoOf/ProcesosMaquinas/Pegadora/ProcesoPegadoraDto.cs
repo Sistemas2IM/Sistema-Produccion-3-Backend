@@ -8,9 +8,9 @@
 
         public string? cantidadAPegar { get; set; }
 
-        public TimeOnly? tiempoArreglo { get; set; }
+        public string? tiempoArreglo { get; set; }
 
-        public TimeOnly? tiempoCorrida { get; set; }
+        public string? tiempoCorrida { get; set; }
 
         public string? material { get; set; }
 

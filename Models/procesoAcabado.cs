@@ -21,9 +21,11 @@ public partial class procesoAcabado
     [StringLength(500)]
     public string cantidadDemasia { get; set; }
 
-    public TimeOnly? tiempoArreglo { get; set; }
+    [StringLength(500)]
+    public string tiempoArreglo { get; set; }
 
-    public TimeOnly? tiempoCorrida { get; set; }
+    [StringLength(500)]
+    public string tiempoCorrida { get; set; }
 
     [ForeignKey("idProceso")]
     [InverseProperty("procesoAcabado")]

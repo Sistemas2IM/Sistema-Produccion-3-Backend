@@ -18,9 +18,11 @@ public partial class procesoPegadora
     [StringLength(500)]
     public string cantidadAPegar { get; set; }
 
-    public TimeOnly? tiempoArreglo { get; set; }
+    [StringLength(500)]
+    public string tiempoArreglo { get; set; }
 
-    public TimeOnly? tiempoCorrida { get; set; }
+    [StringLength(500)]
+    public string tiempoCorrida { get; set; }
 
     [StringLength(200)]
     public string material { get; set; }

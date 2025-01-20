@@ -24,9 +24,11 @@ public partial class procesoBarniz
     [StringLength(500)]
     public string repeticionPliegos { get; set; }
 
-    public TimeOnly? tiempoArreglo { get; set; }
+    [StringLength(500)]
+    public string tiempoArreglo { get; set; }
 
-    public TimeOnly? tiempoCorrida { get; set; }
+    [StringLength(500)]
+    public string tiempoCorrida { get; set; }
 
     [StringLength(200)]
     public string tipoMaterial { get; set; }

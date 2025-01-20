@@ -549,14 +549,18 @@ public partial class base_nuevaContext : DbContext
                 .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_PERMISO_ROL");
 
-            entity.HasOne(d => d.idSubModuloNavigation).WithMany(p => p.permiso).HasConstraintName("FK_PERMISO_SUBMODULO");
+            entity.HasOne(d => d.idSubModuloNavigation).WithMany(p => p.permiso)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK_PERMISO_SUBMODULO");
         });
 
         modelBuilder.Entity<permisoMaquina>(entity =>
         {
             entity.HasKey(e => e.idPermisoMaquina).HasName("PK__permisoM__14AF841E56D0504E");
 
-            entity.HasOne(d => d.maquinaNavigation).WithMany(p => p.permisoMaquina).HasConstraintName("FK_PERMISOS_MAQUINA");
+            entity.HasOne(d => d.maquinaNavigation).WithMany(p => p.permisoMaquina)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK_PERMISOS_MAQUINA");
 
             entity.HasOne(d => d.userNavigation).WithMany(p => p.permisoMaquina)
                 .OnDelete(DeleteBehavior.Cascade)

@@ -14,8 +14,8 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.Acabado
 
         public string? cantidadDemasia { get; set; }
 
-        public TimeOnly? tiempoArreglo { get; set; }
+        public string? tiempoArreglo { get; set; }
 
-        public TimeOnly? tiempoCorrida { get; set; }
+        public string? tiempoCorrida { get; set; }
     }
 }
