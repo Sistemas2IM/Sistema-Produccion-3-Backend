@@ -121,6 +121,10 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             {
                 CreateMap<procesoOf, ProcesoOfMaquinas>().ReverseMap();
 
+                CreateMap<UpProcesoOfMaquinas, procesoOf>()
+                    .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+
                 CreateMap<procesoAcabado, ProcesoAcabadoDto>().ReverseMap();
                 CreateMap<procesoBarniz, ProcesoBarnizDto>().ReverseMap();
                 CreateMap<procesoImpresora, ProcesoImpresoraDto>().ReverseMap();
