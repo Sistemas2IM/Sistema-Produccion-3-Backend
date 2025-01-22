@@ -44,6 +44,10 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
 
         public DateTime? fechaVencimiento { get; set; }
 
+        public string? tipoMaquinaSAP { get; set; }
+
+        public string? idMaquinaSAP { get; set; }
+
         public ProcesoPosturasOfDto? PosturasOfDto { get; set; }
 
         public ProcesoTablerosOfDto? TablerosOfDto { get; set; }
