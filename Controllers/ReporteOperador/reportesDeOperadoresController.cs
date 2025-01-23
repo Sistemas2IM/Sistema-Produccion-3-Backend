@@ -6,7 +6,9 @@ using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Sistema_Produccion_3_Backend.DTO.ProcesoOf;
 using Sistema_Produccion_3_Backend.DTO.ReporteOperador;
+using Sistema_Produccion_3_Backend.DTO.ReporteOperador.DetalleReporte.Impresoras;
 using Sistema_Produccion_3_Backend.Models;
 
 namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
@@ -158,13 +160,12 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
         public async Task<ActionResult<reportesDeOperadores>> PostreportesDeOperadores(AddReporteOperadorDto addReporteOperador)
         {
             var reporteOperador = _mapper.Map<reportesDeOperadores>(addReporteOperador);
-
             _context.reportesDeOperadores.Add(reporteOperador);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetReporte", new { id = reporteOperador.idReporte }, reporteOperador);
+            return Ok(addReporteOperador);
         }
-    
+
         private bool reportesDeOperadoresExists(string id)
         {
             return _context.reportesDeOperadores.Any(e => e.idReporte == id);

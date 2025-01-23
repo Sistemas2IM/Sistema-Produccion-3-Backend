@@ -35,14 +35,11 @@ public partial class detalleReporte
 
     public int? numeroFila { get; set; }
 
-    [Column(TypeName = "datetime")]
-    public DateTime? horaInicio { get; set; }
+    public TimeOnly? horaInicio { get; set; }
 
-    [Column(TypeName = "datetime")]
-    public DateTime? horaFinal { get; set; }
+    public TimeOnly? horaFinal { get; set; }
 
-    [Column(TypeName = "datetime")]
-    public DateTime? tiempo { get; set; }
+    public TimeOnly? tiempo { get; set; }
 
     public string descripcion { get; set; }
 

@@ -24,11 +24,11 @@ namespace Sistema_Produccion_3_Backend.DTO.ReporteOperador.DetalleReporte
 
         public int? numeroFila { get; set; }
 
-        public DateTime? horaInicio { get; set; }
+        public TimeOnly? horaInicio { get; set; }
 
-        public DateTime? horaFinal { get; set; }
+        public TimeOnly? horaFinal { get; set; }
 
-        public DateTime? tiempo { get; set; }
+        public TimeOnly? tiempo { get; set; }
 
         public string? descripcion { get; set; }
 

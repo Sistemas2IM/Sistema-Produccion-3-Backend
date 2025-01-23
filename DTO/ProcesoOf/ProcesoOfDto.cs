@@ -59,6 +59,8 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
 
         public string? idMaquinaSAP { get; set; }
 
+        public string? tipoMaquinaSAP { get; set; }
+
         public List<DetalleProcesoOfDto>? detalleProcesoOf { get; set; }
 
         public List<TarjetaCampoDto>? tarjetaCampoDto { get; set; }

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Sistema_Produccion_3_Backend.DTO.ReporteOperador.DetalleReporte;
+using Sistema_Produccion_3_Backend.DTO.ReporteOperador.DetalleReporte.Impresoras;
 using Sistema_Produccion_3_Backend.Models;
 
 namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
@@ -121,6 +122,37 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
             return CreatedAtAction("GetdetalleReporte", new { id = detalleReporte.idDetalleReporte }, detalleReporte);
         }
 
+        // POST: BATCH
+        [HttpPost("post/BatchAddImpresora")]
+        public async Task<IActionResult> BatchAddDetalleReporteOperador([FromBody] BatchAddDetalleImpresora batchAddDto)
+        {
+            if (batchAddDto == null || batchAddDto.batchImpresoras == null || !batchAddDto.batchImpresoras.Any())
+            {
+                return BadRequest("No se enviaron datos para agregar.");
+            }
+
+            // Mapear los DTOs a las entidades
+            var detalleReportes = batchAddDto.batchImpresoras.Select(dto => _mapper.Map<detalleReporte>(dto)).ToList();
+
+            // Agregar los procesos a la base de datos
+            await _context.detalleReporte.AddRangeAsync(detalleReportes);
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Ocurrió un error al guardar los detalles: {ex.Message}");
+            }
+
+            // Retornar los registros creados
+            return Ok(new
+            {
+                Message = "detalles agregados exitosamente.",
+                ProcesosAgregados = detalleReportes
+            });
+        }
         private bool detalleReporteExists(int id)
         {
             return _context.detalleReporte.Any(e => e.idDetalleReporte == id);

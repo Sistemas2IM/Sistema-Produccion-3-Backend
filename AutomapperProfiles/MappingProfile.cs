@@ -50,6 +50,7 @@ using Sistema_Produccion_3_Backend.DTO.ProductoTerminado.ContenidoEntrega;
 using Sistema_Produccion_3_Backend.DTO.ProductoTerminado.DetalleEntrega;
 using Sistema_Produccion_3_Backend.DTO.ReporteOperador;
 using Sistema_Produccion_3_Backend.DTO.ReporteOperador.DetalleReporte;
+using Sistema_Produccion_3_Backend.DTO.ReporteOperador.DetalleReporte.Impresoras;
 using Sistema_Produccion_3_Backend.DTO.ReporteOperador.DetalleReporte.Operaciones;
 using Sistema_Produccion_3_Backend.DTO.ReporteOperador.DetalleReporte.Operaciones.DetalleOperacionProceso;
 using Sistema_Produccion_3_Backend.DTO.ReporteOperador.EstadoReporte;
@@ -208,6 +209,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             CreateMap<UpdateReporteOperadorDto, reportesDeOperadores>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             CreateMap<reportesDeOperadores, CountReporteOperadorDto>().ReverseMap();
+            CreateMap<detalleReporte, AddBatchDetalleImpresora>().ReverseMap();
             {
                 CreateMap<detalleReporte, DetalleReporteDto>()
                .ForMember(dest => dest.operacionesDto, opt => opt.MapFrom(src => src.idOperacionNavigation))

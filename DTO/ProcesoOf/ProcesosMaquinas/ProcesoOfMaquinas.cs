@@ -23,13 +23,7 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas
 
         public bool? completada { get; set; }
 
-        public bool? bloqueada { get; set; }
-
-        public int? pliegosRecibidos { get; set; }
-
-        public int? pliegosEntregados { get; set; }
-
-        public int? pliegosDanados { get; set; }
+        public bool? bloqueada { get; set; }      
 
         public DateTime? fechaInicio { get; set; }
 
