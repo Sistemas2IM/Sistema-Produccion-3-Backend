@@ -6,6 +6,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Sistema_Produccion_3_Backend.DTO.PermisosUsuario.Rol;
 using Sistema_Produccion_3_Backend.DTO.ReporteOperador.DetalleReporte;
 using Sistema_Produccion_3_Backend.DTO.ReporteOperador.DetalleReporte.Impresoras;
 using Sistema_Produccion_3_Backend.Models;
@@ -100,6 +101,67 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
             }
 
             return Ok(updateDetalleReporte);
+        }
+
+        // PUT BATCH
+        [HttpPut("put/BatchUpdateImpresora")]
+        public async Task<IActionResult> BatchUpdateDetalleImpre([FromBody] BatchUpdateDetalleImpresion batchUpdateDto)
+        {
+            if (batchUpdateDto == null || batchUpdateDto.updateBatchImpresoras == null || !batchUpdateDto.updateBatchImpresoras.Any())
+            {
+                return BadRequest("No se enviaron datos para actualizar.");
+            }
+
+            var ids = batchUpdateDto.updateBatchImpresoras.Select(t => t.idDetalleReporte).ToList();
+
+            // Obtener todos los roles relacionados
+            var detalles = await _context.detalleReporte.Where(t => ids.Contains(t.idDetalleReporte)).ToListAsync();
+
+            if (!detalles.Any())
+            {
+                return NotFound("No se encontraron detalles para los IDs proporcionados.");
+            }
+
+            foreach (var dto in batchUpdateDto.updateBatchImpresoras)
+            {
+                var detalle = detalles.FirstOrDefault(t => t.idDetalleReporte == dto.idDetalleReporte);
+                if (detalle != null)
+                {
+                    // Actualizar propiedades específicas
+                    if (dto.idDetalleReporte != 0)
+                    {
+                        detalle.idOperacion = dto.idOperacion;
+                        detalle.oF = dto.oF;
+                        detalle.numeroFila = dto.numeroFila;
+                        detalle.horaFinal = dto.horaFinal;
+                        detalle.horaInicio = dto.horaInicio;
+                        detalle.tiempo = dto.tiempo;
+                        detalle.descripcion = dto.descripcion;
+                        detalle.cliente = dto.cliente;
+                        detalle.tiroRetiro = dto.tiroRetiro;
+                        detalle.cantidadRecibida = dto.cantidadRecibida;
+                        detalle.cantidadProducida = dto.cantidadProducida;
+                        detalle.cantidadDanada = dto.cantidadDanada;
+                        detalle.cantidadSolicitada = dto.cantidadSolicitada;
+                        detalle.cantidadNc = dto.cantidadNc;
+                        detalle.observaciones = dto.observaciones;
+                        detalle.accionPorAuxiliar = dto.accionPorAuxiliar;
+                    }
+
+                    _context.Entry(detalle).State = EntityState.Modified;
+                }
+            }
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error al actualizar los detalles.");
+            }
+
+            return Ok("Actualización realizada correctamente.");
         }
 
         // POST: api/detalleReporte
