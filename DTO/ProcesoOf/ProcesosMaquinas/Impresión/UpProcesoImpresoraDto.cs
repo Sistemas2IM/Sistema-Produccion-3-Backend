@@ -20,6 +20,24 @@
 
         public string? largoPliego { get; set; }
 
-        public string? tipoBarniz { get; set; }
+        public string? tintas { get; set; }
+
+        public string? tiro { get; set; }
+
+        public string? retiro { get; set; }
+
+        public string? foil { get; set; }
+
+        public string? numerado { get; set; }
+
+        public string? laminado { get; set; }
+
+        public string? foilDetalle { get; set; }
+
+        public string? barnizDetalle { get; set; }
+
+        public string? laminadoDetalle { get; set; }
+
+        public string? indicacionImpresion { get; set; }
     }
 }

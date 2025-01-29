@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf;
+using Sistema_Produccion_3_Backend.DTO.ProductoTerminado;
 using Sistema_Produccion_3_Backend.DTO.ReporteOperador;
 using Sistema_Produccion_3_Backend.DTO.ReporteOperador.DetalleReporte.Impresoras;
 using Sistema_Produccion_3_Backend.Models;
@@ -153,6 +154,55 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
 
             return Ok(updateReporteOperador);
         }
+
+        // PUT BATCH
+        [HttpPut("put/BatchUpdate")]
+        public async Task<IActionResult> BatchUpdateEstadosPT([FromBody] BatchUpdateReporteOperador batchUpdateDto)
+        {
+            if (batchUpdateDto == null || batchUpdateDto.updateReporteOperador == null || !batchUpdateDto.updateReporteOperador.Any())
+            {
+                return BadRequest("No se enviaron datos para actualizar.");
+            }
+
+            var ids = batchUpdateDto.updateReporteOperador.Select(t => t.idReporte).ToList();
+
+            // Obtener todos los roles relacionados
+            var ept = await _context.reportesDeOperadores.Where(t => ids.Contains(t.idReporte)).ToListAsync();
+
+            if (!ept.Any())
+            {
+                return NotFound("No se encontraron los IDs proporcionados.");
+            }
+
+            foreach (var dto in batchUpdateDto.updateReporteOperador)
+            {
+                var pt = ept.FirstOrDefault(t => t.idReporte == dto.idReporte);
+                if (pt != null)
+                {
+                    // Actualizar propiedades específicas
+                    if (dto.idEstadoReporte.HasValue)
+                    {
+                        pt.idEstadoReporte = dto.idEstadoReporte.Value;
+                        pt.ultimaActualizacion = dto.ultimaActualizacion;
+                        pt.actualizadoPor = dto.actualizadoPor;                       
+                    }
+
+                    _context.Entry(pt).State = EntityState.Modified;
+                }
+            }
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error al actualizar los estados.");
+            }
+
+            return Ok("Actualización realizada correctamente.");
+        }
+
 
         // POST: api/reportesDeOperadores
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
