@@ -1,0 +1,23 @@
+﻿namespace Sistema_Produccion_3_Backend.DTO.ReporteOperador.DetalleReporte.Operaciones.DetalleOperacionProceso
+{
+    public class UpdateBatchOperacionProceso
+    {
+        public int idDetalleOperacion { get; set; }
+
+        public int? numeroFila { get; set; }
+
+        public int? secuencia { get; set; }
+
+        public TimeOnly? inicio { get; set; }
+
+        public TimeOnly? finalizacion { get; set; }
+
+        public string? operador { get; set; }
+
+        public int? operacion { get; set; }
+
+        public bool? accionPorAuxiliar { get; set; }
+
+        public string? auxiliar { get; set; }
+    }
+}

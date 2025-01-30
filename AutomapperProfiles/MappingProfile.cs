@@ -154,6 +154,8 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             CreateMap<detalleOperacionProceso, AddDetalleProcesoOfDto>().ReverseMap();
             CreateMap<UpdateDetalleProcesoOfDto, detalleOperacionProceso>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<UpdateBatchOperacionProceso, detalleOperacionProceso>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             CreateMap<tarjetaCampo, TarjetaCampoDto>()
                .ForMember(dest => dest.camposPersonalizadosDto, opt => opt.MapFrom(src => src.idCampoNavigation))

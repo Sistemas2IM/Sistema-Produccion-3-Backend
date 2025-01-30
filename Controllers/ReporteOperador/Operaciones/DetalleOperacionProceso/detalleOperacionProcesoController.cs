@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf;
+using Sistema_Produccion_3_Backend.DTO.ReporteOperador;
 using Sistema_Produccion_3_Backend.DTO.ReporteOperador.DetalleReporte.Operaciones.DetalleOperacionProceso;
 using Sistema_Produccion_3_Backend.DTO.ReporteOperador.DetalleReporte.Operaciones.DetalleOperacionProceso.DetalleOperacionProcesoOF;
 using Sistema_Produccion_3_Backend.Models;
@@ -125,6 +126,59 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador.Operaciones.D
                 }
             }
             return Ok(updateDetalleOperacionProceso);
+        }
+
+        // PUT BATCH
+        [HttpPut("put/BatchUpdate")]
+        public async Task<IActionResult> BatchUpdateEstadosPT([FromBody] BatchUpdateOperacionProceso batchUpdateDto)
+        {
+            if (batchUpdateDto == null || batchUpdateDto.updatehOperacionProcesos == null || !batchUpdateDto.updatehOperacionProcesos.Any())
+            {
+                return BadRequest("No se enviaron datos para actualizar.");
+            }
+
+            var ids = batchUpdateDto.updatehOperacionProcesos.Select(t => t.idDetalleOperacion).ToList();
+
+            // Obtener todos los roles relacionados
+            var ept = await _context.detalleOperacionProceso.Where(t => ids.Contains(t.idDetalleOperacion)).ToListAsync();
+
+            if (!ept.Any())
+            {
+                return NotFound("No se encontraron los IDs proporcionados.");
+            }
+
+            foreach (var dto in batchUpdateDto.updatehOperacionProcesos)
+            {
+                var pt = ept.FirstOrDefault(t => t.idDetalleOperacion == dto.idDetalleOperacion);
+                if (pt != null)
+                {
+                    // Actualizar propiedades específicas
+                    if (dto.idDetalleOperacion > 0)
+                    {
+                        pt.numeroFila = dto.numeroFila;
+                        pt.secuencia = dto.secuencia;
+                        pt.inicio = dto.inicio;
+                        pt.finalizacion = dto.finalizacion;
+                        pt.operador = dto.operador;
+                        pt.operacion = dto.operacion;
+                        pt.accionPorAuxiliar = dto.accionPorAuxiliar;
+                        pt.auxiliar = dto.auxiliar;
+                    }
+
+                    _context.Entry(pt).State = EntityState.Modified;
+                }
+            }
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error al actualizar los estados.");
+            }
+
+            return Ok("Actualización realizada correctamente.");
         }
 
         // POST: api/detalleOperacionProceso
