@@ -33,6 +33,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.ProductoTerminado
                 .Include(r => r.detalleEntrega)
                 .Include(p => p.idEstadoReporteNavigation)
                 .Include(sm => sm.idMaquinaNavigation)
+                .Include(o => o.ofNavigation)
                 .ToListAsync();
 
             var productoTerminadoDto = _mapper.Map<List<ProductoTerminadoDto>>(productoTerminado);
@@ -49,6 +50,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.ProductoTerminado
                 .Include(r => r.detalleEntrega)
                 .Include(p => p.idEstadoReporteNavigation)
                 .Include(sm => sm.idMaquinaNavigation)
+                .Include(o => o.ofNavigation)
                 .FirstOrDefaultAsync(u => u.idEntregaPt == id);
 
             if (entregasProductoTerminado == null)

@@ -18,6 +18,30 @@ public partial class procesoPreprensa
     [StringLength(500)]
     public string cantidadPlanchas { get; set; }
 
+    [StringLength(500)]
+    public string tiempoArreglo { get; set; }
+
+    [StringLength(500)]
+    public string tiempoCorrida { get; set; }
+
+    [StringLength(100)]
+    public string tiro { get; set; }
+
+    [StringLength(100)]
+    public string retiro { get; set; }
+
+    [StringLength(100)]
+    public string foil { get; set; }
+
+    [StringLength(100)]
+    public string numerado { get; set; }
+
+    [StringLength(100)]
+    public string laminado { get; set; }
+
+    [StringLength(500)]
+    public string medidaProd { get; set; }
+
     [ForeignKey("idProceso")]
     [InverseProperty("procesoPreprensa")]
     public virtual procesoOf idProcesoNavigation { get; set; }

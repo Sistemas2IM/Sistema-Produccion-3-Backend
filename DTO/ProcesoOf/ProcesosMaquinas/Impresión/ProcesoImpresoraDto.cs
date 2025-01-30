@@ -47,5 +47,7 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.Impresión
         public string? laminadoDetalle { get; set; }
 
         public string? indicacionImpresion { get; set; }
+
+        public string? medidaProd { get; set; }
     }
 }

@@ -72,6 +72,9 @@ public partial class procesoImpresora
     [StringLength(500)]
     public string indicacionImpresion { get; set; }
 
+    [StringLength(500)]
+    public string medidaProd { get; set; }
+
     [ForeignKey("idProceso")]
     [InverseProperty("procesoImpresora")]
     public virtual procesoOf idProcesoNavigation { get; set; }

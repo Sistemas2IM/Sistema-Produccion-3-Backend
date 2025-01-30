@@ -55,6 +55,12 @@ namespace Sistema_Produccion_3_Backend.DTO.ProductoTerminado
 
         public int? of { get; set; }
 
+        public string? codArticulo { get; set; }
+
+        public string? articuloOf {  get; set; }
+
+        public string? cantidadOf { get; set; }
+
         public List<ContenidoEntregaDto>? contenidoEntregado { get; set; }
 
         public List<DetalleEntregaDto>? detalleEntrega { get; set; }
@@ -63,6 +69,6 @@ namespace Sistema_Produccion_3_Backend.DTO.ProductoTerminado
 
         public MaquinaDto? maquinaDto { get; set; }
 
-        public TarjetaOfDto? tarjetaOfDto { get; set; }
+        //public TarjetaOfDto? tarjetaOfDto { get; set; }
     }
 }

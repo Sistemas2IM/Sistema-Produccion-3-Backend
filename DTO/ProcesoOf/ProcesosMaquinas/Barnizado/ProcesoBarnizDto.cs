@@ -29,5 +29,17 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.Barnizado
         public string? largoPliego { get; set; }
 
         public string? tipoBarniz { get; set; }
+
+        public string? tiro { get; set; }
+
+        public string? retiro { get; set; }
+
+        public string? foil { get; set; }
+
+        public string? numerado { get; set; }
+
+        public string? laminado { get; set; }
+
+        public string? medidaProd { get; set; }
     }
 }
