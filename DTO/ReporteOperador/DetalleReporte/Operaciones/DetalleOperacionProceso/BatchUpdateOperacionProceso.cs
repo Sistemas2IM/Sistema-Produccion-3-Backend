@@ -2,6 +2,6 @@
 {
     public class BatchUpdateOperacionProceso
     {
-        public List<UpdateBatchOperacionProceso>? updatehOperacionProcesos {  get; set; }
+        public List<UpdateBatchOperacionProceso>? updateOperacionProcesos {  get; set; }
     }
 }

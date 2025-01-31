@@ -29,6 +29,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.ProductoTerminado
         public async Task<ActionResult<IEnumerable<ProductoTerminadoDto>>> GetentregasProductoTerminado()
         {
             var productoTerminado = await _context.entregasProductoTerminado
+                .OrderByDescending(f => f.fechaCreacion)
                 .Include(u => u.contenidoEntrega)
                 .Include(r => r.detalleEntrega)
                 .Include(p => p.idEstadoReporteNavigation)

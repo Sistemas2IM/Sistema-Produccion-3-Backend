@@ -30,11 +30,11 @@ public partial class procesoTroqueladora
     [StringLength(500)]
     public string tiempoCorrida { get; set; }
 
-    [StringLength(200)]
-    public string tipoMaterial { get; set; }
+    [StringLength(500)]
+    public string cantidadPliegosDemasia { get; set; }
 
-    [StringLength(200)]
-    public string calibreBase { get; set; }
+    [StringLength(500)]
+    public string indicacionImpresion { get; set; }
 
     [ForeignKey("idProceso")]
     [InverseProperty("procesoTroqueladora")]

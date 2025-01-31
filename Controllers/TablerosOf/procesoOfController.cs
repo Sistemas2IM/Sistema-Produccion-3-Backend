@@ -128,6 +128,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         public async Task<ActionResult<IEnumerable<ProcesoOfVistaTableroDto>>> GetprocesoOfTablero(int id)
         {
             var procesoOf = await _context.procesoOf
+                .OrderBy(p => p.posicion)
                 .Where(t => t.idTablero == id)
                 .Include(u => u.detalleOperacionProceso)
                 .ThenInclude(o => o.idOperacionNavigation)
@@ -249,10 +250,10 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 return BadRequest("No se enviaron datos para actualizar.");
             }
 
-            var ids = batchUpdateDto.ProcesosOf.Select(t => t.oF).ToList();
+            var ids = batchUpdateDto.ProcesosOf.Select(t => t.idProceso).ToList();
 
             // Obtener todas los procesos of relacionadas
-            var procesos = await _context.procesoOf.Where(t => ids.Contains(t.oF)).ToListAsync();
+            var procesos = await _context.procesoOf.Where(t => ids.Contains(t.idProceso)).ToListAsync();
 
             if (!procesos.Any())
             {
@@ -261,13 +262,12 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
 
             foreach (var dto in batchUpdateDto.ProcesosOf)
             {
-                var proceso = procesos.FirstOrDefault(t => t.oF == dto.oF);
+                var proceso = procesos.FirstOrDefault(t => t.idProceso == dto.idProceso);
                 if (proceso != null)
                 {
-                    // Actualizar la posición si es proporcionada
-                    if (dto.posicion.HasValue)
+                    if (dto.idProceso > 0)
                     {
-                        proceso.posicion = dto.posicion.Value;
+                        proceso.posicion = dto.posicion;
                     }
 
                     _context.Entry(proceso).State = EntityState.Modified;
@@ -304,39 +304,30 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 return NotFound("No se encontraron procesos para los IDs proporcionados.");
             }
 
-            int updatedCount = 0;
-
             foreach (var dto in batchUpdateDtoSAP.SAPProcesoOf)
             {
-                Console.WriteLine($"ID: {dto.idProceso}, Posición: {dto.posicion}");
 
                 var proceso = procesos.FirstOrDefault(t => t.idProceso == dto.idProceso);
                 if (proceso != null)
                 {
-                    if (dto.posicion.HasValue && proceso.posicion != dto.posicion.Value)
+                    if (dto.posicion.HasValue)
                     {
                         proceso.posicion = dto.posicion.Value;
-
-                        // Forzar el estado de la propiedad
-                        _context.Entry(proceso).Property(p => p.posicion).IsModified = true;
-                        updatedCount++;
                     }
+                    _context.Entry(proceso).State = EntityState.Modified;
                 }
             }
 
-            var result = await _context.SaveChangesAsync();
-            Console.WriteLine($"Filas afectadas por SaveChangesAsync: {result}");
-
-            if (result == 0)
+            try
             {
-                return BadRequest("No se aplicaron cambios en la base de datos.");
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error al actualizar los Procesos.");
             }
 
-            return Ok(new
-            {
-                UpdatedCount = updatedCount,
-                ProcessedIds = ids
-            });
+            return Ok("Actualización realizada correctamente.");
         }
 
         [HttpPut("put/procesoOfMaquina/{idProceso}")]

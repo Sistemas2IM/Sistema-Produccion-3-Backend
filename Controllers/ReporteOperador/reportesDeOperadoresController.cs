@@ -32,6 +32,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
         public async Task<ActionResult<IEnumerable<ReporteOperadorDto>>> GetreportesDeOperadores()
         {
             var reporteOperador = await _context.reportesDeOperadores
+                .OrderByDescending(f => f.fechaDeCreacion)
                 .Include(r => r.idEstadoReporteNavigation)
                 .Include(p => p.idMaquinaNavigation)
                 .Include(sm => sm.idTipoReporteNavigation)
@@ -55,6 +56,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
         public async Task<ActionResult<IEnumerable<ReporteOperadorDto>>> GetreportesDeOperadoresMaquina(int id)
         {
             var reporteOperador = await _context.reportesDeOperadores
+                .OrderByDescending(f => f.fechaDeCreacion)
                 .Where(u => u.idMaquina == id)
                 .Include(r => r.idEstadoReporteNavigation)
                 .Include(p => p.idMaquinaNavigation)

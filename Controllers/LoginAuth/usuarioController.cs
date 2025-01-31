@@ -24,6 +24,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.LoginAuth
         public async Task<ActionResult<IEnumerable<UsuarioDto>>> Getusuario()
         {
             var usuarios = await _context.usuario
+                .OrderByDescending(f => f.fechaDeCreacion)
                 .Include(u => u.idRolNavigation)        // Include the role
                 .ThenInclude(r => r.permiso)            // Include the permissions for each role
                 .ThenInclude(p => p.idSubModuloNavigation) // Include the sub-modules for each permission

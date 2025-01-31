@@ -75,6 +75,9 @@ public partial class procesoImpresora
     [StringLength(500)]
     public string medidaProd { get; set; }
 
+    [StringLength(200)]
+    public string idTroquel { get; set; }
+
     [ForeignKey("idProceso")]
     [InverseProperty("procesoImpresora")]
     public virtual procesoOf idProcesoNavigation { get; set; }

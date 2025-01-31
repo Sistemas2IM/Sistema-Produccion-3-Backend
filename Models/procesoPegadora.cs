@@ -24,12 +24,6 @@ public partial class procesoPegadora
     [StringLength(500)]
     public string tiempoCorrida { get; set; }
 
-    [StringLength(200)]
-    public string material { get; set; }
-
-    [StringLength(200)]
-    public string calibreBase { get; set; }
-
     [ForeignKey("idProceso")]
     [InverseProperty("procesoPegadora")]
     public virtual procesoOf idProcesoNavigation { get; set; }

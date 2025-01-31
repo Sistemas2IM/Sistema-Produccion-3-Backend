@@ -41,5 +41,7 @@
         public string? indicacionImpresion { get; set; }
 
         public string? medidaProd { get; set; }
+
+        public string? idTroquel { get; set; }
     }
 }

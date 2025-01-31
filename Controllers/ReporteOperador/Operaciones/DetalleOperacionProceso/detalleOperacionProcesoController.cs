@@ -132,12 +132,12 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador.Operaciones.D
         [HttpPut("put/BatchUpdate")]
         public async Task<IActionResult> BatchUpdateEstadosPT([FromBody] BatchUpdateOperacionProceso batchUpdateDto)
         {
-            if (batchUpdateDto == null || batchUpdateDto.updatehOperacionProcesos == null || !batchUpdateDto.updatehOperacionProcesos.Any())
+            if (batchUpdateDto == null || batchUpdateDto.updateOperacionProcesos == null || !batchUpdateDto.updateOperacionProcesos.Any())
             {
                 return BadRequest("No se enviaron datos para actualizar.");
             }
 
-            var ids = batchUpdateDto.updatehOperacionProcesos.Select(t => t.idDetalleOperacion).ToList();
+            var ids = batchUpdateDto.updateOperacionProcesos.Select(t => t.idDetalleOperacion).ToList();
 
             // Obtener todos los roles relacionados
             var ept = await _context.detalleOperacionProceso.Where(t => ids.Contains(t.idDetalleOperacion)).ToListAsync();
@@ -147,7 +147,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador.Operaciones.D
                 return NotFound("No se encontraron los IDs proporcionados.");
             }
 
-            foreach (var dto in batchUpdateDto.updatehOperacionProcesos)
+            foreach (var dto in batchUpdateDto.updateOperacionProcesos)
             {
                 var pt = ept.FirstOrDefault(t => t.idDetalleOperacion == dto.idDetalleOperacion);
                 if (pt != null)
@@ -160,7 +160,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador.Operaciones.D
                         pt.inicio = dto.inicio;
                         pt.finalizacion = dto.finalizacion;
                         pt.operador = dto.operador;
-                        pt.operacion = dto.operacion;
+                        pt.idOperacion = dto.idOperacion;
                         pt.accionPorAuxiliar = dto.accionPorAuxiliar;
                         pt.auxiliar = dto.auxiliar;
                     }

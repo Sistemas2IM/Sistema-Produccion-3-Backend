@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.Barnizado
 {
@@ -20,26 +21,10 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.Barnizado
 
         public string? tiempoCorrida { get; set; }
 
-        public string? tipoMaterial { get; set; }
-
-        public string? calibreBase { get; set; }
-
         public string? anchoPliego { get; set; }
 
         public string? largoPliego { get; set; }
 
-        public string? tipoBarniz { get; set; }
-
-        public string? tiro { get; set; }
-
-        public string? retiro { get; set; }
-
-        public string? foil { get; set; }
-
-        public string? numerado { get; set; }
-
-        public string? laminado { get; set; }
-
-        public string? medidaProd { get; set; }
+        public string? detalleBarniz { get; set; }
     }
 }
