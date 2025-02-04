@@ -8,6 +8,8 @@
 
         public string? nombreCorto { get; set; }
 
+        public bool? necesitaAuxiliar { get; set; }
+
         public int? familiaId { get; set; }
     }
 }

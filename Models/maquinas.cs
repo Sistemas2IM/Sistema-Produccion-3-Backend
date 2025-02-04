@@ -22,6 +22,8 @@ public partial class maquinas
     [StringLength(20)]
     public string nombreCorto { get; set; }
 
+    public bool? necesitaAuxiliar { get; set; }
+
     [InverseProperty("idMaquinaNavigation")]
     public virtual ICollection<contenidoEntrega> contenidoEntrega { get; set; } = new List<contenidoEntrega>();
 

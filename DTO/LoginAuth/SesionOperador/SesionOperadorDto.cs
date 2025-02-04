@@ -12,7 +12,7 @@
 
         public string? turno { get; set; }
 
-        public string? status { get; set; }
+        public bool? activa { get; set; }
 
         public DateTime? fechaCreacion { get; set; }
     }

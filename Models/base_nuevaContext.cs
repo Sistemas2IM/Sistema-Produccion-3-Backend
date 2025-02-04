@@ -25,6 +25,8 @@ public partial class base_nuevaContext : DbContext
 
     public virtual DbSet<auditoriaDeProductos> auditoriaDeProductos { get; set; }
 
+    public virtual DbSet<auxiliares> auxiliares { get; set; }
+
     public virtual DbSet<bitacora> bitacora { get; set; }
 
     public virtual DbSet<camposPersonalizados> camposPersonalizados { get; set; }
@@ -279,6 +281,11 @@ public partial class base_nuevaContext : DbContext
             entity.Property(e => e.variacionDeTono).IsFixedLength();
 
             entity.HasOne(d => d.idReporteAuditoriaNavigation).WithMany(p => p.auditoriaDeProductos).HasConstraintName("FK_PRODUCTOS_REPORTE");
+        });
+
+        modelBuilder.Entity<auxiliares>(entity =>
+        {
+            entity.HasKey(e => e.id).HasName("PK__auxiliar__3213E83F5C17182B");
         });
 
         modelBuilder.Entity<bitacora>(entity =>

@@ -206,7 +206,19 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
         }
 
 
+        // POST: api/reportesDeOperadores
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("post")]
+        public async Task<ActionResult<reportesDeOperadores>> PostreportesDeOperadores(AddReporteOperadorDto addReporteOperador)
+        {
+            var reporteOperador = _mapper.Map<reportesDeOperadores>(addReporteOperador);
+            _context.reportesDeOperadores.Add(reporteOperador);
+            await _context.SaveChangesAsync();
+
+            return Ok(addReporteOperador);
+        }
+
+        /*[HttpPost("post")]
         public async Task<ActionResult<reportesDeOperadores>> PostreportesDeOperadores(AddReporteOperadorDto addReporteOperador)
         {
             // Validar que el tipo de máquina no esté vacío
@@ -261,7 +273,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
             await _context.SaveChangesAsync();
 
             return Ok(reporteOperador);
-        }
+        }*/
 
         private bool reportesDeOperadoresExists(string id)
         {

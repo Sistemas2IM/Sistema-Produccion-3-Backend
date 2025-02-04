@@ -39,6 +39,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[auxiliares]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[bitacora]",
          "ObjectType": 0
       },

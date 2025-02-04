@@ -50,6 +50,7 @@ using Sistema_Produccion_3_Backend.DTO.ProductoTerminado;
 using Sistema_Produccion_3_Backend.DTO.ProductoTerminado.ContenidoEntrega;
 using Sistema_Produccion_3_Backend.DTO.ProductoTerminado.DetalleEntrega;
 using Sistema_Produccion_3_Backend.DTO.ReporteOperador;
+using Sistema_Produccion_3_Backend.DTO.ReporteOperador.Auxiliares;
 using Sistema_Produccion_3_Backend.DTO.ReporteOperador.DetalleReporte;
 using Sistema_Produccion_3_Backend.DTO.ReporteOperador.DetalleReporte.Impresoras;
 using Sistema_Produccion_3_Backend.DTO.ReporteOperador.DetalleReporte.Operaciones;
@@ -244,6 +245,10 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                     CreateMap<UpdateOperacionProcesoDto ,detalleOperacionProceso>()
                         .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
                 }
+
+                CreateMap<auxiliares, AuxiliaresDto>().ReverseMap();
+                CreateMap<auxiliares, AddAuxiliaresDto>().ReverseMap();
+                CreateMap<UpdateAuxiliaresDto, auxiliares>().ReverseMap();
             }
                   
             CreateMap<estadosReporte, EstadoReporteDto>().ReverseMap();

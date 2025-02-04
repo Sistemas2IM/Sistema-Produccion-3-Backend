@@ -27,9 +27,7 @@ public partial class sesionOperador
     [StringLength(25)]
     public string turno { get; set; }
 
-    [StringLength(255)]
-    [Unicode(false)]
-    public string status { get; set; }
+    public bool? activa { get; set; }
 
     [Column(TypeName = "datetime")]
     public DateTime? fechaCreacion { get; set; }
