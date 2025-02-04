@@ -33,5 +33,7 @@ namespace Sistema_Produccion_3_Backend.DTO.ReporteOperador
         public string? actualizadoPor { get; set; }
 
         public int? tipoObjeto { get; set; }
+
+        public string? TipoMaquina { get; set; }
     }
 }

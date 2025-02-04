@@ -206,16 +206,61 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
         }
 
 
-        // POST: api/reportesDeOperadores
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("post")]
         public async Task<ActionResult<reportesDeOperadores>> PostreportesDeOperadores(AddReporteOperadorDto addReporteOperador)
         {
+            // Validar que el tipo de máquina no esté vacío
+            if (string.IsNullOrEmpty(addReporteOperador.TipoMaquina))
+            {
+                return BadRequest("El tipo de máquina es requerido.");
+            }
+
+            // Obtener el último reporte para el tipo de máquina especificado
+            var ultimoReporte = await _context.reportesDeOperadores
+                .Where(r => r.idReporte.StartsWith(addReporteOperador.TipoMaquina + "_")) // Filtrar por tipo de máquina
+                .OrderByDescending(r => r.idReporte) // Ordenar por idReporte de manera descendente
+                .FirstOrDefaultAsync();
+
+            // Determinar el número del nuevo reporte
+            int nuevoNumeroReporte = 1;
+            if (ultimoReporte != null)
+            {
+                // Extraer el número del último reporte
+                var partes = ultimoReporte.idReporte.Split('_');
+                if (partes.Length > 1 && int.TryParse(partes[1], out int ultimoNumero))
+                {
+                    nuevoNumeroReporte = ultimoNumero + 1; // Incrementar el número en 1
+                }
+                else
+                {
+                    // Si no se puede extraer el número, lanzar un error
+                    return BadRequest("El formato del último idReporte no es válido.");
+                }
+            }
+
+            // Generar el nuevo idReporte
+            string nuevoIdReporte = $"{addReporteOperador.TipoMaquina}_{nuevoNumeroReporte}";
+
+            // Verificar si el nuevo idReporte ya existe (por si acaso)
+            var reporteExistente = await _context.reportesDeOperadores
+                .AnyAsync(r => r.idReporte == nuevoIdReporte);
+
+            if (reporteExistente)
+            {
+                return Conflict("El idReporte generado ya existe en la base de datos.");
+            }
+
+            // Mapear el DTO a la entidad
             var reporteOperador = _mapper.Map<reportesDeOperadores>(addReporteOperador);
+
+            // Asignar el nuevo idReporte
+            reporteOperador.idReporte = nuevoIdReporte;
+
+            // Guardar el nuevo reporte
             _context.reportesDeOperadores.Add(reporteOperador);
             await _context.SaveChangesAsync();
 
-            return Ok(addReporteOperador);
+            return Ok(reporteOperador);
         }
 
         private bool reportesDeOperadoresExists(string id)
