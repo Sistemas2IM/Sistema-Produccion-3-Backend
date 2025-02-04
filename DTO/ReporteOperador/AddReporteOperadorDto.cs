@@ -1,9 +1,11 @@
 ﻿using Sistema_Produccion_3_Backend.DTO.Catalogo;
+using System.Text.Json.Serialization;
 
 namespace Sistema_Produccion_3_Backend.DTO.ReporteOperador
 {
     public class AddReporteOperadorDto
     {
+        [JsonIgnore]
         public string? idReporte { get; set; }
 
         public int? idEstadoReporte { get; set; }
@@ -34,6 +36,5 @@ namespace Sistema_Produccion_3_Backend.DTO.ReporteOperador
 
         public int? tipoObjeto { get; set; }
 
-        public string? TipoMaquina { get; set; }
     }
 }

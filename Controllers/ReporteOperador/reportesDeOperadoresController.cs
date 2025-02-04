@@ -208,7 +208,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
 
         // POST: api/reportesDeOperadores
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost("post")]
+        /*[HttpPost("post")]
         public async Task<ActionResult<reportesDeOperadores>> PostreportesDeOperadores(AddReporteOperadorDto addReporteOperador)
         {
             var reporteOperador = _mapper.Map<reportesDeOperadores>(addReporteOperador);
@@ -216,42 +216,37 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
             await _context.SaveChangesAsync();
 
             return Ok(addReporteOperador);
-        }
+        }*/
 
-        /*[HttpPost("post")]
+        [HttpPost("post")]
         public async Task<ActionResult<reportesDeOperadores>> PostreportesDeOperadores(AddReporteOperadorDto addReporteOperador)
         {
-            // Validar que el tipo de máquina no esté vacío
-            if (string.IsNullOrEmpty(addReporteOperador.TipoMaquina))
+            // Validar que el idMaquina sea válido
+            if (addReporteOperador.idMaquina <= 0)
             {
-                return BadRequest("El tipo de máquina es requerido.");
+                return BadRequest("El idMaquina es requerido y debe ser mayor que 0.");
             }
 
-            // Obtener el último reporte para el tipo de máquina especificado
-            var ultimoReporte = await _context.reportesDeOperadores
-                .Where(r => r.idReporte.StartsWith(addReporteOperador.TipoMaquina + "_")) // Filtrar por tipo de máquina
-                .OrderByDescending(r => r.idReporte) // Ordenar por idReporte de manera descendente
+            // Obtener el nombreCorto de la máquina usando el idMaquina
+            var maquina = await _context.maquinas
+                .Where(m => m.idMaquina == addReporteOperador.idMaquina)
+                .Select(m => new { m.nombreCorto })
                 .FirstOrDefaultAsync();
 
-            // Determinar el número del nuevo reporte
-            int nuevoNumeroReporte = 1;
-            if (ultimoReporte != null)
+            if (maquina == null)
             {
-                // Extraer el número del último reporte
-                var partes = ultimoReporte.idReporte.Split('_');
-                if (partes.Length > 1 && int.TryParse(partes[1], out int ultimoNumero))
-                {
-                    nuevoNumeroReporte = ultimoNumero + 1; // Incrementar el número en 1
-                }
-                else
-                {
-                    // Si no se puede extraer el número, lanzar un error
-                    return BadRequest("El formato del último idReporte no es válido.");
-                }
+                return NotFound("No se encontró la máquina con el idMaquina especificado.");
             }
 
+            // Obtener el número de reportes existentes para la máquina especificada (basado en idMaquina)
+            int conteoReportes = await _context.reportesDeOperadores
+                .CountAsync(r => r.idMaquina == addReporteOperador.idMaquina);
+
+            // Generar el nuevo número de reporte
+            int nuevoNumeroReporte = conteoReportes + 1;
+
             // Generar el nuevo idReporte
-            string nuevoIdReporte = $"{addReporteOperador.TipoMaquina}_{nuevoNumeroReporte}";
+            string nuevoIdReporte = $"{maquina.nombreCorto}_{nuevoNumeroReporte}";
 
             // Verificar si el nuevo idReporte ya existe (por si acaso)
             var reporteExistente = await _context.reportesDeOperadores
@@ -273,7 +268,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
             await _context.SaveChangesAsync();
 
             return Ok(reporteOperador);
-        }*/
+        }
 
         private bool reportesDeOperadoresExists(string id)
         {
