@@ -77,6 +77,31 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
         }
 
         // GET: api/reportesDeOperadores por maquina
+        [HttpGet("get/Maquina/{id}/Operador/{user}")]
+        public async Task<ActionResult<IEnumerable<ReporteOperadorDto>>> GetreportesDeOperadoresMaquinaBitacora(int id, string user)
+        {
+            var reporteOperador = await _context.reportesDeOperadores
+                .OrderByDescending(f => f.fechaDeCreacion)
+                .Where(u => u.idMaquina == id && u.operador == user)
+                .Include(r => r.idEstadoReporteNavigation)
+                .Include(p => p.idMaquinaNavigation)
+                .Include(sm => sm.idTipoReporteNavigation)
+                .Include(m => m.detalleReporte) // Incluye 'detalleReporte'
+                    .ThenInclude(d => d.idOperacionNavigation) // Incluye la relación con 'idOperacion'
+                .Include(m => m.detalleReporte)
+                    .ThenInclude(d => d.idMaterialNavigation) // Incluye la relación con 'idMaterial'
+                .Include(m => m.detalleReporte)
+                    .ThenInclude(d => d.idTipoCierreNavigation) // Incluye la relación con 'idTipoCierre'
+                .Include(m => m.detalleReporte)
+                    .ThenInclude(d => d.oFNavigation) // Incluye la relación con 'idTarjetaOf'
+                .ToArrayAsync();
+
+            var reporteOperadorDto = _mapper.Map<List<ReporteOperadorDto>>(reporteOperador);
+
+            return Ok(reporteOperadorDto);
+        }
+
+        // GET: api/reportesDeOperadores por maquina
         [HttpGet("get/count/idMaquina/{id}")]
         public async Task<ActionResult<CountReporteOperadorDto>> GetreportesDeOperadoresCount(int id)
         {
