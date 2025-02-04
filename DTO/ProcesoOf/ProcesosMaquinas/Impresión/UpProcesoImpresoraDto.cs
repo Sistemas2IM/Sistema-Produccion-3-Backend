@@ -12,10 +12,6 @@
 
         public string? tiempoCorrida { get; set; }
 
-        public string? tipoMaterial { get; set; }
-
-        public string? calibreBase { get; set; }
-
         public string? anchoPliego { get; set; }
 
         public string? largoPliego { get; set; }

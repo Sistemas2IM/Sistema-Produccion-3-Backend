@@ -31,12 +31,6 @@ public partial class procesoImpresora
     public string tiempoCorrida { get; set; }
 
     [StringLength(200)]
-    public string tipoMaterial { get; set; }
-
-    [StringLength(200)]
-    public string calibreBase { get; set; }
-
-    [StringLength(200)]
     public string anchoPliego { get; set; }
 
     [StringLength(200)]

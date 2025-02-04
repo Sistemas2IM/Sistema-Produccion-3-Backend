@@ -72,4 +72,7 @@ public partial class reportesDeOperadores
     [ForeignKey("operador")]
     [InverseProperty("reportesDeOperadores")]
     public virtual usuario operadorNavigation { get; set; }
+
+    [InverseProperty("bitacoraNavigation")]
+    public virtual ICollection<sesionOperador> sesionOperador { get; set; } = new List<sesionOperador>();
 }

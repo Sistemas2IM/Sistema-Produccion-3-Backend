@@ -251,6 +251,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[sesionOperador]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[subModulo]",
          "ObjectType": 0
       },

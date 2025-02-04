@@ -39,6 +39,9 @@ public partial class procesoBarniz
     [StringLength(200)]
     public string detalleBarniz { get; set; }
 
+    [StringLength(500)]
+    public string indicacionImpresion { get; set; }
+
     [ForeignKey("idProceso")]
     [InverseProperty("procesoBarniz")]
     public virtual procesoOf idProcesoNavigation { get; set; }

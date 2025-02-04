@@ -41,6 +41,9 @@ public partial class maquinas
     [InverseProperty("idMaquinaNavigation")]
     public virtual ICollection<reportesDeOperadores> reportesDeOperadores { get; set; } = new List<reportesDeOperadores>();
 
+    [InverseProperty("maquinaNavigation")]
+    public virtual ICollection<sesionOperador> sesionOperador { get; set; } = new List<sesionOperador>();
+
     [InverseProperty("idMaquinaNavigation")]
     public virtual ICollection<tablerosOf> tablerosOf { get; set; } = new List<tablerosOf>();
 }

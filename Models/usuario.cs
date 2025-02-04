@@ -72,4 +72,7 @@ public partial class usuario
 
     [InverseProperty("operadorNavigation")]
     public virtual ICollection<reportesDeOperadores> reportesDeOperadores { get; set; } = new List<reportesDeOperadores>();
+
+    [InverseProperty("operadorNavigation")]
+    public virtual ICollection<sesionOperador> sesionOperador { get; set; } = new List<sesionOperador>();
 }

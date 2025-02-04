@@ -131,6 +131,8 @@ public partial class base_nuevaContext : DbContext
 
     public virtual DbSet<secuenciaDeColor> secuenciaDeColor { get; set; }
 
+    public virtual DbSet<sesionOperador> sesionOperador { get; set; }
+
     public virtual DbSet<subModulo> subModulo { get; set; }
 
     public virtual DbSet<tablerosOf> tablerosOf { get; set; }
@@ -685,6 +687,17 @@ public partial class base_nuevaContext : DbContext
             entity.HasKey(e => e.idSecuencia).HasName("PK_SECUENCIADECOLOR");
 
             entity.HasOne(d => d.idDetalleImpresionNavigation).WithMany(p => p.secuenciaDeColor).HasConstraintName("FK_SECUENCIA_COLOR");
+        });
+
+        modelBuilder.Entity<sesionOperador>(entity =>
+        {
+            entity.HasKey(e => e.id).HasName("PK__sesionOp__3213E83F18D6E57D");
+
+            entity.HasOne(d => d.bitacoraNavigation).WithMany(p => p.sesionOperador).HasConstraintName("FK_BITACORA");
+
+            entity.HasOne(d => d.maquinaNavigation).WithMany(p => p.sesionOperador).HasConstraintName("FK_MAQUINA");
+
+            entity.HasOne(d => d.operadorNavigation).WithMany(p => p.sesionOperador).HasConstraintName("FK_OPERADOR");
         });
 
         modelBuilder.Entity<subModulo>(entity =>

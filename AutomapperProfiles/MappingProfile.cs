@@ -23,6 +23,7 @@ using Sistema_Produccion_3_Backend.DTO.Catalogo.Maquinas;
 using Sistema_Produccion_3_Backend.DTO.Catalogo.Motoristas;
 using Sistema_Produccion_3_Backend.DTO.Catalogo.Vehiculos;
 using Sistema_Produccion_3_Backend.DTO.LoginAuth;
+using Sistema_Produccion_3_Backend.DTO.LoginAuth.SesionOperador;
 using Sistema_Produccion_3_Backend.DTO.Logistica;
 using Sistema_Produccion_3_Backend.DTO.Logistica.DetalleGira;
 using Sistema_Produccion_3_Backend.DTO.OV;
@@ -529,6 +530,12 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             CreateMap<bitacora, BitacoraDto>().ReverseMap();
             CreateMap<bitacora, AddBitacoraDto>().ReverseMap();
             CreateMap<UpdateBitacoraDto, bitacora>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            // SESION DE OPERADOR ======================================================================================
+            CreateMap<sesionOperador, SesionOperadorDto>().ReverseMap();
+            CreateMap<sesionOperador, AddSesionOperadorDto>().ReverseMap();
+            CreateMap<UpdateSesionOperadorDto, sesionOperador>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
         }
     }
