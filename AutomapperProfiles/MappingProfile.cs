@@ -21,6 +21,7 @@ using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica.DetalleTroquelado.Ti
 using Sistema_Produccion_3_Backend.DTO.Catalogo.FamiliaMaquina;
 using Sistema_Produccion_3_Backend.DTO.Catalogo.Maquinas;
 using Sistema_Produccion_3_Backend.DTO.Catalogo.Motoristas;
+using Sistema_Produccion_3_Backend.DTO.Catalogo.Turnos;
 using Sistema_Produccion_3_Backend.DTO.Catalogo.Vehiculos;
 using Sistema_Produccion_3_Backend.DTO.LoginAuth;
 using Sistema_Produccion_3_Backend.DTO.LoginAuth.SesionOperador;
@@ -122,7 +123,9 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             CreateMap<AddBatchProcesoDto, procesoOf>().ReverseMap();
             CreateMap<SAPUpdateProcesoOf, procesoOf>().ReverseMap();
             {
-                CreateMap<procesoOf, ProcesoOfMaquinas>().ReverseMap();
+                CreateMap<procesoOf, ProcesoOfMaquinas>()
+                    .ForMember(dest => dest.posturasOfDto, opt => opt.MapFrom(src => src.idPosturaNavigation))
+                    .ReverseMap();
 
                 CreateMap<UpProcesoOfMaquinas, procesoOf>()
                     .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
@@ -542,6 +545,13 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             CreateMap<sesionOperador, AddSesionOperadorDto>().ReverseMap();
             CreateMap<UpdateSesionOperadorDto, sesionOperador>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            {
+                CreateMap<turnos, TurnosDto>().ReverseMap();
+                CreateMap<turnos, AddTurnosDto>().ReverseMap();
+                CreateMap<UpdateTurnosDto, turnos>()
+                    .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            }
         }
     }
 }

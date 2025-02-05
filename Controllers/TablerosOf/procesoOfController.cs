@@ -147,7 +147,9 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         public async Task<ActionResult<ProcesoOfMaquinas>> GetProcesoOf(int id)
         {
             // Cargar datos generales del proceso
-            var proceso = await _context.procesoOf.FindAsync(id);
+            var proceso = await _context.procesoOf
+                .Include(p => p.idPosturaNavigation)
+                .FirstOrDefaultAsync(u => u.idProceso == id);
             if (proceso == null) return NotFound();
 
             // Mapear el modelo general al DTO principal

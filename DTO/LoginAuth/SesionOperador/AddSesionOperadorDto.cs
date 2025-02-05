@@ -2,6 +2,8 @@
 {
     public class AddSesionOperadorDto
     {
+        public int id { get; set; }
+
         public string? operador { get; set; }
 
         public int? maquina { get; set; }

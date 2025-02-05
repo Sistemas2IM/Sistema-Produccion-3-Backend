@@ -311,6 +311,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[turnos]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[usuario]",
          "ObjectType": 0
       },

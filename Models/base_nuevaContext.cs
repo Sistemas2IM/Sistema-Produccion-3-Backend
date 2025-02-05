@@ -161,6 +161,8 @@ public partial class base_nuevaContext : DbContext
 
     public virtual DbSet<tipoReporte> tipoReporte { get; set; }
 
+    public virtual DbSet<turnos> turnos { get; set; }
+
     public virtual DbSet<usuario> usuario { get; set; }
 
     public virtual DbSet<variablesDeAgua> variablesDeAgua { get; set; }
@@ -796,6 +798,11 @@ public partial class base_nuevaContext : DbContext
         modelBuilder.Entity<tipoReporte>(entity =>
         {
             entity.HasKey(e => e.idTipoReporte).HasName("PK_TIPOREPORTE");
+        });
+
+        modelBuilder.Entity<turnos>(entity =>
+        {
+            entity.HasKey(e => e.id).HasName("PK__turnos__3213E83F597A9A98");
         });
 
         modelBuilder.Entity<usuario>(entity =>

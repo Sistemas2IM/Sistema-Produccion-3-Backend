@@ -91,7 +91,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.LoginAuth
             _context.sesionOperador.Add(sesionOp);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetsesionOperador", new { id = sesionOp.id }, sesionOp);
+            return Ok(addSesionOperador);
         }       
 
         private bool sesionOperadorExists(int id)

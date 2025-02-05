@@ -2,7 +2,7 @@
 {
     public class SesionOperadorDto
     {
-        public int id { get; set; }
+        public int? id { get; set; }
 
         public string? operador { get; set; }
 

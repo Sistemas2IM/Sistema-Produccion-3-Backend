@@ -1,4 +1,6 @@
 ﻿
+using Sistema_Produccion_3_Backend.DTO.Tableros.Posturas;
+
 namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas
 {
     public class ProcesoOfMaquinas
@@ -50,6 +52,8 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas
         public string? tipoMaquinaSAP { get; set; }
 
         public object? DetalleProceso { get; set; }
+
+        public PosturasOfDto? posturasOfDto { get; set; }
 
     }
 }
