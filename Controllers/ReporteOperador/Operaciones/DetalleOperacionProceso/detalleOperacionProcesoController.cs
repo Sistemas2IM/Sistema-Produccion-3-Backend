@@ -31,7 +31,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador.Operaciones.D
         [HttpGet("get")]
         public async Task<ActionResult<IEnumerable<OperacionProcesoDto>>> GetdetalleOperacionProceso()
         {
-            var operacionProceso = await _context.operaciones.ToListAsync();
+            var operacionProceso = await _context.detalleOperacionProceso.ToListAsync();
             var operacionProcesoDto = _mapper.Map<List<OperacionProcesoDto>>(operacionProceso);
 
             return Ok(operacionProcesoDto);
@@ -41,7 +41,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador.Operaciones.D
         [HttpGet("get/idOperacion/{id}")]
         public async Task<ActionResult<IEnumerable<OperacionProcesoDto>>> GetdetalleOperacionProcesoIdOperacion(int id)
         {
-            var operacionProceso = await _context.operaciones
+            var operacionProceso = await _context.detalleOperacionProceso
                 .Where(u => u.idOperacion == id)
                 .ToListAsync();
             var operacionProcesoDto = _mapper.Map<List<OperacionProcesoDto>>(operacionProceso);

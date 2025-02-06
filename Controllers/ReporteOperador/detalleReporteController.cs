@@ -32,6 +32,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
         {
             var detalleReporte = await _context.detalleReporte
                 .Where(d => d.idReporte == idReporte) // Filtra por el id del reporte principal
+                .OrderBy(h => h.horaInicio)
                 .Include(u => u.idOperacionNavigation)
                 .Include(r => r.idMaterialNavigation)
                 .Include(p => p.idTipoCierreNavigation)
