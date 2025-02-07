@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf;
 using Sistema_Produccion_3_Backend.DTO.ProductoTerminado;
 using Sistema_Produccion_3_Backend.DTO.ReporteOperador;
+using Sistema_Produccion_3_Backend.DTO.ReporteOperador.DetalleReporte;
 using Sistema_Produccion_3_Backend.DTO.ReporteOperador.DetalleReporte.Impresoras;
 using Sistema_Produccion_3_Backend.Models;
 
@@ -44,9 +45,16 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
                     .ThenInclude(d => d.idTipoCierreNavigation) // Incluye la relación con 'idTipoCierre'
                 .Include(m => m.detalleReporte)
                     .ThenInclude(d => d.oFNavigation) // Incluye la relación con 'idTarjetaOf'
+                .Select(m => new
+                {
+                    Reporte = m,
+                    DetalleReporteOrdenado = m.detalleReporte
+                        .OrderBy(d => d.horaInicio) // Ordena 'detalleReporte' por 'fechaDeCreacion'
+                        .ToList()
+                })
                 .ToArrayAsync();
-            
-            var reporteOperadorDto = _mapper.Map<List<ReporteOperadorDto>>(reporteOperador);
+
+            var reporteOperadorDto = _mapper.Map<List<ReporteOperadorDto>>(reporteOperador.Select(r => r.Reporte).ToList());
 
             return Ok(reporteOperadorDto);
         }
@@ -69,9 +77,22 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
                     .ThenInclude(d => d.idTipoCierreNavigation) // Incluye la relación con 'idTipoCierre'
                 .Include(m => m.detalleReporte)
                     .ThenInclude(d => d.oFNavigation) // Incluye la relación con 'idTarjetaOf'
-                .ToArrayAsync();
+                .Select(m => new
+                {
+                    Reporte = m,
+                    DetalleReporteOrdenado = m.detalleReporte
+                        .OrderBy(d => d.horaInicio) // Ordena 'detalleReporte' por 'horaInicio' (ascendente)
+                        .ToList()
+                })
+                .ToListAsync(); // Cambiado a ToListAsync para trabajar con la lista en memoria
 
-            var reporteOperadorDto = _mapper.Map<List<ReporteOperadorDto>>(reporteOperador);
+            // Mapea el Reporte y asigna el DetalleReporteOrdenado
+            var reporteOperadorDto = reporteOperador.Select(r =>
+            {
+                var reporteDto = _mapper.Map<ReporteOperadorDto>(r.Reporte);
+                reporteDto.detalleReporte = _mapper.Map<List<DetalleReporteDto>>(r.DetalleReporteOrdenado);
+                return reporteDto;
+            }).ToList();
 
             return Ok(reporteOperadorDto);
         }

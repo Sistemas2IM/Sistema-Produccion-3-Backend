@@ -79,6 +79,8 @@ public partial class procesoOf
     [StringLength(200)]
     public string idMaquinaSAP { get; set; }
 
+    public int? oV { get; set; }
+
     [InverseProperty("idProcesoNavigation")]
     public virtual ICollection<asignacion> asignacion { get; set; } = new List<asignacion>();
 

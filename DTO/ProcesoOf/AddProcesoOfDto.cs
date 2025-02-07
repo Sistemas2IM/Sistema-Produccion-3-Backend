@@ -4,6 +4,8 @@
     {
         public int? oF { get; set; }
 
+        public int? oV { get; set; }
+
         public int? idTablero { get; set; }
 
         public int? idPostura { get; set; }

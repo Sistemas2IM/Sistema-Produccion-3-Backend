@@ -4,6 +4,8 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas
 {
     public class UpProcesoOfMaquinas
     {
+        public int? oV { get; set; }
+
         public string? idMaterial { get; set; }
 
         public string? nombreTarjeta { get; set; }
