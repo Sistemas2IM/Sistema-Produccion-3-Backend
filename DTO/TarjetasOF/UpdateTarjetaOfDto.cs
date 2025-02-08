@@ -26,6 +26,8 @@
 
         public DateTime? fechaUltimaActualizacion { get; set; }
 
+        public DateTime? fechaVencimiento { get; set; }
+
         public int? posicion { get; set; }
 
         public bool? archivada { get; set; }

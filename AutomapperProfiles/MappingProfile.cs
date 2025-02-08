@@ -546,12 +546,10 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             CreateMap<UpdateSesionOperadorDto, sesionOperador>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
-            {
-                CreateMap<turnos, TurnosDto>().ReverseMap();
-                CreateMap<turnos, AddTurnosDto>().ReverseMap();
-                CreateMap<UpdateTurnosDto, turnos>()
-                    .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
-            }
+            CreateMap<turnos, TurnosDto>().ReverseMap();
+            CreateMap<turnos, AddTurnosDto>().ReverseMap();
+            CreateMap<UpdateTurnosDto, turnos>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
         }
     }
 }

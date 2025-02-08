@@ -4,7 +4,7 @@ namespace Sistema_Produccion_3_Backend.DTO.TarjetasOF
 {
     public class AddTarjetaOfDto
     {
-        public int oF { get; set; }
+        public int? oF { get; set; }
 
         public int? oV { get; set; }
 

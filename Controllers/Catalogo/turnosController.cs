@@ -29,7 +29,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Catalogo
         public async Task<ActionResult<IEnumerable<TurnosDto>>> Getturnos()
         {
             var turnos = await _context.turnos.ToListAsync();
-            var turnosDto = _mapper.Map<TurnosDto>(turnos);
+            var turnosDto = _mapper.Map<List<TurnosDto>>(turnos);
 
             return Ok(turnosDto);
         }
