@@ -37,6 +37,12 @@ public partial class detalleOperacionProceso
     [StringLength(50)]
     public string auxiliar { get; set; }
 
+    public int? cantidadRecibida { get; set; }
+
+    public int? cantidadProducida { get; set; }
+
+    public int? cantidadNc { get; set; }
+
     [ForeignKey("idOperacion")]
     [InverseProperty("detalleOperacionProceso")]
     public virtual operaciones idOperacionNavigation { get; set; }

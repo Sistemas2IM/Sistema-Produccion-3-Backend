@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Sistema_Produccion_3_Backend.DTO.ProcesoOf.BusquedaProcesos;
 using Sistema_Produccion_3_Backend.DTO.TarjetasOF;
+using Sistema_Produccion_3_Backend.DTO.TarjetasOF.BusquedaTarjetas;
 using Sistema_Produccion_3_Backend.DTO.TarjetasOF.Reportes;
 using Sistema_Produccion_3_Backend.Models;
 
@@ -31,6 +33,51 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 .ToListAsync();
 
             var tarjetaOfDto = _mapper.Map<List<TarjetaOfDto>>(tarjetaOf);
+
+            return Ok(tarjetaOfDto);
+        }
+
+        [HttpGet("get/filtros")]
+        public async Task<ActionResult<IEnumerable<TarjetaBusquedaDto>>> GetprocesoOffiltros(
+        [FromQuery] DateTime? fechaInicio = null,   // Parámetro opcional para la fecha de inicio del rango
+        [FromQuery] DateTime? fechaFin = null,     // Parámetro opcional para la fecha de fin del rango
+        [FromQuery] string cliente = null,         // Parámetro opcional para el cliente
+        [FromQuery] string ejecutivo = null)       // Parámetro opcional para el ejecutivo
+        {
+            // Consulta base
+            var query = _context.tarjetaOf
+                .AsQueryable();
+
+            // Aplicar filtros condicionales
+            if (fechaInicio.HasValue && fechaFin.HasValue)
+            {
+                // Filtrar por rango de fechas (fechaVencimiento entre fechaInicio y fechaFin)
+                query = query.Where(p => p.fechaVencimiento >= fechaInicio.Value && p.fechaVencimiento <= fechaFin.Value);
+            }
+            else if (fechaInicio.HasValue)
+            {
+                // Si solo se proporciona fechaInicio, filtrar desde esa fecha en adelante
+                query = query.Where(p => p.fechaVencimiento >= fechaInicio.Value);
+            }
+            else if (fechaFin.HasValue)
+            {
+                // Si solo se proporciona fechaFin, filtrar hasta esa fecha
+                query = query.Where(p => p.fechaVencimiento <= fechaFin.Value);
+            }
+
+            if (!string.IsNullOrEmpty(cliente))
+            {
+                query = query.Where(p => p.clienteOf == cliente);
+            }
+
+            if (!string.IsNullOrEmpty(ejecutivo))
+            {
+                query = query.Where(p => p.vendedorOf == ejecutivo);
+            }
+
+            // Ejecutar la consulta y mapear a DTO
+            var tarjetaOf = await query.ToListAsync();
+            var tarjetaOfDto = _mapper.Map<List<TarjetaBusquedaDto>>(tarjetaOf);
 
             return Ok(tarjetaOfDto);
         }

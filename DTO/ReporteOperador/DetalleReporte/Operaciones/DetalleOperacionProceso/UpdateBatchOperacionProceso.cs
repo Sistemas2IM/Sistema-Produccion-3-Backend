@@ -19,5 +19,11 @@
         public bool? accionPorAuxiliar { get; set; }
 
         public string? auxiliar { get; set; }
+
+        public int? cantidadRecibida { get; set; }
+
+        public int? cantidadProducida { get; set; }
+
+        public int? cantidadNc { get; set; }
     }
 }
