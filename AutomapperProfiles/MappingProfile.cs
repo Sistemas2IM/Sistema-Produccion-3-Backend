@@ -37,6 +37,7 @@ using Sistema_Produccion_3_Backend.DTO.PermisosUsuario.PermisoMaquina;
 using Sistema_Produccion_3_Backend.DTO.PermisosUsuario.Rol;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.Asignacion;
+using Sistema_Produccion_3_Backend.DTO.ProcesoOf.BusquedaProcesos;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.CamposPersonalizados;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.DetalleProceso;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas;
@@ -116,6 +117,10 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             CreateMap<procesoOf, ListaProcesoOfDto>()
                 .ForMember(dest => dest.PosturasOfDto, opt => opt.MapFrom(src => src.idPosturaNavigation))
                 .ForMember(dest => dest.TablerosOfDto, opt => opt.MapFrom(src => src.idTableroNavigation))
+                .ReverseMap();
+            CreateMap<procesoOf, ProcesosBusquedaDto>()
+                .ForMember(dest => dest.cliente, opt => opt.MapFrom(src => src.oFNavigation.clienteOf))
+                .ForMember(dest => dest.vendedor, opt => opt.MapFrom(src => src.oFNavigation.vendedorOf))
                 .ReverseMap();
             CreateMap<procesoOf, AddProcesoOfDto>().ReverseMap();
             CreateMap<UpdateProcesoOfDto, procesoOf>()

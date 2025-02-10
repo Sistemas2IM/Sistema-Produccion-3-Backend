@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.Json;
-using System.Threading.Tasks;
+﻿using System.Text.Json;
 using AutoMapper;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf;
+using Sistema_Produccion_3_Backend.DTO.ProcesoOf.BusquedaProcesos;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.Acabado;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.Barnizado;
@@ -48,6 +44,52 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 .ToListAsync();
 
             var procesoOfDto = _mapper.Map<List<ProcesoOfDto>>(procesoOf);
+
+            return Ok(procesoOfDto);
+        }
+
+        [HttpGet("get/filtros")]
+        public async Task<ActionResult<IEnumerable<ProcesosBusquedaDto>>> GetprocesoOffiltros(
+        [FromQuery] DateTime? fechaInicio = null,   // Parámetro opcional para la fecha de inicio del rango
+        [FromQuery] DateTime? fechaFin = null,     // Parámetro opcional para la fecha de fin del rango
+        [FromQuery] string cliente = null,         // Parámetro opcional para el cliente
+        [FromQuery] string ejecutivo = null)       // Parámetro opcional para el ejecutivo
+        {
+            // Consulta base
+            var query = _context.procesoOf
+                .Include(u => u.oFNavigation)
+                .AsQueryable();
+
+            // Aplicar filtros condicionales
+            if (fechaInicio.HasValue && fechaFin.HasValue)
+            {
+                // Filtrar por rango de fechas (fechaVencimiento entre fechaInicio y fechaFin)
+                query = query.Where(p => p.fechaVencimiento >= fechaInicio.Value && p.fechaVencimiento <= fechaFin.Value);
+            }
+            else if (fechaInicio.HasValue)
+            {
+                // Si solo se proporciona fechaInicio, filtrar desde esa fecha en adelante
+                query = query.Where(p => p.fechaVencimiento >= fechaInicio.Value);
+            }
+            else if (fechaFin.HasValue)
+            {
+                // Si solo se proporciona fechaFin, filtrar hasta esa fecha
+                query = query.Where(p => p.fechaVencimiento <= fechaFin.Value);
+            }
+
+            if (!string.IsNullOrEmpty(cliente))
+            {
+                query = query.Where(p => p.oFNavigation.clienteOf == cliente);
+            }
+
+            if (!string.IsNullOrEmpty(ejecutivo))
+            {
+                query = query.Where(p => p.oFNavigation.vendedorOf == ejecutivo);
+            }
+
+            // Ejecutar la consulta y mapear a DTO
+            var procesoOf = await query.ToListAsync();
+            var procesoOfDto = _mapper.Map<List<ProcesosBusquedaDto>>(procesoOf);
 
             return Ok(procesoOfDto);
         }
