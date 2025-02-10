@@ -38,7 +38,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         }
 
         [HttpGet("get/filtros")]
-        public async Task<ActionResult<IEnumerable<TarjetaBusquedaDto>>> GetprocesoOffiltros(
+        public async Task<ActionResult<IEnumerable<TarjetaBusquedaDto>>> GettarjetaOffiltros(
         [FromQuery] DateTime? fechaInicio = null,   // Parámetro opcional para la fecha de inicio del rango
         [FromQuery] DateTime? fechaFin = null,     // Parámetro opcional para la fecha de fin del rango
         [FromQuery] string cliente = null,         // Parámetro opcional para el cliente
