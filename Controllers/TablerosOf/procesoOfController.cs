@@ -41,6 +41,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 .Include(d => d.idPosturaNavigation)
                 .Include(c => c.idTableroNavigation)
                 .Include(v => v.idMaterialNavigation)
+                .Include(f => f.oFNavigation)
                 .ToListAsync();
 
             var procesoOfDto = _mapper.Map<List<ProcesoOfDto>>(procesoOf);
@@ -106,6 +107,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 .Include(d => d.idPosturaNavigation)
                 .Include(c => c.idTableroNavigation)
                 .Include(v => v.idMaterialNavigation)
+                .Include(f => f.oFNavigation)
                 .FirstOrDefaultAsync(u => u.idProceso == id);
 
             var procesoOfDto = _mapper.Map<ProcesoOfDto>(procesoOf);
@@ -130,6 +132,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 .Include(d => d.idPosturaNavigation)
                 .Include(c => c.idTableroNavigation)
                 .Include(v => v.idMaterialNavigation)
+                .Include(f => f.oFNavigation)
                 .FirstOrDefaultAsync(u => u.oF == of);
 
             var procesoOfDto = _mapper.Map<ProcesoOfDto>(procesoOf);
@@ -153,6 +156,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 .ThenInclude(v => v.idAreaNavigation)
                 .Include(c => c.idTableroNavigation)
                 .ThenInclude(m => m.idMaquinaNavigation)
+                .Include(f => f.oFNavigation)
                 .ToListAsync();
 
             var procesoOfDto = _mapper.Map<List<ListaProcesoOfDto>>(procesoOf);
@@ -176,6 +180,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 .ThenInclude(o => o.idOperacionNavigation)
                 .Include(m => m.tarjetaCampo)
                 .Include(s => s.tarjetaEtiqueta)
+                .Include(f => f.oFNavigation)
                 .ToListAsync();
 
             var procesoOfDto = _mapper.Map<List<ProcesoOfVistaTableroDto>>(procesoOf);
@@ -191,6 +196,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             // Cargar datos generales del proceso
             var proceso = await _context.procesoOf
                 .Include(p => p.idPosturaNavigation)
+                .Include(f => f.oFNavigation)
                 .FirstOrDefaultAsync(u => u.idProceso == id);
             if (proceso == null) return NotFound();
 

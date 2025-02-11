@@ -23,6 +23,12 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
 
         public string? nombreTarjeta { get; set; }
 
+        public string? cliente { get; set; }
+
+        public string? codProd { get; set; }
+
+        public string? vendedor { get; set; }
+
         public string? productoOf { get; set; }
 
         public string? descripcionOf { get; set; }

@@ -74,6 +74,9 @@ public partial class tarjetaOf
     [StringLength(50)]
     public string codArticulo { get; set; }
 
+    [StringLength(50)]
+    public string serieOf { get; set; }
+
     [InverseProperty("oFNavigation")]
     public virtual ICollection<certificadoDeCalidad> certificadoDeCalidad { get; set; } = new List<certificadoDeCalidad>();
 
