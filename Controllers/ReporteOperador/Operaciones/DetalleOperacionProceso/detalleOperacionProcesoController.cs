@@ -166,6 +166,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador.Operaciones.D
                         pt.cantidadRecibida = dto.cantidadRecibida;
                         pt.cantidadProducida = dto.cantidadProducida;
                         pt.cantidadNc = dto.cantidadNc;
+                        pt.idDetalleReporte = dto.idDetalleReporte;
                     }
 
                     _context.Entry(pt).State = EntityState.Modified;
