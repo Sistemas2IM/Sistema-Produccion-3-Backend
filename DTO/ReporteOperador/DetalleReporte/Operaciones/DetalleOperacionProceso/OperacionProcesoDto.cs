@@ -30,7 +30,5 @@
 
         public int? cantidadNc { get; set; }
 
-        public int? idDetalleReporte { get; set; }
-
     }
 }

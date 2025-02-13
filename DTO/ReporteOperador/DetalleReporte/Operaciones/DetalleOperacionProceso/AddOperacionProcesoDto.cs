@@ -27,7 +27,5 @@
         public int? cantidadProducida { get; set; }
 
         public int? cantidadNc { get; set; }
-
-        public int? idDetalleReporte { get; set; }
     }
 }
