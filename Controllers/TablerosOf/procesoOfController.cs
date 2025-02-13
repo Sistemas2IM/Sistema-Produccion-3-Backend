@@ -484,7 +484,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         // POST PARA DETALLES POR MAQUINA
 
         [HttpPost("post/procesoOfMaquina")]
-        public async Task<ActionResult> CreateProcesoOf(ProcesoOfMaquinas dto)
+        public async Task<ActionResult> CreateProcesoOf(AddProcesoOfMaquinas dto)
         {
             // Validar que el DTO contenga los datos necesarios
             if (dto.DetalleProceso == null || string.IsNullOrEmpty(dto.tipoMaquinaSAP))

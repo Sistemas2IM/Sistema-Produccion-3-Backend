@@ -146,6 +146,10 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                     .ForMember(dest => dest.vendedor, opt => opt.MapFrom(src => src.oFNavigation.vendedorOf))
                     .ReverseMap();
 
+                CreateMap<procesoOf,AddProcesoOfMaquinas>()
+                    .ForMember(dest => dest.posturasOfDto, opt => opt.MapFrom(src => src.idPosturaNavigation))
+                    .ReverseMap();
+
                 CreateMap<UpProcesoOfMaquinas, procesoOf>()
                     .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
