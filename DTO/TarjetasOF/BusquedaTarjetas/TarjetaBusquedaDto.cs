@@ -1,5 +1,4 @@
-﻿using Sistema_Produccion_3_Backend.DTO.TarjetasOF.EtiquetaOf;
-using Sistema_Produccion_3_Backend.Services;
+﻿using Sistema_Produccion_3_Backend.Services;
 using System.Text.Json.Serialization;
 
 namespace Sistema_Produccion_3_Backend.DTO.TarjetasOF.BusquedaTarjetas

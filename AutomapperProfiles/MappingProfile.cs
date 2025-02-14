@@ -23,6 +23,12 @@ using Sistema_Produccion_3_Backend.DTO.Catalogo.Maquinas;
 using Sistema_Produccion_3_Backend.DTO.Catalogo.Motoristas;
 using Sistema_Produccion_3_Backend.DTO.Catalogo.Turnos;
 using Sistema_Produccion_3_Backend.DTO.Catalogo.Vehiculos;
+using Sistema_Produccion_3_Backend.DTO.Etiquetas.Etiqueta;
+using Sistema_Produccion_3_Backend.DTO.Etiquetas.Etiqueta.BathcEtiqueta;
+using Sistema_Produccion_3_Backend.DTO.Etiquetas.EtiquetaOf;
+using Sistema_Produccion_3_Backend.DTO.Etiquetas.EtiquetaOf.BatchEtiquetaOf;
+using Sistema_Produccion_3_Backend.DTO.Etiquetas.TarjetaEtiqueta;
+using Sistema_Produccion_3_Backend.DTO.Etiquetas.TarjetaEtiqueta.BatchTarjetaEtiqueta;
 using Sistema_Produccion_3_Backend.DTO.LoginAuth;
 using Sistema_Produccion_3_Backend.DTO.LoginAuth.SesionOperador;
 using Sistema_Produccion_3_Backend.DTO.Logistica;
@@ -64,7 +70,6 @@ using Sistema_Produccion_3_Backend.DTO.Tableros.Posturas;
 using Sistema_Produccion_3_Backend.DTO.TarjetasOF;
 using Sistema_Produccion_3_Backend.DTO.TarjetasOF.BusquedaTarjetas;
 using Sistema_Produccion_3_Backend.DTO.TarjetasOF.EstadoOf;
-using Sistema_Produccion_3_Backend.DTO.TarjetasOF.EtiquetaOf;
 using Sistema_Produccion_3_Backend.DTO.TarjetasOF.Reportes;
 using Sistema_Produccion_3_Backend.Models;
 
@@ -99,8 +104,16 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             CreateMap<UpdateEstadoOfDto, estadosOf>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
-            //Etiquetas Of
-            CreateMap<etiqueta, EtiquetaDto>().ReverseMap();
+            {
+                CreateMap<etiquetaOf, EtiquetaOfDto>().ReverseMap();
+                CreateMap<etiquetaOf, AddEtiquetaOf>().ReverseMap();
+                CreateMap<UpdateEtiquetaOf, etiquetaOf>()
+                    .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+                CreateMap<etiquetaOf, AddBatchEtiquetaOf>().ReverseMap();
+                CreateMap<UpdateBatchEtiquetaOf, etiquetaOf>()
+                    .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            }
+
 
             // PROCESOS OF ==========================================================================================
             CreateMap<procesoOf, ProcesoOfDto>()
@@ -174,6 +187,24 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 CreateMap<UpProcesoPreprensaDto, procesoPreprensa>()
                     .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
                 CreateMap<UpProcesoTroqueladoDto, procesoTroqueladora>()
+                    .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            }
+
+            {
+                CreateMap<tarjetaEtiqueta, TarjetaEtiquetaDto>().ReverseMap();
+                CreateMap<tarjetaEtiqueta, AddTarjetaEtiquetaDto>().ReverseMap();
+                CreateMap<UpdateTarjetaEtiquetaDto, tarjetaEtiqueta>()
+                    .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+                CreateMap<AddBatchTarjetaEtiqueta, tarjetaEtiqueta>().ReverseMap();
+                CreateMap<UpdateBatchTarjetaEtiqueta, tarjetaEtiqueta>()
+                    .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+                CreateMap<etiqueta, EtiquetaDto>().ReverseMap();
+                CreateMap<etiqueta, AddEtiquetaDto>().ReverseMap();
+                CreateMap<UpdateEtiquetaDto, etiqueta>()
+                    .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+                CreateMap<etiqueta, AddBatchEtiqueta>().ReverseMap();
+                CreateMap<UpdateBatchEtiqueta, etiqueta>()
                     .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             }
 

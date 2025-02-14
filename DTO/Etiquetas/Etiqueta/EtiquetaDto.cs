@@ -1,8 +1,6 @@
-﻿using Sistema_Produccion_3_Backend.Models;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace Sistema_Produccion_3_Backend.DTO.TarjetasOF.EtiquetaOf
+namespace Sistema_Produccion_3_Backend.DTO.Etiquetas.Etiqueta
 {
     public class EtiquetaDto
     {

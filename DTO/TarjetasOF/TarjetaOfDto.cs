@@ -1,4 +1,4 @@
-﻿using Sistema_Produccion_3_Backend.DTO.TarjetasOF.EtiquetaOf;
+﻿using Sistema_Produccion_3_Backend.DTO.Etiquetas.Etiqueta;
 using Sistema_Produccion_3_Backend.Models;
 using Sistema_Produccion_3_Backend.Services;
 using System.ComponentModel.DataAnnotations.Schema;

@@ -1,6 +1,6 @@
-﻿using Sistema_Produccion_3_Backend.DTO.ProcesoOf.CamposPersonalizados;
+﻿using Sistema_Produccion_3_Backend.DTO.Etiquetas.TarjetaEtiqueta;
+using Sistema_Produccion_3_Backend.DTO.ProcesoOf.CamposPersonalizados;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.DetalleProceso;
-using Sistema_Produccion_3_Backend.DTO.ProcesoOf.TarjetaEtiqueta;
 using Sistema_Produccion_3_Backend.DTO.ReporteOperador;
 using Sistema_Produccion_3_Backend.DTO.Tableros;
 using Sistema_Produccion_3_Backend.DTO.Tableros.Posturas;

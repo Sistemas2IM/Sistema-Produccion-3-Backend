@@ -1,6 +1,6 @@
-﻿namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf.TarjetaEtiqueta
+﻿namespace Sistema_Produccion_3_Backend.DTO.Etiquetas.TarjetaEtiqueta.BatchTarjetaEtiqueta
 {
-    public class TarjetaEtiquetaDto
+    public class UpdateBatchTarjetaEtiqueta
     {
         public int idTarjetaEtiqueta { get; set; }
 
