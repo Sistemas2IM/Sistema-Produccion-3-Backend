@@ -24,6 +24,9 @@ public partial class procesoPreprensa
     [StringLength(500)]
     public string tiempoCorrida { get; set; }
 
+    [StringLength(100)]
+    public string ordenAnterior { get; set; }
+
     [ForeignKey("idProceso")]
     [InverseProperty("procesoPreprensa")]
     public virtual procesoOf idProcesoNavigation { get; set; }

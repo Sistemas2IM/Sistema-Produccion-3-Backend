@@ -54,11 +54,15 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         [FromQuery] DateTime? fechaInicio = null,   // Parámetro opcional para la fecha de inicio del rango
         [FromQuery] DateTime? fechaFin = null,     // Parámetro opcional para la fecha de fin del rango
         [FromQuery] string cliente = null,         // Parámetro opcional para el cliente
-        [FromQuery] string ejecutivo = null)       // Parámetro opcional para el ejecutivo
+        [FromQuery] string ejecutivo = null,
+        [FromQuery] int? tablero = null)      // Parámetro opcional para el ejecutivo
+
         {
             // Consulta base
             var query = _context.procesoOf
+                .OrderBy(p => p.posicion)
                 .Include(u => u.oFNavigation)
+                .Include(l => l.idPosturaNavigation)
                 .AsQueryable();
 
             // Aplicar filtros condicionales
@@ -86,6 +90,11 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             if (!string.IsNullOrEmpty(ejecutivo))
             {
                 query = query.Where(p => p.oFNavigation.vendedorOf == ejecutivo);
+            }
+
+            if (tablero.HasValue)
+            {
+                query = query.Where(p => p.idTablero == tablero.Value);
             }
 
             // Ejecutar la consulta y mapear a DTO
@@ -181,6 +190,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 .Include(m => m.tarjetaCampo)
                 .Include(s => s.tarjetaEtiqueta)
                 .Include(f => f.oFNavigation)
+                .Include(l => l.idPosturaNavigation)
                 .ToListAsync();
 
             var procesoOfDto = _mapper.Map<List<ProcesoOfVistaTableroDto>>(procesoOf);

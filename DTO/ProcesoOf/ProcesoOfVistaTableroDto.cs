@@ -19,6 +19,8 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
 
         public int? idPostura { get; set; }
 
+        public string? nombrePostura { get; set; }
+
         public string? idMaterial { get; set; }
 
         public string? nombreTarjeta { get; set; }
