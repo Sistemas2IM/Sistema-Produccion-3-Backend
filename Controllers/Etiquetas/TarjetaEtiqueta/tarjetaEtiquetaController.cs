@@ -111,8 +111,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.Etiquetas.TarjetaEtiqueta
                     // Actualizar propiedades específicas
                     if (dto.idTarjetaEtiqueta != 0)
                     {
-                        etiqueta.idEtiqueta = dto.idEtiqueta.Value;
-                        etiqueta.idProceso = dto.idProceso.Value;
+                        etiqueta.idEtiqueta = dto.idEtiqueta;
+                        etiqueta.idProceso = dto.idProceso;
                     }
 
                     _context.Entry(etiqueta).State = EntityState.Modified;

@@ -2,9 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Sistema_Produccion_3_Backend.DTO.Etiquetas.EtiquetaOf;
+using Sistema_Produccion_3_Backend.DTO.Etiquetas.EtiquetaOf.BatchEtiquetaOf;
+using Sistema_Produccion_3_Backend.DTO.Etiquetas.TarjetaEtiqueta.BatchTarjetaEtiqueta;
 using Sistema_Produccion_3_Backend.Models;
 
 namespace Sistema_Produccion_3_Backend.Controllers.Etiquetas.EtiquetaOf
@@ -14,43 +18,52 @@ namespace Sistema_Produccion_3_Backend.Controllers.Etiquetas.EtiquetaOf
     public class etiquetaOfController : ControllerBase
     {
         private readonly base_nuevaContext _context;
+        private readonly IMapper _mapper;
 
-        public etiquetaOfController(base_nuevaContext context)
+        public etiquetaOfController(base_nuevaContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         // GET: api/etiquetaOf
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<etiquetaOf>>> GetetiquetaOf()
+        [HttpGet("get")]
+        public async Task<ActionResult<IEnumerable<EtiquetaOfDto>>> GetetiquetaOf()
         {
-            return await _context.etiquetaOf.ToListAsync();
+            var etiquetaOf = await _context.etiquetaOf.ToListAsync();
+            var etiquetaOfDto = _mapper.Map<List<EtiquetaOfDto>>(etiquetaOf);
+
+            return (etiquetaOfDto);
         }
 
         // GET: api/etiquetaOf/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<etiquetaOf>> GetetiquetaOf(int id)
+        [HttpGet("get/{id}")]
+        public async Task<ActionResult<EtiquetaOfDto>> GetetiquetaOf(int id)
+        {
+            var etiquetaOf = await _context.etiquetaOf.FindAsync(id);
+            var etiqeutaOfDto = _mapper.Map<EtiquetaOfDto>(etiquetaOf);
+
+            if (etiqeutaOfDto == null)
+            {
+                return NotFound($"No se encontro la etiqueta con id {id}");
+            }
+
+            return Ok(etiqeutaOfDto);
+        }
+
+        // PUT: api/etiquetaOf/5
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPut("put/{id}")]
+        public async Task<IActionResult> PutetiquetaOf(int id, UpdateEtiquetaOf updateEtiquetaOf)
         {
             var etiquetaOf = await _context.etiquetaOf.FindAsync(id);
 
             if (etiquetaOf == null)
             {
-                return NotFound();
+                return NotFound($"No se encontro la etiqueta con el id {id}");
             }
 
-            return etiquetaOf;
-        }
-
-        // PUT: api/etiquetaOf/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutetiquetaOf(int id, etiquetaOf etiquetaOf)
-        {
-            if (id != etiquetaOf.idEtiquetaOf)
-            {
-                return BadRequest();
-            }
-
+            _mapper.Map(updateEtiquetaOf, etiquetaOf);
             _context.Entry(etiquetaOf).State = EntityState.Modified;
 
             try
@@ -61,7 +74,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Etiquetas.EtiquetaOf
             {
                 if (!etiquetaOfExists(id))
                 {
-                    return NotFound();
+                    return BadRequest();
                 }
                 else
                 {
@@ -69,34 +82,96 @@ namespace Sistema_Produccion_3_Backend.Controllers.Etiquetas.EtiquetaOf
                 }
             }
 
-            return NoContent();
+            return Ok(updateEtiquetaOf);
+        }
+
+        // PUT BATCH
+        [HttpPut("put/BatchUpdate")]
+        public async Task<IActionResult> BatchUpdateTarjetaEtiquetaOf([FromBody] BatchUpdateEtiquetaOf batchUpdateDto)
+        {
+            if (batchUpdateDto == null || batchUpdateDto.updateBatchEtiquetaOf == null || !batchUpdateDto.updateBatchEtiquetaOf.Any())
+            {
+                return BadRequest("No se enviaron datos para actualizar.");
+            }
+
+            var ids = batchUpdateDto.updateBatchEtiquetaOf.Select(t => t.idEtiquetaOf).ToList();
+
+            // Obtener todos los roles relacionados
+            var etiquetas = await _context.etiquetaOf.Where(t => ids.Contains(t.idEtiquetaOf)).ToListAsync();
+
+            if (!etiquetas.Any())
+            {
+                return NotFound("No se encontraron etiquetas para los IDs proporcionados.");
+            }
+
+            foreach (var dto in batchUpdateDto.updateBatchEtiquetaOf)
+            {
+                var etiqueta = etiquetas.FirstOrDefault(t => t.idEtiquetaOf == dto.idEtiquetaOf);
+                if (etiqueta != null)
+                {
+                    // Actualizar propiedades específicas
+                    if (dto.idEtiquetaOf != 0)
+                    {
+                        etiqueta.oF = dto.oF;
+                        etiqueta.idEtiqueta = dto.idEtiqueta;
+                    }
+
+                    _context.Entry(etiqueta).State = EntityState.Modified;
+                }
+            }
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error al actualizar las etiquetas.");
+            }
+
+            return Ok("Actualización realizada correctamente.");
         }
 
         // POST: api/etiquetaOf
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<etiquetaOf>> PostetiquetaOf(etiquetaOf etiquetaOf)
+        [HttpPost("post")]
+        public async Task<ActionResult<etiquetaOf>> PostetiquetaOf(AddEtiquetaOf addEtiquetaOf)
         {
+            var etiquetaOf = _mapper.Map<etiquetaOf>(addEtiquetaOf);
             _context.etiquetaOf.Add(etiquetaOf);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetetiquetaOf", new { id = etiquetaOf.idEtiquetaOf }, etiquetaOf);
         }
 
-        // DELETE: api/etiquetaOf/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteetiquetaOf(int id)
+        // POST: BATCH
+        [HttpPost("post/BatchAdd")]
+        public async Task<IActionResult> BatchAddTarjetaEtiqueta([FromBody] BatchAddEtiquetaOf batchAddDto)
         {
-            var etiquetaOf = await _context.etiquetaOf.FindAsync(id);
-            if (etiquetaOf == null)
+            if (batchAddDto == null || batchAddDto.addBatchEtiquetaOf == null || !batchAddDto.addBatchEtiquetaOf.Any())
             {
-                return NotFound();
+                return BadRequest("No se enviaron datos para agregar.");
             }
 
-            _context.etiquetaOf.Remove(etiquetaOf);
-            await _context.SaveChangesAsync();
+            var tarjetaEtiqueta = batchAddDto.addBatchEtiquetaOf.Select(dto => _mapper.Map<etiquetaOf>(dto)).ToList();
 
-            return NoContent();
+            await _context.etiquetaOf.AddRangeAsync(tarjetaEtiqueta);
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Ocurrió un error al guardar las etiquetas: {ex.Message}");
+            }
+
+            // Retornar los registros creados
+            return Ok(new
+            {
+                Message = "Etiqeutas agregados exitosamente.",
+                etiquetas = tarjetaEtiqueta
+            });
         }
 
         private bool etiquetaOfExists(int id)
