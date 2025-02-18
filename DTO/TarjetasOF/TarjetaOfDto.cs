@@ -1,4 +1,5 @@
 ﻿using Sistema_Produccion_3_Backend.DTO.Etiquetas.Etiqueta;
+using Sistema_Produccion_3_Backend.DTO.Etiquetas.EtiquetaOf;
 using Sistema_Produccion_3_Backend.Models;
 using Sistema_Produccion_3_Backend.Services;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -63,7 +64,7 @@ namespace Sistema_Produccion_3_Backend.DTO.TarjetasOF
 
         public string? codArticulo { get; set; }
 
-        public List<EtiquetaDto>? etiquetaDto { get; set; }
+        public List<EtiquetaOfDto>? etiquetaDto { get; set; }
 
         public string? estadonombre { get; set; }
 

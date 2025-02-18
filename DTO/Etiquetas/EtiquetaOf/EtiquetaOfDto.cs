@@ -7,5 +7,9 @@
         public int? oF { get; set; }
 
         public int? idEtiqueta { get; set; }
+
+        public string? color { get; set; }
+
+        public string? texto { get; set; }
     }
 }

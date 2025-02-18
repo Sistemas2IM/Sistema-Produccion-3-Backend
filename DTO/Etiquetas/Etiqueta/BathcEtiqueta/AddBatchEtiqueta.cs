@@ -2,8 +2,6 @@
 {
     public class AddBatchEtiqueta
     {
-        public int idEtiqueta { get; set; }
-
         public string? color { get; set; }
 
         public string? texto { get; set; }

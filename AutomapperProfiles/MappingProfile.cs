@@ -105,7 +105,10 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             {
-                CreateMap<etiquetaOf, EtiquetaOfDto>().ReverseMap();
+                CreateMap<etiquetaOf, EtiquetaOfDto>()
+                    .ForMember(dest => dest.color, opt => opt.MapFrom(src => src.idEtiquetaNavigation.color))
+                    .ForMember(dest => dest.texto, opt => opt.MapFrom(src => src.idEtiquetaNavigation.texto))
+                    .ReverseMap();
                 CreateMap<etiquetaOf, AddEtiquetaOf>().ReverseMap();
                 CreateMap<UpdateEtiquetaOf, etiquetaOf>()
                     .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));

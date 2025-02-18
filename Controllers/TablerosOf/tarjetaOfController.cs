@@ -30,6 +30,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 .OrderBy(p => p.posicion)
                 .Include(u => u.idEstadoOfNavigation)
                 .Include(r => r.etiquetaOf)
+                .ThenInclude(o => o.idEtiquetaNavigation)
                 .ToListAsync();
 
             var tarjetaOfDto = _mapper.Map<List<TarjetaOfDto>>(tarjetaOf);
