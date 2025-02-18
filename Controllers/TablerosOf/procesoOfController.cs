@@ -189,6 +189,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 .ThenInclude(o => o.idOperacionNavigation)
                 .Include(m => m.tarjetaCampo)
                 .Include(s => s.tarjetaEtiqueta)
+                .ThenInclude(e => e.idEtiquetaNavigation)
                 .Include(f => f.oFNavigation)
                 .Include(l => l.idPosturaNavigation)
                 .ToListAsync();

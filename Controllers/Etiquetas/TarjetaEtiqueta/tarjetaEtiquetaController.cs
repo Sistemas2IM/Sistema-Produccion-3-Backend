@@ -173,6 +173,40 @@ namespace Sistema_Produccion_3_Backend.Controllers.Etiquetas.TarjetaEtiqueta
             });
         }
 
+        // DELETE: api/etiquetaOf/batch
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpDelete("delete/batch")]
+        public async Task<IActionResult> DeleteEtiquetasOf([FromBody] List<int> ids)
+        {
+            if (ids == null || !ids.Any())
+            {
+                return BadRequest("No se proporcionaron IDs válidos para eliminar.");
+            }
+
+            var etiquetasToDelete = await _context.tarjetaEtiqueta
+                .Where(e => ids.Contains(e.idTarjetaEtiqueta))
+                .ToListAsync();
+
+            if (etiquetasToDelete == null || !etiquetasToDelete.Any())
+            {
+                return NotFound("No se encontraron etiquetas con los IDs proporcionados.");
+            }
+
+            _context.tarjetaEtiqueta.RemoveRange(etiquetasToDelete);
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                // Manejar la excepción en caso de concurrencia
+                return StatusCode(500, "Error al eliminar las etiquetas.");
+            }
+
+            return Ok($"Se eliminaron etiquetas correctamente.");
+        }
+
         private bool tarjetaEtiquetaExists(int id)
         {
             return _context.tarjetaEtiqueta.Any(e => e.idTarjetaEtiqueta == id);
