@@ -50,7 +50,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         }
 
         [HttpGet("get/filtros")]
-        public async Task<ActionResult<IEnumerable<ProcesosBusquedaDto>>> GetprocesoOffiltros(
+        public async Task<ActionResult<IEnumerable<ProcesoOfDto>>> GetprocesoOffiltros(
         [FromQuery] DateTime? fechaInicio = null,   // Parámetro opcional para la fecha de inicio del rango
         [FromQuery] DateTime? fechaFin = null,     // Parámetro opcional para la fecha de fin del rango
         [FromQuery] string cliente = null,         // Parámetro opcional para el cliente
@@ -63,6 +63,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 .OrderBy(p => p.posicion)
                 .Include(u => u.oFNavigation)
                 .Include(l => l.idPosturaNavigation)
+                .Include(s => s.tarjetaEtiqueta)
+                .ThenInclude(e => e.idEtiquetaNavigation)
                 .AsQueryable();
 
             // Aplicar filtros condicionales
@@ -81,17 +83,14 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 // Si solo se proporciona fechaFin, filtrar hasta esa fecha
                 query = query.Where(p => p.fechaVencimiento <= fechaFin.Value);
             }
-
             if (!string.IsNullOrEmpty(cliente))
             {
-                query = query.Where(p => p.oFNavigation.clienteOf == cliente);
+                query = query.Where(p => p.oFNavigation.clienteOf.Contains(cliente));
             }
-
             if (!string.IsNullOrEmpty(ejecutivo))
             {
-                query = query.Where(p => p.oFNavigation.vendedorOf == ejecutivo);
+                query = query.Where(p => p.oFNavigation.vendedorOf.Contains(ejecutivo));
             }
-
             if (tablero.HasValue)
             {
                 query = query.Where(p => p.idTablero == tablero.Value);
@@ -99,7 +98,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
 
             // Ejecutar la consulta y mapear a DTO
             var procesoOf = await query.ToListAsync();
-            var procesoOfDto = _mapper.Map<List<ProcesosBusquedaDto>>(procesoOf);
+            var procesoOfDto = _mapper.Map<List<ProcesoOfDto>>(procesoOf);
 
             return Ok(procesoOfDto);
         }

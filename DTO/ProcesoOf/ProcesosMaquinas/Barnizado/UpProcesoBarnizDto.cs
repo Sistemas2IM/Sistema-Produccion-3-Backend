@@ -17,5 +17,9 @@
         public string? largoPliego { get; set; }
 
         public string? detalleBarniz { get; set; }
+
+        public string? indicacionImpresion { get; set; }
+
+        public string? barniz { get; set; }
     }
 }

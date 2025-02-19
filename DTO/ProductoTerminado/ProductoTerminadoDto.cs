@@ -59,6 +59,8 @@ namespace Sistema_Produccion_3_Backend.DTO.ProductoTerminado
 
         public string? articuloOf {  get; set; }
 
+        public string? nombreCliente { get; set; }
+
         public string? cantidadOf { get; set; }
 
         public List<ContenidoEntregaDto>? contenidoEntregado { get; set; }

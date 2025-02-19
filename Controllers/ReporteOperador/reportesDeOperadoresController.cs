@@ -292,7 +292,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
             int nuevoNumeroReporte = conteoReportes + 1;
 
             // Generar el nuevo idReporte
-            string nuevoIdReporte = $"{maquina.nombreCorto}_{nuevoNumeroReporte}";
+            string nuevoIdReporte = $"{maquina.nombreCorto}_{nuevoNumeroReporte.ToString().PadLeft(6, '0')}";
 
             // Verificar si el nuevo idReporte ya existe (por si acaso)
             var reporteExistente = await _context.reportesDeOperadores

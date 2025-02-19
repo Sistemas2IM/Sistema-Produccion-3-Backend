@@ -1,11 +1,13 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.BusquedaProcesos;
 using Sistema_Produccion_3_Backend.DTO.TarjetasOF;
 using Sistema_Produccion_3_Backend.DTO.TarjetasOF.BusquedaTarjetas;
 using Sistema_Produccion_3_Backend.DTO.TarjetasOF.Reportes;
 using Sistema_Produccion_3_Backend.Models;
+using System.Linq;
 
 namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
 {
@@ -39,14 +41,21 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         }
 
         [HttpGet("get/filtros")]
-        public async Task<ActionResult<IEnumerable<TarjetaBusquedaDto>>> GettarjetaOffiltros(
+        public async Task<ActionResult<IEnumerable<TarjetaOfDto>>> GettarjetaOffiltros(
         [FromQuery] DateTime? fechaInicio = null,   // Parámetro opcional para la fecha de inicio del rango
         [FromQuery] DateTime? fechaFin = null,     // Parámetro opcional para la fecha de fin del rango
         [FromQuery] string cliente = null,         // Parámetro opcional para el cliente
-        [FromQuery] string ejecutivo = null)       // Parámetro opcional para el ejecutivo
+        [FromQuery] string ejecutivo = null,       // Parámetro opcional para el ejecutivo
+        [FromQuery] string articulo = null,        // Parámetro opcional para el artículo
+        [FromQuery] int? of = null,                // Parámetro opcional para el número de OF
+        [FromQuery] int? ov = null,                // Parámetro opcional para el número de OV
+        [FromQuery] string? lineaNegocio = null,    // Parámetro opcional para la línea de negocio
+        [FromQuery] string? idsEtiquetas = null)    // Parámetro opcional para los IDs de etiquetas (separados por comas)
         {
             // Consulta base
             var query = _context.tarjetaOf
+                .Include(r => r.etiquetaOf)
+                .ThenInclude(o => o.idEtiquetaNavigation)
                 .AsQueryable();
 
             // Aplicar filtros condicionales
@@ -66,21 +75,153 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 query = query.Where(p => p.fechaVencimiento <= fechaFin.Value);
             }
 
+            // Filtro "like" para cliente
             if (!string.IsNullOrEmpty(cliente))
             {
-                query = query.Where(p => p.clienteOf == cliente);
+                query = query.Where(p => p.clienteOf.Contains(cliente));
             }
 
+            // Filtro "like" para ejecutivo
             if (!string.IsNullOrEmpty(ejecutivo))
             {
-                query = query.Where(p => p.vendedorOf == ejecutivo);
+                query = query.Where(p => p.vendedorOf.Contains(ejecutivo));
+            }
+
+            // Filtro "like" para artículo
+            if (!string.IsNullOrEmpty(articulo))
+            {
+                query = query.Where(p => p.productoOf.Contains(articulo));
+            }
+
+            // Filtro "like" para línea de negocio
+            if (!string.IsNullOrEmpty(lineaNegocio))
+            {
+                query = query.Where(p => p.lineaDeNegocio.Contains(lineaNegocio));
+            }
+
+            // Filtro exacto para OF
+            if (of.HasValue)
+            {
+                query = query.Where(p => p.oF == of.Value);
+            }
+
+            // Filtro exacto para OV
+            if (ov.HasValue)
+            {
+                query = query.Where(p => p.oV == ov.Value);
+            }
+
+            // Filtro por IDs de etiquetas
+            if (!string.IsNullOrEmpty(idsEtiquetas))
+            {
+                // Convertir la cadena de IDs separados por comas en una lista de enteros
+                var idsEtiquetasLista = idsEtiquetas.Split(',')
+                    .Select(id => int.Parse(id))
+                    .ToList();
+
+                // Filtrar tarjetas que tengan al menos una de las etiquetas especificadas
+                query = query.Where(p => p.etiquetaOf
+                    .Any(etiquetaOf => idsEtiquetasLista.Contains((int)etiquetaOf.idEtiqueta)));
             }
 
             // Ejecutar la consulta y mapear a DTO
-            var tarjetaOf = await query.ToListAsync();
-            var tarjetaOfDto = _mapper.Map<List<TarjetaBusquedaDto>>(tarjetaOf);
+            var tarjetaOf = await query
+                .ToListAsync();
+            var tarjetaOfDto = _mapper.Map<List<TarjetaOfDto>>(tarjetaOf);
 
             return Ok(tarjetaOfDto);
+        }
+
+        [HttpGet("get/sugerencias")]
+        public async Task<ActionResult<Dictionary<string, List<string>>>> GetSugerencias(
+        [FromQuery] string? cliente = null,   // Parámetro opcional para el cliente
+        [FromQuery] string? ejecutivo = null, // Parámetro opcional para el ejecutivo
+        [FromQuery] string? articulo = null)  // Parámetro opcional para el artículo
+        {
+            // Diccionario para almacenar las sugerencias
+            var sugerencias = new Dictionary<string, List<string>>();
+
+            // Consulta base
+            var query = _context.tarjetaOf.AsQueryable();
+
+            // Sugerencias para cliente
+            if (!string.IsNullOrEmpty(cliente))
+            {
+                var clientesSugeridos = await query
+                    .Where(p => p.clienteOf.Contains(cliente))
+                    .Select(p => p.clienteOf)
+                    .Distinct()
+                    .Take(10) // Limitar el número de sugerencias
+                    .ToListAsync();
+
+                sugerencias.Add("clientes", clientesSugeridos);
+            }
+
+            // Sugerencias para ejecutivo
+            if (!string.IsNullOrEmpty(ejecutivo))
+            {
+                var ejecutivosSugeridos = await query
+                    .Where(p => p.vendedorOf.Contains(ejecutivo))
+                    .Select(p => p.vendedorOf)
+                    .Distinct()
+                    .Take(10) // Limitar el número de sugerencias
+                    .ToListAsync();
+
+                sugerencias.Add("ejecutivos", ejecutivosSugeridos);
+            }
+
+            // Sugerencias para artículo
+            if (!string.IsNullOrEmpty(articulo))
+            {
+                var articulosSugeridos = await query
+                    .Where(p => p.productoOf.Contains(articulo))
+                    .Select(p => p.productoOf)
+                    .Distinct()
+                    .Take(10) // Limitar el número de sugerencias
+                    .ToListAsync();
+
+                sugerencias.Add("articulos", articulosSugeridos);
+            }
+
+            // Devolver las sugerencias
+            return Ok(sugerencias);
+        }
+
+        [HttpGet("get/catalogo")]
+        public async Task<ActionResult<Dictionary<string, List<string>>>> GettarjetaOfCatalogo()
+        {
+            // Diccionario para almacenar los catálogos
+            var catalogos = new Dictionary<string, List<string>>();
+
+            // Obtener clientes únicos
+            var clientes = await _context.tarjetaOf
+                .Select(p => p.clienteOf)
+                .Distinct()
+                .OrderBy(c => c) // Ordenar alfabéticamente
+                .ToListAsync();
+
+            catalogos.Add("clientes", clientes);
+
+            // Obtener ejecutivos únicos
+            var ejecutivos = await _context.tarjetaOf
+                .Select(p => p.vendedorOf)
+                .Distinct()
+                .OrderBy(e => e) // Ordenar alfabéticamente
+                .ToListAsync();
+
+            catalogos.Add("ejecutivos", ejecutivos);
+
+            // Obtener artículos únicos
+            var articulos = await _context.tarjetaOf
+                .Select(p => p.productoOf)
+                .Distinct()
+                .OrderBy(a => a) // Ordenar alfabéticamente
+                .ToListAsync();
+
+            catalogos.Add("articulos", articulos);
+
+            // Devolver los catálogos
+            return Ok(catalogos);
         }
 
         // GET: api/tarjetaOf/5

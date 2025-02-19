@@ -13,7 +13,7 @@ public partial class etiqueta
     [Key]
     public int idEtiqueta { get; set; }
 
-    [StringLength(20)]
+    [StringLength(100)]
     public string color { get; set; }
 
     [StringLength(100)]
