@@ -5,8 +5,10 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Sistema_Produccion_3_Backend.DTO.ProductoTerminado;
+using Sistema_Produccion_3_Backend.DTO.ProductoTerminado.Indicadores;
 using Sistema_Produccion_3_Backend.Models;
 
 namespace Sistema_Produccion_3_Backend.Controllers.ProductoTerminado
@@ -17,11 +19,13 @@ namespace Sistema_Produccion_3_Backend.Controllers.ProductoTerminado
     {
         private readonly base_nuevaContext _context;
         private readonly IMapper _mapper;
+        private readonly base_nuevaContextProcedures _contextSP;
 
-        public entregaProductoTerminadoController(base_nuevaContext context, IMapper mapper)
+        public entregaProductoTerminadoController(base_nuevaContext context, IMapper mapper, base_nuevaContextProcedures contextSP)
         {
             _context = context;
             _mapper = mapper;
+            _contextSP = contextSP;
         }
 
         // GET: api/entregaProductoTerminado
@@ -78,7 +82,6 @@ namespace Sistema_Produccion_3_Backend.Controllers.ProductoTerminado
             // Devolver el siguiente ID a generar xd
             return Ok(siguienteId);
         }
-
 
         // PUT: api/entregaProductoTerminado/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754

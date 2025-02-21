@@ -33,6 +33,8 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf.DetalleProceso
 
         public int? cantidadNc { get; set; }
 
+        public int? idDetalleReporte { get; set; }
+
         public OperacionesDto? operacionesDto { get; set; }
     }
 }

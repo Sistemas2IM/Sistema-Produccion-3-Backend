@@ -325,6 +325,10 @@
       {
          "Name": "[dbo].[vehiculo]",
          "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[IndicadoresReporte]",
+         "ObjectType": 1
       }
    ],
    "UiHint": null,

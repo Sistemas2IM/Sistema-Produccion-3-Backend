@@ -47,5 +47,7 @@ namespace Sistema_Produccion_3_Backend.DTO.ProductoTerminado
         public string? entregadoPor { get; set; }
 
         public int? of { get; set; }
+
+        public DateTime? fechaDespacho { get; set; }
     }
 }

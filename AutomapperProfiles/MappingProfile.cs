@@ -269,6 +269,8 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             CreateMap<detalleEntrega, AddBatchDetalleDto>().ReverseMap();
             CreateMap<UpdateDetalleEntregaDto, detalleEntrega>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<UpdateBatchDetalleEntrega, detalleEntrega>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             // REPORTES POR OPERADOR ==================================================================================
             CreateMap<reportesDeOperadores, ReporteOperadorDto>()

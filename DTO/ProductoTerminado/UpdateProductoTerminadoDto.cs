@@ -41,5 +41,7 @@
         public string? entregadoPor { get; set; }
 
         public int? of { get; set; }
+
+        public DateTime? fechaDespacho { get; set; }
     }
 }

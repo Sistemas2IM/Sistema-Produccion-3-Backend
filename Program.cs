@@ -18,14 +18,18 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+// Configuración de la base de datos
 builder.Services.AddDbContext<base_nuevaContext>(options =>
-        options.UseSqlServer("name=ConnectionStrings:Prod3Connection"));
+    options.UseSqlServer("name=ConnectionStrings:Prod3Connection"));
 
-// Documentacion sobre Swagger/OpenAPI https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddScoped<base_nuevaContextProcedures>();
+
+// Documentación sobre Swagger/OpenAPI https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Configuración de HttpClient para llamadas HTTP
 builder.Services.AddHttpClient();
 
 // Automapper - uso de DTO
@@ -38,7 +42,6 @@ builder.Services.AddTransient<IApiKeyValidation, ApiKeyValidation>();
 builder.Services.AddControllers(options =>
 {
     options.Filters.Add<ValidarApiEndpoint>(); // Registrar el filtro globalmente
-
 });
 
 builder.Services.AddSwaggerGen(c =>
@@ -68,10 +71,8 @@ builder.Services.AddSwaggerGen(c =>
 });
 //---------------------------------------------------------------------------------
 
-//Servicios de Autenticacion de Usuarios
+// Servicios de Autenticación de Usuarios
 builder.Services.AddScoped<IAuthService, AuthService>();
-
-
 
 // Configuración de comportamiento de errores de validación
 builder.Services.Configure<ApiBehaviorOptions>(options =>
@@ -90,11 +91,10 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
     };
 });
 
-//Definir los validadores
+// Definir los validadores
 builder.Services.AddValidatorsFromAssemblyContaining<RegisterValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<PTerminadoValidator>();
 builder.Services.AddFluentValidationAutoValidation();
-
 
 // Habilitar Cors
 builder.Services.AddCors(options =>
@@ -108,6 +108,7 @@ builder.Services.AddCors(options =>
         });
 });
 
+// Configuración de JWT
 var key = builder.Configuration.GetValue<string>("JWTSetting:securitykey");
 var keyBytes = Encoding.ASCII.GetBytes(key);
 
@@ -129,7 +130,6 @@ builder.Services.AddAuthentication(config =>
         ClockSkew = TimeSpan.Zero
     };
 });
-    
 
 var app = builder.Build();
 
@@ -138,14 +138,12 @@ var app = builder.Build();
 app.UseCors("AllowAllOrigins");
 
 app.UseSwagger();
-
 app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 
-app.UseAuthentication();
-
-app.UseAuthorization();
+app.UseAuthentication(); // Middleware de autenticación JWT
+app.UseAuthorization();  // Middleware de autorización
 
 app.MapControllers();
 

@@ -6,6 +6,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Sistema_Produccion_3_Backend.DTO.ProductoTerminado;
 using Sistema_Produccion_3_Backend.DTO.ProductoTerminado.DetalleEntrega;
 using Sistema_Produccion_3_Backend.Models;
 
@@ -90,6 +91,61 @@ namespace Sistema_Produccion_3_Backend.Controllers.ProductoTerminado
             }
 
             return Ok(updateDetalleEntrega);
+        }
+
+        // PUT BATCH
+        [HttpPut("put/BatchUpdate")]
+        public async Task<IActionResult> BatchUpdateDetallePT([FromBody] BatchUpdateDetalleEntrega batchUpdateDto)
+        {
+            if (batchUpdateDto == null || batchUpdateDto.updateBatchDetalleEntregas == null || !batchUpdateDto.updateBatchDetalleEntregas.Any())
+            {
+                return BadRequest("No se enviaron datos para actualizar.");
+            }
+
+            var ids = batchUpdateDto.updateBatchDetalleEntregas.Select(t => t.idDetalleEntrega).ToList();
+
+            // Obtener todos los roles relacionados
+            var ept = await _context.detalleEntrega.Where(t => ids.Contains(t.idDetalleEntrega)).ToListAsync();
+
+            if (!ept.Any())
+            {
+                return NotFound("No se encontraron los IDs proporcionados.");
+            }
+
+            foreach (var dto in batchUpdateDto.updateBatchDetalleEntregas)
+            {
+                var pt = ept.FirstOrDefault(t => t.idDetalleEntrega == dto.idDetalleEntrega);
+                if (pt != null)
+                {
+                    // Actualizar propiedades específicas
+                    if (dto.idDetalleEntrega != 0)
+                    {
+                        pt.numeroFila = dto.numeroFila;
+                        pt.cliente = dto.cliente;
+                        pt.cantidad = dto.cantidad;
+                        pt.codArticuloSAP = dto.codArticuloSAP;
+                        pt.tipoEmpaque = dto.tipoEmpaque;
+                        pt.bultos = dto.bultos;
+                        pt.peso = dto.peso;
+                        pt.nombreArticulo = dto.nombreArticulo;
+                        pt.cantidadTotal = dto.cantidadTotal;
+                        pt.unidad = dto.unidad;
+                    }
+
+                    _context.Entry(pt).State = EntityState.Modified;
+                }
+            }
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error al actualizar los estados.");
+            }
+
+            return Ok("Actualización realizada correctamente.");
         }
 
         // POST: api/detalleEntrega

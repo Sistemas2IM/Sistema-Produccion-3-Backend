@@ -24,6 +24,9 @@ public partial class procesoPegadora
     [StringLength(500)]
     public string tiempoCorrida { get; set; }
 
+    [StringLength(500)]
+    public string indicacionImpresion { get; set; }
+
     [ForeignKey("idProceso")]
     [InverseProperty("procesoPegadora")]
     public virtual procesoOf idProcesoNavigation { get; set; }
