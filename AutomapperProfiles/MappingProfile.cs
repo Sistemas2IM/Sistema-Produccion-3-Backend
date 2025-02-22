@@ -123,6 +123,9 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             CreateMap<UpdateNotasDto, notasOf>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
+            CreateMap<UpdateBatchNotasOf, notasOf>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
 
             // PROCESOS OF ==========================================================================================
             CreateMap<procesoOf, ProcesoOfDto>()

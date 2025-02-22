@@ -2,13 +2,11 @@
 {
     public class AddNotasDto
     {
-        public int idComentario { get; set; }
-
         public int? oF { get; set; }
 
         public string? creadoPor { get; set; }
 
-        public DateTime? fechaCreación { get; set; }
+        public DateTime? fechaCreacion { get; set; }
 
         public string? texto { get; set; }
 

@@ -20,7 +20,7 @@ public partial class notasOf
     public string creadoPor { get; set; }
 
     [Column(TypeName = "datetime")]
-    public DateTime? fechaCreación { get; set; }
+    public DateTime? fechaCreacion { get; set; }
 
     public string texto { get; set; }
 
