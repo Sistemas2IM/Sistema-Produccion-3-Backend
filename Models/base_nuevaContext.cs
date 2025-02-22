@@ -95,6 +95,8 @@ public partial class base_nuevaContext : DbContext
 
     public virtual DbSet<movimientoOf> movimientoOf { get; set; }
 
+    public virtual DbSet<notasOf> notasOf { get; set; }
+
     public virtual DbSet<oV> oV { get; set; }
 
     public virtual DbSet<operaciones> operaciones { get; set; }
@@ -536,6 +538,15 @@ public partial class base_nuevaContext : DbContext
         modelBuilder.Entity<movimientoOf>(entity =>
         {
             entity.HasKey(e => e.idMovimiento).HasName("PK_MOVIMIENTOOF");
+        });
+
+        modelBuilder.Entity<notasOf>(entity =>
+        {
+            entity.HasKey(e => e.idComentario).HasName("PK__notasOf__C74515DAC72B3FC2");
+
+            entity.HasOne(d => d.oFNavigation).WithMany(p => p.notasOf)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("OF_FK");
         });
 
         modelBuilder.Entity<oV>(entity =>

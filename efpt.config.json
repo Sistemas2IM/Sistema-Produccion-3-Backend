@@ -179,6 +179,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[notasOf]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[operaciones]",
          "ObjectType": 0
       },

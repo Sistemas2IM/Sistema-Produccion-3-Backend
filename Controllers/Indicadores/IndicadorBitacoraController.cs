@@ -20,11 +20,10 @@ namespace Sistema_Produccion_3_Backend.Controllers.Indicadores
             _contextSP = contextSP;
         }
 
-        // GET: api/IndicadoresReporte/5
         [HttpGet("indicadoresBitacora/{idReporte}")]
         public async Task<ActionResult<IndicadoresReporteDto>> GetIndicadoresReporte(string idReporte)
         {
-            // Llamar al método generado por EF Core Power Tools
+            // Obtener los resultados del endpoint
             var resultados = await _contextSP.IndicadoresReporteAsync(idReporte);
 
             if (resultados == null || resultados.Count == 0)
@@ -32,8 +31,34 @@ namespace Sistema_Produccion_3_Backend.Controllers.Indicadores
                 return NotFound("No se encontró el reporte con el id: " + idReporte);
             }
 
-            // Devolver el primer resultado (asumiendo que solo hay uno)
+            // Obtener el primer resultado
             var resultado = resultados.First();
+
+            // Buscar la entidad en la base de datos
+            var reporte = await _context.reportesDeOperadores.FindAsync(idReporte);
+
+            if (reporte == null)
+            {
+                return NotFound("No se encontró el reporte con el id: " + idReporte);
+            }
+
+            // Parsear el string a TimeOnly
+            if (TimeOnly.TryParse(resultado.tiempo, out var tiempoOnly))
+            {
+                // Asignar el TimeOnly al campo de la entidad
+                reporte.tiempoTotal = tiempoOnly;
+            }
+            else
+            {
+                return BadRequest("El formato del tiempo no es válido.");
+            }
+
+            // Actualizar los otros campos
+            reporte.velocidadNominal = resultado.velocidad_nominal;
+            reporte.velocidadEfectiva = resultado.velocidad_efectiva;
+
+            // Guardar los cambios en la base de datos
+            await _context.SaveChangesAsync();
 
             return Ok(resultado);
         }

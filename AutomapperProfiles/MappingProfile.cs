@@ -70,6 +70,7 @@ using Sistema_Produccion_3_Backend.DTO.Tableros.Posturas;
 using Sistema_Produccion_3_Backend.DTO.TarjetasOF;
 using Sistema_Produccion_3_Backend.DTO.TarjetasOF.BusquedaTarjetas;
 using Sistema_Produccion_3_Backend.DTO.TarjetasOF.EstadoOf;
+using Sistema_Produccion_3_Backend.DTO.TarjetasOF.NotasOf;
 using Sistema_Produccion_3_Backend.DTO.TarjetasOF.Reportes;
 using Sistema_Produccion_3_Backend.Models;
 
@@ -116,6 +117,11 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 CreateMap<UpdateBatchEtiquetaOf, etiquetaOf>()
                     .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             }
+
+            CreateMap<notasOf, NotasDto>().ReverseMap();
+            CreateMap<notasOf, AddNotasDto>().ReverseMap();
+            CreateMap<UpdateNotasDto, notasOf>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
 
             // PROCESOS OF ==========================================================================================

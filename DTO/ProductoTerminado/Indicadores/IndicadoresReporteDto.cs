@@ -2,7 +2,7 @@
 {
     public class IndicadoresReporteDto
     {
-        public string? Tiempo { get; set; } // Formato HH:MM:SS
+        public TimeOnly? Tiempo { get; set; } // Formato HH:MM:SS
         public int? VelocidadNominal { get; set; }
         public int? VelocidadEfectiva { get; set; }
     }

@@ -35,7 +35,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Bitacora
         }
 
         // GET: api/bitacora/5
-        [HttpGet("get{id}")]
+        [HttpGet("get/{id}")]
         public async Task<ActionResult<BitacoraDto>> Getbitacora(int id)
         {
             var bitacora = await _context.bitacora.FindAsync(id);
