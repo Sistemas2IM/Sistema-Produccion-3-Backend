@@ -41,8 +41,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Buscadores.TablerosOf
             var tarjetaOf = await _context.tarjetaOf
                 .Include(u => u.idEstadoOfNavigation)
                 .Include(r => r.etiquetaOf)
-                .Where(u => u.oF == of)  // Filtra por el número de OF
-                .ToListAsync();
+                .FirstOrDefaultAsync(u => u.oF == of);
 
             // Mapear los resultados a DTOs
             var procesosOfDto = _mapper.Map<List<ProcesoOfDto>>(procesosOf);
