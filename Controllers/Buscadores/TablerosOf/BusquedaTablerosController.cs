@@ -20,11 +20,14 @@ namespace Sistema_Produccion_3_Backend.Controllers.Buscadores.TablerosOf
             _mapper = mapper;
         }
 
-        // GET: api/buscarGlobal/{of}
-        [HttpGet("buscarGlobal/{of}")]
-        public async Task<ActionResult<object>> BuscarGlobal(int of)
+        // GET: api/buscarGlobal/{termino}
+        [HttpGet("buscarGlobal/{termino}")]
+        public async Task<ActionResult<object>> BuscarGlobal(string termino)
         {
-            // Buscar todos los procesos relacionados con el número de OF
+            // Convertir el término de búsqueda a minúsculas para hacer la búsqueda insensible a mayúsculas
+            termino = termino.ToLower();
+
+            // Buscar en la tabla procesoOf
             var procesosOf = await _context.procesoOf
                 .Include(u => u.detalleOperacionProceso)
                 .ThenInclude(o => o.idOperacionNavigation)
@@ -34,30 +37,39 @@ namespace Sistema_Produccion_3_Backend.Controllers.Buscadores.TablerosOf
                 .Include(c => c.idTableroNavigation)
                 .Include(v => v.idMaterialNavigation)
                 .Include(f => f.oFNavigation)
-                .Where(u => u.oF == of)  // Filtra por el número de OF
-                .ToListAsync();  // Obtiene todos los registros
+                .Where(u =>
+                    u.oF.ToString().Contains(termino) ||  // Buscar en el número de OF
+                    u.oFNavigation.clienteOf.ToLower().Contains(termino) ||  // Buscar en el nombre del material
+                    u.oFNavigation.vendedorOf.ToLower().Contains(termino) ||
+                    u.productoOf.ToLower().Contains(termino))
+                .ToListAsync();
 
-            // Buscar la tarjetaOf relacionada con el número de OF
-            var tarjetaOf = await _context.tarjetaOf
+            // Buscar en la tabla tarjetaOf
+            var tarjetasOf = await _context.tarjetaOf
                 .Include(u => u.idEstadoOfNavigation)
                 .Include(r => r.etiquetaOf)
-                .FirstOrDefaultAsync(u => u.oF == of);
+                .Where(u =>
+                    u.oF.ToString().Contains(termino) ||  // Buscar en el número de OF
+                    u.clienteOf.ToLower().Contains(termino) ||  // Buscar en el nombre del material
+                    u.vendedorOf.ToLower().Contains(termino) ||
+                    u.productoOf.ToLower().Contains(termino))
+                .ToListAsync();
 
             // Mapear los resultados a DTOs
             var procesosOfDto = _mapper.Map<List<ProcesoOfDto>>(procesosOf);
-            var tarjetaOfDto = _mapper.Map<TarjetaOfDto>(tarjetaOf);
+            var tarjetasOfDto = _mapper.Map<List<TarjetaOfDto>>(tarjetasOf);
 
             // Crear un objeto anónimo para devolver ambos resultados
             var resultado = new
             {
                 ProcesosOf = procesosOfDto,  // Lista de procesos
-                TarjetaOf = tarjetaOfDto     // Tarjeta única
+                TarjetasOf = tarjetasOfDto   // Lista de tarjetas
             };
 
             // Verificar si se encontraron resultados en alguna de las tablas
-            if (!procesosOfDto.Any() && tarjetaOfDto == null)
+            if (!procesosOfDto.Any() && !tarjetasOfDto.Any())
             {
-                return NotFound("No se encontraron resultados para el número de OF: " + of);
+                return NotFound("No se encontraron resultados para el término de búsqueda: " + termino);
             }
 
             return Ok(resultado);
