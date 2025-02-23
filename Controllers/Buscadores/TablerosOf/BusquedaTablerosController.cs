@@ -24,8 +24,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.Buscadores.TablerosOf
         [HttpGet("buscarGlobal/{of}")]
         public async Task<ActionResult<object>> BuscarGlobal(int of)
         {
-            // Buscar en la tabla procesoOf
-            var procesoOf = await _context.procesoOf
+            // Buscar todos los procesos relacionados con el número de OF
+            var procesosOf = await _context.procesoOf
                 .Include(u => u.detalleOperacionProceso)
                 .ThenInclude(o => o.idOperacionNavigation)
                 .Include(m => m.tarjetaCampo)
@@ -34,27 +34,29 @@ namespace Sistema_Produccion_3_Backend.Controllers.Buscadores.TablerosOf
                 .Include(c => c.idTableroNavigation)
                 .Include(v => v.idMaterialNavigation)
                 .Include(f => f.oFNavigation)
-                .FirstOrDefaultAsync(u => u.oF == of);
+                .Where(u => u.oF == of)  // Filtra por el número de OF
+                .ToListAsync();  // Obtiene todos los registros
 
-            // Buscar en la tabla tarjetaOf
+            // Buscar la tarjetaOf relacionada con el número de OF
             var tarjetaOf = await _context.tarjetaOf
                 .Include(u => u.idEstadoOfNavigation)
                 .Include(r => r.etiquetaOf)
-                .FirstOrDefaultAsync(u => u.oF == of);
+                .Where(u => u.oF == of)  // Filtra por el número de OF
+                .ToListAsync();
 
             // Mapear los resultados a DTOs
-            var procesoOfDto = _mapper.Map<ProcesoOfDto>(procesoOf);
+            var procesosOfDto = _mapper.Map<List<ProcesoOfDto>>(procesosOf);
             var tarjetaOfDto = _mapper.Map<TarjetaOfDto>(tarjetaOf);
 
             // Crear un objeto anónimo para devolver ambos resultados
             var resultado = new
             {
-                ProcesoOf = procesoOfDto,
-                TarjetaOf = tarjetaOfDto
+                ProcesosOf = procesosOfDto,  // Lista de procesos
+                TarjetaOf = tarjetaOfDto     // Tarjeta única
             };
 
             // Verificar si se encontraron resultados en alguna de las tablas
-            if (procesoOfDto == null && tarjetaOfDto == null)
+            if (!procesosOfDto.Any() && tarjetaOfDto == null)
             {
                 return NotFound("No se encontraron resultados para el número de OF: " + of);
             }
