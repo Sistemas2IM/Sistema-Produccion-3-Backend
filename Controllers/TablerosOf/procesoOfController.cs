@@ -266,8 +266,6 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             return Ok(dto);
         }
 
-
-
         // PUT: api/procesoOf/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("put/{id}")]
