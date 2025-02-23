@@ -20,11 +20,33 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         }
 
         // GET: api/procesoOf FLEXOGRAFIA
-        [HttpGet("get/flexo")]
+        [HttpGet("get/procesosOf/flexo")]
         public async Task<ActionResult<IEnumerable<ProcesoOfDto>>> GetprocesoOfFlexo()
         {
             var procesoOf = await _context.procesoOf
                 .Where(f => f.oFNavigation.lineaDeNegocio == "FLEXOGRAFIA")
+                .Include(u => u.detalleOperacionProceso)
+                .ThenInclude(o => o.idOperacionNavigation)
+                .Include(m => m.tarjetaCampo)
+                .Include(s => s.tarjetaEtiqueta)
+                .Include(d => d.idPosturaNavigation)
+                .Include(c => c.idTableroNavigation)
+                .Include(v => v.idMaterialNavigation)
+                .Include(f => f.oFNavigation)
+                .ToListAsync();
+
+            var procesoOfDto = _mapper.Map<List<ProcesoOfDto>>(procesoOf);
+
+            return Ok(procesoOfDto);
+        }
+
+        // GET: api/procesoOf FLEXOGRAFIA
+        [HttpGet("get/tablero/flexo")]
+        public async Task<ActionResult<IEnumerable<ProcesoOfDto>>> GetTableroFlexo()
+        {
+            var procesoOf = await _context.procesoOf
+                .OrderBy(p => p.posicion)
+                .Where(f => f.idTableroNavigation.idArea == 1)
                 .Include(u => u.detalleOperacionProceso)
                 .ThenInclude(o => o.idOperacionNavigation)
                 .Include(m => m.tarjetaCampo)
