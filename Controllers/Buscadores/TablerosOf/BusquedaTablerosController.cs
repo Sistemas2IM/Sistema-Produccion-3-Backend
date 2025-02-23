@@ -14,43 +14,46 @@ namespace Sistema_Produccion_3_Backend.Controllers.Buscadores.TablerosOf
         private readonly base_nuevaContext _context;
         private readonly IMapper _mapper;
 
-        [HttpGet("get/buscarGlobal/{of}")]
-        public async Task<IActionResult> BuscarGlobalPorOF(int of)
+        // GET: api/buscarGlobal/{of}
+        [HttpGet("buscarGlobal/{of}")]
+        public async Task<ActionResult<object>> BuscarGlobal(int of)
         {
-            // Buscar en procesoOf
+            // Buscar en la tabla procesoOf
             var procesoOf = await _context.procesoOf
                 .Include(u => u.detalleOperacionProceso)
-                    .ThenInclude(o => o.idOperacionNavigation)
+                .ThenInclude(o => o.idOperacionNavigation)
                 .Include(m => m.tarjetaCampo)
                 .Include(s => s.tarjetaEtiqueta)
                 .Include(d => d.idPosturaNavigation)
                 .Include(c => c.idTableroNavigation)
                 .Include(v => v.idMaterialNavigation)
-            .Include(f => f.oFNavigation)
+                .Include(f => f.oFNavigation)
                 .FirstOrDefaultAsync(u => u.oF == of);
 
-            // Buscar en tarjetaOf
+            // Buscar en la tabla tarjetaOf
             var tarjetaOf = await _context.tarjetaOf
                 .Include(u => u.idEstadoOfNavigation)
                 .Include(r => r.etiquetaOf)
                 .FirstOrDefaultAsync(u => u.oF == of);
 
-            // Mapear los DTOs
+            // Mapear los resultados a DTOs
             var procesoOfDto = _mapper.Map<ProcesoOfDto>(procesoOf);
             var tarjetaOfDto = _mapper.Map<TarjetaOfDto>(tarjetaOf);
 
-            // Si no se encuentra nada, retornar NotFound
-            if (procesoOfDto == null && tarjetaOfDto == null)
-            {
-                return NotFound($"No se encontró ninguna información para la OF: {of}");
-            }
-
-            // Devolver ambos resultados en un solo JSON
-            return Ok(new
+            // Crear un objeto anónimo para devolver ambos resultados
+            var resultado = new
             {
                 ProcesoOf = procesoOfDto,
                 TarjetaOf = tarjetaOfDto
-            });
+            };
+
+            // Verificar si se encontraron resultados en alguna de las tablas
+            if (procesoOfDto == null && tarjetaOfDto == null)
+            {
+                return NotFound("No se encontraron resultados para el número de OF: " + of);
+            }
+
+            return Ok(resultado);
         }
 
     }
