@@ -14,6 +14,12 @@ namespace Sistema_Produccion_3_Backend.Controllers.Buscadores.TablerosOf
         private readonly base_nuevaContext _context;
         private readonly IMapper _mapper;
 
+        public BusquedaTablerosController(base_nuevaContext context, IMapper mapper)
+        {
+            _context = context;
+            _mapper = mapper;
+        }
+
         // GET: api/buscarGlobal/{of}
         [HttpGet("buscarGlobal/{of}")]
         public async Task<ActionResult<object>> BuscarGlobal(int of)
