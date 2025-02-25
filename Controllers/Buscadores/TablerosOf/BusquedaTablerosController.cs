@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf;
+using Sistema_Produccion_3_Backend.DTO.Tableros;
 using Sistema_Produccion_3_Backend.DTO.TarjetasOF;
 using Sistema_Produccion_3_Backend.Models;
 
@@ -40,8 +41,10 @@ namespace Sistema_Produccion_3_Backend.Controllers.Buscadores.TablerosOf
                 .Where(u =>
                     u.oF.ToString().Contains(termino) ||  // Buscar en el número de OF
                     u.oFNavigation.clienteOf.ToLower().Contains(termino) ||  // Buscar en el nombre del material
-                    u.oFNavigation.vendedorOf.ToLower().Contains(termino) ||
-                    u.productoOf.ToLower().Contains(termino))
+                    u.productoOf.ToLower().Contains(termino) ||
+                    u.oFNavigation.codArticulo.ToLower().Contains(termino) ||
+                    u.oFNavigation.oV.ToString().Contains(termino) ||
+                    u.idMaquinaSAP.ToLower().Contains(termino))
                 .ToListAsync();
 
             // Buscar en la tabla tarjetaOf
@@ -52,22 +55,33 @@ namespace Sistema_Produccion_3_Backend.Controllers.Buscadores.TablerosOf
                     u.oF.ToString().Contains(termino) ||  // Buscar en el número de OF
                     u.clienteOf.ToLower().Contains(termino) ||  // Buscar en el nombre del material
                     u.vendedorOf.ToLower().Contains(termino) ||
-                    u.productoOf.ToLower().Contains(termino))
+                    u.productoOf.ToLower().Contains(termino) ||
+                    u.codArticulo.ToLower().Contains(termino) ||
+                    u.oV.ToString().Contains(termino))
+                .ToListAsync();
+
+            // Tableros
+            var tableros = await _context.tablerosOf
+                .Where(u =>
+                    u.nombreTablero.ToLower().Contains(termino) ||
+                    u.idSapMaquina.ToLower().Contains(termino))          
                 .ToListAsync();
 
             // Mapear los resultados a DTOs
             var procesosOfDto = _mapper.Map<List<ProcesoOfDto>>(procesosOf);
             var tarjetasOfDto = _mapper.Map<List<TarjetaOfDto>>(tarjetasOf);
+            var tablerosDto = _mapper.Map<List<TablerosOfDto>>(tableros);
 
             // Crear un objeto anónimo para devolver ambos resultados
             var resultado = new
             {
                 ProcesosOf = procesosOfDto,  // Lista de procesos
-                TarjetasOf = tarjetasOfDto   // Lista de tarjetas
+                TarjetasOf = tarjetasOfDto,   // Lista de tarjetas
+                Tableros = tablerosDto
             };
 
             // Verificar si se encontraron resultados en alguna de las tablas
-            if (!procesosOfDto.Any() && !tarjetasOfDto.Any())
+            if (!procesosOfDto.Any() && !tarjetasOfDto.Any() && !tablerosDto.Any())
             {
                 return NotFound("No se encontraron resultados para el término de búsqueda: " + termino);
             }

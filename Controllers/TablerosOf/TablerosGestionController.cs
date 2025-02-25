@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf;
+using Sistema_Produccion_3_Backend.DTO.Tableros;
 using Sistema_Produccion_3_Backend.Models;
 
 namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
@@ -29,6 +30,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 .ThenInclude(o => o.idOperacionNavigation)
                 .Include(m => m.tarjetaCampo)
                 .Include(s => s.tarjetaEtiqueta)
+                .ThenInclude(e => e.idEtiquetaNavigation)
                 .Include(d => d.idPosturaNavigation)
                 .Include(c => c.idTableroNavigation)
                 .Include(v => v.idMaterialNavigation)
@@ -41,25 +43,31 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         }
 
         // GET: api/procesoOf FLEXOGRAFIA
-        [HttpGet("get/tablero/flexo")]
-        public async Task<ActionResult<IEnumerable<ProcesoOfDto>>> GetTableroFlexo()
+        [HttpGet("get/tablero/flexoPrensa")]
+        public async Task<ActionResult<IEnumerable<TablerosOfDto>>> GetTableroFlexoPrensa()
         {
-            var procesoOf = await _context.procesoOf
-                .OrderBy(p => p.posicion)
-                .Where(f => f.idTableroNavigation.idArea == 1)
-                .Include(u => u.detalleOperacionProceso)
-                .ThenInclude(o => o.idOperacionNavigation)
-                .Include(m => m.tarjetaCampo)
-                .Include(s => s.tarjetaEtiqueta)
-                .Include(d => d.idPosturaNavigation)
-                .Include(c => c.idTableroNavigation)
-                .Include(v => v.idMaterialNavigation)
-                .Include(f => f.oFNavigation)
+            var tableros = await _context.tablerosOf
+                .Where(f => f.idArea == 1)
+                .Include(u => u.idAreaNavigation)
                 .ToListAsync();
 
-            var procesoOfDto = _mapper.Map<List<ProcesoOfDto>>(procesoOf);
+            var tablerosDto = _mapper.Map<List<TablerosOfDto>>(tableros);
 
-            return Ok(procesoOfDto);
+            return Ok(tablerosDto);
+        }
+
+        // GET: api/procesoOf FLEXOGRAFIA
+        [HttpGet("get/tablero/flexoProceso")]
+        public async Task<ActionResult<IEnumerable<TablerosOfDto>>> GetTableroFlexoProceso()
+        {
+            var tableros = await _context.tablerosOf
+                .Where(f => f.idArea == 11)
+                .Include(u => u.idAreaNavigation)
+                .ToListAsync();
+
+            var tablerosDto = _mapper.Map<List<TablerosOfDto>>(tableros);
+
+            return Ok(tablerosDto);
         }
     }
 }
