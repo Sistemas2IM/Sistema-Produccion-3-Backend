@@ -46,6 +46,7 @@ using Sistema_Produccion_3_Backend.DTO.ProcesoOf.Asignacion;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.BusquedaProcesos;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.CamposPersonalizados;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.DetalleProceso;
+using Sistema_Produccion_3_Backend.DTO.ProcesoOf.MaterialOf;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.Acabado;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.Barnizado;
@@ -238,6 +239,11 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                .ReverseMap();
 
             CreateMap<camposPersonalizados, CamposPersonalizadosDto>().ReverseMap();
+
+            CreateMap<material, MaterialOfDto>().ReverseMap();
+            CreateMap<material, AddMaterialOfDto>().ReverseMap();
+            CreateMap<UpdateMaterialOfDto, material>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             // OV - DTO =============================================================================================
             CreateMap<oV, OVDto>()

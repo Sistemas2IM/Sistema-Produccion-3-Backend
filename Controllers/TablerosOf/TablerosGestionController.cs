@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf;
 using Sistema_Produccion_3_Backend.DTO.Tableros;
+using Sistema_Produccion_3_Backend.DTO.TarjetasOF;
 using Sistema_Produccion_3_Backend.Models;
 
 namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
@@ -68,6 +69,23 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             var tablerosDto = _mapper.Map<List<TablerosOfDto>>(tableros);
 
             return Ok(tablerosDto);
+        }
+
+        // GET: api/tarjetaOf VENDEDORES
+        [HttpGet("get/vendedor{vendedor}")]
+        public async Task<ActionResult<IEnumerable<TarjetaOfDto>>> GettarjetaOf(string vendedor)
+        {
+            var tarjetaOf = await _context.tarjetaOf
+                .Where(v => v.vendedorOf == vendedor)
+                .OrderBy(p => p.posicion)
+                .Include(u => u.idEstadoOfNavigation)
+                .Include(r => r.etiquetaOf)
+                .ThenInclude(o => o.idEtiquetaNavigation)
+                .ToListAsync();
+
+            var tarjetaOfDto = _mapper.Map<List<TarjetaOfDto>>(tarjetaOf);
+
+            return Ok(tarjetaOfDto);
         }
     }
 }

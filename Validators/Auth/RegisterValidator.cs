@@ -23,13 +23,13 @@ namespace Sistema_Produccion_3_Backend.Validators.Auth
 
             RuleFor(x => x.Nombres)
                 .NotEmpty().WithMessage("{PropertyName} son requeridos")
-                .MaximumLength(200).WithMessage("{PropertyName} no debe tener una longitud mayor a 200")
-                .Matches(@"^[a-zA-Z\s]+$").WithMessage("{PropertyName} solo puede contener letras y espacios");
+                .MaximumLength(200).WithMessage("{PropertyName} no debe tener una longitud mayor a 200");
+            //.Matches(@"^[a-zA-Z\s]+$").WithMessage("{PropertyName} solo puede contener letras y espacios");
 
             RuleFor(x => x.Apellidos)
                 .NotEmpty().WithMessage("{PropertyName} son requeridos")
-                .MaximumLength(200).WithMessage("{PropertyName} no debe tener una longitud mayor a 200")
-                .Matches(@"^[a-zA-Z\s]+$").WithMessage("{PropertyName} solo puede contener letras y espacios");
+                .MaximumLength(200).WithMessage("{PropertyName} no debe tener una longitud mayor a 200");
+                //.Matches(@"^[a-zA-Z\s]+$").WithMessage("{PropertyName} solo puede contener letras y espacios");
 
             // Validación opcional para el Email
             RuleFor(x => x.Email)
