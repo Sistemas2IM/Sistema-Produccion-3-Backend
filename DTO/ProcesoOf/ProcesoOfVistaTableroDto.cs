@@ -1,6 +1,7 @@
 ﻿using Sistema_Produccion_3_Backend.DTO.ProcesoOf.CamposPersonalizados;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.DetalleProceso;
 using Sistema_Produccion_3_Backend.DTO.Etiquetas.TarjetaEtiqueta;
+using Sistema_Produccion_3_Backend.DTO.ReporteOperador;
 
 namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
 {
@@ -64,6 +65,12 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
 
         public DateTime? fechaVencimiento { get; set; }
 
+        public string? lineaNegocio { get; set; }
+
+        public string? cantRequerida { get; set; }
+
+        public string? tipoOrden { get; set; }
+
         public string? tipoMaquinaSAP { get; set; }
 
         public int? idDetalleReporte { get; set; }
@@ -73,5 +80,7 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
         public List<TarjetaCampoDto>? tarjetaCampoDto { get; set; }
 
         public List<TarjetaEtiquetaDto>? tarjetaEtiquetaDto { get; set; }
+
+        public MaterialDto? materialDto { get; set; }
     }
 }

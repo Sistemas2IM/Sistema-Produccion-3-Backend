@@ -77,6 +77,12 @@ public partial class tarjetaOf
     [StringLength(50)]
     public string seriesOf { get; set; }
 
+    [StringLength(50)]
+    public string fsc { get; set; }
+
+    [StringLength(25)]
+    public string unidadMedida { get; set; }
+
     [InverseProperty("oFNavigation")]
     public virtual ICollection<certificadoDeCalidad> certificadoDeCalidad { get; set; } = new List<certificadoDeCalidad>();
 

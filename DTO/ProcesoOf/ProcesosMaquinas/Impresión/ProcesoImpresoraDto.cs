@@ -47,5 +47,11 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.Impresión
         public string? medidaProd { get; set; }
 
         public string? idTroquel { get; set; }
+
+        public string? barniz { get; set; }
+
+        public string? detalleNumerado { get; set; }
+
+        public string? tamanoAbierto { get; set; }
     }
 }

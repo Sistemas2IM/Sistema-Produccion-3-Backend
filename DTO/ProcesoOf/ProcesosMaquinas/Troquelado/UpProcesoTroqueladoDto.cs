@@ -15,5 +15,7 @@
         public string? cantidadPliegosDemasia { get; set; }
 
         public string? indicacionImpresion { get; set; }
+
+        public string? indicacion { get; set; }
     }
 }

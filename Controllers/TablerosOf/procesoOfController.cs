@@ -191,6 +191,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 .ThenInclude(e => e.idEtiquetaNavigation)
                 .Include(f => f.oFNavigation)
                 .Include(l => l.idPosturaNavigation)
+                .Include(v => v.idMaterialNavigation)
                 .ToListAsync();
 
             var procesoOfDto = _mapper.Map<List<ProcesoOfVistaTableroDto>>(procesoOf);
@@ -206,6 +207,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             // Cargar datos generales del proceso
             var proceso = await _context.procesoOf
                 .Include(p => p.idPosturaNavigation)
+                .Include(v => v.idMaterialNavigation)
                 .Include(f => f.oFNavigation)
                 .FirstOrDefaultAsync(u => u.idProceso == id);
             if (proceso == null) return NotFound();

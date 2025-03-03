@@ -45,5 +45,7 @@
         public bool? cerrada { get; set; }
 
         public string? codArticulo { get; set; }
+
+        public string? fsc { get; set; }
     }
 }

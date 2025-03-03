@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using SAPbobsCOM;
 using Sistema_Produccion_3_Backend.DTO.Bitacora;
 using Sistema_Produccion_3_Backend.Services.SAP.HANA;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 
@@ -33,12 +34,13 @@ namespace Sistema_Produccion_3_Backend.Controllers.AnexosSAP
 
                 // Consulta SQL para obtener la ruta de los anexos
                 string query = @"
-                SELECT 
-                    T1.""trgtPath"" || '\' || T1.""FileName"" || '.' || T1.""FileExt"" AS ""AnexoOf"",
-                    T1.""FileName"" AS ""NombreArchivo""
-                FROM OWOR T0 
-                LEFT JOIN ATC1 T1 ON T0.""AtcEntry"" = T1.""AbsEntry""
-                WHERE T0.""DocNum"" = ?";
+                                SELECT 
+                                    T1.""trgtPath"" || '\' || T1.""FileName"" || '.' || T1.""FileExt"" AS ""AnexoOf"",
+                                    T1.""FileName"" AS ""NombreArchivo"",
+                                    T1.""Date"" AS ""FechaAnexo""
+                                FROM OWOR T0 
+                                LEFT JOIN ATC1 T1 ON T0.""AtcEntry"" = T1.""AbsEntry""
+                                WHERE T0.""DocNum"" = ?";
 
                 // Ejecutar la consulta
                 var recordSet = (Recordset)oCompany.GetBusinessObject(BoObjectTypes.BoRecordset);
@@ -51,12 +53,13 @@ namespace Sistema_Produccion_3_Backend.Controllers.AnexosSAP
                 }
 
                 // Crear una lista para almacenar los archivos
-                var archivosAdjuntos = new List<FileContentResult>();
+                var archivosAdjuntos = new List<AnexoResponse>();
 
                 while (!recordSet.EoF)
                 {
                     string filePath = recordSet.Fields.Item("AnexoOf").Value.ToString();
                     string fileName = recordSet.Fields.Item("NombreArchivo").Value.ToString();
+                    string fileDate = recordSet.Fields.Item("FechaAnexo").Value.ToString();
 
                     Console.WriteLine($"Ruta obtenida desde SAP HANA: {filePath}");
 
@@ -70,7 +73,13 @@ namespace Sistema_Produccion_3_Backend.Controllers.AnexosSAP
                             string contentType = GetContentType(filePath);
 
                             // Agregar el archivo a la lista
-                            archivosAdjuntos.Add(File(fileBytes, contentType, fileName));
+                            archivosAdjuntos.Add(new AnexoResponse
+                            {
+                                FileBytes = fileBytes,
+                                ContentType = contentType,
+                                FileName = fileName,
+                                FileDate = fileDate
+                            });
                         }
                     }
                     catch (Exception ex)
@@ -104,6 +113,14 @@ namespace Sistema_Produccion_3_Backend.Controllers.AnexosSAP
                 contentType = "application/octet-stream"; // Tipo genérico
             }
             return contentType;
+        }
+
+        public class AnexoResponse
+        {
+            public byte[]? FileBytes { get; set; }
+            public string? ContentType { get; set; }
+            public string? FileName { get; set; }
+            public string? FileDate { get; set; }
         }
     }
 }

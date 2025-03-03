@@ -27,8 +27,28 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.Barnizado
 
         public string? detalleBarniz { get; set; }
 
-        public string? indicacionImpresion { get; set; }
+        public string? indicacion { get; set; }
 
         public string? barniz { get; set; }
+
+        public string? tintas { get; set; }
+
+        public string? tiro { get; set; }
+
+        public string? retiro { get; set; }
+
+        public string? foil { get; set; }
+
+        public string? numerado { get; set; }
+
+        public string? laminado { get; set; }
+
+        public string? foilDetalle { get; set; }
+
+        public string? laminadoDetalle { get; set; }
+
+        public string? detalleNumerado { get; set; }
+
+        public string? tamanoAbierto { get; set; }
     }
 }

@@ -68,6 +68,29 @@ namespace Sistema_Produccion_3_Backend.Controllers.ProductoTerminado
             return Ok(productoTerminado);
         }
 
+        // GET: api/entregaProductoTerminado/get/of/{of}
+        [HttpGet("get/of/{of}")]
+        public async Task<ActionResult<IEnumerable<ProductoTerminadoDto>>> GetEntregasProductoTerminadoOf(int of)
+        {
+            var entregasProductoTerminado = await _context.entregasProductoTerminado
+                .Include(u => u.contenidoEntrega)
+                .Include(r => r.detalleEntrega)
+                .Include(p => p.idEstadoReporteNavigation)
+                .Include(sm => sm.idMaquinaNavigation)
+                .Include(o => o.ofNavigation)
+                .Where(u => u.of == of)  // Filtra antes de convertir a lista
+                .ToListAsync();
+
+            if (!entregasProductoTerminado.Any())  // Verifica si la lista está vacía
+            {
+                return NotFound("No se encontró el reporte con el OF: " + of);
+            }
+
+            var productosTerminados = _mapper.Map<List<ProductoTerminadoDto>>(entregasProductoTerminado);
+
+            return Ok(productosTerminados);
+        }
+
         [HttpGet("get/ultimoPT")]
         public async Task<ActionResult<int>> GetentregasProductoTerminadoUltimo()
         {

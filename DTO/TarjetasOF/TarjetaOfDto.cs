@@ -64,6 +64,8 @@ namespace Sistema_Produccion_3_Backend.DTO.TarjetasOF
 
         public string? codArticulo { get; set; }
 
+        public string? fsc { get; set; }
+
         public List<EtiquetaOfDto>? etiquetaDto { get; set; }
 
         public string? estadonombre { get; set; }

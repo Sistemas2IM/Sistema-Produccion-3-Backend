@@ -7,5 +7,7 @@
         public string? tiempoArreglo { get; set; }
 
         public string? tiempoCorrida { get; set; }
+
+        public string? indicacion { get; set; }
     }
 }

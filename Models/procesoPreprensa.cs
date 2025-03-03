@@ -27,6 +27,18 @@ public partial class procesoPreprensa
     [StringLength(100)]
     public string ordenAnterior { get; set; }
 
+    [StringLength(500)]
+    public string repeticionPliegos { get; set; }
+
+    [StringLength(500)]
+    public string medidaProd { get; set; }
+
+    [StringLength(500)]
+    public string indicacion { get; set; }
+
+    [StringLength(200)]
+    public string tamanoAbierto { get; set; }
+
     [ForeignKey("idProceso")]
     [InverseProperty("procesoPreprensa")]
     public virtual procesoOf idProcesoNavigation { get; set; }

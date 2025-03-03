@@ -51,6 +51,12 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
 
         public DateTime? fechaVencimiento { get; set; }
 
+        public string? lineaNegocio { get; set; }
+
+        public string? cantRequerida { get; set; }
+
+        public string? tipoOrden { get; set; }
+
         public string? tipoMaquinaSAP { get; set; }
 
         public string? idMaquinaSAP { get; set; }

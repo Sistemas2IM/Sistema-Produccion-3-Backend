@@ -40,10 +40,40 @@ public partial class procesoBarniz
     public string detalleBarniz { get; set; }
 
     [StringLength(500)]
-    public string indicacionImpresion { get; set; }
+    public string indicacion { get; set; }
 
     [StringLength(50)]
     public string barniz { get; set; }
+
+    [StringLength(200)]
+    public string tintas { get; set; }
+
+    [StringLength(100)]
+    public string tiro { get; set; }
+
+    [StringLength(100)]
+    public string retiro { get; set; }
+
+    [StringLength(100)]
+    public string foil { get; set; }
+
+    [StringLength(100)]
+    public string numerado { get; set; }
+
+    [StringLength(100)]
+    public string laminado { get; set; }
+
+    [StringLength(500)]
+    public string foilDetalle { get; set; }
+
+    [StringLength(500)]
+    public string laminadoDetalle { get; set; }
+
+    [StringLength(500)]
+    public string detalleNumerado { get; set; }
+
+    [StringLength(200)]
+    public string tamanoAbierto { get; set; }
 
     [ForeignKey("idProceso")]
     [InverseProperty("procesoBarniz")]

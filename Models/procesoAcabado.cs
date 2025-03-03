@@ -27,6 +27,42 @@ public partial class procesoAcabado
     [StringLength(500)]
     public string tiempoCorrida { get; set; }
 
+    [StringLength(100)]
+    public string barniz { get; set; }
+
+    [StringLength(100)]
+    public string tiro { get; set; }
+
+    [StringLength(100)]
+    public string retiro { get; set; }
+
+    [StringLength(100)]
+    public string foil { get; set; }
+
+    [StringLength(100)]
+    public string numerado { get; set; }
+
+    [StringLength(100)]
+    public string laminado { get; set; }
+
+    [StringLength(500)]
+    public string foilDetalle { get; set; }
+
+    [StringLength(500)]
+    public string detalleBarniz { get; set; }
+
+    [StringLength(500)]
+    public string laminadoDetalle { get; set; }
+
+    [StringLength(500)]
+    public string indicacion { get; set; }
+
+    [StringLength(100)]
+    public string medidaProd { get; set; }
+
+    [StringLength(500)]
+    public string detalleNum { get; set; }
+
     [ForeignKey("idProceso")]
     [InverseProperty("procesoAcabado")]
     public virtual procesoOf idProcesoNavigation { get; set; }

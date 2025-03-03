@@ -17,6 +17,16 @@ public partial class material
     [StringLength(200)]
     public string nombreMaterial { get; set; }
 
+    [StringLength(100)]
+    public string tipoMaterial { get; set; }
+
+    [StringLength(10)]
+    public string calibre { get; set; }
+
+    [Column("base")]
+    [StringLength(10)]
+    public string _base { get; set; }
+
     [InverseProperty("idMaterialNavigation")]
     public virtual ICollection<detalleReporte> detalleReporte { get; set; } = new List<detalleReporte>();
 

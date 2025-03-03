@@ -1,4 +1,5 @@
 ﻿
+using Sistema_Produccion_3_Backend.DTO.ReporteOperador;
 using Sistema_Produccion_3_Backend.DTO.Tableros.Posturas;
 
 namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas
@@ -55,6 +56,12 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas
 
         public DateTime? fechaVencimiento { get; set; }
 
+        public string? lineaNegocio { get; set; }
+
+        public string? cantRequerida { get; set; }
+
+        public string? tipoOrden { get; set; }
+
         public string? idMaquinaSAP { get; set; }
 
         public string? tipoMaquinaSAP { get; set; }
@@ -62,6 +69,8 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas
         public object? DetalleProceso { get; set; }
 
         public PosturasOfDto? posturasOfDto { get; set; }
+
+        public MaterialDto? materialDto { get; set; }
 
     }
 }

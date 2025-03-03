@@ -34,7 +34,7 @@ public partial class procesoTroqueladora
     public string cantidadPliegosDemasia { get; set; }
 
     [StringLength(500)]
-    public string indicacionImpresion { get; set; }
+    public string indicacion { get; set; }
 
     [ForeignKey("idProceso")]
     [InverseProperty("procesoTroqueladora")]
