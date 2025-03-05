@@ -338,7 +338,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
 
         // DASHBOARD =========================================================================
 
-        // GET: api/tarjetaOf/lineaNegocio
+        /*// GET: api/tarjetaOf/lineaNegocio
         [HttpGet("get/lineaNegocio")]
         public async Task<ActionResult<IEnumerable<object>>> GetTarjetaOfCountByLineaNegocio()
         {
@@ -381,7 +381,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 .CountAsync();
 
             return Ok(new { CantidadTarjetasCerradasHoy = cantidadTarjetasCerradasHoy });
-        }
+        }*/
 
 
         // - REPORTES - =======================================================================================

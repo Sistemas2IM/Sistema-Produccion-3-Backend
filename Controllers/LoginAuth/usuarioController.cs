@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Sistema_Produccion_3_Backend.DTO.PermisosUsuario;
+using Sistema_Produccion_3_Backend.DTO.PermisosUsuario.Diseño;
 using Sistema_Produccion_3_Backend.Models;
 
 namespace Sistema_Produccion_3_Backend.Controllers.LoginAuth
@@ -32,6 +33,20 @@ namespace Sistema_Produccion_3_Backend.Controllers.LoginAuth
                 //.ThenInclude(m => m.idMenuNavigation)   // Include the menu for each module
                 .Include(c => c.idCargoNavigation)
                 .Include(pm => pm.permisoMaquina)
+                .ToListAsync();
+
+            var usuariosDto = _mapper.Map<List<UsuarioDto>>(usuarios);
+
+            return Ok(usuariosDto);
+        }
+
+        // GET: api/usuario
+        [HttpGet("get/diseñadores")]
+        public async Task<ActionResult<IEnumerable<UsuarioDisenoDto>>> GetusuarioDisenador()
+        {
+            var usuarios = await _context.usuario
+                .Where(u => u.idCargo == 2)
+                .OrderByDescending(f => f.fechaDeCreacion)               
                 .ToListAsync();
 
             var usuariosDto = _mapper.Map<List<UsuarioDto>>(usuarios);

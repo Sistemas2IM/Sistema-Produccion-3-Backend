@@ -47,5 +47,7 @@
         public string? codArticulo { get; set; }
 
         public string? fsc { get; set; }
+
+        public string? unidadMedida { get; set; }
     }
 }
