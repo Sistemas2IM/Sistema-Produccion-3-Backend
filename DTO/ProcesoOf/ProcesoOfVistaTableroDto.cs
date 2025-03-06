@@ -73,6 +73,8 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
 
         public string? unidadMedida { get; set; }
 
+        public string? fsc { get; set; }
+
         public string? tipoMaquinaSAP { get; set; }
 
         public int? idDetalleReporte { get; set; }

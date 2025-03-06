@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Diagnostics;
+using System.Text.Json;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -128,29 +129,81 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             return Ok(procesoOfDto);
         }
 
-        // GET: api/procesoOf/5
+        // GET: api/procesoOf/get/procesosByOf/{of}
         [HttpGet("get/oF/{of}")]
-        public async Task<ActionResult<ProcesoOfDto>> GetprocesoOfTarjeta(int of)
+        public async Task<ActionResult<IEnumerable<ProcesoOfMaquinas>>> GetProcesosByOf(int of)
         {
-            var procesoOf = await _context.procesoOf
-                .Include(u => u.detalleOperacionProceso)
-                .ThenInclude(o => o.idOperacionNavigation)
-                .Include(m => m.tarjetaCampo)
-                .Include(s => s.tarjetaEtiqueta)
-                .Include(d => d.idPosturaNavigation)
-                .Include(c => c.idTableroNavigation)
+            // Obtener todos los procesos asociados a la OF
+            var procesos = await _context.procesoOf
+                .Include(p => p.idPosturaNavigation)
                 .Include(v => v.idMaterialNavigation)
                 .Include(f => f.oFNavigation)
-                .FirstOrDefaultAsync(u => u.oF == of);
+                .Where(u => u.oF == of) // Filtrar por OF
+                .ToListAsync();
 
-            var procesoOfDto = _mapper.Map<ProcesoOfDto>(procesoOf);
+            if (procesos == null || !procesos.Any()) return NotFound();
 
-            if (procesoOfDto == null)
+            var resultados = new List<ProcesoOfMaquinas>();
+
+            // Iterar sobre cada proceso para cargar sus detalles específicos
+            foreach (var proceso in procesos)
             {
-                return NotFound("No se encontro el proceso de la Of con el numero de of: " + of);
+                var dto = _mapper.Map<ProcesoOfMaquinas>(proceso);
+
+                // Cargar detalles específicos según el tipo de máquina
+                switch (proceso.tipoMaquinaSAP)
+                {
+                    case "impresion":
+                        var detalleImpresora = await _context.procesoImpresora
+                            .Where(p => p.idProceso == proceso.idProceso)
+                            .FirstOrDefaultAsync();
+                        dto.DetalleProceso = _mapper.Map<ProcesoImpresoraDto>(detalleImpresora);
+                        break;
+
+                    case "troquel":
+                        var detalleTroqueladora = await _context.procesoTroqueladora
+                            .Where(p => p.idProceso == proceso.idProceso)
+                            .FirstOrDefaultAsync();
+                        dto.DetalleProceso = _mapper.Map<ProcesoTroqueladoraDto>(detalleTroqueladora);
+                        break;
+
+                    case "barniz":
+                        var detalleBarnizadora = await _context.procesoBarniz
+                            .Where(p => p.idProceso == proceso.idProceso)
+                            .FirstOrDefaultAsync();
+                        dto.DetalleProceso = _mapper.Map<ProcesoBarnizDto>(detalleBarnizadora);
+                        break;
+
+                    case "pegadora":
+                        var detallePegadora = await _context.procesoPegadora
+                            .Where(p => p.idProceso == proceso.idProceso)
+                            .FirstOrDefaultAsync();
+                        dto.DetalleProceso = _mapper.Map<ProcesoPegadoraDto>(detallePegadora);
+                        break;
+
+                    case "acabado":
+                        var detalleAcabado = await _context.procesoAcabado
+                            .Where(p => p.idProceso == proceso.idProceso)
+                            .FirstOrDefaultAsync();
+                        dto.DetalleProceso = _mapper.Map<ProcesoAcabadoDto>(detalleAcabado);
+                        break;
+
+                    case "preprensa":
+                        var detallePreprensa = await _context.procesoPreprensa
+                            .Where(p => p.idProceso == proceso.idProceso)
+                            .FirstOrDefaultAsync();
+                        dto.DetalleProceso = _mapper.Map<ProcesoPreprensaDto>(detallePreprensa);
+                        break;
+
+                    default:
+                        dto.DetalleProceso = null;
+                        break;
+                }
+
+                resultados.Add(dto);
             }
 
-            return Ok(procesoOfDto);
+            return Ok(resultados);
         }
 
         // GET: api/procesoOf/5 LISTA
