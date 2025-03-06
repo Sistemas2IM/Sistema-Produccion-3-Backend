@@ -101,23 +101,41 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("Getasignacion", new { id = asignacionOf.idAsignacion }, asignacionOf);
-        }     
+        }
 
         // DELETE: api/asignacion/5
-        /*[HttpDelete("{id}")]
+        [HttpDelete("delete/{id}")]
         public async Task<IActionResult> Deleteasignacion(int id)
         {
-            var asignacion = await _context.asignacion.FindAsync(id);
-            if (asignacion == null)
+            try
             {
-                return NotFound();
+                // Buscar la asignación por ID sin seguimiento (mejora el rendimiento)
+                var asignacion = await _context.asignacion
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(a => a.idAsignacion == id);
+
+                if (asignacion == null)
+                {
+                    return NotFound(new { message = $"No se encontró la asignación con ID {id}." });
+                }            
+
+                // Eliminar la asignación
+                _context.asignacion.Remove(asignacion);
+                await _context.SaveChangesAsync();
+
+                return NoContent(); // 204 No Content
             }
-
-            _context.asignacion.Remove(asignacion);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }*/
+            catch (DbUpdateException ex)
+            {
+                // Manejar errores de actualización de la base de datos
+                return StatusCode(500, new { message = "Error al eliminar la asignación.", details = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                // Manejar otros errores inesperados
+                return StatusCode(500, new { message = "Ocurrió un error inesperado.", details = ex.Message });
+            }
+        }
 
         private bool asignacionExists(int id)
         {

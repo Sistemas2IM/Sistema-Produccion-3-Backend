@@ -49,7 +49,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.LoginAuth
                 .OrderByDescending(f => f.fechaDeCreacion)               
                 .ToListAsync();
 
-            var usuariosDto = _mapper.Map<List<UsuarioDto>>(usuarios);
+            var usuariosDto = _mapper.Map<List<UsuarioDisenoDto>>(usuarios);
 
             return Ok(usuariosDto);
         }
