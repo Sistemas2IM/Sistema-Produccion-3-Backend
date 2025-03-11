@@ -11,6 +11,7 @@ using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.Barnizado;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.Impresión;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.Pegadora;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.Preprensa;
+using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.Serigrafia;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.Troquelado;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.UpdateSAP;
 using Sistema_Produccion_3_Backend.Models;
@@ -66,6 +67,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 .Include(l => l.idPosturaNavigation)
                 .Include(s => s.tarjetaEtiqueta)
                 .ThenInclude(e => e.idEtiquetaNavigation)
+                .Include(a => a.asignacion)
+                .ThenInclude(u => u.userNavigation)
                 .AsQueryable();
 
             // Aplicar filtros condicionales
@@ -138,72 +141,16 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 .Include(p => p.idPosturaNavigation)
                 .Include(v => v.idMaterialNavigation)
                 .Include(f => f.oFNavigation)
-                .Where(u => u.oF == of) // Filtrar por OF
-                .ToListAsync();
+                .FirstOrDefaultAsync(u => u.oF == of);
 
-            if (procesos == null || !procesos.Any()) return NotFound();
+                var procesoOfDto = _mapper.Map<ProcesoOfDto>(procesos);
 
-            var resultados = new List<ProcesoOfMaquinas>();
-
-            // Iterar sobre cada proceso para cargar sus detalles específicos
-            foreach (var proceso in procesos)
-            {
-                var dto = _mapper.Map<ProcesoOfMaquinas>(proceso);
-
-                // Cargar detalles específicos según el tipo de máquina
-                switch (proceso.tipoMaquinaSAP)
+                if (procesoOfDto == null)
                 {
-                    case "impresion":
-                        var detalleImpresora = await _context.procesoImpresora
-                            .Where(p => p.idProceso == proceso.idProceso)
-                            .FirstOrDefaultAsync();
-                        dto.DetalleProceso = _mapper.Map<ProcesoImpresoraDto>(detalleImpresora);
-                        break;
-
-                    case "troquel":
-                        var detalleTroqueladora = await _context.procesoTroqueladora
-                            .Where(p => p.idProceso == proceso.idProceso)
-                            .FirstOrDefaultAsync();
-                        dto.DetalleProceso = _mapper.Map<ProcesoTroqueladoraDto>(detalleTroqueladora);
-                        break;
-
-                    case "barniz":
-                        var detalleBarnizadora = await _context.procesoBarniz
-                            .Where(p => p.idProceso == proceso.idProceso)
-                            .FirstOrDefaultAsync();
-                        dto.DetalleProceso = _mapper.Map<ProcesoBarnizDto>(detalleBarnizadora);
-                        break;
-
-                    case "pegadora":
-                        var detallePegadora = await _context.procesoPegadora
-                            .Where(p => p.idProceso == proceso.idProceso)
-                            .FirstOrDefaultAsync();
-                        dto.DetalleProceso = _mapper.Map<ProcesoPegadoraDto>(detallePegadora);
-                        break;
-
-                    case "acabado":
-                        var detalleAcabado = await _context.procesoAcabado
-                            .Where(p => p.idProceso == proceso.idProceso)
-                            .FirstOrDefaultAsync();
-                        dto.DetalleProceso = _mapper.Map<ProcesoAcabadoDto>(detalleAcabado);
-                        break;
-
-                    case "preprensa":
-                        var detallePreprensa = await _context.procesoPreprensa
-                            .Where(p => p.idProceso == proceso.idProceso)
-                            .FirstOrDefaultAsync();
-                        dto.DetalleProceso = _mapper.Map<ProcesoPreprensaDto>(detallePreprensa);
-                        break;
-
-                    default:
-                        dto.DetalleProceso = null;
-                        break;
+                    return NotFound("No se encontro el proceso de la Of con el of: " + of);
                 }
 
-                resultados.Add(dto);
-            }
-
-            return Ok(resultados);
+            return Ok(procesoOfDto);
         }
 
         // GET: api/procesoOf/5 LISTA
@@ -245,6 +192,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 .Include(f => f.oFNavigation)
                 .Include(l => l.idPosturaNavigation)
                 .Include(v => v.idMaterialNavigation)
+                .Include(a => a.asignacion)
+                .ThenInclude(u => u.userNavigation)
                 .ToListAsync();
 
             var procesoOfDto = _mapper.Map<List<ProcesoOfVistaTableroDto>>(procesoOf);
@@ -311,6 +260,12 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                         .Where(p => p.idProceso == id)
                         .FirstOrDefaultAsync();
                     dto.DetalleProceso = _mapper.Map<ProcesoPreprensaDto>(detallePreprensa);
+                    break;
+                case "serigrafia":
+                    var detalleSerigrafia = await _context.procesoSerigrafia
+                        .Where(p => p.idProceso == proceso.idProceso)
+                        .FirstOrDefaultAsync();
+                    dto.DetalleProceso = _mapper.Map<ProcesoSerigrafiaDto>(detalleSerigrafia);
                     break;
 
                 default:
@@ -486,6 +441,10 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                         await ActualizarDetalleMaquina<procesoBarniz, UpProcesoBarnizDto>(idProceso, dto.DetalleProceso);
                         break;
 
+                    case "serigrafia":
+                        await ActualizarDetalleMaquina<procesoSerigrafia, UpProcesoSerigrafia>(idProceso, dto.DetalleProceso);
+                        break;
+
                     default:
                         return BadRequest("Tipo de máquina no soportado.");
                 }
@@ -545,7 +504,6 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         }
 
         // POST PARA DETALLES POR MAQUINA
-
         [HttpPost("post/procesoOfMaquina")]
         public async Task<ActionResult> CreateProcesoOf(AddProcesoOfMaquinas dto)
         {
@@ -633,6 +591,18 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                         {
                             detalleBarniz.idProceso = proceso.idProceso;
                             _context.procesoBarniz.Add(detalleBarniz);
+                        }
+                    }
+                    break;
+
+                case "serigrafia":
+                    if (dto.DetalleProceso is JsonElement jsonSeriagrafia)
+                    {
+                        var detalleSerigrafia = JsonSerializer.Deserialize<procesoSerigrafia>(jsonSeriagrafia.GetRawText());
+                        if (detalleSerigrafia != null)
+                        {
+                            detalleSerigrafia.idProceso = proceso.idProceso;
+                            _context.procesoSerigrafia.Add(detalleSerigrafia);
                         }
                     }
                     break;

@@ -38,6 +38,9 @@ public partial class maquinas
     public virtual ICollection<operaciones> operaciones { get; set; } = new List<operaciones>();
 
     [InverseProperty("maquinaNavigation")]
+    public virtual ICollection<pausasMaquina> pausasMaquina { get; set; } = new List<pausasMaquina>();
+
+    [InverseProperty("maquinaNavigation")]
     public virtual ICollection<permisoMaquina> permisoMaquina { get; set; } = new List<permisoMaquina>();
 
     [InverseProperty("idMaquinaNavigation")]

@@ -64,6 +64,9 @@ public partial class usuario
     [InverseProperty("usuario")]
     public virtual rol idRolNavigation { get; set; }
 
+    [InverseProperty("usuarioNavigation")]
+    public virtual ICollection<pausasMaquina> pausasMaquina { get; set; } = new List<pausasMaquina>();
+
     [InverseProperty("userNavigation")]
     public virtual ICollection<permisoMaquina> permisoMaquina { get; set; } = new List<permisoMaquina>();
 

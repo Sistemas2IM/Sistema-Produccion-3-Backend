@@ -2,6 +2,7 @@
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.DetalleProceso;
 using Sistema_Produccion_3_Backend.DTO.Etiquetas.TarjetaEtiqueta;
 using Sistema_Produccion_3_Backend.DTO.ReporteOperador;
+using Sistema_Produccion_3_Backend.DTO.ProcesoOf.Asignacion;
 
 namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
 {
@@ -74,6 +75,8 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
         public string? unidadMedida { get; set; }
 
         public string? fsc { get; set; }
+
+        public List<AsignacionDto>? asignacionDto { get; set; }
 
         public string? tipoMaquinaSAP { get; set; }
 

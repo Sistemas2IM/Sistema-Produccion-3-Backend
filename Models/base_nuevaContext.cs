@@ -101,6 +101,8 @@ public partial class base_nuevaContext : DbContext
 
     public virtual DbSet<operaciones> operaciones { get; set; }
 
+    public virtual DbSet<pausasMaquina> pausasMaquina { get; set; }
+
     public virtual DbSet<permiso> permiso { get; set; }
 
     public virtual DbSet<permisoMaquina> permisoMaquina { get; set; }
@@ -122,6 +124,8 @@ public partial class base_nuevaContext : DbContext
     public virtual DbSet<procesoPegadora> procesoPegadora { get; set; }
 
     public virtual DbSet<procesoPreprensa> procesoPreprensa { get; set; }
+
+    public virtual DbSet<procesoSerigrafia> procesoSerigrafia { get; set; }
 
     public virtual DbSet<procesoTroqueladora> procesoTroqueladora { get; set; }
 
@@ -563,6 +567,23 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.idMaquinaNavigation).WithMany(p => p.operaciones).HasConstraintName("FK_OPERACIO_MAQUINA");
         });
 
+        modelBuilder.Entity<pausasMaquina>(entity =>
+        {
+            entity.HasKey(e => e.id).HasName("PK__pausasMa__3213E83F297D9027");
+
+            entity.HasOne(d => d.bitacora).WithMany(p => p.pausasMaquina)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("BITACORA_FK");
+
+            entity.HasOne(d => d.maquinaNavigation).WithMany(p => p.pausasMaquina)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("MAQUINA_FK");
+
+            entity.HasOne(d => d.usuarioNavigation).WithMany(p => p.pausasMaquina)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("USUARIO_FK");
+        });
+
         modelBuilder.Entity<permiso>(entity =>
         {
             entity.HasKey(e => e.idPermiso).HasName("PK_PERMISO");
@@ -658,6 +679,15 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.idProcesoNavigation).WithMany(p => p.procesoPreprensa)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_procesoPreprensa_procesoOf");
+        });
+
+        modelBuilder.Entity<procesoSerigrafia>(entity =>
+        {
+            entity.HasKey(e => e.idProcesoSerigrafia).HasName("PK__procesoS__0D76A68B511ACF82");
+
+            entity.HasOne(d => d.idProcesoNavigation).WithMany(p => p.procesoSerigrafia)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_procesoSerigrafia_procesoOf");
         });
 
         modelBuilder.Entity<procesoTroqueladora>(entity =>

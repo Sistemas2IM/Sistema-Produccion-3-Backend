@@ -1,4 +1,5 @@
 ﻿using Sistema_Produccion_3_Backend.DTO.Etiquetas.TarjetaEtiqueta;
+using Sistema_Produccion_3_Backend.DTO.ProcesoOf.Asignacion;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.CamposPersonalizados;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.DetalleProceso;
 using Sistema_Produccion_3_Backend.DTO.ReporteOperador;
@@ -72,6 +73,8 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
         public string? tipoOrden { get; set; }
 
         public string? fsc { get; set; }
+
+        public List<AsignacionDto>? asignacionDto { get; set; }
 
         public string? unidadMedida { get; set; } 
 

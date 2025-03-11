@@ -73,6 +73,9 @@ public partial class reportesDeOperadores
     [InverseProperty("reportesDeOperadores")]
     public virtual usuario operadorNavigation { get; set; }
 
+    [InverseProperty("bitacora")]
+    public virtual ICollection<pausasMaquina> pausasMaquina { get; set; } = new List<pausasMaquina>();
+
     [InverseProperty("bitacoraNavigation")]
     public virtual ICollection<sesionOperador> sesionOperador { get; set; } = new List<sesionOperador>();
 }

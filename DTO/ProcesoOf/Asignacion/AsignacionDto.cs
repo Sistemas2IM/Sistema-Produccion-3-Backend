@@ -12,6 +12,5 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf.Asignacion
 
         public int? idProceso { get; set; }
 
-        public ProcesoOfDto? procesoOf { get; set; }
     }
 }

@@ -122,6 +122,9 @@ public partial class procesoOf
     public virtual ICollection<procesoPreprensa> procesoPreprensa { get; set; } = new List<procesoPreprensa>();
 
     [InverseProperty("idProcesoNavigation")]
+    public virtual ICollection<procesoSerigrafia> procesoSerigrafia { get; set; } = new List<procesoSerigrafia>();
+
+    [InverseProperty("idProcesoNavigation")]
     public virtual ICollection<procesoTroqueladora> procesoTroqueladora { get; set; } = new List<procesoTroqueladora>();
 
     [InverseProperty("idProcesoNavigation")]

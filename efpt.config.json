@@ -191,6 +191,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[pausasMaquina]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[permiso]",
          "ObjectType": 0
       },
@@ -232,6 +236,10 @@
       },
       {
          "Name": "[dbo].[procesoPreprensa]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[procesoSerigrafia]",
          "ObjectType": 0
       },
       {
