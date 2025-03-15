@@ -102,6 +102,9 @@ public partial class procesoOf
     [InverseProperty("procesoOf")]
     public virtual tablerosOf idTableroNavigation { get; set; }
 
+    [InverseProperty("proceso")]
+    public virtual ICollection<logCambiosProceso> logCambiosProceso { get; set; } = new List<logCambiosProceso>();
+
     [ForeignKey("oF")]
     [InverseProperty("procesoOf")]
     public virtual tarjetaOf oFNavigation { get; set; }

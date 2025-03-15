@@ -155,6 +155,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[logCambiosProceso]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[maquinas]",
          "ObjectType": 0
       },

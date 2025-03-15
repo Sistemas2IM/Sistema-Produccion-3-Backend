@@ -83,6 +83,8 @@ public partial class base_nuevaContext : DbContext
 
     public virtual DbSet<gira> gira { get; set; }
 
+    public virtual DbSet<logCambiosProceso> logCambiosProceso { get; set; }
+
     public virtual DbSet<maquinas> maquinas { get; set; }
 
     public virtual DbSet<material> material { get; set; }
@@ -510,6 +512,15 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.idVehiculoNavigation).WithMany(p => p.gira).HasConstraintName("FK_GIRA_VEHICULO");
         });
 
+        modelBuilder.Entity<logCambiosProceso>(entity =>
+        {
+            entity.HasKey(e => e.log_id).HasName("PK__logCambi__9E2397E0C8C6A3C6");
+
+            entity.HasOne(d => d.proceso).WithMany(p => p.logCambiosProceso).HasConstraintName("FK_PROCESO");
+
+            entity.HasOne(d => d.usuario).WithMany(p => p.logCambiosProceso).HasConstraintName("FK_USUARIO");
+        });
+
         modelBuilder.Entity<maquinas>(entity =>
         {
             entity.HasKey(e => e.idMaquina).HasName("PK_MAQUINAS");
@@ -564,7 +575,7 @@ public partial class base_nuevaContext : DbContext
         {
             entity.HasKey(e => e.idOperacion).HasName("PK_OPERACIONES");
 
-            entity.HasOne(d => d.idMaquinaNavigation).WithMany(p => p.operaciones).HasConstraintName("FK_OPERACIO_MAQUINA");
+            entity.HasOne(d => d.familiaMaquinaNavigation).WithMany(p => p.operaciones).HasConstraintName("FK_FAMILIA_MAQUINA");
         });
 
         modelBuilder.Entity<pausasMaquina>(entity =>

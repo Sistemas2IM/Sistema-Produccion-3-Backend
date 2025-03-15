@@ -15,7 +15,7 @@ namespace Sistema_Produccion_3_Backend.DTO.TarjetasOF
 
         public int? idEstadoOf { get; set; }
 
-        public string? serieOf { get; set; }
+        public string? seriesOf { get; set; }
 
         public string? tipoDeOrden { get; set; }
 

@@ -2,8 +2,10 @@
 {
     public class AddOperacionesDto
     {
-        public int? idMaquina { get; set; }
+        public int? familiaMaquina { get; set; }
 
         public string? nombreOperacion { get; set; }
+
+        public string? tipoOperacion { get; set; }
     }
 }

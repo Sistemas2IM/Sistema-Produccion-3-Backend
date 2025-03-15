@@ -47,6 +47,7 @@ using Sistema_Produccion_3_Backend.DTO.ProcesoOf.Asignacion;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.BusquedaProcesos;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.CamposPersonalizados;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.DetalleProceso;
+using Sistema_Produccion_3_Backend.DTO.ProcesoOf.LogCambiosProceso;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.MaterialOf;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.Acabado;
@@ -147,6 +148,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForMember(dest => dest.tipoOrden, opt => opt.MapFrom(src => src.oFNavigation.tipoDeOrden))
                 .ForMember(dest => dest.unidadMedida, opt => opt.MapFrom(src => src.oFNavigation.unidadMedida))
                 .ForMember(dest => dest.fsc, opt => opt.MapFrom(src => src.oFNavigation.fsc))
+                .ForMember(dest => dest.asignacionDto, opt => opt.MapFrom(src => src.asignacion))
                 .ReverseMap();
             CreateMap<procesoOf, ProcesoOfVistaTableroDto>()
                 .ForMember(dest => dest.detalleProcesoOf, opt => opt.MapFrom(src => src.detalleOperacionProceso))
@@ -256,6 +258,13 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             CreateMap<detalleOperacionProceso, DetalleProcesoOfDto>()
                 .ForMember(dest => dest.operacionesDto, opt => opt.MapFrom(src => src.idOperacionNavigation))
                 .ReverseMap();
+
+            {
+                CreateMap<logCambiosProceso, LogCambiosProcesoDto>().ReverseMap();
+                CreateMap<logCambiosProceso, AddLogCambiosProcesoDto>().ReverseMap();
+                CreateMap<UpdateLogCambiosProcesoDto, logCambiosProceso>()
+                    .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            }
 
             CreateMap<detalleOperacionProceso, AddDetalleProcesoOfDto>().ReverseMap();
             CreateMap<UpdateDetalleProcesoOfDto, detalleOperacionProceso>()

@@ -65,6 +65,8 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
 
         public string? idMaquinaSAP { get; set; }
 
+        public object? DetalleProceso { get; set; }
+
         public ProcesoPosturasOfDto? PosturasOfDto { get; set; }
 
         public ProcesoTablerosOfDto? TablerosOfDto { get; set; }

@@ -8,16 +8,19 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Sistema_Produccion_3_Backend.Models;
 
-[Index("idMaquina", Name = "MAQUINA_OPERACIONES_FK")]
+[Index("familiaMaquina", Name = "FAMILIA_MAQUINA_FK")]
 public partial class operaciones
 {
     [Key]
     public int idOperacion { get; set; }
 
-    public int? idMaquina { get; set; }
+    public int? familiaMaquina { get; set; }
 
     [StringLength(200)]
     public string nombreOperacion { get; set; }
+
+    [StringLength(50)]
+    public string tipoOperacion { get; set; }
 
     [InverseProperty("idOperacionNavigation")]
     public virtual ICollection<detalleOperacionProceso> detalleOperacionProceso { get; set; } = new List<detalleOperacionProceso>();
@@ -25,7 +28,7 @@ public partial class operaciones
     [InverseProperty("idOperacionNavigation")]
     public virtual ICollection<detalleReporte> detalleReporte { get; set; } = new List<detalleReporte>();
 
-    [ForeignKey("idMaquina")]
+    [ForeignKey("familiaMaquina")]
     [InverseProperty("operaciones")]
-    public virtual maquinas idMaquinaNavigation { get; set; }
+    public virtual familliaDeMaquina familiaMaquinaNavigation { get; set; }
 }
