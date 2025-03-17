@@ -7,5 +7,7 @@
         public string? nombreOperacion { get; set; }
 
         public string? tipoOperacion { get; set; }
+
+        public string prefijo { get; set; }
     }
 }

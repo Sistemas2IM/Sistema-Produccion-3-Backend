@@ -22,6 +22,9 @@ public partial class operaciones
     [StringLength(50)]
     public string tipoOperacion { get; set; }
 
+    [StringLength(3)]
+    public string prefijo { get; set; }
+
     [InverseProperty("idOperacionNavigation")]
     public virtual ICollection<detalleOperacionProceso> detalleOperacionProceso { get; set; } = new List<detalleOperacionProceso>();
 

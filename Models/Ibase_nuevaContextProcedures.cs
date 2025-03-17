@@ -14,5 +14,6 @@ namespace Sistema_Produccion_3_Backend.Models
     public partial interface Ibase_nuevaContextProcedures
     {
         Task<List<IndicadoresReporteResult>> IndicadoresReporteAsync(string idReporte, OutputParameter<int> returnValue = null, CancellationToken cancellationToken = default);
+        Task<List<TimeInListResult>> TimeInListAsync(int? idProceso, OutputParameter<int> returnValue = null, CancellationToken cancellationToken = default);
     }
 }

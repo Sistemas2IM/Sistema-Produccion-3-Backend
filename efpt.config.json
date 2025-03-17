@@ -345,6 +345,10 @@
       {
          "Name": "[dbo].[IndicadoresReporte]",
          "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[TimeInList]",
+         "ObjectType": 1
       }
    ],
    "UiHint": null,
