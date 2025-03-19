@@ -69,8 +69,7 @@ public partial class detalleReporte
 
     public int? cantidadEnRollos { get; set; }
 
-    [Column(TypeName = "numeric(20, 2)")]
-    public decimal? anchoBobina { get; set; }
+    public int? anchoBobina { get; set; }
 
     [Column(TypeName = "numeric(20, 2)")]
     public decimal? velocidadMaquina { get; set; }
@@ -79,28 +78,28 @@ public partial class detalleReporte
 
     public int? largoConvertido { get; set; }
 
-    public int? anchoMm { get; set; }
+    public int? bjAncho { get; set; }
 
-    public int? largoMm { get; set; }
+    public int? bjLargo { get; set; }
 
-    public int? anchoMt { get; set; }
+    public int? bsAncho { get; set; }
 
-    public int? largoMt { get; set; }
+    public int? bsLargo { get; set; }
 
-    [Column(TypeName = "numeric(20, 2)")]
-    public decimal? ancho { get; set; }
+    public int? ancho { get; set; }
 
-    [Column(TypeName = "numeric(20, 2)")]
-    public decimal? alto { get; set; }
+    public int? alto { get; set; }
 
     public int? repeticiones { get; set; }
 
     public int? cantidadSobrante { get; set; }
 
-    [Column(TypeName = "numeric(20, 2)")]
-    public decimal? udCorrugados { get; set; }
+    public int? udCorrugados { get; set; }
 
     public bool? accionPorAuxiliar { get; set; }
+
+    [Column(TypeName = "datetime")]
+    public DateTime? fechaHora { get; set; }
 
     [ForeignKey("idMaterial")]
     [InverseProperty("detalleReporte")]

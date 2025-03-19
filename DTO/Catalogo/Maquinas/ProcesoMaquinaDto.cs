@@ -5,5 +5,7 @@
         public int idMaquina { get; set; }
 
         public string? nombreMaquina { get; set; }
+
+        public string? familiaNombre { get; set; }
     }
 }

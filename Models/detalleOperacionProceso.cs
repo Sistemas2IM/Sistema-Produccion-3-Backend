@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Sistema_Produccion_3_Backend.Models;
 
+[Index("maquina", Name = "MAQUINA_FK")]
 [Index("idProceso", Name = "PROCESO_OPERACIONES_FK")]
 [Index("idOperacion", Name = "TIPO_OPERACION_FK")]
 public partial class detalleOperacionProceso
@@ -45,6 +46,34 @@ public partial class detalleOperacionProceso
 
     public int? idDetalleReporte { get; set; }
 
+    [StringLength(1)]
+    public string tiroRetiro { get; set; }
+
+    [Column(TypeName = "datetime")]
+    public DateTime? fechaHora { get; set; }
+
+    public int? bjAncho { get; set; }
+
+    public int? bjLargo { get; set; }
+
+    public int? largoConvertido { get; set; }
+
+    public int? bsLargo { get; set; }
+
+    public int? bsAncho { get; set; }
+
+    public int? anchoBobina { get; set; }
+
+    public int? cantAjuste { get; set; }
+
+    public int? cantProducir { get; set; }
+
+    public int? cantSolicitada { get; set; }
+
+    public int? cantProducida { get; set; }
+
+    public int? maquina { get; set; }
+
     [ForeignKey("idOperacion")]
     [InverseProperty("detalleOperacionProceso")]
     public virtual operaciones idOperacionNavigation { get; set; }
@@ -52,4 +81,8 @@ public partial class detalleOperacionProceso
     [ForeignKey("idProceso")]
     [InverseProperty("detalleOperacionProceso")]
     public virtual procesoOf idProcesoNavigation { get; set; }
+
+    [ForeignKey("maquina")]
+    [InverseProperty("detalleOperacionProceso")]
+    public virtual maquinas maquinaNavigation { get; set; }
 }

@@ -13,5 +13,7 @@
         public string? bitacoraId { get; set; }
 
         public string? tipoPausa { get; set; }
+
+        public int? idOperacion { get; set; }
     }
 }

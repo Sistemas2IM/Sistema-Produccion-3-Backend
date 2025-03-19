@@ -81,6 +81,12 @@ public partial class procesoOf
 
     public int? oV { get; set; }
 
+    [StringLength(50)]
+    public string serieNumeracion { get; set; }
+
+    [StringLength(10)]
+    public string tiroRetiro { get; set; }
+
     [InverseProperty("idProcesoNavigation")]
     public virtual ICollection<asignacion> asignacion { get; set; } = new List<asignacion>();
 
@@ -117,6 +123,9 @@ public partial class procesoOf
 
     [InverseProperty("idProcesoNavigation")]
     public virtual ICollection<procesoImpresora> procesoImpresora { get; set; } = new List<procesoImpresora>();
+
+    [InverseProperty("idProcesoNavigation")]
+    public virtual ICollection<procesoImpresoraFlexo> procesoImpresoraFlexo { get; set; } = new List<procesoImpresoraFlexo>();
 
     [InverseProperty("idProcesoNavigation")]
     public virtual ICollection<procesoPegadora> procesoPegadora { get; set; } = new List<procesoPegadora>();

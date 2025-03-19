@@ -48,7 +48,7 @@
 
         public int? cantidadEnRollos { get; set; }
 
-        public decimal? anchoBobina { get; set; }
+        public int? anchoBobina { get; set; }
 
         public decimal? velocidadMaquina { get; set; }
 
@@ -56,23 +56,25 @@
 
         public int? largoConvertido { get; set; }
 
-        public int? anchoMm { get; set; }
+        public int? bjAncho { get; set; }
 
-        public int? largoMm { get; set; }
+        public int? bjLargo { get; set; }
 
-        public int? anchoMt { get; set; }
+        public int? bsAncho { get; set; }
 
-        public int? largoMt { get; set; }
+        public int? bsLargo { get; set; }
 
-        public decimal? ancho { get; set; }
+        public int? ancho { get; set; }
 
-        public decimal? alto { get; set; }
+        public int? alto { get; set; }
 
         public int? repeticiones { get; set; }
 
         public int? cantidadSobrante { get; set; }
 
-        public decimal? udCorrugados { get; set; }
+        public int? udCorrugados { get; set; }
+
+        public DateTime? fechaHora { get; set; }
 
         public bool? accionPorAuxiliar { get; set; }
     }

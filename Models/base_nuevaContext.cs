@@ -121,6 +121,8 @@ public partial class base_nuevaContext : DbContext
 
     public virtual DbSet<procesoImpresora> procesoImpresora { get; set; }
 
+    public virtual DbSet<procesoImpresoraFlexo> procesoImpresoraFlexo { get; set; }
+
     public virtual DbSet<procesoOf> procesoOf { get; set; }
 
     public virtual DbSet<procesoPegadora> procesoPegadora { get; set; }
@@ -377,6 +379,8 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.idOperacionNavigation).WithMany(p => p.detalleOperacionProceso).HasConstraintName("FK_DETALLEO_OPERACION");
 
             entity.HasOne(d => d.idProcesoNavigation).WithMany(p => p.detalleOperacionProceso).HasConstraintName("FK_DETALLE_O_PROCESO");
+
+            entity.HasOne(d => d.maquinaNavigation).WithMany(p => p.detalleOperacionProceso).HasConstraintName("FK_MAQUINA_OPERACION_PROCESO");
         });
 
         modelBuilder.Entity<detallePegado>(entity =>
@@ -661,6 +665,15 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.idProcesoNavigation).WithMany(p => p.procesoImpresora)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_procesoImpresora_procesoOf");
+        });
+
+        modelBuilder.Entity<procesoImpresoraFlexo>(entity =>
+        {
+            entity.HasKey(e => e.idProcesoImpresoraFlexo).HasName("PK__procesoI__751EE56008093203");
+
+            entity.HasOne(d => d.idProcesoNavigation).WithMany(p => p.procesoImpresoraFlexo)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_procesoImpresoraFlexo_procesoOf");
         });
 
         modelBuilder.Entity<procesoOf>(entity =>

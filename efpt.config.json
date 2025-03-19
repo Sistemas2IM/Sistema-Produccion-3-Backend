@@ -231,6 +231,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[procesoImpresoraFlexo]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[procesoOf]",
          "ObjectType": 0
       },

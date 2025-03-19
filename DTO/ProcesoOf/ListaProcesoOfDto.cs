@@ -67,6 +67,12 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
 
         public object? DetalleProceso { get; set; }
 
+        public string? serie { get; set; }
+
+        public string? serieNumeracion { get; set; }
+
+        public string? tiroRetiro { get; set; }
+
         public ProcesoPosturasOfDto? PosturasOfDto { get; set; }
 
         public ProcesoTablerosOfDto? TablerosOfDto { get; set; }

@@ -149,6 +149,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForMember(dest => dest.unidadMedida, opt => opt.MapFrom(src => src.oFNavigation.unidadMedida))
                 .ForMember(dest => dest.fsc, opt => opt.MapFrom(src => src.oFNavigation.fsc))
                 .ForMember(dest => dest.asignacionDto, opt => opt.MapFrom(src => src.asignacion))
+                .ForMember(dest => dest.serie, opt => opt.MapFrom(src => src.oFNavigation.seriesOf))
                 .ReverseMap();
             CreateMap<procesoOf, ProcesoOfVistaTableroDto>()
                 .ForMember(dest => dest.detalleProcesoOf, opt => opt.MapFrom(src => src.detalleOperacionProceso))
@@ -165,6 +166,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForMember(dest => dest.unidadMedida, opt => opt.MapFrom(src => src.oFNavigation.unidadMedida))
                 .ForMember(dest => dest.fsc, opt => opt.MapFrom(src => src.oFNavigation.fsc))
                 .ForMember(dest => dest.asignacionDto, opt => opt.MapFrom(src => src.asignacion))
+                .ForMember(dest => dest.serie, opt => opt.MapFrom(src => src.oFNavigation.seriesOf))
                 .ReverseMap();
             CreateMap<procesoOf, ListaProcesoOfDto>()
                 .ForMember(dest => dest.PosturasOfDto, opt => opt.MapFrom(src => src.idPosturaNavigation))
@@ -177,6 +179,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForMember(dest => dest.tipoOrden, opt => opt.MapFrom(src => src.oFNavigation.tipoDeOrden))
                 .ForMember(dest => dest.unidadMedida, opt => opt.MapFrom(src => src.oFNavigation.unidadMedida))
                 .ForMember(dest => dest.fsc, opt => opt.MapFrom(src => src.oFNavigation.fsc))
+                .ForMember(dest => dest.serie, opt => opt.MapFrom(src => src.oFNavigation.seriesOf))
                 .ReverseMap();
             CreateMap<procesoOf, ProcesosBusquedaDto>()
                 .ForMember(dest => dest.cliente, opt => opt.MapFrom(src => src.oFNavigation.clienteOf))
@@ -200,6 +203,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                     .ForMember(dest => dest.tipoOrden, opt => opt.MapFrom(src => src.oFNavigation.tipoDeOrden))
                     .ForMember(dest => dest.unidadMedida, opt => opt.MapFrom(src => src.oFNavigation.unidadMedida))
                     .ForMember(dest => dest.fsc, opt => opt.MapFrom(src => src.oFNavigation.fsc))
+                    .ForMember(dest => dest.serie, opt => opt.MapFrom(src => src.oFNavigation.seriesOf))
                     .ReverseMap();
 
                 CreateMap<procesoOf,AddProcesoOfMaquinas>()
@@ -360,7 +364,9 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                     CreateMap<UpdateOperacionesDto, operaciones>()
                         .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
-                    CreateMap<detalleOperacionProceso, OperacionProcesoDto>().ReverseMap();
+                    CreateMap<detalleOperacionProceso, OperacionProcesoDto>()
+                        .ForMember(dest => dest.procesoDto, opt => opt.MapFrom(src => src.idProcesoNavigation))
+                        .ReverseMap();
                     CreateMap<detalleOperacionProceso, AddOperacionProcesoDto>().ReverseMap();
                     CreateMap<detalleOperacionProceso, BatchAddOperacionProcesoDto>().ReverseMap();
                     CreateMap<UpdateOperacionProcesoDto ,detalleOperacionProceso>()
@@ -378,8 +384,12 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             CreateMap<tipoCierre, TipoCierreDto>().ReverseMap();
 
             // CATALOGOS ==============================================================================================
-            CreateMap<maquinas, MaquinaDto>().ReverseMap();
-            CreateMap<maquinas, ProcesoMaquinaDto>().ReverseMap(); // <---- para lista procesos por OF
+            CreateMap<maquinas, MaquinaDto>()
+                .ForMember(dest => dest.familiaNombre, opt => opt.MapFrom(src => src.idFamiliaNavigation.nombreFamilia))
+                .ReverseMap();
+            CreateMap<maquinas, ProcesoMaquinaDto>()
+                .ForMember(dest => dest.familiaNombre, opt => opt.MapFrom(src => src.idFamiliaNavigation.nombreFamilia))
+                .ReverseMap(); // <---- para lista procesos por OF
             CreateMap<maquinas, AddMaquinaDto>().ReverseMap();
             CreateMap<UpdateMaquinaDto, maquinas>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));

@@ -42,5 +42,7 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.Acabado
         public string? medidaProd { get; set; }
 
         public string? detalleNum { get; set; }
+
+        public string? tipoCierre { get; set; }
     }
 }

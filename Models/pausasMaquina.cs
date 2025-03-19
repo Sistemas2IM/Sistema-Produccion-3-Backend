@@ -33,6 +33,8 @@ public partial class pausasMaquina
     [StringLength(100)]
     public string tipoPausa { get; set; }
 
+    public int? idOperacion { get; set; }
+
     [ForeignKey("bitacoraId")]
     [InverseProperty("pausasMaquina")]
     public virtual reportesDeOperadores bitacora { get; set; }

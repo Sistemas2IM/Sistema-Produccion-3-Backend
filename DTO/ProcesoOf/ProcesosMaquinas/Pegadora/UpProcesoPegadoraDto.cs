@@ -9,5 +9,7 @@
         public string? tiempoCorrida { get; set; }
 
         public string? indicacion { get; set; }
+
+        public string? tipoCierre { get; set; }
     }
 }

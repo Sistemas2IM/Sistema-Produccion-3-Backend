@@ -86,6 +86,12 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
 
         public int? idDetalleReporte { get; set; }
 
+        public string? serie { get; set; }
+
+        public string? serieNumeracion { get; set; }
+
+        public string? tiroRetiro { get; set; }
+
         public List<DetalleProcesoOfDto>? detalleProcesoOf { get; set; }
 
         public List<TarjetaCampoDto>? tarjetaCampoDto { get; set; }

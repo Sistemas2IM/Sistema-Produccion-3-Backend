@@ -35,5 +35,31 @@
         public string? observaciones { get; set; }
 
         public bool? accionPorAuxiliar { get; set; }
+
+        public int? anchoBobina { get; set; }
+
+        public decimal? velocidadMaquina { get; set; }
+
+        public int? largoConvertido { get; set; }
+
+        public int? bjAncho { get; set; }
+
+        public int? bjLargo { get; set; }
+
+        public int? bsAncho { get; set; }
+
+        public int? bsLargo { get; set; }
+
+        public int? ancho { get; set; }
+
+        public int? alto { get; set; }
+
+        public int? repeticiones { get; set; }
+
+        public int? cantidadSobrante { get; set; }
+
+        public int? udCorrugados { get; set; }
+
+        public DateTime? fechaHora { get; set; }
     }
 }

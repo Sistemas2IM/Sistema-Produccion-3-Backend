@@ -5,6 +5,7 @@ using Sistema_Produccion_3_Backend.DTO.ProcesoOf.DetalleProceso;
 using Sistema_Produccion_3_Backend.DTO.ReporteOperador;
 using Sistema_Produccion_3_Backend.DTO.Tableros;
 using Sistema_Produccion_3_Backend.DTO.Tableros.Posturas;
+using System.ComponentModel.DataAnnotations;
 
 namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
 {
@@ -85,6 +86,10 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
         public object? DetalleProceso { get; set; }
 
         public string? serie { get; set; }
+
+        public string? serieNumeracion { get; set; }
+
+        public string? tiroRetiro { get; set; }
 
         public List<DetalleProcesoOfDto>? detalleProcesoOf { get; set; }
 

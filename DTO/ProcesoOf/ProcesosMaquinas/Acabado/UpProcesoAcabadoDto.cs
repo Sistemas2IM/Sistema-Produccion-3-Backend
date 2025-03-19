@@ -33,5 +33,7 @@
         public string? medidaProd { get; set; }
 
         public string? detalleNum { get; set; }
+
+        public string? tipoCierre { get; set; }
     }
 }

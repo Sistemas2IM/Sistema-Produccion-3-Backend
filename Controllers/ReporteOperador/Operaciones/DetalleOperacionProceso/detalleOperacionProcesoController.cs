@@ -64,6 +64,19 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador.Operaciones.D
             return detalleOperacionProceso;
         }
 
+        // GET: api/detalleOperacionProceso
+        [HttpGet("get/of/{of}")]
+        public async Task<ActionResult<IEnumerable<OperacionProcesoDto>>> GetdetalleOperacionProcesoOf(int of)
+        {
+            var operacionProceso = await _context.detalleOperacionProceso               
+                .Include(o => o.idProcesoNavigation)
+                .Where(o => o.idProcesoNavigation.oF == of)
+                .ToListAsync();
+            var operacionProcesoDto = _mapper.Map<List<OperacionProcesoDto>>(operacionProceso);
+
+            return Ok(operacionProcesoDto);
+        }
+
         // GET: api/detalleOperacionProceso/5
         [HttpGet("get/{ofId}/{idMaquina}")]
         public async Task<ActionResult<IEnumerable<OperacionProcesoOfMaquina>>> GetOperacionProceso(int ofId, int idMaquina)
@@ -166,6 +179,19 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador.Operaciones.D
                         pt.cantidadRecibida = dto.cantidadRecibida;
                         pt.cantidadProducida = dto.cantidadProducida;
                         pt.cantidadNc = dto.cantidadNc;
+                        pt.tiroRetiro = dto.tiroRetiro;
+                        pt.fechaHora = dto.fechaHora;
+                        pt.bjAncho = dto.bjAncho;
+                        pt.bjLargo = dto.bjLargo;
+                        pt.largoConvertido = dto.largoConvertido;
+                        pt.bsLargo = dto.bsLargo;
+                        pt.bsAncho = dto.bsAncho;
+                        pt.anchoBobina = dto.anchoBobina;
+                        pt.cantAjuste = dto.cantAjuste;
+                        pt.cantProducir = dto.cantProducir;
+                        pt.cantSolicitada = dto.cantSolicitada;
+                        pt.cantProducida = dto.cantProducida;
+                        pt.maquina = dto.maquina;
                     }
 
                     _context.Entry(pt).State = EntityState.Modified;

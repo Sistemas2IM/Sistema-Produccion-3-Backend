@@ -248,6 +248,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 .Where(t => t.idTablero == id)
                 .Include(u => u.detalleOperacionProceso)
                 .ThenInclude(o => o.idOperacionNavigation)
+                .Include(u => u.detalleOperacionProceso)
+                .ThenInclude(m => m.maquinaNavigation)
                 .Include(m => m.tarjetaCampo)
                 .Include(s => s.tarjetaEtiqueta)
                 .ThenInclude(e => e.idEtiquetaNavigation)

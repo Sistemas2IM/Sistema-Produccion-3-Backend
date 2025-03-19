@@ -29,5 +29,31 @@
         public int? cantidadNc { get; set; }
 
         public int? idDetalleReporte { get; set; }
+
+        public string? tiroRetiro { get; set; }
+
+        public DateTime? fechaHora { get; set; }
+
+        public int? bjAncho { get; set; }
+
+        public int? bjLargo { get; set; }
+
+        public int? largoConvertido { get; set; }
+
+        public int? bsLargo { get; set; }
+
+        public int? bsAncho { get; set; }
+
+        public int? anchoBobina { get; set; }
+
+        public int? cantAjuste { get; set; }
+
+        public int? cantProducir { get; set; }
+
+        public int? cantSolicitada { get; set; }
+
+        public int? cantProducida { get; set; }
+
+        public int? maquina { get; set; }
     }
 }

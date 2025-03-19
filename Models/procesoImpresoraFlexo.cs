@@ -8,29 +8,23 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Sistema_Produccion_3_Backend.Models;
 
-public partial class procesoPegadora
+public partial class procesoImpresoraFlexo
 {
     [Key]
-    public int idProcesoPegadora { get; set; }
+    public int idProcesoImpresoraFlexo { get; set; }
 
     public int idProceso { get; set; }
 
     [StringLength(500)]
-    public string cantidadAPegar { get; set; }
+    public string forma { get; set; }
 
     [StringLength(500)]
-    public string tiempoArreglo { get; set; }
+    public string radesq { get; set; }
 
     [StringLength(500)]
-    public string tiempoCorrida { get; set; }
-
-    [StringLength(500)]
-    public string indicacion { get; set; }
-
-    [StringLength(500)]
-    public string tipoCierre { get; set; }
+    public string semicorte { get; set; }
 
     [ForeignKey("idProceso")]
-    [InverseProperty("procesoPegadora")]
+    [InverseProperty("procesoImpresoraFlexo")]
     public virtual procesoOf idProcesoNavigation { get; set; }
 }

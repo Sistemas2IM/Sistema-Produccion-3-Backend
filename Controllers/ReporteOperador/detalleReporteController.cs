@@ -147,6 +147,19 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
                         detalle.cantidadNc = dto.cantidadNc;
                         detalle.observaciones = dto.observaciones;
                         detalle.accionPorAuxiliar = dto.accionPorAuxiliar;
+                        detalle.anchoBobina = dto.anchoBobina;
+                        detalle.velocidadMaquina = dto.velocidadMaquina;
+                        detalle.largoConvertido = dto.largoConvertido;
+                        detalle.bjAncho = dto.bjAncho;
+                        detalle.bjLargo = dto.bjLargo;
+                        detalle.bsAncho = dto.bsAncho;
+                        detalle.bsLargo = dto.bsLargo;
+                        detalle.ancho = dto.ancho;
+                        detalle.alto = dto.alto;
+                        detalle.repeticiones = dto.repeticiones;
+                        detalle.cantidadSobrante = dto.cantidadSobrante;
+                        detalle.udCorrugados = dto.udCorrugados;
+                        detalle.fechaHora = dto.fechaHora;
                     }
 
                     _context.Entry(detalle).State = EntityState.Modified;

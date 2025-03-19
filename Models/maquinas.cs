@@ -27,6 +27,9 @@ public partial class maquinas
     [InverseProperty("idMaquinaNavigation")]
     public virtual ICollection<contenidoEntrega> contenidoEntrega { get; set; } = new List<contenidoEntrega>();
 
+    [InverseProperty("maquinaNavigation")]
+    public virtual ICollection<detalleOperacionProceso> detalleOperacionProceso { get; set; } = new List<detalleOperacionProceso>();
+
     [InverseProperty("idMaquinaNavigation")]
     public virtual ICollection<entregasProductoTerminado> entregasProductoTerminado { get; set; } = new List<entregasProductoTerminado>();
 
