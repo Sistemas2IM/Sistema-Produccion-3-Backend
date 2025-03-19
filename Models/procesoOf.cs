@@ -119,6 +119,9 @@ public partial class procesoOf
     public virtual ICollection<procesoAcabado> procesoAcabado { get; set; } = new List<procesoAcabado>();
 
     [InverseProperty("idProcesoNavigation")]
+    public virtual ICollection<procesoAcabadoFlexo> procesoAcabadoFlexo { get; set; } = new List<procesoAcabadoFlexo>();
+
+    [InverseProperty("idProcesoNavigation")]
     public virtual ICollection<procesoBarniz> procesoBarniz { get; set; } = new List<procesoBarniz>();
 
     [InverseProperty("idProcesoNavigation")]
@@ -126,6 +129,9 @@ public partial class procesoOf
 
     [InverseProperty("idProcesoNavigation")]
     public virtual ICollection<procesoImpresoraFlexo> procesoImpresoraFlexo { get; set; } = new List<procesoImpresoraFlexo>();
+
+    [InverseProperty("idProcesoNavigation")]
+    public virtual ICollection<procesoMangaFlexo> procesoMangaFlexo { get; set; } = new List<procesoMangaFlexo>();
 
     [InverseProperty("idProcesoNavigation")]
     public virtual ICollection<procesoPegadora> procesoPegadora { get; set; } = new List<procesoPegadora>();

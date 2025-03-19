@@ -7,8 +7,11 @@ using Sistema_Produccion_3_Backend.DTO.ProcesoOf;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.BusquedaProcesos;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.Acabado;
+using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.AcabadoFlexo;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.Barnizado;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.Impresión;
+using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.ImpresionFlexo;
+using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.MangaFlexo;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.Pegadora;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.Preprensa;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.Serigrafia;
@@ -228,6 +231,27 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                         dto.DetalleProceso = _mapper.Map<ProcesoSerigrafiaDto>(detalleSerigrafia);
                         break;
 
+                    case "impresionFlexo":
+                        var detalleImpresionFlexo = await _context.procesoImpresoraFlexo
+                            .Where(p => p.idProceso == proceso.idProceso)
+                            .FirstOrDefaultAsync();
+                        dto.DetalleProceso = _mapper.Map<ProcesoImpresoraFlexoDto>(detalleImpresionFlexo);
+                        break;
+
+                    case "acabadoFlexo":
+                        var detalleAcabadoFlexo = await _context.procesoAcabadoFlexo
+                            .Where(p => p.idProceso == proceso.idProceso)
+                            .FirstOrDefaultAsync();
+                        dto.DetalleProceso = _mapper.Map<ProcesoAcabadoFlexoDto>(detalleAcabadoFlexo);
+                        break;
+
+                    case "mangaFlexo":
+                        var detalleMangaFlexo = await _context.procesoMangaFlexo
+                            .Where(p => p.idProceso == proceso.idProceso)
+                            .FirstOrDefaultAsync();
+                        dto.DetalleProceso = _mapper.Map<ProcesoMangaFlexoDto>(detalleMangaFlexo);
+                        break;
+
                     default:
                         dto.DetalleProceso = null;
                         break;
@@ -310,11 +334,32 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                         dto.DetalleProceso = _mapper.Map<ProcesoPreprensaDto>(detallePreprensa);
                         break;
 
-                    case "serigrafia":
+                        case "serigrafia":
                         var detalleSerigrafia = await _context.procesoSerigrafia
                             .Where(p => p.idProceso == proceso.idProceso)
                             .FirstOrDefaultAsync();
                         dto.DetalleProceso = _mapper.Map<ProcesoSerigrafiaDto>(detalleSerigrafia);
+                        break;
+
+                        case "impresionFlexo":
+                        var detalleImpresionFlexo = await _context.procesoImpresoraFlexo
+                        .Where(p => p.idProceso == proceso.idProceso)
+                        .FirstOrDefaultAsync();
+                        dto.DetalleProceso = _mapper.Map<ProcesoImpresoraFlexoDto>(detalleImpresionFlexo);
+                        break;
+
+                        case "acabadoFlexo":
+                        var detalleAcabadoFlexo = await _context.procesoAcabadoFlexo
+                            .Where(p => p.idProceso == proceso.idProceso)
+                            .FirstOrDefaultAsync();
+                        dto.DetalleProceso = _mapper.Map<ProcesoAcabadoFlexoDto>(detalleAcabadoFlexo);
+                        break;
+
+                        case "mangaFlexo":
+                        var detalleMangaFlexo = await _context.procesoMangaFlexo
+                            .Where(p => p.idProceso == proceso.idProceso)
+                            .FirstOrDefaultAsync();
+                        dto.DetalleProceso = _mapper.Map<ProcesoMangaFlexoDto>(detalleMangaFlexo);
                         break;
 
                     default:
@@ -404,6 +449,27 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                         dto.DetalleProceso = _mapper.Map<ProcesoSerigrafiaDto>(detalleSerigrafia);
                         break;
 
+                    case "impresionFlexo":
+                        var detalleImpresionFlexo = await _context.procesoImpresoraFlexo
+                            .Where(p => p.idProceso == proceso.idProceso)
+                            .FirstOrDefaultAsync();
+                        dto.DetalleProceso = _mapper.Map<ProcesoImpresoraFlexoDto>(detalleImpresionFlexo);
+                        break;
+
+                    case "acabadoFlexo":
+                        var detalleAcabadoFlexo = await _context.procesoAcabadoFlexo
+                            .Where(p => p.idProceso == proceso.idProceso)
+                            .FirstOrDefaultAsync();
+                        dto.DetalleProceso = _mapper.Map<ProcesoAcabadoFlexoDto>(detalleAcabadoFlexo);
+                        break;
+
+                    case "mangaFlexo":
+                        var detalleMangaFlexo = await _context.procesoMangaFlexo
+                            .Where(p => p.idProceso == proceso.idProceso)
+                            .FirstOrDefaultAsync();
+                        dto.DetalleProceso = _mapper.Map<ProcesoMangaFlexoDto>(detalleMangaFlexo);
+                        break;
+
                     default:
                         dto.DetalleProceso = null;
                         break;
@@ -480,6 +546,27 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                         .Where(p => p.idProceso == proceso.idProceso)
                         .FirstOrDefaultAsync();
                     dto.DetalleProceso = _mapper.Map<ProcesoSerigrafiaDto>(detalleSerigrafia);
+                    break;
+
+                case "impresionFlexo":
+                    var detalleImpresionFlexo = await _context.procesoImpresoraFlexo
+                        .Where(p => p.idProceso == proceso.idProceso)
+                        .FirstOrDefaultAsync();
+                    dto.DetalleProceso = _mapper.Map<ProcesoImpresoraFlexoDto>(detalleImpresionFlexo);
+                    break;
+
+                case "acabadoFlexo":
+                    var detalleAcabadoFlexo = await _context.procesoAcabadoFlexo
+                        .Where(p => p.idProceso == proceso.idProceso)
+                        .FirstOrDefaultAsync();
+                    dto.DetalleProceso = _mapper.Map<ProcesoAcabadoFlexoDto>(detalleAcabadoFlexo);
+                    break;
+
+                case "mangaFlexo":
+                    var detalleMangaFlexo = await _context.procesoMangaFlexo
+                        .Where(p => p.idProceso == proceso.idProceso)
+                        .FirstOrDefaultAsync();
+                    dto.DetalleProceso = _mapper.Map<ProcesoMangaFlexoDto>(detalleMangaFlexo);
                     break;
 
                 default:
@@ -659,6 +746,18 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                         await ActualizarDetalleMaquina<procesoSerigrafia, UpProcesoSerigrafia>(idProceso, dto.DetalleProceso);
                         break;
 
+                    case "impresionFlexo":
+                        await ActualizarDetalleMaquina<procesoImpresoraFlexo, UpProcesoImpresoraFlexoDto>(idProceso, dto.DetalleProceso);
+                        break;
+
+                    case "acabadoFlexo":
+                        await ActualizarDetalleMaquina<procesoAcabadoFlexo, UpProcesoAcabadoFlexoDto>(idProceso, dto.DetalleProceso);
+                        break;
+
+                    case "mangaFlexo":
+                        await ActualizarDetalleMaquina<procesoMangaFlexo, UpProcesoMangaFlexoDto>(idProceso, dto.DetalleProceso);
+                        break;
+
                     default:
                         return BadRequest("Tipo de máquina no soportado.");
                 }
@@ -817,6 +916,42 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                         {
                             detalleSerigrafia.idProceso = proceso.idProceso;
                             _context.procesoSerigrafia.Add(detalleSerigrafia);
+                        }
+                    }
+                    break;
+
+                    case "impresionFlexo":
+                    if (dto.DetalleProceso is JsonElement jsonImpresionFlexo)
+                    {
+                        var detalleImpresionFlexo = JsonSerializer.Deserialize<procesoImpresoraFlexo>(jsonImpresionFlexo.GetRawText());
+                        if (detalleImpresionFlexo != null)
+                        {
+                            detalleImpresionFlexo.idProceso = proceso.idProceso;
+                            _context.procesoImpresoraFlexo.Add(detalleImpresionFlexo);
+                        }
+                    }
+                    break;
+
+                    case "acabadoFlexo":
+                    if (dto.DetalleProceso is JsonElement jsonAcabadoFlexo)
+                    {
+                        var detalleAcabadoFlexo = JsonSerializer.Deserialize<procesoAcabadoFlexo>(jsonAcabadoFlexo.GetRawText());
+                        if (detalleAcabadoFlexo != null)
+                        {
+                            detalleAcabadoFlexo.idProceso = proceso.idProceso;
+                            _context.procesoAcabadoFlexo.Add(detalleAcabadoFlexo);
+                        }
+                    }
+                    break;
+
+                    case "mangaFlexo":
+                    if (dto.DetalleProceso is JsonElement jsonMangaFlexo)
+                    {
+                        var detalleMangaFlexo = JsonSerializer.Deserialize<procesoMangaFlexo>(jsonMangaFlexo.GetRawText());
+                        if (detalleMangaFlexo != null)
+                        {
+                            detalleMangaFlexo.idProceso = proceso.idProceso;
+                            _context.procesoMangaFlexo.Add(detalleMangaFlexo);
                         }
                     }
                     break;

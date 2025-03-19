@@ -117,11 +117,15 @@ public partial class base_nuevaContext : DbContext
 
     public virtual DbSet<procesoAcabado> procesoAcabado { get; set; }
 
+    public virtual DbSet<procesoAcabadoFlexo> procesoAcabadoFlexo { get; set; }
+
     public virtual DbSet<procesoBarniz> procesoBarniz { get; set; }
 
     public virtual DbSet<procesoImpresora> procesoImpresora { get; set; }
 
     public virtual DbSet<procesoImpresoraFlexo> procesoImpresoraFlexo { get; set; }
+
+    public virtual DbSet<procesoMangaFlexo> procesoMangaFlexo { get; set; }
 
     public virtual DbSet<procesoOf> procesoOf { get; set; }
 
@@ -653,6 +657,15 @@ public partial class base_nuevaContext : DbContext
                 .HasConstraintName("FK_procesoAcabado_procesoOf");
         });
 
+        modelBuilder.Entity<procesoAcabadoFlexo>(entity =>
+        {
+            entity.HasKey(e => e.idProcesoAcanadoFlexo).HasName("PK__procesoA__13DE4B6F5490DE7D");
+
+            entity.HasOne(d => d.idProcesoNavigation).WithMany(p => p.procesoAcabadoFlexo)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_procesoAcabadoFlexo_procesoOf");
+        });
+
         modelBuilder.Entity<procesoBarniz>(entity =>
         {
             entity.HasOne(d => d.idProcesoNavigation).WithMany(p => p.procesoBarniz)
@@ -674,6 +687,15 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.idProcesoNavigation).WithMany(p => p.procesoImpresoraFlexo)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_procesoImpresoraFlexo_procesoOf");
+        });
+
+        modelBuilder.Entity<procesoMangaFlexo>(entity =>
+        {
+            entity.HasKey(e => e.idProcesoMangaFlexo).HasName("PK__procesoM__E9EEA4A75491350E");
+
+            entity.HasOne(d => d.idProcesoNavigation).WithMany(p => p.procesoMangaFlexo)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_procesoMangaFlexo_procesoOf");
         });
 
         modelBuilder.Entity<procesoOf>(entity =>
