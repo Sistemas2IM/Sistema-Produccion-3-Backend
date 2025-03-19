@@ -24,6 +24,87 @@ public partial class procesoImpresoraFlexo
     [StringLength(500)]
     public string semicorte { get; set; }
 
+    [StringLength(500)]
+    public string codigoMontaje { get; set; }
+
+    [StringLength(500)]
+    public string z { get; set; }
+
+    [StringLength(200)]
+    public string desarrolloPulg { get; set; }
+
+    [StringLength(200)]
+    public string desarrolloMM { get; set; }
+
+    [StringLength(200)]
+    public string anchoMaterial { get; set; }
+
+    [StringLength(200)]
+    public string largoMM { get; set; }
+
+    [StringLength(200)]
+    public string gapDesa { get; set; }
+
+    [StringLength(200)]
+    public string anchoMM { get; set; }
+
+    [StringLength(200)]
+    public string gapEje { get; set; }
+
+    [StringLength(500)]
+    public string layFlat { get; set; }
+
+    [StringLength(200)]
+    public string costuraMM { get; set; }
+
+    [StringLength(500)]
+    public string imposicionDesarrollo { get; set; }
+
+    [StringLength(500)]
+    public string imposicionEje { get; set; }
+
+    [StringLength(500)]
+    public string imposicionTotal { get; set; }
+
+    [StringLength(500)]
+    public string cantidadTintas { get; set; }
+
+    [StringLength(500)]
+    public string refMaterial { get; set; }
+
+    [StringLength(500)]
+    public string cantidadMaterialSoli { get; set; }
+
+    [StringLength(500)]
+    public string excedente { get; set; }
+
+    [StringLength(500)]
+    public string ajusteMaterial { get; set; }
+
+    [StringLength(500)]
+    public string areaM2 { get; set; }
+
+    [StringLength(500)]
+    public string sentidoSalida { get; set; }
+
+    [StringLength(500)]
+    public string tiempoArreglo { get; set; }
+
+    [StringLength(500)]
+    public string tiempoCorrida { get; set; }
+
+    [StringLength(500)]
+    public string etiquetaRollo { get; set; }
+
+    [StringLength(500)]
+    public string rollosTotales { get; set; }
+
+    [StringLength(500)]
+    public string rollosCorrugado { get; set; }
+
+    [StringLength(500)]
+    public string cantCorrugado { get; set; }
+
     [ForeignKey("idProceso")]
     [InverseProperty("procesoImpresoraFlexo")]
     public virtual procesoOf idProcesoNavigation { get; set; }

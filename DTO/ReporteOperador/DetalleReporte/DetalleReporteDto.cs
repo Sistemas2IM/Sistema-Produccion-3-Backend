@@ -14,7 +14,7 @@ namespace Sistema_Produccion_3_Backend.DTO.ReporteOperador.DetalleReporte
 
         public int? idOperacion { get; set; }
 
-        public string idMaterial { get; set; }
+        public string? idMaterial { get; set; }
 
         public int? idProceso { get; set; }
 
@@ -44,13 +44,13 @@ namespace Sistema_Produccion_3_Backend.DTO.ReporteOperador.DetalleReporte
 
         public int? cantidadSolicitada { get; set; }
 
-        public int? cantidadProducidaMt { get; set; }
+        public int? cantProducida { get; set; }
 
         public int? cantidadAjuste { get; set; }
 
         public int? cantidadNc { get; set; }
 
-        public int? cantidadNcProducida { get; set; }
+        public int? cantProducir { get; set; }
 
         public int? cantidadMtEnRollos { get; set; }
 

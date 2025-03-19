@@ -14,11 +14,11 @@
 
         public int? numeroFila { get; set; }
 
-        public DateTime? horaInicio { get; set; }
+        public TimeOnly? horaInicio { get; set; }
 
-        public DateTime? horaFinal { get; set; }
+        public TimeOnly? horaFinal { get; set; }
 
-        public DateTime? tiempo { get; set; }
+        public TimeOnly? tiempo { get; set; }
 
         public string? descripcion { get; set; }
 
@@ -34,13 +34,13 @@
 
         public int? cantidadSolicitada { get; set; }
 
-        public int? cantidadProducidaMt { get; set; }
+        public int? cantProducida { get; set; }
 
         public int? cantidadAjuste { get; set; }
 
         public int? cantidadNc { get; set; }
 
-        public int? cantidadNcProducida { get; set; }
+        public int? cantProducir { get; set; }
 
         public int? cantidadMtEnRollos { get; set; }
 
@@ -72,8 +72,8 @@
 
         public int? udCorrugados { get; set; }
 
-        public DateTime? fechaHora { get; set; }
-
         public bool? accionPorAuxiliar { get; set; }
+
+        public DateTime? fechaHora { get; set; }
     }
 }

@@ -70,6 +70,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador.Operaciones.D
         {
             var operacionProceso = await _context.detalleOperacionProceso               
                 .Include(o => o.idProcesoNavigation)
+                .Include(m => m.maquinaNavigation)
+                .Include(o => o.idOperacionNavigation)
                 .Where(o => o.idProcesoNavigation.oF == of)
                 .ToListAsync();
             var operacionProcesoDto = _mapper.Map<List<OperacionProcesoDto>>(operacionProceso);

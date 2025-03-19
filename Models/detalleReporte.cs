@@ -57,13 +57,13 @@ public partial class detalleReporte
 
     public int? cantidadSolicitada { get; set; }
 
-    public int? cantidadProducidaMt { get; set; }
+    public int? cantProducida { get; set; }
 
     public int? cantidadAjuste { get; set; }
 
     public int? cantidadNc { get; set; }
 
-    public int? cantidadNcProducida { get; set; }
+    public int? cantProducir { get; set; }
 
     public int? cantidadMtEnRollos { get; set; }
 

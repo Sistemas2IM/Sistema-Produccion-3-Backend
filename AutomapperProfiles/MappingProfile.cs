@@ -365,7 +365,11 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                         .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
                     CreateMap<detalleOperacionProceso, OperacionProcesoDto>()
-                        .ForMember(dest => dest.procesoDto, opt => opt.MapFrom(src => src.idProcesoNavigation))
+                        .ForMember(dest => dest.of, opt => opt.MapFrom(src => src.idProcesoNavigation.oF))
+                        .ForMember(dest => dest.nombreCorto, opt => opt.MapFrom(src => src.maquinaNavigation.nombreCorto))
+                        .ForMember(dest => dest.nombreMaquina, opt => opt.MapFrom(src => src.maquinaNavigation.nombreMaquina))
+                        .ForMember(dest => dest.nombreOperacion, opt => opt.MapFrom(src => src.idOperacionNavigation.nombreOperacion))
+                        .ForMember(dest => dest.prefijo, opt => opt.MapFrom(src => src.idOperacionNavigation.prefijo))
                         .ReverseMap();
                     CreateMap<detalleOperacionProceso, AddOperacionProcesoDto>().ReverseMap();
                     CreateMap<detalleOperacionProceso, BatchAddOperacionProcesoDto>().ReverseMap();

@@ -11,6 +11,12 @@ namespace Sistema_Produccion_3_Backend.DTO.ReporteOperador.DetalleReporte.Impres
 
         public int? idOperacion { get; set; }
 
+        public string? idMaterial { get; set; }
+
+        public int? idProceso { get; set; }
+
+        public int? idTipoCierre { get; set; }
+
         public int? oF { get; set; }
 
         public int? numeroFila { get; set; }
@@ -35,15 +41,23 @@ namespace Sistema_Produccion_3_Backend.DTO.ReporteOperador.DetalleReporte.Impres
 
         public int? cantidadSolicitada { get; set; }
 
+        public int? cantProducida { get; set; }
+
+        public int? cantidadAjuste { get; set; }
+
         public int? cantidadNc { get; set; }
 
-        public string? observaciones { get; set; }
+        public int? cantProducir { get; set; }
 
-        public bool? accionPorAuxiliar { get; set; }
+        public int? cantidadMtEnRollos { get; set; }
+
+        public int? cantidadEnRollos { get; set; }
 
         public int? anchoBobina { get; set; }
 
         public decimal? velocidadMaquina { get; set; }
+
+        public string? observaciones { get; set; }
 
         public int? largoConvertido { get; set; }
 
@@ -64,6 +78,8 @@ namespace Sistema_Produccion_3_Backend.DTO.ReporteOperador.DetalleReporte.Impres
         public int? cantidadSobrante { get; set; }
 
         public int? udCorrugados { get; set; }
+
+        public bool? accionPorAuxiliar { get; set; }
 
         public DateTime? fechaHora { get; set; }
     }

@@ -60,9 +60,15 @@ namespace Sistema_Produccion_3_Backend.DTO.ReporteOperador.DetalleReporte.Operac
 
         public int? maquina { get; set; }
 
-        //public MaquinaDto? maquinaDto { get; set; }
+        public string? nombreMaquina { get; set; }
 
-        public ProcesoOfDto? procesoDto { get; set; }
+        public string? nombreCorto { get; set; }
+
+        public int? of { get; set; }
+
+        public string? nombreOperacion { get; set; }
+
+        public string? prefijo { get; set; }
 
     }
 }
