@@ -51,8 +51,11 @@ using Sistema_Produccion_3_Backend.DTO.ProcesoOf.LogCambiosProceso;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.MaterialOf;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.Acabado;
+using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.AcabadoFlexo;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.Barnizado;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.Impresión;
+using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.ImpresionFlexo;
+using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.MangaFlexo;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.Pegadora;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.Preprensa;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.Serigrafia;
@@ -221,6 +224,9 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 CreateMap<procesoPreprensa, ProcesoPreprensaDto>().ReverseMap();
                 CreateMap<procesoTroqueladora, ProcesoTroqueladoraDto>().ReverseMap();
                 CreateMap<procesoSerigrafia, ProcesoSerigrafiaDto>().ReverseMap();
+                CreateMap<procesoImpresoraFlexo, ProcesoImpresoraFlexoDto>().ReverseMap();
+                CreateMap<procesoAcabadoFlexo, ProcesoAcabadoFlexoDto>().ReverseMap();
+                CreateMap<procesoMangaFlexo, ProcesoMangaFlexoDto>().ReverseMap();
 
                 CreateMap<UpProcesoAcabadoDto, procesoAcabado>()
                     .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
@@ -235,6 +241,12 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 CreateMap<UpProcesoTroqueladoDto, procesoTroqueladora>()
                     .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
                 CreateMap<UpProcesoSerigrafia, procesoSerigrafia>()
+                    .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+                CreateMap<UpProcesoImpresoraFlexoDto, procesoImpresoraFlexo>()
+                    .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+                CreateMap<UpProcesoAcabadoFlexoDto, procesoAcabadoFlexo>()
+                    .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+                CreateMap<UpProcesoMangaFlexoDto, procesoMangaFlexo>()
                     .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             }
 
