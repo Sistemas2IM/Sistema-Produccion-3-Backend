@@ -25,6 +25,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         {
             var tablero = await _context.tablerosOf
                 .Include(u => u.posturasOf)
+                .Include(m => m.idMaquinaNavigation)
+                .ThenInclude(f => f.idFamiliaNavigation)
                 .ToListAsync();
 
             var tableroDto = _mapper.Map<List<TablerosOfDto>>(tablero);

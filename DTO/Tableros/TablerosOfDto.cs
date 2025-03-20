@@ -11,6 +11,8 @@ namespace Sistema_Produccion_3_Backend.DTO.Tableros
 
         public int? idMaquina { get; set; }
 
+        public int? idFamiliaMaquina { get; set; }
+
         public string? nombreTablero { get; set; }
 
         public string? idSapMaquina { get; set; }

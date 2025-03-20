@@ -13,6 +13,8 @@ public partial class base_nuevaContext : DbContext
     {
     }
 
+    public virtual DbSet<HistoricoDatos> HistoricoDatos { get; set; }
+
     public virtual DbSet<areas> areas { get; set; }
 
     public virtual DbSet<articuloOv> articuloOv { get; set; }
@@ -137,6 +139,8 @@ public partial class base_nuevaContext : DbContext
 
     public virtual DbSet<procesoTroqueladora> procesoTroqueladora { get; set; }
 
+    public virtual DbSet<procesosFlexo> procesosFlexo { get; set; }
+
     public virtual DbSet<refreshToken> refreshToken { get; set; }
 
     public virtual DbSet<reporteDeAuditoria> reporteDeAuditoria { get; set; }
@@ -185,6 +189,11 @@ public partial class base_nuevaContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<HistoricoDatos>(entity =>
+        {
+            entity.HasKey(e => e.ID).HasName("PK__Historic__3214EC270C355F8F");
+        });
+
         modelBuilder.Entity<areas>(entity =>
         {
             entity.HasKey(e => e.idArea).HasName("PK_AREAS");
@@ -741,6 +750,15 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.idProcesoNavigation).WithMany(p => p.procesoTroqueladora)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_procesoTroqueladora_procesoOf");
+        });
+
+        modelBuilder.Entity<procesosFlexo>(entity =>
+        {
+            entity.HasKey(e => e.idProcesosFlexo).HasName("PK__procesos__CBFD21756F84ADA7");
+
+            entity.HasOne(d => d.idProcesoNavigation).WithMany(p => p.procesosFlexo)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_procesosFlexo_procesoOf");
         });
 
         modelBuilder.Entity<refreshToken>(entity =>

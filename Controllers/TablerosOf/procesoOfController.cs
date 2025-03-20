@@ -14,8 +14,10 @@ using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.ImpresionFlexo
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.MangaFlexo;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.Pegadora;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.Preprensa;
+using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.procesosFlexo;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.Serigrafia;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.Troquelado;
+using Sistema_Produccion_3_Backend.DTO.ProcesoOf.UpdateMaquina;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.UpdateSAP;
 using Sistema_Produccion_3_Backend.Models;
 
@@ -252,6 +254,13 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                         dto.DetalleProceso = _mapper.Map<ProcesoMangaFlexoDto>(detalleMangaFlexo);
                         break;
 
+                        case "procesosFlexo":
+                        var detalleProcesosFlexo = await _context.procesosFlexo
+                        .Where(p => p.idProceso == proceso.idProceso)
+                        .FirstOrDefaultAsync();
+                        dto.DetalleProceso = _mapper.Map<ProcesosFlexoDto>(detalleProcesosFlexo);
+                        break;
+
                     default:
                         dto.DetalleProceso = null;
                         break;
@@ -362,6 +371,13 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                         dto.DetalleProceso = _mapper.Map<ProcesoMangaFlexoDto>(detalleMangaFlexo);
                         break;
 
+                        case "procesosFlexo":
+                        var detalleProcesosFlexo = await _context.procesosFlexo
+                        .Where(p => p.idProceso == proceso.idProceso)
+                        .FirstOrDefaultAsync();
+                        dto.DetalleProceso = _mapper.Map<ProcesosFlexoDto>(detalleProcesosFlexo);
+                        break;
+
                     default:
                         dto.DetalleProceso = null;
                         break;
@@ -470,6 +486,13 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                         dto.DetalleProceso = _mapper.Map<ProcesoMangaFlexoDto>(detalleMangaFlexo);
                         break;
 
+                    case "procesosFlexo":
+                        var detalleProcesosFlexo = await _context.procesosFlexo
+                            .Where(p => p.idProceso == proceso.idProceso)
+                            .FirstOrDefaultAsync();
+                        dto.DetalleProceso = _mapper.Map<ProcesosFlexoDto>(detalleProcesosFlexo);
+                        break;
+
                     default:
                         dto.DetalleProceso = null;
                         break;
@@ -567,6 +590,13 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                         .Where(p => p.idProceso == proceso.idProceso)
                         .FirstOrDefaultAsync();
                     dto.DetalleProceso = _mapper.Map<ProcesoMangaFlexoDto>(detalleMangaFlexo);
+                    break;
+
+                case "procesosFlexo":
+                    var detalleProcesosFlexo = await _context.procesosFlexo
+                        .Where(p => p.idProceso == proceso.idProceso)
+                        .FirstOrDefaultAsync();
+                    dto.DetalleProceso = _mapper.Map<ProcesosFlexoDto>(detalleProcesosFlexo);
                     break;
 
                 default:
@@ -699,6 +729,55 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             return Ok("Actualización realizada correctamente.");
         }
 
+        [HttpPut("put/BatchUpdateMaquina")]
+        public async Task<IActionResult> BatchUpdateProcesosMaquina([FromBody] BatchUpdateMaquinaProcesoOF batchUpdateDto)
+        {
+            if (batchUpdateDto == null || batchUpdateDto.updateMaquinaProcesoOf == null || !batchUpdateDto.updateMaquinaProcesoOf.Any())
+            {
+                return BadRequest("No se enviaron datos para actualizar.");
+            }
+
+            var ids = batchUpdateDto.updateMaquinaProcesoOf.Select(t => t.idProceso).ToList();
+
+            // Obtener todas los procesos of relacionadas
+            var procesos = await _context.procesoOf.Where(t => ids.Contains(t.idProceso)).ToListAsync();
+
+            if (!procesos.Any())
+            {
+                return NotFound("No se encontraron procesos para los IDs proporcionados.");
+            }
+
+            foreach (var dto in batchUpdateDto.updateMaquinaProcesoOf)
+            {
+                var proceso = procesos.FirstOrDefault(t => t.idProceso == dto.idProceso);
+                if (proceso != null)
+                {
+                    if (dto.idProceso > 0)
+                    {
+                        proceso.idTablero = dto.idTablero;
+                        proceso.idPostura = dto.idPostura;
+                        proceso.posicion = dto.posicion;
+                        proceso.fechaActualización = dto.fechaActualización;
+                        proceso.comentario = dto.comentario;
+                        proceso.actualizadoPor = dto.actualizadoPor;
+                    }
+
+                    _context.Entry(proceso).State = EntityState.Modified;
+                }
+            }
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error al actualizar los procesos.");
+            }
+
+            return Ok("Actualización realizada correctamente.");
+        }
+
         [HttpPut("put/procesoOfMaquina/{idProceso}")]
         public async Task<IActionResult> UpdateProcesoOf(int idProceso, [FromBody] UpProcesoOfMaquinas dto)
         {
@@ -716,7 +795,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             // Verificar si se necesita actualizar el detalle según el tipo de máquina
             if (!string.IsNullOrEmpty(dto.tipoMaquinaSAP) && dto.DetalleProceso != null)
             {
-                switch (dto.tipoMaquinaSAP.ToLower())
+                switch (dto.tipoMaquinaSAP)
                 {
                     case "preprensa":
                         await ActualizarDetalleMaquina<procesoPreprensa, UpProcesoPreprensaDto>(idProceso, dto.DetalleProceso);
@@ -756,6 +835,10 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
 
                     case "mangaFlexo":
                         await ActualizarDetalleMaquina<procesoMangaFlexo, UpProcesoMangaFlexoDto>(idProceso, dto.DetalleProceso);
+                        break;
+
+                    case "procesosFlexo":
+                        await ActualizarDetalleMaquina<procesosFlexo, UpProcesosFlexoDto>(idProceso, dto.DetalleProceso);
                         break;
 
                     default:
@@ -834,7 +917,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             await _context.SaveChangesAsync();
 
             // Insertar los detalles específicos según el tipo de máquina
-            switch (dto.tipoMaquinaSAP.ToLower()) // Convertir a minúsculas por seguridad
+            switch (dto.tipoMaquinaSAP) // Convertir a minúsculas por seguridad
             {
                 case "preprensa":
                     if (dto.DetalleProceso is JsonElement jsonPreprensa)
@@ -952,6 +1035,18 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                         {
                             detalleMangaFlexo.idProceso = proceso.idProceso;
                             _context.procesoMangaFlexo.Add(detalleMangaFlexo);
+                        }
+                    }
+                    break;
+
+                    case "procesosFlexo":
+                    if (dto.DetalleProceso is JsonElement jsonProcesosFlexo)
+                    {
+                        var detalleProcesosFlexo = JsonSerializer.Deserialize<procesosFlexo>(jsonProcesosFlexo.GetRawText());
+                        if (detalleProcesosFlexo != null)
+                        {
+                            detalleProcesosFlexo.idProceso = proceso.idProceso;
+                            _context.procesosFlexo.Add(detalleProcesosFlexo);
                         }
                     }
                     break;

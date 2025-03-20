@@ -87,6 +87,14 @@ public partial class procesoOf
     [StringLength(10)]
     public string tiroRetiro { get; set; }
 
+    [Column(TypeName = "datetime")]
+    public DateTime? fechaActualización { get; set; }
+
+    public string comentario { get; set; }
+
+    [StringLength(50)]
+    public string actualizadoPor { get; set; }
+
     [InverseProperty("idProcesoNavigation")]
     public virtual ICollection<asignacion> asignacion { get; set; } = new List<asignacion>();
 
@@ -144,6 +152,9 @@ public partial class procesoOf
 
     [InverseProperty("idProcesoNavigation")]
     public virtual ICollection<procesoTroqueladora> procesoTroqueladora { get; set; } = new List<procesoTroqueladora>();
+
+    [InverseProperty("idProcesoNavigation")]
+    public virtual ICollection<procesosFlexo> procesosFlexo { get; set; } = new List<procesosFlexo>();
 
     [InverseProperty("idProcesoNavigation")]
     public virtual ICollection<tarjetaCampo> tarjetaCampo { get; set; } = new List<tarjetaCampo>();

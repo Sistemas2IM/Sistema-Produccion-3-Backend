@@ -155,6 +155,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[HistoricoDatos]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[logCambiosProceso]",
          "ObjectType": 0
       },
@@ -256,6 +260,10 @@
       },
       {
          "Name": "[dbo].[procesoSerigrafia]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[procesosFlexo]",
          "ObjectType": 0
       },
       {
