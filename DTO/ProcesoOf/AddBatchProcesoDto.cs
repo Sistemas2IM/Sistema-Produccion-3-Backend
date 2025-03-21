@@ -49,5 +49,9 @@
         public bool? archivada { get; set; }
 
         public DateTime? fechaVencimiento { get; set; }
+
+        public string? serieNumeracion { get; set; }
+
+        public string? tiroRetiro { get; set; }
     }
 }
