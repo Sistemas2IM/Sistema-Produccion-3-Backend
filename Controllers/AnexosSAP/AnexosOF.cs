@@ -17,8 +17,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.AnexosSAP
     public class AnexosOF : ControllerBase
     {
         // GET: api/anexosof/get/5
-        [HttpGet("get/files/{of}")]
-        public async Task<IActionResult> GetAnexosFiles(int of)
+        [HttpGet("get/files/{of}/{nombreRol}")]
+        public async Task<IActionResult> GetAnexosFiles(int of, string nombreRol)
         {
             try
             {
@@ -34,13 +34,14 @@ namespace Sistema_Produccion_3_Backend.Controllers.AnexosSAP
 
                 // Consulta SQL para obtener la ruta de los anexos
                 string query = @"
-                                SELECT 
-                                    T1.""trgtPath"" || '\' || T1.""FileName"" || '.' || T1.""FileExt"" AS ""AnexoOf"",
-                                    T1.""FileName"" AS ""NombreArchivo"",
-                                    T1.""Date"" AS ""FechaAnexo""
-                                FROM OWOR T0 
-                                LEFT JOIN ATC1 T1 ON T0.""AtcEntry"" = T1.""AbsEntry""
-                                WHERE T0.""DocNum"" = ?";
+            SELECT 
+                T1.""trgtPath"" || '\' || T1.""FileName"" || '.' || T1.""FileExt"" AS ""AnexoOf"",
+                T1.""FileName"" AS ""NombreArchivo"",
+                T1.""Date"" AS ""FechaAnexo"",
+                T1.""U_permisoAnexo"" AS ""PermisoAnexo""
+            FROM OWOR T0 
+            LEFT JOIN ATC1 T1 ON T0.""AtcEntry"" = T1.""AbsEntry""
+            WHERE T0.""DocNum"" = ?";
 
                 // Ejecutar la consulta
                 var recordSet = (Recordset)oCompany.GetBusinessObject(BoObjectTypes.BoRecordset);
@@ -60,31 +61,40 @@ namespace Sistema_Produccion_3_Backend.Controllers.AnexosSAP
                     string filePath = recordSet.Fields.Item("AnexoOf").Value.ToString();
                     string fileName = recordSet.Fields.Item("NombreArchivo").Value.ToString();
                     string fileDate = recordSet.Fields.Item("FechaAnexo").Value.ToString();
+                    string permisoAnexo = recordSet.Fields.Item("PermisoAnexo").Value.ToString();
 
-                    Console.WriteLine($"Ruta obtenida desde SAP HANA: {filePath}");
-
-                    try
+                    // Validar si el rol del usuario tiene permiso para ver el anexo
+                    if (TienePermiso(nombreRol, permisoAnexo))
                     {
-                        // Usar FileStream para manejar permisos explícitos
-                        using (var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
-                        {
-                            byte[] fileBytes = new byte[fileStream.Length];
-                            await fileStream.ReadExactlyAsync(fileBytes);
-                            string contentType = GetContentType(filePath);
+                        Console.WriteLine($"Ruta obtenida desde SAP HANA: {filePath}");
 
-                            // Agregar el archivo a la lista
-                            archivosAdjuntos.Add(new AnexoResponse
+                        try
+                        {
+                            // Usar FileStream para manejar permisos explícitos
+                            using (var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
                             {
-                                FileBytes = fileBytes,
-                                ContentType = contentType,
-                                FileName = fileName,
-                                FileDate = fileDate
-                            });
+                                byte[] fileBytes = new byte[fileStream.Length];
+                                await fileStream.ReadExactlyAsync(fileBytes);
+                                string contentType = GetContentType(filePath);
+
+                                // Agregar el archivo a la lista
+                                archivosAdjuntos.Add(new AnexoResponse
+                                {
+                                    FileBytes = fileBytes,
+                                    ContentType = contentType,
+                                    FileName = fileName,
+                                    FileDate = fileDate
+                                });
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"Error al leer el archivo {filePath}: {ex.Message}");
                         }
                     }
-                    catch (Exception ex)
+                    else
                     {
-                        Console.WriteLine($"Error al leer el archivo {filePath}: {ex.Message}");
+                        Console.WriteLine($"El usuario con rol {nombreRol} no tiene permiso para ver el archivo {fileName}.");
                     }
 
                     recordSet.MoveNext();
@@ -92,7 +102,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.AnexosSAP
 
                 if (archivosAdjuntos.Count == 0)
                 {
-                    return NotFound("No se pudieron cargar los archivos anexos.");
+                    return NotFound("No se pudieron cargar los archivos anexos o no tiene permisos para verlos.");
                 }
 
                 // Retornar la lista de archivos
@@ -102,6 +112,33 @@ namespace Sistema_Produccion_3_Backend.Controllers.AnexosSAP
             {
                 return StatusCode(500, $"Error interno del servidor: {ex.Message}");
             }
+        }
+
+        // Método para validar si el rol tiene permiso
+        private bool TienePermiso(string nombreRol, string permisoAnexo)
+        {
+            // Si el permiso es "ninguno", nadie tiene acceso
+            if (permisoAnexo.ToLower() == "ninguno")
+            {
+                return false;
+            }
+
+            // Mapear los roles a los grupos de permisos
+            var gruposPermisos = new Dictionary<string, List<string>>
+    {
+        { "Comercial", new List<string> { "Ejecutivo", "AsistenteVenta", "Cotizaciones", "JefeVentas", "Planificación" } },
+        { "Producción", new List<string> { "Maquina", "Planificación", "Diseñador", "Calidad" } },
+        { "Calidad", new List<string> { "Calidad" } },
+        { "Financiero", new List<string> { "Gerencia", "Digitador" } }
+    };
+
+            // Verificar si el rol del usuario está en el grupo de permisos
+            if (gruposPermisos.ContainsKey(permisoAnexo))
+            {
+                return gruposPermisos[permisoAnexo].Contains(nombreRol.ToLower());
+            }
+
+            return false;
         }
 
         // Método auxiliar para obtener el Content-Type del archivo
