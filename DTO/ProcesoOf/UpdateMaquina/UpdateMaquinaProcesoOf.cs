@@ -15,5 +15,7 @@
         public string? comentario { get; set; }
 
         public string? actualizadoPor { get; set; }
+
+        public bool? muestra { get; set; }
     }
 }

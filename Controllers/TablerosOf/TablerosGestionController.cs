@@ -26,7 +26,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         public async Task<ActionResult<IEnumerable<ProcesoOfDto>>> GetprocesoOfFlexo()
         {
             var procesoOf = await _context.procesoOf
-                .Where(f => f.oFNavigation.lineaDeNegocio == "FLEXOGRAFIA")
+                .Where(f => f.oFNavigation.lineaDeNegocio == "FLEXO")
                 .Include(u => u.detalleOperacionProceso)
                 .ThenInclude(o => o.idOperacionNavigation)
                 .Include(m => m.tarjetaCampo)

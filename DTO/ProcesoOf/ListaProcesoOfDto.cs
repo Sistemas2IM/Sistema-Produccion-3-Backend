@@ -73,6 +73,14 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
 
         public string? tiroRetiro { get; set; }
 
+        public DateTime? fechaActualización { get; set; }
+
+        public string? comentario { get; set; }
+
+        public string? actualizadoPor { get; set; }
+
+        public bool? muestra { get; set; }
+
         public ProcesoPosturasOfDto? PosturasOfDto { get; set; }
 
         public ProcesoTablerosOfDto? TablerosOfDto { get; set; }

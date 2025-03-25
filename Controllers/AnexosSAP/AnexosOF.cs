@@ -17,9 +17,11 @@ namespace Sistema_Produccion_3_Backend.Controllers.AnexosSAP
     public class AnexosOF : ControllerBase
     {
         // GET: api/anexosof/get/5
-        [HttpGet("get/files/{of}/{nombreRol}")]
-        public async Task<IActionResult> GetAnexosFiles(int of, string nombreRol)
+        //[HttpGet("get/files/{of}/{nombreRol
+        [HttpGet("get/files/{of}")]
+        public async Task<IActionResult> GetAnexosFiles(int of/*, string nombreRol*/)
         {
+            string nombreRol = "Administrador";
             try
             {
                 // Conectar a HANA
@@ -34,14 +36,14 @@ namespace Sistema_Produccion_3_Backend.Controllers.AnexosSAP
 
                 // Consulta SQL para obtener la ruta de los anexos
                 string query = @"
-            SELECT 
-                T1.""trgtPath"" || '\' || T1.""FileName"" || '.' || T1.""FileExt"" AS ""AnexoOf"",
-                T1.""FileName"" AS ""NombreArchivo"",
-                T1.""Date"" AS ""FechaAnexo"",
-                T1.""U_permisoAnexo"" AS ""PermisoAnexo""
-            FROM OWOR T0 
-            LEFT JOIN ATC1 T1 ON T0.""AtcEntry"" = T1.""AbsEntry""
-            WHERE T0.""DocNum"" = ?";
+                SELECT 
+                    T1.""trgtPath"" || '\' || T1.""FileName"" || '.' || T1.""FileExt"" AS ""AnexoOf"",
+                    T1.""FileName"" AS ""NombreArchivo"",
+                    T1.""Date"" AS ""FechaAnexo"",
+                    T1.""U_permisoAnexo"" AS ""PermisoAnexo""
+                FROM OWOR T0 
+                LEFT JOIN ATC1 T1 ON T0.""AtcEntry"" = T1.""AbsEntry""
+                WHERE T0.""DocNum"" = ?";
 
                 // Ejecutar la consulta
                 var recordSet = (Recordset)oCompany.GetBusinessObject(BoObjectTypes.BoRecordset);
@@ -118,24 +120,26 @@ namespace Sistema_Produccion_3_Backend.Controllers.AnexosSAP
         private bool TienePermiso(string nombreRol, string permisoAnexo)
         {
             // Si el permiso es "ninguno", nadie tiene acceso
-            if (permisoAnexo.ToLower() == "ninguno")
+            if (permisoAnexo == "ninguno")
             {
                 return false;
             }
 
+            permisoAnexo = "Administrador";
+
             // Mapear los roles a los grupos de permisos
             var gruposPermisos = new Dictionary<string, List<string>>
     {
-        { "Comercial", new List<string> { "Ejecutivo", "AsistenteVenta", "Cotizaciones", "JefeVentas", "Planificación" } },
-        { "Producción", new List<string> { "Maquina", "Planificación", "Diseñador", "Calidad" } },
-        { "Calidad", new List<string> { "Calidad" } },
-        { "Financiero", new List<string> { "Gerencia", "Digitador" } }
+        { "comercial", new List<string> { "Ventas", "AsistenteVenta", "Cotizaciones", "JefeVentas", "Planificación", "Administrador" } },
+        { "producción", new List<string> { "Operador", "Planificación", "Diseñador", "Calidad", "Administrador" } },
+        { "calidad", new List<string> { "Calidad", "Administrador" } },
+        { "financiero", new List<string> { "Gerencia", "Digitador", "Administrador" } }
     };
 
             // Verificar si el rol del usuario está en el grupo de permisos
             if (gruposPermisos.ContainsKey(permisoAnexo))
             {
-                return gruposPermisos[permisoAnexo].Contains(nombreRol.ToLower());
+                return gruposPermisos[permisoAnexo].Contains(nombreRol);
             }
 
             return false;

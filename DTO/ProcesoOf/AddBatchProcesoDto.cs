@@ -53,5 +53,13 @@
         public string? serieNumeracion { get; set; }
 
         public string? tiroRetiro { get; set; }
+
+        public DateTime? fechaActualización { get; set; }
+
+        public string? comentario { get; set; }
+
+        public string? actualizadoPor { get; set; }
+
+        public bool? muestra { get; set; }
     }
 }

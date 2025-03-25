@@ -91,6 +91,15 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
 
         public string? tiroRetiro { get; set; }
 
+        public DateTime? fechaActualización { get; set; }
+
+        public string? comentario { get; set; }
+
+        [StringLength(50)]
+        public string? actualizadoPor { get; set; }
+
+        public bool? muestra { get; set; }
+
         public List<DetalleProcesoOfDto>? detalleProcesoOf { get; set; }
 
         public List<TarjetaCampoDto>? tarjetaCampoDto { get; set; }

@@ -3,6 +3,7 @@ using Sistema_Produccion_3_Backend.DTO.ProcesoOf.DetalleProceso;
 using Sistema_Produccion_3_Backend.DTO.Etiquetas.TarjetaEtiqueta;
 using Sistema_Produccion_3_Backend.DTO.ReporteOperador;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.Asignacion;
+using System.ComponentModel.DataAnnotations;
 
 namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
 {
@@ -91,6 +92,14 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
         public string? serieNumeracion { get; set; }
 
         public string? tiroRetiro { get; set; }
+
+        public DateTime? fechaActualización { get; set; }
+
+        public string? comentario { get; set; }
+
+        public string? actualizadoPor { get; set; }
+
+        public bool? muestra { get; set; }
 
         public List<DetalleProcesoOfDto>? detalleProcesoOf { get; set; }
 

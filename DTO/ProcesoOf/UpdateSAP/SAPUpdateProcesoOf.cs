@@ -31,5 +31,7 @@
         public string? programadoPor { get; set; }
 
         public DateTime? fechaCreacion { get; set; }
+
+        public bool? muestra { get; set; }
     }
 }

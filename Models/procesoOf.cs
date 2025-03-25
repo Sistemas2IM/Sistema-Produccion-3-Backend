@@ -95,6 +95,8 @@ public partial class procesoOf
     [StringLength(50)]
     public string actualizadoPor { get; set; }
 
+    public bool? muestra { get; set; }
+
     [InverseProperty("idProcesoNavigation")]
     public virtual ICollection<asignacion> asignacion { get; set; } = new List<asignacion>();
 

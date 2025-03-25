@@ -45,5 +45,7 @@
         public bool? archivada { get; set; }
 
         public DateTime? fechaVencimiento { get; set; }
+
+        public bool? muestra { get; set; }
     }
 }
