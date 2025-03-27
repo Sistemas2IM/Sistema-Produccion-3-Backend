@@ -174,6 +174,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 .Include(c => c.idTableroNavigation)
                 .ThenInclude(m => m.idMaquinaNavigation)
                 .Include(f => f.oFNavigation)
+                .Include(n => n.tarjetaCampo)
+                .Include(e => e.tarjetaEtiqueta)
                 .ToListAsync();
 
             var dtos = new List<ListaProcesoOfDto>();
@@ -1059,7 +1061,133 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             return Ok("Proceso Of creado exitosamente.");
         }
 
+        [HttpPost("post/procesoOfMaquina/batch")]
+        public async Task<ActionResult> CreateProcesoOfBatch(List<AddProcesoOfMaquinas> dtos)
+        {
+            if (dtos == null || !dtos.Any())
+            {
+                return BadRequest("La lista de procesos no puede estar vacía.");
+            }
 
+            var resultados = new List<BatchResult>();
+            using var transaction = await _context.Database.BeginTransactionAsync();
+
+            try
+            {
+                foreach (var dto in dtos)
+                {
+                    var resultadoItem = new BatchResult { OF = dto.oF, TipoMaquina = dto.tipoMaquinaSAP };
+
+                    try
+                    {
+                        // Validación básica
+                        if (dto.DetalleProceso == null || string.IsNullOrEmpty(dto.tipoMaquinaSAP))
+                        {
+                            resultadoItem.Estatus = "Error";
+                            resultadoItem.Mensaje = "Detalle del proceso o tipo de máquina inválidos";
+                            resultados.Add(resultadoItem);
+                            continue;
+                        }
+
+                        // Crear proceso principal
+                        var proceso = _mapper.Map<procesoOf>(dto);
+                        _context.procesoOf.Add(proceso);
+                        await _context.SaveChangesAsync(); // Guardar para obtener ID
+
+                        // Procesar detalle
+                        var (procesadoExitoso, mensajeError) = await ProcesarDetalleMaquina(dto, proceso.idProceso);
+
+                        if (!procesadoExitoso)
+                        {
+                            resultadoItem.Estatus = "Error";
+                            resultadoItem.Mensaje = mensajeError ?? "Tipo de máquina no soportado o datos inválidos";
+                        }
+                        else
+                        {
+                            resultadoItem.Estatus = "Éxito";
+                            resultadoItem.Mensaje = "Proceso creado correctamente";
+                            resultadoItem.IdProceso = proceso.idProceso;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        resultadoItem.Estatus = "Error";
+                        resultadoItem.Mensaje = $"Error interno: {ex.Message}";
+                    }
+
+                    resultados.Add(resultadoItem);
+                }
+
+                await transaction.CommitAsync();
+                return Ok(new
+                {
+                    TotalProcesados = dtos.Count,
+                    Exitosos = resultados.Count(r => r.Estatus == "Éxito"),
+                    Fallidos = resultados.Count(r => r.Estatus == "Error"),
+                    Detalles = resultados
+                });
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                return StatusCode(500, $"Error general en el procesamiento batch: {ex.Message}");
+            }
+        }
+
+        private async Task<(bool Success, string? ErrorMessage)> ProcesarDetalleMaquina(AddProcesoOfMaquinas dto, int idProceso)
+        {
+            if (dto.DetalleProceso is not JsonElement jsonElement)
+                return (false, "Formato de detalle inválido");
+
+            try
+            {
+                object? detalle = dto.tipoMaquinaSAP switch
+                {
+                    "preprensa" => JsonSerializer.Deserialize<procesoPreprensa>(jsonElement.GetRawText()),
+                    "impresion" => JsonSerializer.Deserialize<procesoImpresora>(jsonElement.GetRawText()),
+                    "troquel" => JsonSerializer.Deserialize<procesoTroqueladora>(jsonElement.GetRawText()),
+                    "pegadora" => JsonSerializer.Deserialize<procesoPegadora>(jsonElement.GetRawText()),
+                    "acabado" => JsonSerializer.Deserialize<procesoAcabado>(jsonElement.GetRawText()),
+                    "barniz" => JsonSerializer.Deserialize<procesoBarniz>(jsonElement.GetRawText()),
+                    "serigrafia" => JsonSerializer.Deserialize<procesoSerigrafia>(jsonElement.GetRawText()),
+                    "impresionflexo" => JsonSerializer.Deserialize<procesoImpresoraFlexo>(jsonElement.GetRawText()),
+                    "acabadoflexo" => JsonSerializer.Deserialize<procesoAcabadoFlexo>(jsonElement.GetRawText()),
+                    "mangaflexo" => JsonSerializer.Deserialize<procesoMangaFlexo>(jsonElement.GetRawText()),
+                    "procesosflexo" => JsonSerializer.Deserialize<procesosFlexo>(jsonElement.GetRawText()),
+                    _ => null
+                };
+
+                if (detalle == null)
+                    return (false, "Tipo de máquina no soportado");
+
+                // Asignar el idProceso usando reflexión
+                var prop = detalle.GetType().GetProperty("idProceso");
+                prop?.SetValue(detalle, idProceso);
+
+                // Agregar al contexto
+                await _context.AddAsync(detalle);
+                await _context.SaveChangesAsync(); // Guardar cambios para el detalle
+
+                return (true, null);
+            }
+            catch (JsonException ex)
+            {
+                return (false, $"Error al deserializar detalle: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                return (false, $"Error inesperado: {ex.Message}");
+            }
+        }
+
+        public class BatchResult
+        {
+            public int? IdProceso { get; set; }
+            public int? OF { get; set; }
+            public string? TipoMaquina { get; set; }
+            public string? Estatus { get; set; }
+            public string? Mensaje { get; set; }
+        }
 
         private bool procesoOfExists(int id)
         {

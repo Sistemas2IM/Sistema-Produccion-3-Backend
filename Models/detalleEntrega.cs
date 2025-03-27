@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Sistema_Produccion_3_Backend.Models;
 
+[Index("tipoEmpaque", Name = "EMPAQUE_FK")]
 [Index("idEntregaPt", Name = "ENTREGA_DETALLE_FK")]
 public partial class detalleEntrega
 {
@@ -27,7 +28,7 @@ public partial class detalleEntrega
     [StringLength(50)]
     public string codArticuloSAP { get; set; }
 
-    [StringLength(50)]
+    [StringLength(10)]
     public string tipoEmpaque { get; set; }
 
     public int? bultos { get; set; }
@@ -47,4 +48,8 @@ public partial class detalleEntrega
     [ForeignKey("idEntregaPt")]
     [InverseProperty("detalleEntrega")]
     public virtual entregasProductoTerminado idEntregaPtNavigation { get; set; }
+
+    [ForeignKey("tipoEmpaque")]
+    [InverseProperty("detalleEntrega")]
+    public virtual listasEmpaque tipoEmpaqueNavigation { get; set; }
 }

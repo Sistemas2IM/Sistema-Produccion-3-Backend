@@ -66,6 +66,7 @@ using Sistema_Produccion_3_Backend.DTO.ProcesoOf.UpdateSAP;
 using Sistema_Produccion_3_Backend.DTO.ProductoTerminado;
 using Sistema_Produccion_3_Backend.DTO.ProductoTerminado.ContenidoEntrega;
 using Sistema_Produccion_3_Backend.DTO.ProductoTerminado.DetalleEntrega;
+using Sistema_Produccion_3_Backend.DTO.ProductoTerminado.ListaEmpaque;
 using Sistema_Produccion_3_Backend.DTO.ReporteOperador;
 using Sistema_Produccion_3_Backend.DTO.ReporteOperador.Auxiliares;
 using Sistema_Produccion_3_Backend.DTO.ReporteOperador.DetalleReporte;
@@ -185,6 +186,8 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForMember(dest => dest.unidadMedida, opt => opt.MapFrom(src => src.oFNavigation.unidadMedida))
                 .ForMember(dest => dest.fsc, opt => opt.MapFrom(src => src.oFNavigation.fsc))
                 .ForMember(dest => dest.serie, opt => opt.MapFrom(src => src.oFNavigation.seriesOf))
+                .ForMember(dest => dest.tarjetaCampoDto, opt => opt.MapFrom(src => src.tarjetaCampo))
+                .ForMember(dest => dest.tarjetaEtiquetaDto, opt => opt.MapFrom(src => src.tarjetaEtiqueta))
                 .ReverseMap();
             CreateMap<procesoOf, ProcesosBusquedaDto>()
                 .ForMember(dest => dest.cliente, opt => opt.MapFrom(src => src.oFNavigation.clienteOf))
@@ -347,6 +350,13 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             CreateMap<UpdateBatchDetalleEntrega, detalleEntrega>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            {
+                CreateMap<listasEmpaque, ListasEmpaqueDto>().ReverseMap();
+                CreateMap<listasEmpaque, AddListasEmpaqueDto>().ReverseMap();
+                CreateMap<UpdateListasEmpaqueDto, listasEmpaque>()
+                    .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            }
 
             // REPORTES POR OPERADOR ==================================================================================
             CreateMap<reportesDeOperadores, ReporteOperadorDto>()
@@ -657,6 +667,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             CreateMap<tablerosOf, TablerosOfDto>()
                 .ForMember(dest => dest.posturasOfDto, opt => opt.MapFrom(src => src.posturasOf))
                 .ForMember(dest => dest.idFamiliaMaquina, opt => opt.MapFrom(src => src.idMaquinaNavigation.idFamilia))
+                .ForMember(dest => dest.nombreMaquina, opt => opt.MapFrom(src => src.idMaquinaNavigation.nombreMaquina))
                 .ReverseMap();
             CreateMap<tablerosOf, ProcesoTablerosOfDto>()
                 .ForMember(dest => dest.AreasDto, opt => opt.MapFrom(src => src.idAreaNavigation))

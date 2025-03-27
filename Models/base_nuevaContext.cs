@@ -85,6 +85,8 @@ public partial class base_nuevaContext : DbContext
 
     public virtual DbSet<gira> gira { get; set; }
 
+    public virtual DbSet<listasEmpaque> listasEmpaque { get; set; }
+
     public virtual DbSet<logCambiosProceso> logCambiosProceso { get; set; }
 
     public virtual DbSet<maquinas> maquinas { get; set; }
@@ -367,6 +369,10 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.idEntregaPtNavigation).WithMany(p => p.detalleEntrega)
                 .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_DETALLE_ENTREGA");
+
+            entity.HasOne(d => d.tipoEmpaqueNavigation).WithMany(p => p.detalleEntrega)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK_EMPAQUE");
         });
 
         modelBuilder.Entity<detalleGira>(entity =>
@@ -527,6 +533,11 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.idMotoristaNavigation).WithMany(p => p.gira).HasConstraintName("FK_GIRA_MOTORISTA");
 
             entity.HasOne(d => d.idVehiculoNavigation).WithMany(p => p.gira).HasConstraintName("FK_GIRA_VEHICULO");
+        });
+
+        modelBuilder.Entity<listasEmpaque>(entity =>
+        {
+            entity.HasKey(e => e.idEmpaque).HasName("PK__listasEm__3AF2C2D965ECFF3E");
         });
 
         modelBuilder.Entity<logCambiosProceso>(entity =>

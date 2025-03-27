@@ -4,6 +4,7 @@ using Sistema_Produccion_3_Backend.DTO.ReporteOperador;
 using Sistema_Produccion_3_Backend.DTO.Tableros.Posturas;
 using Sistema_Produccion_3_Backend.DTO.Tableros;
 using Sistema_Produccion_3_Backend.DTO.Catalogo.Maquinas;
+using Sistema_Produccion_3_Backend.DTO.Etiquetas.TarjetaEtiqueta;
 
 namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
 {
@@ -84,6 +85,10 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
         public ProcesoPosturasOfDto? PosturasOfDto { get; set; }
 
         public ProcesoTablerosOfDto? TablerosOfDto { get; set; }
+
+        public List<TarjetaCampoDto>? tarjetaCampoDto { get; set; }
+
+        public List<TarjetaEtiquetaDto>? tarjetaEtiquetaDto { get; set; }
 
     }
 }

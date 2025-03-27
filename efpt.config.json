@@ -159,6 +159,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[listasEmpaque]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[logCambiosProceso]",
          "ObjectType": 0
       },
