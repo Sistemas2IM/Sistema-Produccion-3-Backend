@@ -39,6 +39,12 @@ public partial class procesosFlexo
     [StringLength(500)]
     public string cantCorrugado { get; set; }
 
+    [StringLength(500)]
+    public string totalM { get; set; }
+
+    [StringLength(500)]
+    public string tintasFlexo { get; set; }
+
     [ForeignKey("idProceso")]
     [InverseProperty("procesosFlexo")]
     public virtual procesoOf idProcesoNavigation { get; set; }

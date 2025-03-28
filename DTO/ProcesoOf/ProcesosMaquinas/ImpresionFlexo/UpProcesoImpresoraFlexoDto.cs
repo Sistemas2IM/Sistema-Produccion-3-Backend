@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.ImpresionFlexo
 {
@@ -63,5 +64,9 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.ImpresionF
         public string? rollosCorrugado { get; set; }
 
         public string? cantCorrugado { get; set; }
+
+        public string? totalM { get; set; }
+
+        public string? tintasFlexo { get; set; }
     }
 }

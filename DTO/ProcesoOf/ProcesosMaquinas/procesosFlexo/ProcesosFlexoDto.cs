@@ -25,5 +25,9 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.procesosFl
         public string? rollosCorrugado { get; set; }
 
         public string? cantCorrugado { get; set; }
+
+        public string? totalM { get; set; }
+
+        public string? tintasFlexo { get; set; }
     }
 }
