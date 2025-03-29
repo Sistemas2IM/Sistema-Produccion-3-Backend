@@ -1,4 +1,4 @@
-﻿/*using CrystalDecisions.CrystalReports.Engine;
+﻿using CrystalDecisions.CrystalReports.Engine;
 using CrystalDecisions.Shared;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
@@ -37,7 +37,7 @@ namespace Reportes_Cystal_Nexo.Controllers.ReportesCrystal
 
             try
             {
-                string reportPath = Path.Combine(_env.ContentRootPath, "Reportes", $"{idReporte}.rpt");
+                string reportPath = Path.Combine(_env.ContentRootPath, "Reportes/Crystal", $"{idReporte}.rpt");
 
                 if (!System.IO.File.Exists(reportPath))
                 {
@@ -100,4 +100,4 @@ namespace Reportes_Cystal_Nexo.Controllers.ReportesCrystal
         /// </summary>
         public Dictionary<string, string> Parametros { get; set; }
     }
-}*/
+}

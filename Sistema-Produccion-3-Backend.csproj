@@ -32,6 +32,11 @@
     <PackageReference Include="AutoMapper" Version="14.0.0" />
     <PackageReference Include="Azure.Identity" Version="1.13.2" />
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+    <PackageReference Include="CrystalReports.Engine" Version="13.0.4003" />
+    <PackageReference Include="CrystalReports.ReportAppServer.ClientDoc" Version="13.0.4003" />
+    <PackageReference Include="CrystalReports.ReportAppServer.Controllers" Version="13.0.4003" />
+    <PackageReference Include="CrystalReports.ReportAppServer.DataSetConversion" Version="13.0.4003" />
+    <PackageReference Include="CrystalReports.Shared" Version="13.0.4003" />
     <PackageReference Include="EfCore.SchemaCompare" Version="9.0.0" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.3" />
@@ -59,6 +64,7 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="8.0.0" />
     <PackageReference Include="System.Formats.Asn1" Version="9.0.3" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.7.0" />
+    <PackageReference Include="System.Security.Permissions" Version="9.0.3" />
     <PackageReference Include="System.Text.Json" Version="9.0.3" />
   </ItemGroup>
 
