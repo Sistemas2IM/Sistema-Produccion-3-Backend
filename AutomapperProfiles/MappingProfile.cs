@@ -330,6 +330,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForMember(dest => dest.articuloOf, opt => opt.MapFrom(src => src.ofNavigation.productoOf))
                 .ForMember(dest => dest.cantidadOf, opt => opt.MapFrom(src => src.ofNavigation.cantidadOf))
                 .ForMember(dest => dest.nombreCliente, opt => opt.MapFrom(src => src.ofNavigation.clienteOf))
+                .ForMember(dest => dest.fsc, opt => opt.MapFrom(src => src.ofNavigation.fsc))
                 .ReverseMap();
             CreateMap<entregasProductoTerminado, UltimoProductoTerminadoDto>().ReverseMap(); // Para regresar el ultimo PT + 1
             CreateMap<entregasProductoTerminado, AddProductoTerminadoDto>().ReverseMap();
