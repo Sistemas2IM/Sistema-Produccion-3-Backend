@@ -45,6 +45,27 @@ public partial class procesosFlexo
     [StringLength(500)]
     public string tintasFlexo { get; set; }
 
+    [StringLength(100)]
+    public string foil { get; set; }
+
+    [StringLength(500)]
+    public string foilDetalle { get; set; }
+
+    [StringLength(500)]
+    public string barnizDetalle { get; set; }
+
+    [StringLength(100)]
+    public string barniz { get; set; }
+
+    [StringLength(100)]
+    public string laminado { get; set; }
+
+    [StringLength(500)]
+    public string laminadoDetalle { get; set; }
+
+    [StringLength(200)]
+    public string diametroCore { get; set; }
+
     [ForeignKey("idProceso")]
     [InverseProperty("procesosFlexo")]
     public virtual procesoOf idProcesoNavigation { get; set; }

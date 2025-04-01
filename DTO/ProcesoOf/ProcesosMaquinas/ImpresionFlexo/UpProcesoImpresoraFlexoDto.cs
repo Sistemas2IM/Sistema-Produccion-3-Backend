@@ -68,5 +68,19 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.ImpresionF
         public string? totalM { get; set; }
 
         public string? tintasFlexo { get; set; }
+
+        public string? foil { get; set; }
+
+        public string? foilDetalle { get; set; }
+
+        public string? barnizDetalle { get; set; }
+
+        public string? barniz { get; set; }
+
+        public string? laminado { get; set; }
+
+        public string? laminadoDetalle { get; set; }
+
+        public string? diametroCore { get; set; }
     }
 }
