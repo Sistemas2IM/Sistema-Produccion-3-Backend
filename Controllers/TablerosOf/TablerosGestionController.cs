@@ -123,5 +123,94 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
 
             return Ok(tarjetaOfDto);
         }
+
+        // GET: api/tarjetaOf/filtradas/{vendedor}
+        [HttpGet("get/vendedor/dinamico/{vendedor}")]
+        public async Task<ActionResult<IEnumerable<TarjetaOfDto>>> GetTarjetasFiltradas(string vendedor)
+        {
+            try
+            {
+                // Primero determinamos el tipo de usuario
+                var usuario = await _context.usuario.FirstOrDefaultAsync(u => u.nombres + " " + u.apellidos == vendedor);
+                if (usuario == null)
+                {
+                    return NotFound("Usuario no encontrado");
+                }
+
+                IQueryable<tarjetaOf> query = _context.tarjetaOf
+                    .Include(u => u.idEstadoOfNavigation)
+                    .Include(r => r.etiquetaOf)
+                    .ThenInclude(o => o.idEtiquetaNavigation);
+
+                // Filtrado según tipo de usuario
+                switch (vendedor)
+                {
+                    // Vendedores normales (solo ven sus propias órdenes en proceso)
+                    case "Claudia Ruano":
+                    case "Jenny Gálvez":
+                    case "Juan Mónico":
+                    case "Hugo Campos":
+                    case "Javier Toledo":
+                    case "Xiomara Cruz":
+                        query = query.Where(t => t.vendedorOf == vendedor /*&&
+                                               t.idEstadoOfNavigation.nombreEstado == "En proceso"*/)
+                                   .OrderBy(p => p.posicion);
+                        break;
+
+                    // Encargados con acceso completo
+                    case "Eliseo Menjívar":
+                    case "Fátima García":
+                        // Ven todo excepto oficina y freelance
+                        query = query.Where(t => t.vendedorOf != "Oficina" /*&&
+                                               t.vendedorOf != "freelance"*/)
+                                   .OrderBy(p => p.posicion);
+                        break;
+
+                    // Encargados con acceso restringido por línea de negocio
+                    case "Floridalma Alfaro":
+                        query = query.Where(t => t.lineaDeNegocio == "FLEXO" &&
+                                               t.vendedorOf != "Oficina" /*&&
+                                               t.vendedorOf != "freelance"*/)
+                                   .OrderBy(p => p.posicion);
+                        break;
+
+                    // Cotizadores con diferentes niveles de acceso
+                    case "Ingrid Guevara":
+                    case "Katya":
+                    case "Elba Deleon":
+                        // Oficina y freelance
+                        query = query.Where(t => t.vendedorOf == "Oficina" /*||
+                                               t.vendedorOf == "freelance"*/)
+                                   .OrderBy(p => p.posicion);
+                        break;
+
+                    case "Diana Munguia":
+                        // Oficina, Engracia y Margarita
+                        query = query.Where(t => t.vendedorOf == "Oficina" ||
+                                               t.vendedorOf == "Engracia Díaz" ||
+                                               t.vendedorOf == "Margarita Díaz")
+                                   .OrderBy(p => p.posicion);
+                        break;
+
+                    case "Wendy Del Cid":
+                        // Todos con línea de negocio promocionales
+                        query = query.Where(t => t.lineaDeNegocio == "PROMO")
+                                   .OrderBy(p => p.posicion);
+                        break;
+
+                    default:
+                        return BadRequest("Usuario no tiene permisos configurados");
+                }
+
+                var tarjetas = await query.ToListAsync();
+                var tarjetasDto = _mapper.Map<List<TarjetaOfDto>>(tarjetas);
+
+                return Ok(tarjetasDto);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error interno del servidor: {ex.Message}");
+            }
+        }
     }
 }
