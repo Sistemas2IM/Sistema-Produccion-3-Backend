@@ -108,7 +108,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         }
 
         // GET: api/tarjetaOf VENDEDORES
-        [HttpGet("get/vendedor{vendedor}")]
+        /*[HttpGet("get/vendedor{vendedor}")]
         public async Task<ActionResult<IEnumerable<TarjetaOfDto>>> GettarjetaOf(string vendedor)
         {
             var tarjetaOf = await _context.tarjetaOf
@@ -122,10 +122,10 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             var tarjetaOfDto = _mapper.Map<List<TarjetaOfDto>>(tarjetaOf);
 
             return Ok(tarjetaOfDto);
-        }
+        }*/
 
         // GET: api/tarjetaOf/filtradas/{vendedor}
-        [HttpGet("get/vendedor/dinamico/{vendedor}")]
+        [HttpGet("get/vendedor{vendedor}")]
         public async Task<ActionResult<IEnumerable<TarjetaOfDto>>> GetTarjetasFiltradas(string vendedor)
         {
             try
