@@ -303,6 +303,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[sysdiagrams]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[tablerosOf]",
          "ObjectType": 0
       },

@@ -157,6 +157,8 @@ public partial class base_nuevaContext : DbContext
 
     public virtual DbSet<subModulo> subModulo { get; set; }
 
+    public virtual DbSet<sysdiagrams> sysdiagrams { get; set; }
+
     public virtual DbSet<tablerosOf> tablerosOf { get; set; }
 
     public virtual DbSet<tarjetaCampo> tarjetaCampo { get; set; }
@@ -194,16 +196,26 @@ public partial class base_nuevaContext : DbContext
         modelBuilder.Entity<HistoricoDatos>(entity =>
         {
             entity.HasKey(e => e.ID).HasName("PK__Historic__3214EC270C355F8F");
+
+            entity.Property(e => e.IDProcedimiento).UseCollation("SQL_Latin1_General_CP1_CI_AS");
         });
 
         modelBuilder.Entity<areas>(entity =>
         {
             entity.HasKey(e => e.idArea).HasName("PK_AREAS");
+
+            entity.Property(e => e.nombreArea).UseCollation("SQL_Latin1_General_CP1_CI_AS");
         });
 
         modelBuilder.Entity<articuloOv>(entity =>
         {
             entity.HasKey(e => e.idArticulo).HasName("PK_ARTICULOOV");
+
+            entity.Property(e => e.articulo).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.departamento).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.detalleArticulo).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.lineaDeNegocio).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.unidad).UseCollation("SQL_Latin1_General_CP1_CI_AS");
 
             entity.HasOne(d => d.oVNavigation).WithMany(p => p.articuloOv).HasConstraintName("FK_ARTICULO_OV");
         });
@@ -211,6 +223,8 @@ public partial class base_nuevaContext : DbContext
         modelBuilder.Entity<asignacion>(entity =>
         {
             entity.HasKey(e => e.idAsignacion).HasName("PK_ASIGNACION");
+
+            entity.Property(e => e.user).UseCollation("SQL_Latin1_General_CP1_CI_AS");
 
             entity.HasOne(d => d.idProcesoNavigation).WithMany(p => p.asignacion).HasConstraintName("FK_ASIGN_PROCESOO");
 
@@ -221,6 +235,10 @@ public partial class base_nuevaContext : DbContext
         {
             entity.HasKey(e => e.idAuditoria).HasName("PK_AUDITORIADECALIDAD");
 
+            entity.Property(e => e.tipo).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.turno).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.user).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+
             entity.HasOne(d => d.userNavigation).WithMany(p => p.auditoriaDeCalidad).HasConstraintName("FK_AUDITOR");
         });
 
@@ -228,39 +246,105 @@ public partial class base_nuevaContext : DbContext
         {
             entity.HasKey(e => e.idAuditoriaDeProcesos).HasName("PK_AUDITORIADEPROCESOS");
 
-            entity.Property(e => e.adhesivoCorrecto).IsFixedLength();
-            entity.Property(e => e.aprobacionDeArranque).IsFixedLength();
-            entity.Property(e => e.armadoDePieza).IsFixedLength();
-            entity.Property(e => e.arranqueDeFibra).IsFixedLength();
-            entity.Property(e => e.arteOPlotter).IsFixedLength();
-            entity.Property(e => e.bobinaGolpeada).IsFixedLength();
-            entity.Property(e => e.bolsaDeTrabajo).IsFixedLength();
-            entity.Property(e => e.calibre).IsFixedLength();
-            entity.Property(e => e.codigoDeBarra).IsFixedLength();
-            entity.Property(e => e.contaminacion).IsFixedLength();
-            entity.Property(e => e.corrugadoIdentificado).IsFixedLength();
-            entity.Property(e => e.corrugadoSellado).IsFixedLength();
-            entity.Property(e => e.curadoDeBarniz).IsFixedLength();
-            entity.Property(e => e.delaminada).IsFixedLength();
-            entity.Property(e => e.escuadra).IsFixedLength();
-            entity.Property(e => e.fibra).IsFixedLength();
-            entity.Property(e => e.fichaTecnica).IsFixedLength();
-            entity.Property(e => e.guiaDeColor).IsFixedLength();
-            entity.Property(e => e.guiaDeCorte).IsFixedLength();
-            entity.Property(e => e.huellaTroquel).IsFixedLength();
-            entity.Property(e => e.identificacionDeProducto).IsFixedLength();
-            entity.Property(e => e.lecturaDeArte).IsFixedLength();
-            entity.Property(e => e.malCortado).IsFixedLength();
-            entity.Property(e => e.malOlor).IsFixedLength();
-            entity.Property(e => e.matrizSegunCalibre).IsFixedLength();
-            entity.Property(e => e.mecanicoODummy).IsFixedLength();
-            entity.Property(e => e.pruebaDeCurado).IsFixedLength();
-            entity.Property(e => e.referenciaImpresion).IsFixedLength();
-            entity.Property(e => e.solicitudDeCorte).IsFixedLength();
-            entity.Property(e => e.tamanoDeMateriaPrima).IsFixedLength();
-            entity.Property(e => e.tarimaPlastificada).IsFixedLength();
-            entity.Property(e => e.unidadesDeCorrugado).IsFixedLength();
-            entity.Property(e => e.usoDeEspectro).IsFixedLength();
+            entity.Property(e => e.adhesivoCorrecto)
+                .IsFixedLength()
+                .UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.aprobacionDeArranque)
+                .IsFixedLength()
+                .UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.armadoDePieza)
+                .IsFixedLength()
+                .UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.arranqueDeFibra)
+                .IsFixedLength()
+                .UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.arteOPlotter)
+                .IsFixedLength()
+                .UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.bobinaGolpeada)
+                .IsFixedLength()
+                .UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.bolsaDeTrabajo)
+                .IsFixedLength()
+                .UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.calibre)
+                .IsFixedLength()
+                .UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.codigoDeBarra)
+                .IsFixedLength()
+                .UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.contaminacion)
+                .IsFixedLength()
+                .UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.corrugadoIdentificado)
+                .IsFixedLength()
+                .UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.corrugadoSellado)
+                .IsFixedLength()
+                .UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.curadoDeBarniz)
+                .IsFixedLength()
+                .UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.delaminada)
+                .IsFixedLength()
+                .UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.escuadra)
+                .IsFixedLength()
+                .UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.fibra)
+                .IsFixedLength()
+                .UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.fichaTecnica)
+                .IsFixedLength()
+                .UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.guiaDeColor)
+                .IsFixedLength()
+                .UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.guiaDeCorte)
+                .IsFixedLength()
+                .UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.huellaTroquel)
+                .IsFixedLength()
+                .UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.identificacionDeProducto)
+                .IsFixedLength()
+                .UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.lecturaDeArte)
+                .IsFixedLength()
+                .UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.malCortado)
+                .IsFixedLength()
+                .UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.malOlor)
+                .IsFixedLength()
+                .UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.matrizSegunCalibre)
+                .IsFixedLength()
+                .UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.mecanicoODummy)
+                .IsFixedLength()
+                .UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.pruebaDeCurado)
+                .IsFixedLength()
+                .UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.referenciaImpresion)
+                .IsFixedLength()
+                .UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.solicitudDeCorte)
+                .IsFixedLength()
+                .UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.tamanoDeMateriaPrima)
+                .IsFixedLength()
+                .UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.tarimaPlastificada)
+                .IsFixedLength()
+                .UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.unidadesDeCorrugado)
+                .IsFixedLength()
+                .UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.usoDeEspectro)
+                .IsFixedLength()
+                .UseCollation("SQL_Latin1_General_CP1_CI_AS");
 
             entity.HasOne(d => d.idReporteAuditoriaNavigation).WithMany(p => p.auditoriaDeProcesos).HasConstraintName("FK__PROCESOS_REPORTE");
         });
@@ -269,43 +353,117 @@ public partial class base_nuevaContext : DbContext
         {
             entity.HasKey(e => e.idAuditoriaDeProductos).HasName("PK_AUDITORIADEPRODUCTOS");
 
-            entity.Property(e => e.ancho).IsFixedLength();
-            entity.Property(e => e.banizDeficiente).IsFixedLength();
-            entity.Property(e => e.basuras).IsFixedLength();
-            entity.Property(e => e.brillos).IsFixedLength();
-            entity.Property(e => e.calibre).IsFixedLength();
-            entity.Property(e => e.cuadratura).IsFixedLength();
-            entity.Property(e => e.despegado).IsFixedLength();
-            entity.Property(e => e.doblado).IsFixedLength();
-            entity.Property(e => e.engraseYVelo).IsFixedLength();
-            entity.Property(e => e.expulse).IsFixedLength();
-            entity.Property(e => e.fallosDeRegistro).IsFixedLength();
-            entity.Property(e => e.faltanteDeSisa).IsFixedLength();
-            entity.Property(e => e.faltanteDeTexto).IsFixedLength();
-            entity.Property(e => e.foil).IsFixedLength();
-            entity.Property(e => e.golpeDeHule).IsFixedLength();
-            entity.Property(e => e.largo).IsFixedLength();
-            entity.Property(e => e.malContado).IsFixedLength();
-            entity.Property(e => e.malDoblado).IsFixedLength();
-            entity.Property(e => e.manchasYMarcas).IsFixedLength();
-            entity.Property(e => e.materiaPrimaCorrecta).IsFixedLength();
-            entity.Property(e => e.medida).IsFixedLength();
-            entity.Property(e => e.otro).IsFixedLength();
-            entity.Property(e => e.pegadoDeCorte).IsFixedLength();
-            entity.Property(e => e.perforado).IsFixedLength();
-            entity.Property(e => e.pestanuda).IsFixedLength();
-            entity.Property(e => e.planchaSegunColor).IsFixedLength();
-            entity.Property(e => e.rayones).IsFixedLength();
-            entity.Property(e => e.realzado).IsFixedLength();
-            entity.Property(e => e.rebava).IsFixedLength();
-            entity.Property(e => e.registroDeBarniz).IsFixedLength();
-            entity.Property(e => e.repinte).IsFixedLength();
-            entity.Property(e => e.reventado).IsFixedLength();
-            entity.Property(e => e.roto).IsFixedLength();
-            entity.Property(e => e.sinGrapa).IsFixedLength();
-            entity.Property(e => e.sisaDefinida).IsFixedLength();
-            entity.Property(e => e.sucio).IsFixedLength();
-            entity.Property(e => e.variacionDeTono).IsFixedLength();
+            entity.Property(e => e.ancho)
+                .IsFixedLength()
+                .UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.banizDeficiente)
+                .IsFixedLength()
+                .UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.basuras)
+                .IsFixedLength()
+                .UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.brillos)
+                .IsFixedLength()
+                .UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.calibre)
+                .IsFixedLength()
+                .UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.cuadratura)
+                .IsFixedLength()
+                .UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.despegado)
+                .IsFixedLength()
+                .UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.doblado)
+                .IsFixedLength()
+                .UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.engraseYVelo)
+                .IsFixedLength()
+                .UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.expulse)
+                .IsFixedLength()
+                .UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.fallosDeRegistro)
+                .IsFixedLength()
+                .UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.faltanteDeSisa)
+                .IsFixedLength()
+                .UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.faltanteDeTexto)
+                .IsFixedLength()
+                .UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.foil)
+                .IsFixedLength()
+                .UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.golpeDeHule)
+                .IsFixedLength()
+                .UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.largo)
+                .IsFixedLength()
+                .UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.malContado)
+                .IsFixedLength()
+                .UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.malDoblado)
+                .IsFixedLength()
+                .UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.manchasYMarcas)
+                .IsFixedLength()
+                .UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.materiaPrimaCorrecta)
+                .IsFixedLength()
+                .UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.medida)
+                .IsFixedLength()
+                .UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.otro)
+                .IsFixedLength()
+                .UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.pegadoDeCorte)
+                .IsFixedLength()
+                .UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.perforado)
+                .IsFixedLength()
+                .UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.pestanuda)
+                .IsFixedLength()
+                .UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.planchaSegunColor)
+                .IsFixedLength()
+                .UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.rayones)
+                .IsFixedLength()
+                .UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.realzado)
+                .IsFixedLength()
+                .UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.rebava)
+                .IsFixedLength()
+                .UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.registroDeBarniz)
+                .IsFixedLength()
+                .UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.repinte)
+                .IsFixedLength()
+                .UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.reventado)
+                .IsFixedLength()
+                .UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.roto)
+                .IsFixedLength()
+                .UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.sinGrapa)
+                .IsFixedLength()
+                .UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.sisaDefinida)
+                .IsFixedLength()
+                .UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.sucio)
+                .IsFixedLength()
+                .UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.variacionDeTono)
+                .IsFixedLength()
+                .UseCollation("SQL_Latin1_General_CP1_CI_AS");
 
             entity.HasOne(d => d.idReporteAuditoriaNavigation).WithMany(p => p.auditoriaDeProductos).HasConstraintName("FK_PRODUCTOS_REPORTE");
         });
@@ -313,26 +471,46 @@ public partial class base_nuevaContext : DbContext
         modelBuilder.Entity<auxiliares>(entity =>
         {
             entity.HasKey(e => e.id).HasName("PK__auxiliar__3213E83F5C17182B");
+
+            entity.Property(e => e.nombre).UseCollation("SQL_Latin1_General_CP1_CI_AS");
         });
 
         modelBuilder.Entity<bitacora>(entity =>
         {
             entity.HasKey(e => e.idBitacora).HasName("PK_BITACORA");
+
+            entity.Property(e => e.usuario).UseCollation("SQL_Latin1_General_CP1_CI_AS");
         });
 
         modelBuilder.Entity<camposPersonalizados>(entity =>
         {
             entity.HasKey(e => e.idCampo).HasName("PK_CAMPOSPERSONALIZADOS");
+
+            entity.Property(e => e.nombreCampo).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.tipo).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.valoresPosibles).UseCollation("SQL_Latin1_General_CP1_CI_AS");
         });
 
         modelBuilder.Entity<cargo>(entity =>
         {
             entity.HasKey(e => e.idCargo).HasName("PK_CARGO");
+
+            entity.Property(e => e.descripcion).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.nombreCargo).UseCollation("SQL_Latin1_General_CP1_CI_AS");
         });
 
         modelBuilder.Entity<certificadoDeCalidad>(entity =>
         {
             entity.HasKey(e => e.idCertificado).HasName("PK_CERTIFICADODECALIDAD");
+
+            entity.Property(e => e.cliente).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.codigoProducto).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.creadoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.numeroDeLote).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.numeroFactura).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.observaciones).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.producto).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.tipoDeProducto).UseCollation("SQL_Latin1_General_CP1_CI_AS");
 
             entity.HasOne(d => d.oFNavigation).WithMany(p => p.certificadoDeCalidad).HasConstraintName("FK_CERTIFIC_OF");
         });
@@ -340,6 +518,10 @@ public partial class base_nuevaContext : DbContext
         modelBuilder.Entity<contenidoEntrega>(entity =>
         {
             entity.HasKey(e => e.idContenidoEntrega).HasName("PK_CONTENIDOENTREGA");
+
+            entity.Property(e => e.codigoProducto).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.descripcion).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.producto).UseCollation("SQL_Latin1_General_CP1_CI_AS");
 
             entity.HasOne(d => d.idEntregaPtNavigation).WithMany(p => p.contenidoEntrega).HasConstraintName("FK_CONTENI_ENTREGA");
 
@@ -350,12 +532,27 @@ public partial class base_nuevaContext : DbContext
         {
             entity.HasKey(e => e.idBarniz).HasName("PK_DETALLEBARNIZ");
 
+            entity.Property(e => e.brillo).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.gradoMedicion).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.lote).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.maquinaBarniz).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.nombreBarniz).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.numeroLote).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.operario).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.tipoBarniz).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.tolerancia).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.vence).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.viscosidad).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+
             entity.HasOne(d => d.idDetalleImpresionNavigation).WithMany(p => p.detalleBarniz).HasConstraintName("FK_DETALLE_BANIZ");
         });
 
         modelBuilder.Entity<detalleCertificado>(entity =>
         {
             entity.HasKey(e => e.idDetalleCertificado).HasName("PK_DETALLECERTIFICADO");
+
+            entity.Property(e => e.especificacion).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.resultado).UseCollation("SQL_Latin1_General_CP1_CI_AS");
 
             entity.HasOne(d => d.idCaracteristaNavigation).WithMany(p => p.detalleCertificado).HasConstraintName("FK_ESPECIFICACION");
 
@@ -365,6 +562,12 @@ public partial class base_nuevaContext : DbContext
         modelBuilder.Entity<detalleEntrega>(entity =>
         {
             entity.HasKey(e => e.idDetalleEntrega).HasName("PK_DETALLEENTREGA");
+
+            entity.Property(e => e.cliente).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.codArticuloSAP).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.nombreArticulo).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.tipoEmpaque).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.unidad).UseCollation("SQL_Latin1_General_CP1_CI_AS");
 
             entity.HasOne(d => d.idEntregaPtNavigation).WithMany(p => p.detalleEntrega)
                 .OnDelete(DeleteBehavior.Cascade)
@@ -379,6 +582,11 @@ public partial class base_nuevaContext : DbContext
         {
             entity.HasKey(e => e.idDetalleGira).HasName("PK_DETALLEGIRA");
 
+            entity.Property(e => e.cliente).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.numeroDeFactura).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.observaciones).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.otros).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+
             entity.HasOne(d => d.idGiraNavigation).WithMany(p => p.detalleGira).HasConstraintName("FK_DETALLE_GIRA");
 
             entity.HasOne(d => d.oFNavigation).WithMany(p => p.detalleGira).HasConstraintName("FK_GIRA_OF");
@@ -388,12 +596,39 @@ public partial class base_nuevaContext : DbContext
         {
             entity.HasKey(e => e.idDetalleImpresion).HasName("PK_DETALLEIMPRESION");
 
+            entity.Property(e => e.alcoholAgua).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.colorRetiro).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.colorTiro).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.conductividadAgua).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.curvasPlancha).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.datoInstrumento).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.familiaTramadoPlancha).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.formaPunto).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.formuladoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.lineaturaPlancha).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.maquina).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.observaciones).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.operario).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.phAgua).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.porcentajeTalco).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.presionGeneralMaquina).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.proveedorTintas).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.resolucionPlancha).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.temperaturaAgua).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.temperaturaSalida).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.tipoPlancha).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.tipoTalco).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+
             entity.HasOne(d => d.idFichaTecnicaNavigation).WithMany(p => p.detalleImpresion).HasConstraintName("FK_DETALLE_IMP");
         });
 
         modelBuilder.Entity<detalleOperacionProceso>(entity =>
         {
             entity.HasKey(e => e.idDetalleOperacion).HasName("PK_DETALLEOPERACIONPROCESO");
+
+            entity.Property(e => e.auxiliar).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.operador).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.tiroRetiro).UseCollation("SQL_Latin1_General_CP1_CI_AS");
 
             entity.HasOne(d => d.idOperacionNavigation).WithMany(p => p.detalleOperacionProceso).HasConstraintName("FK_DETALLEO_OPERACION");
 
@@ -406,12 +641,36 @@ public partial class base_nuevaContext : DbContext
         {
             entity.HasKey(e => e.idDetallePegado).HasName("PK_DETALLEPEGADO");
 
+            entity.Property(e => e.alimentacion).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.anchoAcetato).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.anchoPega).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.espesorAcetato).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.largoAcetato).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.largoPega).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.maquina).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.observaciones).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.operario).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.pegaDisco).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.pegaPistola).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.tipoAcetato).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.tipoCorrugado).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.toleranciaAcetato).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.toleranciaPega).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.velocidadPegado).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+
             entity.HasOne(d => d.idFichaTecnicaNavigation).WithMany(p => p.detallePegado).HasConstraintName("FK_DETALLE_PEG");
         });
 
         modelBuilder.Entity<detalleReporte>(entity =>
         {
             entity.HasKey(e => e.idDetalleReporte).HasName("PK_DETALLEREPORTE");
+
+            entity.Property(e => e.cliente).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.descripcion).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.idMaterial).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.idReporte).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.observaciones).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.tiroRetiro).UseCollation("SQL_Latin1_General_CP1_CI_AS");
 
             entity.HasOne(d => d.idMaterialNavigation).WithMany(p => p.detalleReporte).HasConstraintName("FK_DETALLE_MATERIAL");
 
@@ -430,6 +689,11 @@ public partial class base_nuevaContext : DbContext
         {
             entity.HasKey(e => e.idSecadoMaquina).HasName("PK_DETALLESECADO");
 
+            entity.Property(e => e.porcentajePotenciaAire).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.porcentajePotenciaCalorifica).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.potenciaLamparaIr).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.salida).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+
             entity.HasOne(d => d.idDetalleImpresionNavigation).WithMany(p => p.detalleSecado).HasConstraintName("FK_DETALLE_SEC");
         });
 
@@ -437,12 +701,31 @@ public partial class base_nuevaContext : DbContext
         {
             entity.HasKey(e => e.idDetalleTroquelado).HasName("PK_DETALLETROQUELADO");
 
+            entity.Property(e => e.altoArmada).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.anchoArmada).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.anchoSinArmar).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.codigoTroquel).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.largoArmada).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.largoSinArmar).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.maquina).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.observaciones).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.operario).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.presionMaquina).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.tipoMatriz).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+
             entity.HasOne(d => d.idFichaTecnicaNavigation).WithMany(p => p.detalleTroquelado).HasConstraintName("FK_FICHA_TRO");
         });
 
         modelBuilder.Entity<entregasProductoTerminado>(entity =>
         {
             entity.HasKey(e => e.idEntregaPt).HasName("PK_ENTREGASPRODUCTOTERMINADO");
+
+            entity.Property(e => e.actualizadoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.areaEntrega).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.areaRecibe).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.creadoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.entregadoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.recibidoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
 
             entity.HasOne(d => d.idEstadoReporteNavigation).WithMany(p => p.entregasProductoTerminado).HasConstraintName("FK_ENTREGAS_ESTADO");
 
@@ -455,7 +738,10 @@ public partial class base_nuevaContext : DbContext
         {
             entity.HasKey(e => e.idEspacioColor).HasName("PK_ESPACIOCOLOR");
 
-            entity.Property(e => e.tipoEspacioColor).IsFixedLength();
+            entity.Property(e => e.tipoEspacioColor)
+                .IsFixedLength()
+                .UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.valorEspacioColor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
 
             entity.HasOne(d => d.idFormulacionTintaNavigation).WithMany(p => p.espacioColor).HasConstraintName("FK_TINTAS_CIE");
         });
@@ -463,16 +749,22 @@ public partial class base_nuevaContext : DbContext
         modelBuilder.Entity<especificaciones>(entity =>
         {
             entity.HasKey(e => e.idCaracterista).HasName("PK_ESPECIFICACIONES");
+
+            entity.Property(e => e.nombreEspecificacion).UseCollation("SQL_Latin1_General_CP1_CI_AS");
         });
 
         modelBuilder.Entity<estadosOf>(entity =>
         {
             entity.HasKey(e => e.idEstadoOf).HasName("PK_ESTADOSOF");
+
+            entity.Property(e => e.nombreEstado).UseCollation("SQL_Latin1_General_CP1_CI_AS");
         });
 
         modelBuilder.Entity<estadosReporte>(entity =>
         {
             entity.HasKey(e => e.idEstadoReporte).HasName("PK_ESTADOSREPORTE");
+
+            entity.Property(e => e.nombreEstado).UseCollation("SQL_Latin1_General_CP1_CI_AS");
 
             entity.HasOne(d => d.tipoReporteNavigation).WithMany(p => p.estadosReporte).HasConstraintName("FK_TIPO_REPORTE");
         });
@@ -480,6 +772,9 @@ public partial class base_nuevaContext : DbContext
         modelBuilder.Entity<etiqueta>(entity =>
         {
             entity.HasKey(e => e.idEtiqueta).HasName("PK_ETIQUETA");
+
+            entity.Property(e => e.color).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.texto).UseCollation("SQL_Latin1_General_CP1_CI_AS");
         });
 
         modelBuilder.Entity<etiquetaOf>(entity =>
@@ -494,11 +789,25 @@ public partial class base_nuevaContext : DbContext
         modelBuilder.Entity<familliaDeMaquina>(entity =>
         {
             entity.HasKey(e => e.idFamilia).HasName("PK_FAMILLIADEMAQUINA");
+
+            entity.Property(e => e.nombreFamilia).UseCollation("SQL_Latin1_General_CP1_CI_AS");
         });
 
         modelBuilder.Entity<fichaTecnica>(entity =>
         {
             entity.HasKey(e => e.idFichaTecnica).HasName("PK_FICHATECNICA");
+
+            entity.Property(e => e.calibreMaterial).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.cliente).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.codigoProducto).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.creadoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.encargadoCalidad).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.marcarMaterial).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.producto).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.proveedorMaterial).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.tipoDeProducto).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.tipoMaterial).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.toleranciaMaterial).UseCollation("SQL_Latin1_General_CP1_CI_AS");
 
             entity.HasOne(d => d.idTipoFichaNavigation).WithMany(p => p.fichaTecnica).HasConstraintName("FK_TIPOFICHA");
 
@@ -509,6 +818,12 @@ public partial class base_nuevaContext : DbContext
         {
             entity.HasKey(e => e.idFiltro).HasName("PK_FILTROS");
 
+            entity.Property(e => e.condicionDeMedicion).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.filtroPolarizador).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.referenciaDeBlanco).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.tipoFiltro).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.valorFiltro).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+
             entity.HasOne(d => d.idDetalleImpresionNavigation).WithMany(p => p.filtros).HasConstraintName("FK_FILTROS");
         });
 
@@ -516,12 +831,23 @@ public partial class base_nuevaContext : DbContext
         {
             entity.HasKey(e => e.idFormulacionTinta).HasName("PK_FORMULACIONTINTAS");
 
+            entity.Property(e => e.cieA).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.cieB).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.cieL).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.color).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.pintado).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.referencia).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+
             entity.HasOne(d => d.idDetalleImpresionNavigation).WithMany(p => p.formulacionTintas).HasConstraintName("FK_FORMULACION_TINTAS");
         });
 
         modelBuilder.Entity<generalidadColor>(entity =>
         {
             entity.HasKey(e => e.idGeneralidad).HasName("PK_GENERALIDADCOLOR");
+
+            entity.Property(e => e.descripcionTinta).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.porcentajeTinta).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.proveedorTinta).UseCollation("SQL_Latin1_General_CP1_CI_AS");
 
             entity.HasOne(d => d.idEspacioColorNavigation).WithMany(p => p.generalidadColor).HasConstraintName("FK_COLOR_TINTA");
         });
@@ -538,11 +864,19 @@ public partial class base_nuevaContext : DbContext
         modelBuilder.Entity<listasEmpaque>(entity =>
         {
             entity.HasKey(e => e.idEmpaque).HasName("PK__listasEm__3AF2C2D965ECFF3E");
+
+            entity.Property(e => e.idEmpaque).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.codigoSAP).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.empaque).UseCollation("SQL_Latin1_General_CP1_CI_AS");
         });
 
         modelBuilder.Entity<logCambiosProceso>(entity =>
         {
             entity.HasKey(e => e.log_id).HasName("PK__logCambi__9E2397E0C8C6A3C6");
+
+            entity.Property(e => e.estado_anterior).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.nuevo_estado).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.usuario_id).UseCollation("SQL_Latin1_General_CP1_CI_AS");
 
             entity.HasOne(d => d.proceso).WithMany(p => p.logCambiosProceso).HasConstraintName("FK_PROCESO");
 
@@ -553,22 +887,37 @@ public partial class base_nuevaContext : DbContext
         {
             entity.HasKey(e => e.idMaquina).HasName("PK_MAQUINAS");
 
+            entity.Property(e => e.nombreCorto).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.nombreMaquina).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+
             entity.HasOne(d => d.idFamiliaNavigation).WithMany(p => p.maquinas).HasConstraintName("FK_MAQUINAS_FAMILIA");
         });
 
         modelBuilder.Entity<material>(entity =>
         {
             entity.HasKey(e => e.idMaterial).HasName("PK_MATERIAL");
+
+            entity.Property(e => e.idMaterial).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e._base).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.calibre).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.nombreMaterial).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.tipoMaterial).UseCollation("SQL_Latin1_General_CP1_CI_AS");
         });
 
         modelBuilder.Entity<menu>(entity =>
         {
             entity.HasKey(e => e.idMenu).HasName("PK_MENU");
+
+            entity.Property(e => e.icono).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.nombreMenu).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.ruta).UseCollation("SQL_Latin1_General_CP1_CI_AS");
         });
 
         modelBuilder.Entity<modulo>(entity =>
         {
             entity.HasKey(e => e.idModulo).HasName("PK_MODULO");
+
+            entity.Property(e => e.nombreModulo).UseCollation("SQL_Latin1_General_CP1_CI_AS");
 
             entity.HasOne(d => d.idMenuNavigation).WithMany(p => p.modulo).HasConstraintName("FK_MODULO_MENU");
         });
@@ -576,16 +925,25 @@ public partial class base_nuevaContext : DbContext
         modelBuilder.Entity<motorista>(entity =>
         {
             entity.HasKey(e => e.idMotorista).HasName("PK_MOTORISTA");
+
+            entity.Property(e => e.apellidos).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.nombres).UseCollation("SQL_Latin1_General_CP1_CI_AS");
         });
 
         modelBuilder.Entity<movimientoOf>(entity =>
         {
             entity.HasKey(e => e.idMovimiento).HasName("PK_MOVIMIENTOOF");
+
+            entity.Property(e => e.usuario).UseCollation("SQL_Latin1_General_CP1_CI_AS");
         });
 
         modelBuilder.Entity<notasOf>(entity =>
         {
             entity.HasKey(e => e.idComentario).HasName("PK__notasOf__C74515DAC72B3FC2");
+
+            entity.Property(e => e.creadoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.texto).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.tipoNota).UseCollation("SQL_Latin1_General_CP1_CI_AS");
 
             entity.HasOne(d => d.oFNavigation).WithMany(p => p.notasOf)
                 .OnDelete(DeleteBehavior.Cascade)
@@ -597,11 +955,20 @@ public partial class base_nuevaContext : DbContext
             entity.HasKey(e => e.oV1).HasName("PK_OV");
 
             entity.Property(e => e.oV1).ValueGeneratedNever();
+            entity.Property(e => e.cliente).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.codigoCliente).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.comentario).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.tipoOrden).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.vendedor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
         });
 
         modelBuilder.Entity<operaciones>(entity =>
         {
             entity.HasKey(e => e.idOperacion).HasName("PK_OPERACIONES");
+
+            entity.Property(e => e.nombreOperacion).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.prefijo).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.tipoOperacion).UseCollation("SQL_Latin1_General_CP1_CI_AS");
 
             entity.HasOne(d => d.familiaMaquinaNavigation).WithMany(p => p.operaciones).HasConstraintName("FK_FAMILIA_MAQUINA");
         });
@@ -609,6 +976,10 @@ public partial class base_nuevaContext : DbContext
         modelBuilder.Entity<pausasMaquina>(entity =>
         {
             entity.HasKey(e => e.id).HasName("PK__pausasMa__3213E83F297D9027");
+
+            entity.Property(e => e.bitacoraId).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.tipoPausa).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.usuario).UseCollation("SQL_Latin1_General_CP1_CI_AS");
 
             entity.HasOne(d => d.bitacora).WithMany(p => p.pausasMaquina)
                 .OnDelete(DeleteBehavior.Cascade)
@@ -627,6 +998,8 @@ public partial class base_nuevaContext : DbContext
         {
             entity.HasKey(e => e.idPermiso).HasName("PK_PERMISO");
 
+            entity.Property(e => e.descripcion).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+
             entity.HasOne(d => d.idRolNavigation).WithMany(p => p.permiso)
                 .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_PERMISO_ROL");
@@ -639,6 +1012,8 @@ public partial class base_nuevaContext : DbContext
         modelBuilder.Entity<permisoMaquina>(entity =>
         {
             entity.HasKey(e => e.idPermisoMaquina).HasName("PK__permisoM__14AF841E56D0504E");
+
+            entity.Property(e => e.user).UseCollation("SQL_Latin1_General_CP1_CI_AS");
 
             entity.HasOne(d => d.maquinaNavigation).WithMany(p => p.permisoMaquina)
                 .OnDelete(DeleteBehavior.Cascade)
@@ -653,12 +1028,16 @@ public partial class base_nuevaContext : DbContext
         {
             entity.HasKey(e => e.idPorcentaje).HasName("PK_PORCENTAJEDEAGUA");
 
+            entity.Property(e => e.valor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+
             entity.HasOne(d => d.idReporteAuditoriaNavigation).WithMany(p => p.porcentajeDeAgua).HasConstraintName("FK_PORCENTAJ_REPORTE");
         });
 
         modelBuilder.Entity<posturasOf>(entity =>
         {
             entity.HasKey(e => e.idPostura).HasName("PK_POSTURASOF");
+
+            entity.Property(e => e.nombrePostura).UseCollation("SQL_Latin1_General_CP1_CI_AS");
 
             entity.HasOne(d => d.idTableroNavigation).WithMany(p => p.posturasOf).HasConstraintName("FK_POSTURAS_TABLEROS");
         });
@@ -667,11 +1046,31 @@ public partial class base_nuevaContext : DbContext
         {
             entity.HasKey(e => e.idPotencia).HasName("PK_POTENCIALAMPARAUV");
 
+            entity.Property(e => e.potencia).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+
             entity.HasOne(d => d.idBarnizNavigation).WithMany(p => p.potenciaLamparaUv).HasConstraintName("FK_POTENCIAL_BARNIZ");
         });
 
         modelBuilder.Entity<procesoAcabado>(entity =>
         {
+            entity.Property(e => e.barniz).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.cantidadDemasia).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.cantidadMrequerido).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.detalleBarniz).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.detalleNum).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.foil).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.foilDetalle).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.indicacion).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.laminado).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.laminadoDetalle).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.medidaProd).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.numerado).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.retiro).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.tiempoArreglo).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.tiempoCorrida).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.tipoCierre).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.tiro).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+
             entity.HasOne(d => d.idProcesoNavigation).WithMany(p => p.procesoAcabado)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_procesoAcabado_procesoOf");
@@ -681,6 +1080,15 @@ public partial class base_nuevaContext : DbContext
         {
             entity.HasKey(e => e.idProcesoAcanadoFlexo).HasName("PK__procesoA__13DE4B6F5490DE7D");
 
+            entity.Property(e => e.cantCorrugado).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.cantidadMaterialSoli).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.etiquetaRollo).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.rollosCorrugado).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.rollosTotales).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.tiempoArreglo).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.tiempoCorrida).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.z).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+
             entity.HasOne(d => d.idProcesoNavigation).WithMany(p => p.procesoAcabadoFlexo)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_procesoAcabadoFlexo_procesoOf");
@@ -688,6 +1096,27 @@ public partial class base_nuevaContext : DbContext
 
         modelBuilder.Entity<procesoBarniz>(entity =>
         {
+            entity.Property(e => e.anchoPliego).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.barniz).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.cantidadPliegosDemasia).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.cantidadPliegosImprimir).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.detalleBarniz).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.detalleNumerado).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.foil).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.foilDetalle).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.indicacion).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.laminado).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.laminadoDetalle).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.largoPliego).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.numerado).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.repeticionPliegos).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.retiro).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.tamanoAbierto).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.tiempoArreglo).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.tiempoCorrida).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.tintas).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.tiro).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+
             entity.HasOne(d => d.idProcesoNavigation).WithMany(p => p.procesoBarniz)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_procesoBarniz_procesoOf");
@@ -695,6 +1124,29 @@ public partial class base_nuevaContext : DbContext
 
         modelBuilder.Entity<procesoImpresora>(entity =>
         {
+            entity.Property(e => e.anchoPliego).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.barniz).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.barnizDetalle).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.cantidadPliegosDemasia).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.cantidadPliegosImprimir).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.detalleNumerado).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.foil).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.foilDetalle).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.idTroquel).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.indicacionImpresion).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.laminado).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.laminadoDetalle).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.largoPliego).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.medidaProd).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.numerado).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.repeticionPliegos).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.retiro).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.tamanoAbierto).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.tiempoArreglo).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.tiempoCorrida).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.tintas).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.tiro).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+
             entity.HasOne(d => d.idProcesoNavigation).WithMany(p => p.procesoImpresora)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_procesoImpresora_procesoOf");
@@ -704,6 +1156,46 @@ public partial class base_nuevaContext : DbContext
         {
             entity.HasKey(e => e.idProcesoImpresoraFlexo).HasName("PK__procesoI__751EE56008093203");
 
+            entity.Property(e => e.ajusteMaterial).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.anchoMM).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.anchoMaterial).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.areaM2).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.barniz).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.barnizDetalle).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.cantCorrugado).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.cantidadMaterialSoli).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.cantidadTintas).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.codigoMontaje).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.costuraMM).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.desarrolloMM).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.desarrolloPulg).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.diametroCore).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.etiquetaRollo).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.excedente).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.foil).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.foilDetalle).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.forma).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.gapDesa).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.gapEje).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.imposicionDesarrollo).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.imposicionEje).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.imposicionTotal).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.laminado).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.laminadoDetalle).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.largoMM).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.layFlat).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.radesq).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.refMaterial).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.rollosCorrugado).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.rollosTotales).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.semicorte).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.sentidoSalida).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.tiempoArreglo).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.tiempoCorrida).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.tintasFlexo).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.totalM).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.z).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+
             entity.HasOne(d => d.idProcesoNavigation).WithMany(p => p.procesoImpresoraFlexo)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_procesoImpresoraFlexo_procesoOf");
@@ -712,6 +1204,15 @@ public partial class base_nuevaContext : DbContext
         modelBuilder.Entity<procesoMangaFlexo>(entity =>
         {
             entity.HasKey(e => e.idProcesoMangaFlexo).HasName("PK__procesoM__E9EEA4A75491350E");
+
+            entity.Property(e => e.cantCorrugado).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.cantidadMaterialSoli).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.etiquetaRollo).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.rollosCorrugado).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.rollosTotales).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.tiempoArreglo).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.tiempoCorrida).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.z).UseCollation("SQL_Latin1_General_CP1_CI_AS");
 
             entity.HasOne(d => d.idProcesoNavigation).WithMany(p => p.procesoMangaFlexo)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -724,6 +1225,18 @@ public partial class base_nuevaContext : DbContext
 
             entity.ToTable(tb => tb.HasTrigger("trg_UpdateTarjetaOf"));
 
+            entity.Property(e => e.actualizadoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.comentario).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.descripcionOf).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.idMaquinaSAP).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.idMaterial).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.nombreTarjeta).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.productoOf).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.programadoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.serieNumeracion).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.tipoMaquinaSAP).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.tiroRetiro).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+
             entity.HasOne(d => d.idMaterialNavigation).WithMany(p => p.procesoOf).HasConstraintName("FK_PROCESO_MATERIAL");
 
             entity.HasOne(d => d.idPosturaNavigation).WithMany(p => p.procesoOf).HasConstraintName("FK_PROCESO_POSTURA_");
@@ -735,6 +1248,12 @@ public partial class base_nuevaContext : DbContext
 
         modelBuilder.Entity<procesoPegadora>(entity =>
         {
+            entity.Property(e => e.cantidadAPegar).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.indicacion).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.tiempoArreglo).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.tiempoCorrida).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.tipoCierre).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+
             entity.HasOne(d => d.idProcesoNavigation).WithMany(p => p.procesoPegadora)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_procesoPegadora_procesoOf");
@@ -742,6 +1261,15 @@ public partial class base_nuevaContext : DbContext
 
         modelBuilder.Entity<procesoPreprensa>(entity =>
         {
+            entity.Property(e => e.cantidadPlanchas).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.indicacion).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.medidaProd).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.ordenAnterior).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.repeticionPliegos).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.tamanoAbierto).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.tiempoArreglo).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.tiempoCorrida).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+
             entity.HasOne(d => d.idProcesoNavigation).WithMany(p => p.procesoPreprensa)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_procesoPreprensa_procesoOf");
@@ -751,6 +1279,8 @@ public partial class base_nuevaContext : DbContext
         {
             entity.HasKey(e => e.idProcesoSerigrafia).HasName("PK__procesoS__0D76A68B511ACF82");
 
+            entity.Property(e => e.cantProducir).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+
             entity.HasOne(d => d.idProcesoNavigation).WithMany(p => p.procesoSerigrafia)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_procesoSerigrafia_procesoOf");
@@ -758,6 +1288,14 @@ public partial class base_nuevaContext : DbContext
 
         modelBuilder.Entity<procesoTroqueladora>(entity =>
         {
+            entity.Property(e => e.cantPliegosTroquelar).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.cantidadPliegosDemasia).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.idTroquel).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.indicacion).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.repeticionPliegos).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.tiempoArreglo).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.tiempoCorrida).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+
             entity.HasOne(d => d.idProcesoNavigation).WithMany(p => p.procesoTroqueladora)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_procesoTroqueladora_procesoOf");
@@ -766,6 +1304,24 @@ public partial class base_nuevaContext : DbContext
         modelBuilder.Entity<procesosFlexo>(entity =>
         {
             entity.HasKey(e => e.idProcesosFlexo).HasName("PK__procesos__CBFD21756F84ADA7");
+
+            entity.Property(e => e.barniz).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.barnizDetalle).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.cantCorrugado).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.cantidadMaterialSoli).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.diametroCore).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.etiquetaRollo).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.foil).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.foilDetalle).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.laminado).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.laminadoDetalle).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.rollosCorrugado).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.rollosTotales).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.tiempoArreglo).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.tiempoCorrida).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.tintasFlexo).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.totalM).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.z).UseCollation("SQL_Latin1_General_CP1_CI_AS");
 
             entity.HasOne(d => d.idProcesoNavigation).WithMany(p => p.procesosFlexo)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -776,6 +1332,10 @@ public partial class base_nuevaContext : DbContext
         {
             entity.HasKey(e => e.token).HasName("PK_REFRESHTOKEN");
 
+            entity.Property(e => e.token).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.refreshToken1).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.user).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+
             entity.HasOne(d => d.userNavigation).WithMany(p => p.refreshToken).HasConstraintName("FK_REFRESHT_USUARIO");
         });
 
@@ -783,8 +1343,17 @@ public partial class base_nuevaContext : DbContext
         {
             entity.HasKey(e => e.idReporteAuditoria).HasName("PK_REPORTEDEAUDITORIA");
 
-            entity.Property(e => e.procesosArrelgo).IsFixedLength();
-            entity.Property(e => e.tiroRetiro).IsFixedLength();
+            entity.Property(e => e.codigoProducto).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.maquina).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.observaciones).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.operador).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.procesosArrelgo)
+                .IsFixedLength()
+                .UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.producto).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.tiroRetiro)
+                .IsFixedLength()
+                .UseCollation("SQL_Latin1_General_CP1_CI_AS");
 
             entity.HasOne(d => d.idAuditoriaNavigation).WithMany(p => p.reporteDeAuditoria).HasConstraintName("FK_REPORTES_AUDIT");
         });
@@ -792,6 +1361,12 @@ public partial class base_nuevaContext : DbContext
         modelBuilder.Entity<reportesDeOperadores>(entity =>
         {
             entity.HasKey(e => e.idReporte).HasName("PK_REPORTESDEOPERADORES");
+
+            entity.Property(e => e.idReporte).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.actualizadoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.creadoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.operador).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.turno).UseCollation("SQL_Latin1_General_CP1_CI_AS");
 
             entity.HasOne(d => d.idEstadoReporteNavigation).WithMany(p => p.reportesDeOperadores).HasConstraintName("FK_REPORTES_ESTADO");
 
@@ -805,11 +1380,35 @@ public partial class base_nuevaContext : DbContext
         modelBuilder.Entity<rol>(entity =>
         {
             entity.HasKey(e => e.idRol).HasName("PK_ROL");
+
+            entity.Property(e => e.descripcion).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.nombreRol).UseCollation("SQL_Latin1_General_CP1_CI_AS");
         });
 
         modelBuilder.Entity<secuenciaDeColor>(entity =>
         {
             entity.HasKey(e => e.idSecuencia).HasName("PK_SECUENCIADECOLOR");
+
+            entity.Property(e => e.anguloColorRetiro).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.anguloColorTiro).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.densidadRetiro).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.densidadTiro).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.distribuciónLateralRetiro).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.distribuciónLateralTiro).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.porcentajeAguaRetiro).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.porcentajeAguaTiro).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.presionRetiro).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.presionTiro).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.retiro).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.rodilloEntintadorRetiro).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.rodilloEntintadorTiro).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.tiro).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.tomadorTintaRetiro).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.tomadorTintaTiro).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.varianteFlujoRetiro).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.varianteFlujoTiro).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.vueltasRetiro).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.vueltasTiro).UseCollation("SQL_Latin1_General_CP1_CI_AS");
 
             entity.HasOne(d => d.idDetalleImpresionNavigation).WithMany(p => p.secuenciaDeColor).HasConstraintName("FK_SECUENCIA_COLOR");
         });
@@ -817,6 +1416,10 @@ public partial class base_nuevaContext : DbContext
         modelBuilder.Entity<sesionOperador>(entity =>
         {
             entity.HasKey(e => e.id).HasName("PK__sesionOp__3213E83F18D6E57D");
+
+            entity.Property(e => e.bitacora).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.operador).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.turno).UseCollation("SQL_Latin1_General_CP1_CI_AS");
 
             entity.HasOne(d => d.bitacoraNavigation).WithMany(p => p.sesionOperador).HasConstraintName("FK_BITACORA");
 
@@ -829,12 +1432,22 @@ public partial class base_nuevaContext : DbContext
         {
             entity.HasKey(e => e.idSubModulo).HasName("PK_SUBMODULO");
 
+            entity.Property(e => e.nombreSubModulo).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+
             entity.HasOne(d => d.idModuloNavigation).WithMany(p => p.subModulo).HasConstraintName("FK_SUBMODUL_MODULO");
+        });
+
+        modelBuilder.Entity<sysdiagrams>(entity =>
+        {
+            entity.HasKey(e => e.diagram_id).HasName("PK__sysdiagr__C2B05B61593218A9");
         });
 
         modelBuilder.Entity<tablerosOf>(entity =>
         {
             entity.HasKey(e => e.idTablero).HasName("PK_TABLEROSOF");
+
+            entity.Property(e => e.idSapMaquina).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.nombreTablero).UseCollation("SQL_Latin1_General_CP1_CI_AS");
 
             entity.HasOne(d => d.idAreaNavigation).WithMany(p => p.tablerosOf).HasConstraintName("FK_TABLEROS_AREAS");
 
@@ -844,6 +1457,9 @@ public partial class base_nuevaContext : DbContext
         modelBuilder.Entity<tarjetaCampo>(entity =>
         {
             entity.HasKey(e => e.idCamposTarjeta).HasName("PK_TARJETACAMPO");
+
+            entity.Property(e => e.valorLista).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.valorTexto).UseCollation("SQL_Latin1_General_CP1_CI_AS");
 
             entity.HasOne(d => d.idCampoNavigation).WithMany(p => p.tarjetaCampo).HasConstraintName("FK_CAMPO_TARJETA");
 
@@ -864,6 +1480,17 @@ public partial class base_nuevaContext : DbContext
             entity.HasKey(e => e.oF).HasName("PK_TARJETAOF");
 
             entity.Property(e => e.oF).ValueGeneratedNever();
+            entity.Property(e => e.clienteOf).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.codArticulo).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.descipcionOf).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.fsc).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.lineaDeNegocio).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.nombreOf).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.productoOf).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.seriesOf).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.tipoDeOrden).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.unidadMedida).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.vendedorOf).UseCollation("SQL_Latin1_General_CP1_CI_AS");
 
             entity.HasOne(d => d.idEstadoOfNavigation).WithMany(p => p.tarjetaOf).HasConstraintName("FK_TARJETA_ESTADO");
         });
@@ -872,27 +1499,50 @@ public partial class base_nuevaContext : DbContext
         {
             entity.HasKey(e => e.idTipoAcabado).HasName("PK_TIPOACABADO");
 
+            entity.Property(e => e.cantidad).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.codigo).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.color).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.lote).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.presionMaquina).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.proveedor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.temperaturaLamina).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.tipoAcabado1).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.tipoFoil).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+
             entity.HasOne(d => d.idDetalleTroqueladoNavigation).WithMany(p => p.tipoAcabado).HasConstraintName("FK_TIPOACABADO_TROQUEL");
         });
 
         modelBuilder.Entity<tipoCierre>(entity =>
         {
             entity.HasKey(e => e.idTipoCierre).HasName("PK_TIPOCIERRE");
+
+            entity.Property(e => e.nombreTipoCierre).UseCollation("SQL_Latin1_General_CP1_CI_AS");
         });
 
         modelBuilder.Entity<tipoDeObjetos>(entity =>
         {
             entity.HasKey(e => e.idTipoDeObjetos).HasName("PK_TIPODEOBJETOS");
+
+            entity.Property(e => e.nombreTipoDeObjeto).UseCollation("SQL_Latin1_General_CP1_CI_AS");
         });
 
         modelBuilder.Entity<tipoFicha>(entity =>
         {
             entity.HasKey(e => e.idTipoFicha).HasName("PK_TIPOFICHA");
+
+            entity.Property(e => e.nombre).UseCollation("SQL_Latin1_General_CP1_CI_AS");
         });
 
         modelBuilder.Entity<tipoPega>(entity =>
         {
             entity.HasKey(e => e.idTipoPega).HasName("PK_TIPOPEGA");
+
+            entity.Property(e => e.lote).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.marca).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.proveedor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.tipoPega1).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.tolerancia).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.vence).UseCollation("SQL_Latin1_General_CP1_CI_AS");
 
             entity.HasOne(d => d.idDetallePegadoNavigation).WithMany(p => p.tipoPega).HasConstraintName("FK_TIPO_PEGADO");
         });
@@ -901,6 +1551,8 @@ public partial class base_nuevaContext : DbContext
         {
             entity.HasKey(e => e.idTipoPegado).HasName("PK_TIPOPEGADO");
 
+            entity.Property(e => e.tipoPegado1).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+
             entity.HasOne(d => d.idDetallePegadoNavigation).WithMany(p => p.tipoPegado).HasConstraintName("FK_TIPO_PEGA");
         });
 
@@ -908,22 +1560,37 @@ public partial class base_nuevaContext : DbContext
         {
             entity.HasKey(e => e.idTipoPleca).HasName("PK_TIPOPLECA");
 
+            entity.Property(e => e.medida).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.tamanoAgujero).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.tipoDePleca).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+
             entity.HasOne(d => d.idDetalleTroqueladoNavigation).WithMany(p => p.tipoPleca).HasConstraintName("FK_TIPOPLECA_TRO");
         });
 
         modelBuilder.Entity<tipoReporte>(entity =>
         {
             entity.HasKey(e => e.idTipoReporte).HasName("PK_TIPOREPORTE");
+
+            entity.Property(e => e.nombreTipoReporte).UseCollation("SQL_Latin1_General_CP1_CI_AS");
         });
 
         modelBuilder.Entity<turnos>(entity =>
         {
             entity.HasKey(e => e.id).HasName("PK__turnos__3213E83F597A9A98");
+
+            entity.Property(e => e.turno).UseCollation("SQL_Latin1_General_CP1_CI_AS");
         });
 
         modelBuilder.Entity<usuario>(entity =>
         {
             entity.HasKey(e => e.user).HasName("PK_USUARIO");
+
+            entity.Property(e => e.user).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.actualizadoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.apellidos).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.email).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.nombres).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.password).UseCollation("SQL_Latin1_General_CP1_CI_AS");
 
             entity.HasOne(d => d.idAreaNavigation).WithMany(p => p.usuario).HasConstraintName("FK_USUARIO_AREA");
 
@@ -936,12 +1603,22 @@ public partial class base_nuevaContext : DbContext
         {
             entity.HasKey(e => e.idVariables).HasName("PK_VARIABLESDEAGUA");
 
+            entity.Property(e => e.acl).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.cond).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.ph).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.tem).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.vis).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+
             entity.HasOne(d => d.idReporteAuditoriaNavigation).WithMany(p => p.variablesDeAgua).HasConstraintName("FK_VARIABLES_REPORTE");
         });
 
         modelBuilder.Entity<vehiculo>(entity =>
         {
             entity.HasKey(e => e.idVehiculo).HasName("PK_VEHICULO");
+
+            entity.Property(e => e.codigoActivo).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.nombre).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.placa).UseCollation("SQL_Latin1_General_CP1_CI_AS");
         });
 
         OnModelCreatingPartial(modelBuilder);
