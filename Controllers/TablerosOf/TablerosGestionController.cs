@@ -78,6 +78,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             var tableros = await _context.tablerosOf
                 .Where(f => f.idArea == idArea)
                 .Include(u => u.idAreaNavigation)
+                .Include(u => u.idMaquinaNavigation)
+                .ThenInclude(m => m.idFamiliaNavigation)
                 .ToListAsync();
             var tablerosDto = _mapper.Map<List<TablerosOfDto>>(tableros);
             return Ok(tablerosDto);

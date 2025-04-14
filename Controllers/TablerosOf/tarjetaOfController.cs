@@ -25,7 +25,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         }
 
         // GET: api/tarjetaOf
-        [HttpGet("get")]
+        /*[HttpGet("get")]
         public async Task<ActionResult<IEnumerable<TarjetaOfDto>>> GettarjetaOf()
         {
             var tarjetaOf = await _context.tarjetaOf
@@ -36,6 +36,34 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 .ToListAsync();
 
             var tarjetaOfDto = _mapper.Map<List<TarjetaOfDto>>(tarjetaOf);
+
+            return Ok(tarjetaOfDto);
+        }*/
+
+        // GET: api/tarjetaOf
+        [HttpGet("get")]
+        public async Task<ActionResult<IEnumerable<TarjetaOfDto>>> GettarjetaOf()
+        {
+            var query = _context.tarjetaOf
+                .Include(u => u.idEstadoOfNavigation)
+                .Include(r => r.etiquetaOf)
+                .ThenInclude(o => o.idEtiquetaNavigation)
+                .AsQueryable();
+
+            // Ordenamiento condicional
+            var tarjetasOrdenadas = await query
+                .OrderBy(t => t.idEstadoOf == 1 ? 0 : 1)  // Primero las de estado 1
+                .Select(t => new
+                {
+                    Tarjeta = t,
+                    Orden = t.idEstadoOf == 1 ? -t.oF : t.posicion  // -OF para descendente
+                })
+                .OrderBy(x => x.Tarjeta.idEstadoOf == 1 ? 0 : 1)
+                .ThenBy(x => x.Orden)
+                .Select(x => x.Tarjeta)
+                .ToListAsync();
+
+            var tarjetaOfDto = _mapper.Map<List<TarjetaOfDto>>(tarjetasOrdenadas);
 
             return Ok(tarjetaOfDto);
         }
@@ -56,6 +84,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             var query = _context.tarjetaOf
                 .Include(r => r.etiquetaOf)
                 .ThenInclude(o => o.idEtiquetaNavigation)
+                .Include(e => e.idEstadoOfNavigation)
                 .AsQueryable();
 
             // Aplicar filtros condicionales

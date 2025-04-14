@@ -178,9 +178,22 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 .Include(e => e.tarjetaEtiqueta)
                 .ToListAsync();
 
+            // Ordenar los procesos según el criterio requerido
+            var procesosOrdenados = procesos.OrderBy(p =>
+                p.idTableroNavigation?.idTablero switch
+                {
+                    42 => 1,    // Primera prioridad (Tablero 42)
+                    44 => 2,    // Segunda prioridad (Tablero 44)
+                    _ => 3      // Resto de los procesos
+                })
+                .ThenBy(p => p.idTableroNavigation?.idTablero == 42 || p.idTableroNavigation?.idTablero == 44
+                    ? 0  // Mantener orden original para 42 y 44
+                    : p.idProceso)  // Ordenar por idProceso solo para el resto
+                .ToList();
+
             var dtos = new List<ListaProcesoOfDto>();
 
-            foreach (var proceso in procesos)
+            foreach (var proceso in procesosOrdenados)
             {
                 var dto = _mapper.Map<ListaProcesoOfDto>(proceso);
 

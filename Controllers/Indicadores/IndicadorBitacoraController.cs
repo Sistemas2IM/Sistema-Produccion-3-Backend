@@ -79,5 +79,23 @@ namespace Sistema_Produccion_3_Backend.Controllers.Indicadores
 
             return Ok(resultados);
         }
+
+        [HttpGet("resumenOf/{numOf}")]  // ":int" restringe a solo valores enteros
+        [ProducesResponseType(typeof(List<ResumenOfResult>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> GetResumenOf(
+        [FromRoute] int numOf,  // Ahora es obligatorio (no nullable)
+        CancellationToken cancellationToken)
+        {
+            try
+            {
+                var result = await _contextSP.ResumenOfAsync(numOf, cancellationToken: cancellationToken);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

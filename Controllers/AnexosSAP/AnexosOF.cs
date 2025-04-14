@@ -17,11 +17,10 @@ namespace Sistema_Produccion_3_Backend.Controllers.AnexosSAP
     public class AnexosOF : ControllerBase
     {
         // GET: api/anexosof/get/5
-        //[HttpGet("get/files/{of}/{nombreRol
-        [HttpGet("get/files/{of}")]
-        public async Task<IActionResult> GetAnexosFiles(int of/*, string nombreRol*/)
+        [HttpGet("get/files/{of}/{nombreRol}")]
+        //[HttpGet("get/files/{of}")]
+        public async Task<IActionResult> GetAnexosFiles(int of, string nombreRol)
         {
-            string nombreRol = "Administrador";
             try
             {
                 // Conectar a HANA
@@ -125,7 +124,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.AnexosSAP
                 return false;
             }
 
-            permisoAnexo = "Administrador";
+            //permisoAnexo = "Administrador";
 
             // Mapear los roles a los grupos de permisos
             var gruposPermisos = new Dictionary<string, List<string>>
