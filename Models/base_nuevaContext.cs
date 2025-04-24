@@ -111,7 +111,11 @@ public partial class base_nuevaContext : DbContext
 
     public virtual DbSet<permiso> permiso { get; set; }
 
+    public virtual DbSet<permisoEspecifico> permisoEspecifico { get; set; }
+
     public virtual DbSet<permisoMaquina> permisoMaquina { get; set; }
+
+    public virtual DbSet<permisoTipo> permisoTipo { get; set; }
 
     public virtual DbSet<porcentajeDeAgua> porcentajeDeAgua { get; set; }
 
@@ -1009,6 +1013,19 @@ public partial class base_nuevaContext : DbContext
                 .HasConstraintName("FK_PERMISO_SUBMODULO");
         });
 
+        modelBuilder.Entity<permisoEspecifico>(entity =>
+        {
+            entity.HasKey(e => e.idPermisoEspecifico).HasName("PK__permisoE__11805B4430FF764A");
+
+            entity.HasOne(d => d.idPermisoTipoNavigation).WithMany(p => p.permisoEspecifico)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK_PERMISO_TIPO");
+
+            entity.HasOne(d => d.idRolNavigation).WithMany(p => p.permisoEspecifico)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK_ROL");
+        });
+
         modelBuilder.Entity<permisoMaquina>(entity =>
         {
             entity.HasKey(e => e.idPermisoMaquina).HasName("PK__permisoM__14AF841E56D0504E");
@@ -1022,6 +1039,15 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.userNavigation).WithMany(p => p.permisoMaquina)
                 .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_PERMISOS_MAQUINA_USUARIO");
+        });
+
+        modelBuilder.Entity<permisoTipo>(entity =>
+        {
+            entity.HasKey(e => e.idPermisoTipo).HasName("PK__permisoT__BA9D7CD3A8DDE3D3");
+
+            entity.HasOne(d => d.idSubModuloNavigation).WithMany(p => p.permisoTipo)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK_SUBMODULO");
         });
 
         modelBuilder.Entity<porcentajeDeAgua>(entity =>
