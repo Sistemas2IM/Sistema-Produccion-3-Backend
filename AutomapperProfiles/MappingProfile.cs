@@ -471,6 +471,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
 
             CreateMap<subModulo, SubModuloDto>()
                 .ForMember(dest => dest.modulo, opt => opt.MapFrom(src => src.idModuloNavigation))
+                .ForMember(dest => dest.permisoTipoDto, opt => opt.MapFrom(src => src.permisoTipo))
                 .ReverseMap();
 
             CreateMap<permisoMaquina, PermisoMaquinaDto>().ReverseMap();

@@ -1,4 +1,5 @@
-﻿using Sistema_Produccion_3_Backend.DTO.PermisosUsuario.Modulo;
+﻿using Sistema_Produccion_3_Backend.DTO.Permisos.PermisoTipo;
+using Sistema_Produccion_3_Backend.DTO.PermisosUsuario.Modulo;
 using System.ComponentModel.DataAnnotations;
 
 namespace Sistema_Produccion_3_Backend.DTO.PermisosUsuario.Modulo.SubModulo
@@ -12,5 +13,7 @@ namespace Sistema_Produccion_3_Backend.DTO.PermisosUsuario.Modulo.SubModulo
         public string? nombreSubModulo { get; set; }
 
         public ModuloDto? modulo { get; set; }
+
+        public List<PermisoTipoDto>? permisoTipoDto { get; set; }
     }
 }
