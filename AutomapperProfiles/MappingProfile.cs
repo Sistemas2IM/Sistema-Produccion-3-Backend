@@ -449,6 +449,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
 
             CreateMap<rol, RolDto>()
                 .ForMember(dest => dest.permisos, opt => opt.MapFrom(src => src.permiso))
+                .ForMember(dest => dest.permisoEspecificoDto, opt => opt.MapFrom(src => src.permisoEspecifico))
                 .ReverseMap();
 
             CreateMap<rol, AddRolDto>()
@@ -735,7 +736,11 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             // PERMISOS ESPECIFICOS
-            CreateMap<permisoEspecifico, PermisoEspecificoDto>().ReverseMap();
+            CreateMap<permisoEspecifico, PermisoEspecificoDto>()
+                .ForMember(dest => dest.idSubmodulo, opt => opt.MapFrom(src => src.idPermisoTipoNavigation.idSubModulo))
+                .ForMember(dest => dest.descripcion, opt => opt.MapFrom(src => src.idPermisoTipoNavigation.descripcion))
+                .ForMember(dest => dest.clave, opt => opt.MapFrom(src => src.idPermisoTipoNavigation.clave))
+                .ReverseMap();
             CreateMap<permisoEspecifico, AddPermisoEspecificoDto>().ReverseMap();
             CreateMap<UpdatePermisoEspecificoDto, permisoEspecifico>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));

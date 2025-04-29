@@ -24,7 +24,10 @@ namespace Sistema_Produccion_3_Backend.Controllers.Permisos
         [HttpGet("get")]
         public async Task<ActionResult<IEnumerable<PermisoEspecificoDto>>> GetPermisoEspecifico()
         {
-            var permisoEspecifico = await _context.permisoEspecifico.ToListAsync();
+            var permisoEspecifico = await _context.permisoEspecifico
+                .Include(u => u.idRolNavigation)
+                .Include(u => u.idPermisoTipoNavigation)
+                .ToListAsync();
 
             var permisoEspecificoDto = _mapper.Map<List<PermisoEspecificoDto>>(permisoEspecifico);
 
@@ -34,7 +37,10 @@ namespace Sistema_Produccion_3_Backend.Controllers.Permisos
         [HttpGet("get/{id}")]
         public async Task<ActionResult<PermisoEspecificoDto>> GetPermisoEspecifico(int id)
         {
-            var permisoEspecifico = await _context.permisoEspecifico.FindAsync(id);
+            var permisoEspecifico = await _context.permisoEspecifico
+                .Include(u => u.idRolNavigation)
+                .Include(u => u.idPermisoTipoNavigation)
+                .FirstOrDefaultAsync(u => u.idPermisoEspecifico == id);
             if (permisoEspecifico == null)
             {
                 return NotFound();

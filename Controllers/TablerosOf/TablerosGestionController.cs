@@ -109,6 +109,108 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             return Ok(procesoOfDto);
         }
 
+        [HttpGet("get/procesosOfGestion/filtros")]
+        public async Task<ActionResult<IEnumerable<ProcesoOfVistaTableroDto>>> GetProcesoOfAreaFiltro(
+        [FromQuery] int? idArea = null,          // Parámetro obligatorio para el área
+        [FromQuery] DateTime? fechaInicio = null,   // Parámetro opcional para la fecha de inicio del rango
+        [FromQuery] DateTime? fechaFin = null,     // Parámetro opcional para la fecha de fin del rango
+        [FromQuery] string? cliente = null,         // Parámetro opcional para el cliente
+        [FromQuery] string? ejecutivo = null,
+        [FromQuery] string? articulo = null,     // Parámetro opcional para el artículo
+        [FromQuery] int? oF = null,               // Parámetro opcional para el oF
+        [FromQuery] int? oV = null,               // Parámetro opcional para el oV
+        [FromQuery] string? lineaNegocio = null, // Parámetro opcional para la línea de negocio
+        [FromQuery] string? idsEtiquetas = null, // Parámetro opcional para las etiquetas
+        [FromQuery] int? idProceso = null,        // Parámetro opcional para la postura
+        [FromQuery] int? tablero = null)      // Parámetro opcional para el ejecutivo
+        {
+            // Consulta base
+            var query = _context.procesoOf
+                .OrderBy(p => p.posicion)
+                .Include(u => u.detalleOperacionProceso)
+                .ThenInclude(o => o.idOperacionNavigation)
+                .Include(m => m.tarjetaCampo)
+                .Include(s => s.tarjetaEtiqueta)
+                .ThenInclude(e => e.idEtiquetaNavigation)
+                .Include(f => f.oFNavigation)
+                .Include(l => l.idPosturaNavigation)
+                .Include(v => v.idMaterialNavigation)
+                .Include(a => a.asignacion)
+                .ThenInclude(u => u.userNavigation)
+                .AsQueryable();
+
+            // Aplicar filtros condicionales
+            if (idArea.HasValue)
+            {
+                // Filtrar por área
+                query = query.Where(p => p.idTableroNavigation.idArea == idArea.Value);
+            }
+            if (fechaInicio.HasValue && fechaFin.HasValue)
+            {
+                // Filtrar por rango de fechas (fechaVencimiento entre fechaInicio y fechaFin)
+                query = query.Where(p => p.fechaVencimiento >= fechaInicio.Value && p.fechaVencimiento <= fechaFin.Value);
+            }
+            else if (fechaInicio.HasValue)
+            {
+                // Si solo se proporciona fechaInicio, filtrar desde esa fecha en adelante
+                query = query.Where(p => p.fechaVencimiento >= fechaInicio.Value);
+            }
+            else if (fechaFin.HasValue)
+            {
+                // Si solo se proporciona fechaFin, filtrar hasta esa fecha
+                query = query.Where(p => p.fechaVencimiento <= fechaFin.Value);
+            }
+            if (!string.IsNullOrEmpty(cliente))
+            {
+                query = query.Where(p => p.oFNavigation.clienteOf.Contains(cliente));
+            }
+            if (!string.IsNullOrEmpty(ejecutivo))
+            {
+                query = query.Where(p => p.oFNavigation.vendedorOf.Contains(ejecutivo));
+            }
+            if (!string.IsNullOrEmpty(articulo))
+            {
+                query = query.Where(p => p.oFNavigation.productoOf.Contains(articulo));
+            }
+            if (oF.HasValue)
+            {
+                query = query.Where(p => p.oF == oF.Value);
+            }
+            if (oV.HasValue)
+            {
+                query = query.Where(p => p.oV == oV.Value);
+            }
+            if (!string.IsNullOrEmpty(lineaNegocio))
+            {
+                query = query.Where(p => p.oFNavigation.lineaDeNegocio.Contains(lineaNegocio));
+            }
+            if (!string.IsNullOrEmpty(idsEtiquetas))
+            {
+                // Convertir la cadena de IDs de etiquetas en una lista de enteros
+                var ids = idsEtiquetas.Split(',')
+                    .Select(int.Parse)
+                    .ToList();
+
+                // Filtrar por etiquetas
+                query = query.Where(p => p.tarjetaEtiqueta
+                .Any(te => ids.Contains(te.idTarjetaEtiqueta)));
+            }
+            if (idProceso.HasValue)
+            {
+                query = query.Where(p => p.idProceso == idProceso.Value);
+            }
+            if (tablero.HasValue)
+            {
+                query = query.Where(p => p.idTablero == tablero.Value);
+            }
+
+            // Ejecutar la consulta y mapear a DTO
+            var procesoOf = await query.ToListAsync();
+            var procesoOfDto = _mapper.Map<List<ProcesoOfVistaTableroDto>>(procesoOf);
+
+            return Ok(procesoOfDto);
+        }
+
         // GET: api/tarjetaOf VENDEDORES
         /*[HttpGet("get/vendedor{vendedor}")]
         public async Task<ActionResult<IEnumerable<TarjetaOfDto>>> GettarjetaOf(string vendedor)

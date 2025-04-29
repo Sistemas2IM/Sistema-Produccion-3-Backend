@@ -60,8 +60,14 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         public async Task<ActionResult<IEnumerable<ProcesoOfDto>>> GetprocesoOffiltros(
         [FromQuery] DateTime? fechaInicio = null,   // Parámetro opcional para la fecha de inicio del rango
         [FromQuery] DateTime? fechaFin = null,     // Parámetro opcional para la fecha de fin del rango
-        [FromQuery] string cliente = null,         // Parámetro opcional para el cliente
-        [FromQuery] string ejecutivo = null,
+        [FromQuery] string? cliente = null,         // Parámetro opcional para el cliente
+        [FromQuery] string? ejecutivo = null,
+        [FromQuery] string? articulo = null,     // Parámetro opcional para el artículo
+        [FromQuery] int? oF = null,               // Parámetro opcional para el oF
+        [FromQuery] int? oV = null,               // Parámetro opcional para el oV
+        [FromQuery] string? lineaNegocio = null, // Parámetro opcional para la línea de negocio
+        [FromQuery] string? idsEtiquetas = null, // Parámetro opcional para las etiquetas
+        [FromQuery] int? idProceso = null,        // Parámetro opcional para la postura
         [FromQuery] int? tablero = null)      // Parámetro opcional para el ejecutivo
 
         {
@@ -103,6 +109,37 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             if (!string.IsNullOrEmpty(ejecutivo))
             {
                 query = query.Where(p => p.oFNavigation.vendedorOf.Contains(ejecutivo));
+            }
+            if (!string.IsNullOrEmpty(articulo))
+            {
+                query = query.Where(p => p.oFNavigation.productoOf.Contains(articulo));
+            }
+            if (oF.HasValue)
+            {
+                query = query.Where(p => p.oF == oF.Value);
+            }
+            if (oV.HasValue)
+            {
+                query = query.Where(p => p.oV == oV.Value);
+            }
+            if (!string.IsNullOrEmpty(lineaNegocio))
+            {
+                query = query.Where(p => p.oFNavigation.lineaDeNegocio.Contains(lineaNegocio));
+            }
+            if (!string.IsNullOrEmpty(idsEtiquetas))
+            {
+                // Convertir la cadena de IDs de etiquetas en una lista de enteros
+                var ids = idsEtiquetas.Split(',')
+                    .Select(int.Parse)
+                    .ToList();
+
+                // Filtrar por etiquetas
+                query = query.Where(p => p.tarjetaEtiqueta
+                .Any(te => ids.Contains(te.idTarjetaEtiqueta)));
+            }
+            if (idProceso.HasValue)
+            {
+                query = query.Where(p => p.idProceso == idProceso.Value);
             }
             if (tablero.HasValue)
             {
