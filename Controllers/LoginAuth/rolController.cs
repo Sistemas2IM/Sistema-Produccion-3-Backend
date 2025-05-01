@@ -28,7 +28,14 @@ namespace Sistema_Produccion_3_Backend.Controllers.LoginAuth
         [HttpGet("get")]
         public async Task<ActionResult<IEnumerable<RolDto>>> Getrol()
         {
-            var rol = await _context.rol.ToListAsync();
+            var rol = await _context.rol
+                .Include(u => u.permiso)
+                .ThenInclude(s => s.idSubModuloNavigation)
+                .ThenInclude(m => m.idModuloNavigation)
+                .ThenInclude(e => e.idMenuNavigation)
+                .Include(u => u.permisoEspecifico)
+                .ThenInclude(r => r.idPermisoTipoNavigation)
+                .ToListAsync();
             var rolDto = _mapper.Map<List<RolDto>>(rol);
 
             return Ok(rolDto);
@@ -42,6 +49,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.LoginAuth
                 .ThenInclude(s => s.idSubModuloNavigation)
                 .ThenInclude(m => m.idModuloNavigation)
                 .ThenInclude(e => e.idMenuNavigation)
+                .Include(u => u.permisoEspecifico)
+                .ThenInclude(r => r.idPermisoTipoNavigation)
                 .ToListAsync();
             var rolDto = _mapper.Map<List<RolDto>>(rol);
 
@@ -57,6 +66,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.LoginAuth
                 .ThenInclude(s => s.idSubModuloNavigation)
                 .ThenInclude(m => m.idModuloNavigation)
                 .ThenInclude(e => e.idMenuNavigation)
+                .Include(u => u.permisoEspecifico)
+                .ThenInclude(r => r.idPermisoTipoNavigation)
                 .FirstOrDefaultAsync(u => u.idRol == id);
             var rolDto = _mapper.Map<RolDto>(rol);
 

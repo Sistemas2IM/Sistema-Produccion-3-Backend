@@ -31,6 +31,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.LoginAuth
             var subModulo = await _context.subModulo
                 .Include(u => u.idModuloNavigation)
                 .ThenInclude(m => m.idMenuNavigation)
+                .Include(u => u.permisoTipo)
                 .ToListAsync();
             var subModuloDto = _mapper.Map<List<SubModuloDto>>(subModulo);
 
@@ -44,6 +45,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.LoginAuth
             var subModulo = await _context.subModulo
                 .Include(u => u.idModuloNavigation)
                 .ThenInclude(m => m.idMenuNavigation)
+                .Include(u => u.permisoTipo)
                 .FirstOrDefaultAsync(u => u.idSubModulo == id);
             var subModuloDto = _mapper.Map<SubModuloDto>(subModulo);
 

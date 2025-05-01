@@ -1,4 +1,5 @@
-﻿using Sistema_Produccion_3_Backend.DTO.PermisosUsuario.Modulo.SubModulo.Permiso;
+﻿using Sistema_Produccion_3_Backend.DTO.Permisos.PermisoEspecifico;
+using Sistema_Produccion_3_Backend.DTO.PermisosUsuario.Modulo.SubModulo.Permiso;
 using System.ComponentModel.DataAnnotations;
 
 namespace Sistema_Produccion_3_Backend.DTO.PermisosUsuario.Rol
@@ -14,5 +15,7 @@ namespace Sistema_Produccion_3_Backend.DTO.PermisosUsuario.Rol
         public bool? status { get; set; }
 
         public List<PermisoDto>? permisos { get; set; }
+
+        public List<PermisoEspecificoDto>? permisoEspecificoDto { get; set; }
     }
 }
