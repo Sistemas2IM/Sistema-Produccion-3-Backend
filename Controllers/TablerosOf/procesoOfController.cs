@@ -225,6 +225,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 .Include(n => n.tarjetaCampo)
                 .Include(e => e.tarjetaEtiqueta)
                 .Include(a => a.asignacion)
+                .ThenInclude(u => u.userNavigation)
                 .ToListAsync();
 
             // Ordenar los procesos según el criterio requerido
