@@ -366,6 +366,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             // REPORTES POR OPERADOR ==================================================================================
             CreateMap<reportesDeOperadores, ReporteOperadorDto>()
                 .ForMember(dest => dest.estadoReporteDto, opt => opt.MapFrom(src => src.idEstadoReporteNavigation))
+                .ForMember(dest => dest.nombreEstado, opt => opt.MapFrom(src => src.idEstadoReporteNavigation.nombreEstado))
                 .ForMember(dest => dest.tipoReporteDto, opt => opt.MapFrom(src => src.idTipoReporteNavigation))
                 .ForMember(dest => dest.maquinaDto, opt => opt.MapFrom(src => src.idMaquinaNavigation))
                 .ForMember(dest => dest.detalleReporte, opt => opt.MapFrom(src => src.detalleReporte))
