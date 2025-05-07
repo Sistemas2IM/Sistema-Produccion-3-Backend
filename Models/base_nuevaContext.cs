@@ -39,6 +39,8 @@ public partial class base_nuevaContext : DbContext
 
     public virtual DbSet<contenidoEntrega> contenidoEntrega { get; set; }
 
+    public virtual DbSet<corridaCombinada> corridaCombinada { get; set; }
+
     public virtual DbSet<detalleBarniz> detalleBarniz { get; set; }
 
     public virtual DbSet<detalleCertificado> detalleCertificado { get; set; }
@@ -532,6 +534,17 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.idMaquinaNavigation).WithMany(p => p.contenidoEntrega).HasConstraintName("FK_MAQUINA_ENTREGA");
         });
 
+        modelBuilder.Entity<corridaCombinada>(entity =>
+        {
+            entity.HasKey(e => e.idRelacion).HasName("PK__corridaC__FC68CFD3A8DB3F8F");
+
+            entity.HasOne(d => d.maestroNavigation).WithMany(p => p.corridaCombinadamaestroNavigation)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK_MAESTRO");
+
+            entity.HasOne(d => d.subordinadoNavigation).WithOne(p => p.corridaCombinadasubordinadoNavigation).HasConstraintName("FK_SUBORDINADO");
+        });
+
         modelBuilder.Entity<detalleBarniz>(entity =>
         {
             entity.HasKey(e => e.idBarniz).HasName("PK_DETALLEBARNIZ");
@@ -882,7 +895,9 @@ public partial class base_nuevaContext : DbContext
             entity.Property(e => e.nuevo_estado).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.usuario_id).UseCollation("SQL_Latin1_General_CP1_CI_AS");
 
-            entity.HasOne(d => d.proceso).WithMany(p => p.logCambiosProceso).HasConstraintName("FK_PROCESO");
+            entity.HasOne(d => d.proceso).WithMany(p => p.logCambiosProceso)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK_PROCESO");
 
             entity.HasOne(d => d.usuario).WithMany(p => p.logCambiosProceso).HasConstraintName("FK_USUARIO");
         });

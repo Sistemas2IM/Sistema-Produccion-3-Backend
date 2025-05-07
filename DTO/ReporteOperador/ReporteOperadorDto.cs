@@ -42,6 +42,8 @@ namespace Sistema_Produccion_3_Backend.DTO.ReporteOperador
 
         public string? nombreEstado { get; set; }
 
+        public string? nombreUsuario { get; set; }
+
         public List<DetalleReporteDto>? detalleReporte { get; set; }
 
         public EstadoReporteDto? estadoReporteDto { get; set; }
