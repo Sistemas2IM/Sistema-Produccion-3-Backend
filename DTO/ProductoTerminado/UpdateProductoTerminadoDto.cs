@@ -43,5 +43,7 @@
         public int? of { get; set; }
 
         public DateTime? fechaDespacho { get; set; }
+
+        public string? nombreAlterno { get; set; }
     }
 }

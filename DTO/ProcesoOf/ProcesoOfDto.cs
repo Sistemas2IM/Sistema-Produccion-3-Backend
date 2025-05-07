@@ -21,6 +21,8 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
 
         public int? idPostura { get; set; }
 
+        public string? nombrePostura { get; set; }
+
         public string? idMaterial { get; set; }
 
         public string? nombreTarjeta { get; set; }
@@ -98,6 +100,8 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
         public string? actualizadoPor { get; set; }
 
         public bool? muestra { get; set; }
+
+        public bool? cancelada { get; set; }
 
         public List<DetalleProcesoOfDto>? detalleProcesoOf { get; set; }
 

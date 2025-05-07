@@ -44,12 +44,16 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 .Where(x => x.archivada == false)
                 .Include(u => u.detalleOperacionProceso)
                 .ThenInclude(o => o.idOperacionNavigation)
+                .Include(u => u.detalleOperacionProceso)
+                .ThenInclude(m => m.maquinaNavigation)
                 .Include(m => m.tarjetaCampo)
                 .Include(s => s.tarjetaEtiqueta)
-                .Include(d => d.idPosturaNavigation)
-                .Include(c => c.idTableroNavigation)
-                .Include(v => v.idMaterialNavigation)
+                .ThenInclude(e => e.idEtiquetaNavigation)
                 .Include(f => f.oFNavigation)
+                .Include(l => l.idPosturaNavigation)
+                .Include(v => v.idMaterialNavigation)
+                .Include(a => a.asignacion)
+                .ThenInclude(u => u.userNavigation)
                 .ToListAsync();
 
             var procesoOfDto = _mapper.Map<List<ProcesoOfDto>>(procesoOf);

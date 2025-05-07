@@ -97,6 +97,8 @@ public partial class procesoOf
 
     public bool? muestra { get; set; }
 
+    public bool? cancelada { get; set; }
+
     [InverseProperty("idProcesoNavigation")]
     public virtual ICollection<asignacion> asignacion { get; set; } = new List<asignacion>();
 

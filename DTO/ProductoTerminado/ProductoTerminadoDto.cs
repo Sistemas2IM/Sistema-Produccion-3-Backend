@@ -57,6 +57,8 @@ namespace Sistema_Produccion_3_Backend.DTO.ProductoTerminado
 
         public DateTime? fechaDespacho { get; set; }
 
+        public string? nombreAlterno { get; set; }
+
         public string? codArticulo { get; set; }
 
         public string? articuloOf {  get; set; }

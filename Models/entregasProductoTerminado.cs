@@ -69,6 +69,9 @@ public partial class entregasProductoTerminado
     [Column(TypeName = "datetime")]
     public DateTime? fechaDespacho { get; set; }
 
+    [StringLength(250)]
+    public string nombreAlterno { get; set; }
+
     [InverseProperty("idEntregaPtNavigation")]
     public virtual ICollection<contenidoEntrega> contenidoEntrega { get; set; } = new List<contenidoEntrega>();
 
