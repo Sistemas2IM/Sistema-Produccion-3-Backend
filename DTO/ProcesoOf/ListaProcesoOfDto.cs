@@ -83,6 +83,8 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
 
         public bool? muestra { get; set; }
 
+        public bool? cancelada { get; set; }
+
         public List<AsignacionDto>? asignacionDto { get; set; }
 
         public ProcesoPosturasOfDto? PosturasOfDto { get; set; }
