@@ -57,7 +57,6 @@ namespace Sistema_Produccion_3_Backend.Controllers.Etiquetas.EtiquetaOf
         public async Task<IActionResult> PutetiquetaOf(int id, UpdateEtiquetaOf updateEtiquetaOf)
         {
             var etiquetaOf = await _context.etiquetaOf.FindAsync(id);
-
             if (etiquetaOf == null)
             {
                 return NotFound($"No se encontro la etiqueta con el id {id}");

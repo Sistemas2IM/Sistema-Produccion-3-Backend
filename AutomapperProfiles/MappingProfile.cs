@@ -23,6 +23,7 @@ using Sistema_Produccion_3_Backend.DTO.Catalogo.Maquinas;
 using Sistema_Produccion_3_Backend.DTO.Catalogo.Motoristas;
 using Sistema_Produccion_3_Backend.DTO.Catalogo.Turnos;
 using Sistema_Produccion_3_Backend.DTO.Catalogo.Vehiculos;
+using Sistema_Produccion_3_Backend.DTO.CorridaCombinada;
 using Sistema_Produccion_3_Backend.DTO.Etiquetas.Etiqueta;
 using Sistema_Produccion_3_Backend.DTO.Etiquetas.Etiqueta.BathcEtiqueta;
 using Sistema_Produccion_3_Backend.DTO.Etiquetas.EtiquetaOf;
@@ -375,6 +376,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForMember(dest => dest.tipoReporteDto, opt => opt.MapFrom(src => src.idTipoReporteNavigation))
                 .ForMember(dest => dest.maquinaDto, opt => opt.MapFrom(src => src.idMaquinaNavigation))
                 .ForMember(dest => dest.detalleReporte, opt => opt.MapFrom(src => src.detalleReporte))
+                .ForMember(dest => dest.nombreUsuario, opt => opt.MapFrom(src => src.operadorNavigation.nombres + " " + src.operadorNavigation.apellidos))
                 .ReverseMap();
             CreateMap<reportesDeOperadores, AddReporteOperadorDto>().ReverseMap();
             CreateMap<UpdateReporteOperadorDto, reportesDeOperadores>()
@@ -755,6 +757,12 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             CreateMap<UpdateBatchPermisoEspecifico, permisoEspecifico>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
+            // CORRIDAS COMBINADAS =====================================================================================
+            CreateMap<corridaCombinada, CorridaCombinadaDto>().ReverseMap();
+            CreateMap<corridaCombinada, AddCorridaCombinadaDto>().ReverseMap();
+            CreateMap<UpdateCorridaCombinadaDto, corridaCombinada>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<corridaCombinada, AddBatchCorridaCombinada>().ReverseMap();
         }
     }
 }
