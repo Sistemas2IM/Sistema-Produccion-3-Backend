@@ -51,5 +51,7 @@
         public DateTime? fechaVencimiento { get; set; }
 
         public bool? muestra { get; set; }
+
+        public string? indicador { get; set; }
     }
 }

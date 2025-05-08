@@ -103,6 +103,8 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
 
         public bool? cancelada { get; set; }
 
+        public string? indicador { get; set; }
+
         public List<DetalleProcesoOfDto>? detalleProcesoOf { get; set; }
 
         public List<TarjetaCampoDto>? tarjetaCampoDto { get; set; }
