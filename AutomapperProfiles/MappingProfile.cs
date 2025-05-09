@@ -210,6 +210,8 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             CreateMap<SAPUpdateProcesoOf, procesoOf>().ReverseMap();
             CreateMap<UpdateMaquinaProcesoOf, procesoOf>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<UpdateArchivadaProcesoOf, procesoOf>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             {
                 CreateMap<procesoOf, ProcesoOfMaquinas>()
                     .ForMember(dest => dest.posturasOfDto, opt => opt.MapFrom(src => src.idPosturaNavigation))
@@ -758,7 +760,10 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             // CORRIDAS COMBINADAS =====================================================================================
-            CreateMap<corridaCombinada, CorridaCombinadaDto>().ReverseMap();
+            CreateMap<corridaCombinada, CorridaCombinadaDto>()
+                .ForMember(dest => dest.oF, opt => opt.MapFrom(src => src.subordinadoNavigation.oF))
+                .ForMember(dest => dest.productoOf, opt => opt.MapFrom(src => src.subordinadoNavigation.productoOf))
+                .ReverseMap();
             CreateMap<corridaCombinada, AddCorridaCombinadaDto>().ReverseMap();
             CreateMap<UpdateCorridaCombinadaDto, corridaCombinada>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));

@@ -346,21 +346,21 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         public async Task<ActionResult<IEnumerable<ProcesoOfVistaTableroDto>>> GetprocesoOfTablero(int id)
         {
             var procesos = await _context.procesoOf
-                .OrderBy(p => p.posicion)
-                .Where(t => t.idTablero == id && t.archivada == false)
-                .Include(u => u.detalleOperacionProceso)
-                .ThenInclude(o => o.idOperacionNavigation)
-                .Include(u => u.detalleOperacionProceso)
-                .ThenInclude(m => m.maquinaNavigation)
-                .Include(m => m.tarjetaCampo)
-                .Include(s => s.tarjetaEtiqueta)
-                .ThenInclude(e => e.idEtiquetaNavigation)
-                .Include(f => f.oFNavigation)
-                .Include(l => l.idPosturaNavigation)
-                .Include(v => v.idMaterialNavigation)
-                .Include(a => a.asignacion)
-                .ThenInclude(u => u.userNavigation)
-                .ToListAsync();
+    .OrderBy(p => p.posicion)
+    .Where(t => t.idTablero == id && t.archivada == false)
+    .Include(u => u.detalleOperacionProceso)
+        .ThenInclude(o => o.idOperacionNavigation)
+    .Include(u => u.detalleOperacionProceso)
+        .ThenInclude(m => m.maquinaNavigation)
+    .Include(m => m.tarjetaCampo)
+    .Include(s => s.tarjetaEtiqueta)
+        .ThenInclude(e => e.idEtiquetaNavigation)
+    .Include(f => f.oFNavigation)
+    .Include(l => l.idPosturaNavigation)
+    .Include(v => v.idMaterialNavigation)
+    .Include(a => a.asignacion)
+    .ThenInclude(u => u.userNavigation)
+    .ToListAsync();
 
             var dtos = new List<ProcesoOfVistaTableroDto>();
 
@@ -736,6 +736,51 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                     if (dto.idProceso > 0)
                     {
                         proceso.posicion = dto.posicion;
+                    }
+
+                    _context.Entry(proceso).State = EntityState.Modified;
+                }
+            }
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error al actualizar los procesos.");
+            }
+
+            return Ok("Actualización realizada correctamente.");
+        }
+
+        [HttpPut("put/BatchUpdateArchivada")]
+        public async Task<IActionResult> BatchUpdateProcesosArchivo([FromBody] BatchUpdateArchivadaOf batchUpdateDto)
+        {
+            if (batchUpdateDto == null || batchUpdateDto.archivadaProcesosOf == null || !batchUpdateDto.archivadaProcesosOf.Any())
+            {
+                return BadRequest("No se enviaron datos para actualizar.");
+            }
+
+            var ids = batchUpdateDto.archivadaProcesosOf.Select(t => t.idProceso).ToList();
+
+            // Obtener todas los procesos of relacionadas
+            var procesos = await _context.procesoOf.Where(t => ids.Contains(t.idProceso)).ToListAsync();
+
+            if (!procesos.Any())
+            {
+                return NotFound("No se encontraron procesos para los IDs proporcionados.");
+            }
+
+            foreach (var dto in batchUpdateDto.archivadaProcesosOf)
+            {
+                var proceso = procesos.FirstOrDefault(t => t.idProceso == dto.idProceso);
+                if (proceso != null)
+                {
+                    if (dto.idProceso > 0)
+                    {
+                        proceso.archivada = dto.archivada;
+                        proceso.cancelada = dto.cancelada;
                     }
 
                     _context.Entry(proceso).State = EntityState.Modified;
