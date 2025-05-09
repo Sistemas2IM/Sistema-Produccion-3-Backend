@@ -107,6 +107,8 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
 
         public string? indicador { get; set; }
 
+        public bool? corridaCombinada { get; set; }
+
         // Si este proceso es MAESTRO, puede tener muchas subordinadas
         public List<CorridaCombinadaDto>? subordinadas { get; set; }
 

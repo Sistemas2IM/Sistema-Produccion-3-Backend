@@ -106,7 +106,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.CorridaCombinada
             // Retornar los registros creados
             return Ok(new
             {
-                Message = "Etiqeutas agregados exitosamente.",
+                Message = "Cambios agregados exitosamente.",
                 etiquetas = corridaCombinada
             });
         }

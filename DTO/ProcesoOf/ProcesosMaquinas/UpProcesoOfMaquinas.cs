@@ -67,5 +67,7 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas
         public bool? muestra { get; set; }
 
         public string? indicador { get; set; }
+
+        public bool? corridaCombinada { get; set; }
     }
 }

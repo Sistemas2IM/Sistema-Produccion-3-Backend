@@ -765,6 +765,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             CreateMap<corridaCombinada, CorridaCombinadaDto>()
                 .ForMember(dest => dest.oF, opt => opt.MapFrom(src => src.subordinadoNavigation.oF))
                 .ForMember(dest => dest.productoOf, opt => opt.MapFrom(src => src.subordinadoNavigation.productoOf))
+                .ForMember(dest => dest.cantRequerida, opt => opt.MapFrom(src => src.subordinadoNavigation.oFNavigation.cantidadOf))
                 .ReverseMap();
             CreateMap<corridaCombinada, AddCorridaCombinadaDto>().ReverseMap();
             CreateMap<UpdateCorridaCombinadaDto, corridaCombinada>()
