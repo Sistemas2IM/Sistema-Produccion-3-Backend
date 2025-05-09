@@ -107,6 +107,12 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
 
         public string? indicador { get; set; }
 
+        // Si este proceso es MAESTRO, puede tener muchas subordinadas
+        public List<CorridaCombinadaDto>? subordinadas { get; set; }
+
+        // Si este proceso es SUBORDINADO, tiene solo un maestro
+        public CorridaCombinadaDto? maestro { get; set; }
+
         public List<DetalleProcesoOfDto>? detalleProcesoOf { get; set; }
 
         public List<TarjetaCampoDto>? tarjetaCampoDto { get; set; }

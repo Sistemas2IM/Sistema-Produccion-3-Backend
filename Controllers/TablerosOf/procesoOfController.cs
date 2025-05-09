@@ -346,21 +346,25 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         public async Task<ActionResult<IEnumerable<ProcesoOfVistaTableroDto>>> GetprocesoOfTablero(int id)
         {
             var procesos = await _context.procesoOf
-    .OrderBy(p => p.posicion)
-    .Where(t => t.idTablero == id && t.archivada == false)
-    .Include(u => u.detalleOperacionProceso)
-        .ThenInclude(o => o.idOperacionNavigation)
-    .Include(u => u.detalleOperacionProceso)
-        .ThenInclude(m => m.maquinaNavigation)
-    .Include(m => m.tarjetaCampo)
-    .Include(s => s.tarjetaEtiqueta)
-        .ThenInclude(e => e.idEtiquetaNavigation)
-    .Include(f => f.oFNavigation)
-    .Include(l => l.idPosturaNavigation)
-    .Include(v => v.idMaterialNavigation)
-    .Include(a => a.asignacion)
-    .ThenInclude(u => u.userNavigation)
-    .ToListAsync();
+            .OrderBy(p => p.posicion)
+            .Where(t => t.idTablero == id && t.archivada == false)
+            .Include(u => u.detalleOperacionProceso)
+            .ThenInclude(o => o.idOperacionNavigation)
+            .Include(u => u.detalleOperacionProceso)
+            .ThenInclude(m => m.maquinaNavigation)
+            .Include(m => m.tarjetaCampo)
+            .Include(s => s.tarjetaEtiqueta)
+            .ThenInclude(e => e.idEtiquetaNavigation)
+            .Include(f => f.oFNavigation)
+            .Include(l => l.idPosturaNavigation)
+            .Include(v => v.idMaterialNavigation)
+            .Include(a => a.asignacion)
+            .ThenInclude(u => u.userNavigation)
+            .Include(p => p.corridaCombinadamaestroNavigation) // todas las subordinadas a este proceso
+            .ThenInclude(r => r.subordinadoNavigation)     // incluir datos del subordinado
+            .Include(p => p.corridaCombinadasubordinadoNavigation) // este proceso como subordinado
+            .ThenInclude(r => r.maestroNavigation)             // incluir datos del maestro
+            .ToListAsync();
 
             var dtos = new List<ProcesoOfVistaTableroDto>();
 
