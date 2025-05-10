@@ -362,8 +362,10 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             .ThenInclude(u => u.userNavigation)
             .Include(p => p.corridaCombinadamaestroNavigation) // todas las subordinadas a este proceso
             .ThenInclude(r => r.subordinadoNavigation)     // incluir datos del subordinado
+            .ThenInclude(r => r.oFNavigation) // of
             .Include(p => p.corridaCombinadasubordinadoNavigation) // este proceso como subordinado
             .ThenInclude(r => r.maestroNavigation)             // incluir datos del maestro
+            .ThenInclude(r => r.oFNavigation) // of
             .ToListAsync();
 
             var dtos = new List<ProcesoOfVistaTableroDto>();

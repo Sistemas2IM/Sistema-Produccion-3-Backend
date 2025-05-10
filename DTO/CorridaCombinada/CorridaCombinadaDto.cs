@@ -15,5 +15,7 @@
         public DateTime? fechaVencimiento { get; set; }
 
         public string? cantRequerida { get; set; } // de maestro / proceso of
+
+        public string? nombreCliente { get; set; } // de maestro / proceso of
     }
 }
