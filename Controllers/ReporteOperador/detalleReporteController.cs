@@ -229,6 +229,21 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
                 ProcesosAgregados = detalleReportes
             });
         }
+
+        // DELETE: api/detalleReporte/5
+        [HttpDelete("delete/{id}")]
+        public async Task<IActionResult> DeletedetalleReporte(int id)
+        {
+            var detalleReporte = await _context.detalleReporte.FindAsync(id);
+            if (detalleReporte == null)
+            {
+                return NotFound("No se encontro el detalle con el id: " + id);
+            }
+            _context.detalleReporte.Remove(detalleReporte);
+            await _context.SaveChangesAsync();
+            return Ok("Se elimino el detalle con el id: " + id);
+        }
+
         private bool detalleReporteExists(int id)
         {
             return _context.detalleReporte.Any(e => e.idDetalleReporte == id);

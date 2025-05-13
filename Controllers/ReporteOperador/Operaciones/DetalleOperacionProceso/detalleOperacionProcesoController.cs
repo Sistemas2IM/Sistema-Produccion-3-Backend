@@ -256,6 +256,20 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador.Operaciones.D
             });
         }
 
+        // DELETE: api/detalleOperacionProceso/5
+        [HttpDelete("delete/{id}")]
+        public async Task<IActionResult> DeletedetalleOperacionProceso(int id)
+        {
+            var detalleOperacionProceso = await _context.detalleOperacionProceso.FindAsync(id);
+            if (detalleOperacionProceso == null)
+            {
+                return NotFound("No se encontro el registro con el ID: " + id);
+            }
+            _context.detalleOperacionProceso.Remove(detalleOperacionProceso);
+            await _context.SaveChangesAsync();
+            return Ok("Se elimino el registro con el ID: " + id);
+        }
+
         private bool detalleOperacionProcesoExists(int id)
         {
             return _context.detalleOperacionProceso.Any(e => e.idDetalleOperacion == id);
