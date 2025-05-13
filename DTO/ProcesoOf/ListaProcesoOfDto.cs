@@ -85,8 +85,6 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
 
         public bool? cancelada { get; set; }
 
-        public bool? cancelada { get; set; }
-
         public string? indicador { get; set; }
 
         public List<AsignacionDto>? asignacionDto { get; set; }
