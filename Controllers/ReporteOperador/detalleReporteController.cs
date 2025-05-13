@@ -144,6 +144,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
                         detalle.cantidadProducida = dto.cantidadProducida;
                         detalle.cantidadDanada = dto.cantidadDanada;
                         detalle.cantidadSolicitada = dto.cantidadSolicitada;
+                        detalle.cantidadAjuste = dto.cantidadAjuste;
                         detalle.cantidadNc = dto.cantidadNc;
                         detalle.observaciones = dto.observaciones;
                         detalle.accionPorAuxiliar = dto.accionPorAuxiliar;
