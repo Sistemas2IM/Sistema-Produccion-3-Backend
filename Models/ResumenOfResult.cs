@@ -8,8 +8,8 @@ namespace Sistema_Produccion_3_Backend.Models
 {
     public partial class ResumenOfResult
     {
-        public int of { get; set; }
-        [StringLength(20)]
+        public int? oF { get; set; }
+        [StringLength(500)]
         public string maquina { get; set; }
         [Column("horas_mq_planificadas", TypeName = "decimal(38,2)")]
         public decimal? horas_mq_planificadas { get; set; }

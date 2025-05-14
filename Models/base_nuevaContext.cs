@@ -1267,6 +1267,7 @@ public partial class base_nuevaContext : DbContext
             entity.ToTable(tb => tb.HasTrigger("trg_UpdateTarjetaOf"));
 
             entity.Property(e => e.actualizadoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.cancelada).HasDefaultValue(false);
             entity.Property(e => e.comentario).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.descripcionOf).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.idMaquinaSAP).UseCollation("SQL_Latin1_General_CP1_CI_AS");
@@ -1405,6 +1406,8 @@ public partial class base_nuevaContext : DbContext
 
             entity.Property(e => e.idReporte).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.actualizadoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.archivado).HasDefaultValue(false);
+            entity.Property(e => e.cancelado).HasDefaultValue(false);
             entity.Property(e => e.creadoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.operador).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.turno).UseCollation("SQL_Latin1_General_CP1_CI_AS");
@@ -1462,11 +1465,17 @@ public partial class base_nuevaContext : DbContext
             entity.Property(e => e.operador).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.turno).UseCollation("SQL_Latin1_General_CP1_CI_AS");
 
-            entity.HasOne(d => d.bitacoraNavigation).WithMany(p => p.sesionOperador).HasConstraintName("FK_BITACORA");
+            entity.HasOne(d => d.bitacoraNavigation).WithMany(p => p.sesionOperador)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK_BITACORA");
 
-            entity.HasOne(d => d.maquinaNavigation).WithMany(p => p.sesionOperador).HasConstraintName("FK_MAQUINA");
+            entity.HasOne(d => d.maquinaNavigation).WithMany(p => p.sesionOperador)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK_MAQUINA");
 
-            entity.HasOne(d => d.operadorNavigation).WithMany(p => p.sesionOperador).HasConstraintName("FK_OPERADOR");
+            entity.HasOne(d => d.operadorNavigation).WithMany(p => p.sesionOperador)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK_OPERADOR");
         });
 
         modelBuilder.Entity<subModulo>(entity =>
