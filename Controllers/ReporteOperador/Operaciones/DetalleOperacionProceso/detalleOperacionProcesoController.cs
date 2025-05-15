@@ -194,6 +194,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador.Operaciones.D
                         pt.cantSolicitada = dto.cantSolicitada;
                         pt.cantProducida = dto.cantProducida;
                         pt.maquina = dto.maquina;
+                        pt.numAuxiliares = dto.numAuxiliares;
                     }
 
                     _context.Entry(pt).State = EntityState.Modified;

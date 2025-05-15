@@ -55,5 +55,7 @@
         public int? cantProducida { get; set; }
 
         public int? maquina { get; set; }
+
+        public int? numAuxiliares { get; set; }
     }
 }

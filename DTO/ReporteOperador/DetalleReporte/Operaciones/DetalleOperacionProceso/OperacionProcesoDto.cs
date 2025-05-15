@@ -60,6 +60,8 @@ namespace Sistema_Produccion_3_Backend.DTO.ReporteOperador.DetalleReporte.Operac
 
         public int? maquina { get; set; }
 
+        public int? numAuxiliares { get; set; }
+
         public string? nombreMaquina { get; set; }
 
         public string? nombreCorto { get; set; }
