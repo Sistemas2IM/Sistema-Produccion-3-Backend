@@ -10,6 +10,8 @@
 
         public bool? necesitaAuxiliar { get; set; }
 
+        public string? nombreAlterno { get; set; }
+
         public int? familiaId { get; set; }
     }
 }

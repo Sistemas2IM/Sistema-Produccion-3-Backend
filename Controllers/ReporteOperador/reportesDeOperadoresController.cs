@@ -45,6 +45,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
                     .ThenInclude(d => d.idTipoCierreNavigation) // Incluye la relación con 'idTipoCierre'
                 .Include(m => m.detalleReporte)
                     .ThenInclude(d => d.oFNavigation) // Incluye la relación con 'idTarjetaOf'
+                .Include(o => o.operadorNavigation)
                 .Select(m => new
                 {
                     Reporte = m,
@@ -77,6 +78,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
                     .ThenInclude(d => d.idTipoCierreNavigation) // Incluye la relación con 'idTipoCierre'
                 .Include(m => m.detalleReporte)
                     .ThenInclude(d => d.oFNavigation) // Incluye la relación con 'idTarjetaOf'
+                .Include(o => o.operadorNavigation)
                 .Select(m => new
                 {
                     Reporte = m,
@@ -115,6 +117,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
                     .ThenInclude(d => d.idTipoCierreNavigation) // Incluye la relación con 'idTipoCierre'
                 .Include(m => m.detalleReporte)
                     .ThenInclude(d => d.oFNavigation) // Incluye la relación con 'idTarjetaOf'
+                .Include(o => o.operadorNavigation)
                 //.Select(m => new
                 //{
                 //    Reporte = m,
@@ -165,6 +168,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
                     .ThenInclude(d => d.idTipoCierreNavigation) // Incluye la relación con 'idTipoCierre'
                 .Include(m => m.detalleReporte)
                     .ThenInclude(d => d.oFNavigation) // Incluye la relación con 'idTarjetaOf'
+                .Include(o => o.operadorNavigation)
                 .FirstOrDefaultAsync(u => u.idReporte == id);
 
             if (reporteOperador == null)

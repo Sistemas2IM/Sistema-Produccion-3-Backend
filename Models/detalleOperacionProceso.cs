@@ -74,6 +74,8 @@ public partial class detalleOperacionProceso
 
     public int? maquina { get; set; }
 
+    public int? numAuxiliares { get; set; }
+
     [ForeignKey("idOperacion")]
     [InverseProperty("detalleOperacionProceso")]
     public virtual operaciones idOperacionNavigation { get; set; }

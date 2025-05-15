@@ -24,6 +24,9 @@ public partial class maquinas
 
     public bool? necesitaAuxiliar { get; set; }
 
+    [StringLength(100)]
+    public string nombreAlterno { get; set; }
+
     [InverseProperty("idMaquinaNavigation")]
     public virtual ICollection<contenidoEntrega> contenidoEntrega { get; set; } = new List<contenidoEntrega>();
 
