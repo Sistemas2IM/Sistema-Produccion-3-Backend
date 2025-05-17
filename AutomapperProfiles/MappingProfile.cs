@@ -685,6 +685,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForMember(dest => dest.posturasOfDto, opt => opt.MapFrom(src => src.posturasOf))
                 .ForMember(dest => dest.idFamiliaMaquina, opt => opt.MapFrom(src => src.idMaquinaNavigation.idFamilia))
                 .ForMember(dest => dest.nombreMaquina, opt => opt.MapFrom(src => src.idMaquinaNavigation.nombreMaquina))
+                .ForMember(dest => dest.nombreAlternoMaquina, opt => opt.MapFrom(src => src.idMaquinaNavigation.nombreAlterno))
                 .ReverseMap();
             CreateMap<tablerosOf, ProcesoTablerosOfDto>()
                 .ForMember(dest => dest.AreasDto, opt => opt.MapFrom(src => src.idAreaNavigation))
