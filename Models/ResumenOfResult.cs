@@ -23,6 +23,7 @@ namespace Sistema_Produccion_3_Backend.Models
         public int? cantidad_producida_tiro { get; set; }
         public int? cantidad_producida_retiro { get; set; }
         public int? cantidad_producida_total { get; set; }
-        public int? cantidad_planificada { get; set; }
+        [Column("cantidad_planificada", TypeName = "decimal(38,2)")]
+        public decimal? cantidad_planificada { get; set; }
     }
 }

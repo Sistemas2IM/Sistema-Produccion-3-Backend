@@ -1530,6 +1530,8 @@ public partial class base_nuevaContext : DbContext
             entity.HasKey(e => e.oF).HasName("PK_TARJETAOF");
 
             entity.Property(e => e.oF).ValueGeneratedNever();
+            entity.Property(e => e.archivada).HasDefaultValue(false);
+            entity.Property(e => e.cancelada).HasDefaultValue(false);
             entity.Property(e => e.clienteOf).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.codArticulo).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.descipcionOf).UseCollation("SQL_Latin1_General_CP1_CI_AS");
