@@ -107,6 +107,8 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
 
         public string? indicador { get; set; }
 
+        public int? lineNumSAP { get; set; }
+
         public List<DetalleProcesoOfDto>? detalleProcesoOf { get; set; }
 
         public List<TarjetaCampoDto>? tarjetaCampoDto { get; set; }

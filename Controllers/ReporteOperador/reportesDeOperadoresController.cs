@@ -6,6 +6,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using SAPbobsCOM;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf;
 using Sistema_Produccion_3_Backend.DTO.ProductoTerminado;
 using Sistema_Produccion_3_Backend.DTO.ReporteOperador;
@@ -65,10 +66,9 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
         [HttpGet("get/idMaquina/{id}")]
         public async Task<ActionResult<IEnumerable<ReporteOperadorDto>>> GetreportesDeOperadoresMaquina(int id)
         {
-            var reporteOperador = await _context.reportesDeOperadores
-                .Where(r => r.archivado == false || r.archivado == null) // Solo no archivados
+            var reporteOperador = await _context.reportesDeOperadores          
                 .OrderByDescending(f => f.fechaDeCreacion)
-                .Where(u => u.idMaquina == id)
+                .Where(u => u.idMaquina == id && u.archivado == false || u.archivado == null) // Solo no archivados
                 .Include(r => r.idEstadoReporteNavigation)
                 .Include(p => p.idMaquinaNavigation)
                 .Include(sm => sm.idTipoReporteNavigation)
@@ -85,7 +85,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
                 {
                     Reporte = m,
                     DetalleReporteOrdenado = m.detalleReporte
-                        .OrderBy(d => d.horaInicio) // Ordena 'detalleReporte' por 'horaInicio' (ascendente)
+                        .OrderBy(d => d.fechaHora ) // Ordena 'detalleReporte' por 'horaInicio' (ascendente)
                         .ToList()
                 })
                 .ToListAsync(); // Cambiado a ToListAsync para trabajar con la lista en memoria

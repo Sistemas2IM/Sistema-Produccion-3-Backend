@@ -284,7 +284,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                     case "Katya":
                     case "Elba Deleon":
                         // Oficina y freelance
-                        query = query.Where(t => t.vendedorOf == "Oficina" /*||
+                        query = query.Where(t => t.vendedorOf != "Oficina" /*||
                                                t.vendedorOf == "freelance"*/)
                                    .OrderBy(p => p.posicion);
                         break;

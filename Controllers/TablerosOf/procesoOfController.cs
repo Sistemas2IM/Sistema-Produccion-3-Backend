@@ -74,7 +74,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         [FromQuery] string? idsEtiquetas = null, // Parámetro opcional para las etiquetas
         [FromQuery] int? idProceso = null,        // Parámetro opcional para la postura
         [FromQuery] bool archivada = false,          // Parámetro opcional para la postura
-        [FromQuery] int? tablero = null)      // Parámetro opcional para el ejecutivo
+        [FromQuery] int? tablero = null,
+        [FromQuery] string? disenador = null)      // Parámetro opcional para el ejecutivo
 
         {
             // Consulta base

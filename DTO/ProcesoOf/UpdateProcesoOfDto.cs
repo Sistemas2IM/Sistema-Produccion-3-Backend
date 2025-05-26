@@ -51,5 +51,7 @@
         public bool? cancelada { get; set; }
 
         public string? indicador { get; set; }
+
+        public int? lineNumSAP { get; set; }
     }
 }

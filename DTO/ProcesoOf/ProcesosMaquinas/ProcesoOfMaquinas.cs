@@ -70,6 +70,8 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas
 
         public string? tipoMaquinaSAP { get; set; }
 
+        public int? lineNumSAP { get; set; }
+
         public object? DetalleProceso { get; set; }
 
         public string? serie { get; set; }

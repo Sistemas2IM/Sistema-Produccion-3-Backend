@@ -104,6 +104,8 @@ public partial class procesoOf
 
     public bool? corridaCombinada { get; set; }
 
+    public int? lineNumSAP { get; set; }
+
     [InverseProperty("idProcesoNavigation")]
     public virtual ICollection<asignacion> asignacion { get; set; } = new List<asignacion>();
 

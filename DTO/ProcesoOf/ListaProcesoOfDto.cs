@@ -87,6 +87,8 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
 
         public string? indicador { get; set; }
 
+        public int? lineNumSAP { get; set; }
+
         public List<AsignacionDto>? asignacionDto { get; set; }
 
         public ProcesoPosturasOfDto? PosturasOfDto { get; set; }
