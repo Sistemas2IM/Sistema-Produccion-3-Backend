@@ -3,5 +3,7 @@
     public class AddAreasDto
     {
         public string? nombreArea { get; set; }
+
+        public int? secuencia { get; set; }
     }
 }

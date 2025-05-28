@@ -133,6 +133,14 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             {
                 query = query.Where(p => p.oFNavigation.lineaDeNegocio.Contains(lineaNegocio));
             }
+            if (!string.IsNullOrEmpty(disenador))
+            {
+                query = query.Where(p =>
+                    p.asignacion.Any(a =>
+                        (a.userNavigation.nombres + " " + a.userNavigation.apellidos).Contains(disenador)
+                    )
+                );
+            }
             if (!string.IsNullOrEmpty(idsEtiquetas))
             {
                 // Convertir la cadena de IDs de etiquetas en una lista de enteros
@@ -233,27 +241,21 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 .ThenInclude(u => u.userNavigation)
                 .ToListAsync();
 
-            // Ordenar los procesos según el criterio requerido
-            var procesosOrdenados = procesos.OrderBy(p =>
-                p.idTableroNavigation?.idTablero switch
-                {
-                    42 => 1,    // Primera prioridad (Tablero 42)
-                    44 => 2,    // Segunda prioridad (Tablero 44)
-                    _ => 3      // Resto de los procesos
-                })
-                .ThenBy(p => p.idTableroNavigation?.idTablero == 42 || p.idTableroNavigation?.idTablero == 44
-                    ? 0  // Mantener orden original para 42 y 44
-                    : p.idProceso)  // Ordenar por idProceso solo para el resto
-                .ToList();
-
             var dtos = new List<ListaProcesoOfDto>();
 
-            foreach (var proceso in procesosOrdenados)
+            foreach (var proceso in procesos)
             {
                 var dto = _mapper.Map<ListaProcesoOfDto>(proceso);
 
                 switch (proceso.tipoMaquinaSAP)
                 {
+                    case "preprensa":
+                        var detallePreprensa = await _context.procesoPreprensa
+                            .Where(p => p.idProceso == proceso.idProceso)
+                            .FirstOrDefaultAsync();
+                        dto.DetalleProceso = _mapper.Map<ProcesoPreprensaDto>(detallePreprensa);
+                        break;
+
                     case "impresion":
                         var detalleImpresora = await _context.procesoImpresora
                             .Where(p => p.idProceso == proceso.idProceso)
@@ -287,14 +289,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                             .Where(p => p.idProceso == proceso.idProceso)
                             .FirstOrDefaultAsync();
                         dto.DetalleProceso = _mapper.Map<ProcesoAcabadoDto>(detalleAcabado);
-                        break;
-
-                    case "preprensa":
-                        var detallePreprensa = await _context.procesoPreprensa
-                            .Where(p => p.idProceso == proceso.idProceso)
-                            .FirstOrDefaultAsync();
-                        dto.DetalleProceso = _mapper.Map<ProcesoPreprensaDto>(detallePreprensa);
-                        break;
+                        break;                   
 
                     case "serigrafia":
                         var detalleSerigrafia = await _context.procesoSerigrafia
@@ -338,6 +333,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
 
                 dtos.Add(dto);
             }
+            // Ordenamos por secuenciaArea
+            dtos = dtos.OrderBy(d => d.secuenciaArea ?? 999).ToList();
 
             return Ok(dtos);
         }

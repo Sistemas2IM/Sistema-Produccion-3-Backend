@@ -197,6 +197,8 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForMember(dest => dest.tarjetaEtiquetaDto, opt => opt.MapFrom(src => src.tarjetaEtiqueta))
                 .ForMember(dest => dest.asignacionDto, opt => opt.MapFrom(src => src.asignacion))
                 .ForMember(dest => dest.fechaVencimiento, opt => opt.MapFrom(src => src.oFNavigation.fechaVencimiento))
+                .ForMember(dest => dest.secuenciaArea, opt => opt.MapFrom(src => src.idTableroNavigation.idAreaNavigation.secuencia)
+                )
                 .ReverseMap();
             CreateMap<procesoOf, ProcesosBusquedaDto>()
                 .ForMember(dest => dest.cliente, opt => opt.MapFrom(src => src.oFNavigation.clienteOf))
