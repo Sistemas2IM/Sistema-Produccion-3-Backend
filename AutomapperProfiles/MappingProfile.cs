@@ -144,7 +144,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
 
             // PROCESOS OF ==========================================================================================
             CreateMap<procesoOf, ProcesoOfDto>()
-                .ForMember(dest => dest.detalleProcesoOf, opt => opt.MapFrom(src => src.detalleOperacionProceso))
+                .ForMember(dest => dest.detalleProcesoOf, opt => opt.MapFrom(src => src.detalleReporte))
                 .ForMember(dest => dest.tarjetaCampoDto, opt => opt.MapFrom(src => src.tarjetaCampo))
                 .ForMember(dest => dest.tarjetaEtiquetaDto, opt => opt.MapFrom(src => src.tarjetaEtiqueta))
                 .ForMember(dest => dest.posturasOfDto, opt => opt.MapFrom(src => src.idPosturaNavigation))
@@ -164,7 +164,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForMember(dest => dest.fechaVencimiento, opt => opt.MapFrom(src => src.oFNavigation.fechaVencimiento))
                 .ReverseMap();
             CreateMap<procesoOf, ProcesoOfVistaTableroDto>()
-                .ForMember(dest => dest.detalleProcesoOf, opt => opt.MapFrom(src => src.detalleOperacionProceso))
+                .ForMember(dest => dest.detalleProcesoOf, opt => opt.MapFrom(src => src.detalleReporte))
                 .ForMember(dest => dest.tarjetaCampoDto, opt => opt.MapFrom(src => src.tarjetaCampo))
                 .ForMember(dest => dest.tarjetaEtiquetaDto, opt => opt.MapFrom(src => src.tarjetaEtiqueta))
                 .ForMember(dest => dest.materialDto, opt => opt.MapFrom(src => src.idMaterialNavigation))
@@ -412,8 +412,8 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
 
                     CreateMap<detalleOperacionProceso, OperacionProcesoDto>()
                         .ForMember(dest => dest.of, opt => opt.MapFrom(src => src.idProcesoNavigation.oF))
-                        .ForMember(dest => dest.nombreCorto, opt => opt.MapFrom(src => src.maquinaNavigation.nombreCorto))
-                        .ForMember(dest => dest.nombreMaquina, opt => opt.MapFrom(src => src.maquinaNavigation.nombreMaquina))
+                        //.ForMember(dest => dest.nombreCorto, opt => opt.MapFrom(src => src.maquinaNavigation.nombreCorto))
+                        //.ForMember(dest => dest.nombreMaquina, opt => opt.MapFrom(src => src.maquinaNavigation.nombreMaquina))
                         .ForMember(dest => dest.nombreOperacion, opt => opt.MapFrom(src => src.idOperacionNavigation.nombreOperacion))
                         .ForMember(dest => dest.prefijo, opt => opt.MapFrom(src => src.idOperacionNavigation.prefijo))
                         .ReverseMap();

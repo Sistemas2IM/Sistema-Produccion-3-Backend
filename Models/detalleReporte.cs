@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Sistema_Produccion_3_Backend.Models;
 
 [Index("idTipoCierre", Name = "DETALLE_TIPO_CIERRE_FK")]
+[Index("maquina", Name = "MAQUINA_FK")]
 [Index("idMaterial", Name = "MATERIAL_DETALLE_FK")]
 [Index("oF", Name = "OF_DETALLE_REPORTE_FK")]
 [Index("idOperacion", Name = "OPERACION_DETALLE_FK")]
@@ -101,6 +102,13 @@ public partial class detalleReporte
     [Column(TypeName = "datetime")]
     public DateTime? fechaHora { get; set; }
 
+    [StringLength(50)]
+    public string operador { get; set; }
+
+    public int? numAuxiliares { get; set; }
+
+    public int? maquina { get; set; }
+
     [ForeignKey("idMaterial")]
     [InverseProperty("detalleReporte")]
     public virtual material idMaterialNavigation { get; set; }
@@ -120,6 +128,10 @@ public partial class detalleReporte
     [ForeignKey("idTipoCierre")]
     [InverseProperty("detalleReporte")]
     public virtual tipoCierre idTipoCierreNavigation { get; set; }
+
+    [ForeignKey("maquina")]
+    [InverseProperty("detalleReporte")]
+    public virtual maquinas maquinaNavigation { get; set; }
 
     [ForeignKey("oF")]
     [InverseProperty("detalleReporte")]

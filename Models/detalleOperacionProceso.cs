@@ -83,8 +83,4 @@ public partial class detalleOperacionProceso
     [ForeignKey("idProceso")]
     [InverseProperty("detalleOperacionProceso")]
     public virtual procesoOf idProcesoNavigation { get; set; }
-
-    [ForeignKey("maquina")]
-    [InverseProperty("detalleOperacionProceso")]
-    public virtual maquinas maquinaNavigation { get; set; }
 }

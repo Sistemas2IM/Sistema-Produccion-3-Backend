@@ -42,9 +42,9 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         {
             var procesoOf = await _context.procesoOf
                 .Where(x => x.archivada == false)
-                .Include(u => u.detalleOperacionProceso)
+                .Include(u => u.detalleReporte)
                 .ThenInclude(o => o.idOperacionNavigation)
-                .Include(u => u.detalleOperacionProceso)
+                .Include(u => u.detalleReporte)
                 .ThenInclude(m => m.maquinaNavigation)
                 .Include(m => m.tarjetaCampo)
                 .Include(s => s.tarjetaEtiqueta)
@@ -81,7 +81,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             // Consulta base
             var query = _context.procesoOf
                 .OrderBy(p => p.posicion)
-                .Include(u => u.detalleOperacionProceso)
+                .Include(u => u.detalleReporte)
                 .ThenInclude(o => o.idOperacionNavigation)
                 .Include(m => m.tarjetaCampo)
                 .Include(s => s.tarjetaEtiqueta)
@@ -181,7 +181,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         public async Task<ActionResult<ProcesoOfDto>> GetprocesoOf(int id)
         {
             var procesoOf = await _context.procesoOf
-                .Include(u => u.detalleOperacionProceso)
+                .Include(u => u.detalleReporte)
                 .ThenInclude(o => o.idOperacionNavigation)
                 .Include(m => m.tarjetaCampo)
                 .Include(s => s.tarjetaEtiqueta)
@@ -346,9 +346,9 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             var procesos = await _context.procesoOf
     .OrderBy(p => p.posicion)
     .Where(t => t.idTablero == id && t.archivada == false)
-    .Include(u => u.detalleOperacionProceso)
+    .Include(u => u.detalleReporte)
         .ThenInclude(o => o.idOperacionNavigation)
-    .Include(u => u.detalleOperacionProceso)
+    .Include(u => u.detalleReporte)
         .ThenInclude(m => m.maquinaNavigation)
     .Include(m => m.tarjetaCampo)
     .Include(s => s.tarjetaEtiqueta)
@@ -463,7 +463,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             var procesos = await _context.procesoOf
                 .OrderBy(p => p.posicion)
                 .Where(t => t.asignacion.Any(u => u.user == user) && t.archivada == false)
-                .Include(u => u.detalleOperacionProceso)
+                .Include(u => u.detalleReporte)
                 .ThenInclude(o => o.idOperacionNavigation)
                 .Include(m => m.tarjetaCampo)
                 .Include(s => s.tarjetaEtiqueta)

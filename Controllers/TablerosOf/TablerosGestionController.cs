@@ -92,9 +92,9 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             var procesoOf = await _context.procesoOf
                 .OrderBy(p => p.posicion)
                 .Where(f => f.idTableroNavigation.idArea == idArea)
-                .Include(u => u.detalleOperacionProceso)
+                .Include(u => u.detalleReporte)
                 .ThenInclude(o => o.idOperacionNavigation)
-                .Include(u => u.detalleOperacionProceso)
+                .Include(u => u.detalleReporte)
                 .ThenInclude(m => m.maquinaNavigation)
                 .Include(m => m.tarjetaCampo)
                 .Include(s => s.tarjetaEtiqueta)

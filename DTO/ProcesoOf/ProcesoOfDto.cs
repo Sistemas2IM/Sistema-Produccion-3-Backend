@@ -4,6 +4,7 @@ using Sistema_Produccion_3_Backend.DTO.ProcesoOf.Asignacion;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.CamposPersonalizados;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.DetalleProceso;
 using Sistema_Produccion_3_Backend.DTO.ReporteOperador;
+using Sistema_Produccion_3_Backend.DTO.ReporteOperador.DetalleReporte;
 using Sistema_Produccion_3_Backend.DTO.Tableros;
 using Sistema_Produccion_3_Backend.DTO.Tableros.Posturas;
 using System.ComponentModel.DataAnnotations;
@@ -108,7 +109,7 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
 
         public int? lineNumSAP { get; set; }
 
-        public List<DetalleProcesoOfDto>? detalleProcesoOf { get; set; }
+        public List<DetalleReporteDto>? detalleProcesoOf { get; set; }
 
         public List<TarjetaCampoDto>? tarjetaCampoDto { get; set; }
 

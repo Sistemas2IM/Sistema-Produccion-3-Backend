@@ -650,8 +650,6 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.idOperacionNavigation).WithMany(p => p.detalleOperacionProceso).HasConstraintName("FK_DETALLEO_OPERACION");
 
             entity.HasOne(d => d.idProcesoNavigation).WithMany(p => p.detalleOperacionProceso).HasConstraintName("FK_DETALLE_O_PROCESO");
-
-            entity.HasOne(d => d.maquinaNavigation).WithMany(p => p.detalleOperacionProceso).HasConstraintName("FK_MAQUINA_OPERACION_PROCESO");
         });
 
         modelBuilder.Entity<detallePegado>(entity =>
@@ -687,6 +685,7 @@ public partial class base_nuevaContext : DbContext
             entity.Property(e => e.idMaterial).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.idReporte).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.observaciones).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.operador).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.tiroRetiro).UseCollation("SQL_Latin1_General_CP1_CI_AS");
 
             entity.HasOne(d => d.idMaterialNavigation).WithMany(p => p.detalleReporte).HasConstraintName("FK_DETALLE_MATERIAL");
@@ -698,6 +697,8 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.idReporteNavigation).WithMany(p => p.detalleReporte).HasConstraintName("FK_DETALLE_REPORTE");
 
             entity.HasOne(d => d.idTipoCierreNavigation).WithMany(p => p.detalleReporte).HasConstraintName("FK_DETALLE_TIPOCIERRE");
+
+            entity.HasOne(d => d.maquinaNavigation).WithMany(p => p.detalleReporte).HasConstraintName("FK_MAQUINA_OPERACION_PROCESO");
 
             entity.HasOne(d => d.oFNavigation).WithMany(p => p.detalleReporte).HasConstraintName("FK_DETALLE_OF");
         });
