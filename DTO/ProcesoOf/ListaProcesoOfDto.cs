@@ -87,6 +87,8 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
 
         public string? indicador { get; set; }
 
+        public bool? corridaCombinada { get; set; }
+
         public int? lineNumSAP { get; set; }
 
         public int? secuenciaArea { get; set; }

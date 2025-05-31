@@ -108,6 +108,8 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
 
         public string? indicador { get; set; }
 
+        public bool? corridaCombinada { get; set; }
+
         public int? lineNumSAP { get; set; }
 
         public List<DetalleReporteDto>? detalleProcesoOf { get; set; }

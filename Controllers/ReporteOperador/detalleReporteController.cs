@@ -160,6 +160,9 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
                         detalle.cantidadSobrante = dto.cantidadSobrante;
                         detalle.udCorrugados = dto.udCorrugados;
                         detalle.fechaHora = dto.fechaHora;
+                        detalle.operador = dto.operador;
+                        detalle.numAuxiliares = dto.numAuxiliares;
+                        detalle.maquina = dto.maquina;
                     }
 
                     _context.Entry(detalle).State = EntityState.Modified;

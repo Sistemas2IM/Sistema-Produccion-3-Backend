@@ -56,6 +56,8 @@
 
         public string? indicador { get; set; }
 
+        public bool? corridaCombinada { get; set; }
+
         public int? lineNumSAP { get; set; }
     }
 }

@@ -77,5 +77,11 @@
         public bool? accionPorAuxiliar { get; set; }
 
         public DateTime? fechaHora { get; set; }
+
+        public string? operador { get; set; }
+
+        public int? numAuxiliares { get; set; }
+
+        public int? maquina { get; set; }
     }
 }
