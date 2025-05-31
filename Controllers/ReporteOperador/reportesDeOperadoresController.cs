@@ -66,31 +66,30 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
         [HttpGet("get/idMaquina/{id}")]
         public async Task<ActionResult<IEnumerable<ReporteOperadorDto>>> GetreportesDeOperadoresMaquina(int id)
         {
-            var reporteOperador = await _context.reportesDeOperadores          
+            var reporteOperador = await _context.reportesDeOperadores
+                .Where(u => u.idMaquina == id && (u.archivado == false || u.archivado == null)) // Filtro corregido
                 .OrderByDescending(f => f.fechaDeCreacion)
-                .Where(u => u.idMaquina == id && u.archivado == false || u.archivado == null) // Solo no archivados
                 .Include(r => r.idEstadoReporteNavigation)
                 .Include(p => p.idMaquinaNavigation)
                 .Include(sm => sm.idTipoReporteNavigation)
-                .Include(m => m.detalleReporte) // Incluye 'detalleReporte'
-                    .ThenInclude(d => d.idOperacionNavigation) // Incluye la relación con 'idOperacion'
                 .Include(m => m.detalleReporte)
-                    .ThenInclude(d => d.idMaterialNavigation) // Incluye la relación con 'idMaterial'
+                    .ThenInclude(d => d.idOperacionNavigation)
                 .Include(m => m.detalleReporte)
-                    .ThenInclude(d => d.idTipoCierreNavigation) // Incluye la relación con 'idTipoCierre'
+                    .ThenInclude(d => d.idMaterialNavigation)
                 .Include(m => m.detalleReporte)
-                    .ThenInclude(d => d.oFNavigation) // Incluye la relación con 'idTarjetaOf'
+                    .ThenInclude(d => d.idTipoCierreNavigation)
+                .Include(m => m.detalleReporte)
+                    .ThenInclude(d => d.oFNavigation)
                 .Include(o => o.operadorNavigation)
                 .Select(m => new
                 {
                     Reporte = m,
                     DetalleReporteOrdenado = m.detalleReporte
-                        .OrderBy(d => d.fechaHora ) // Ordena 'detalleReporte' por 'horaInicio' (ascendente)
+                        .OrderBy(d => d.fechaHora) // Ordena detalles por fechaHora
                         .ToList()
                 })
-                .ToListAsync(); // Cambiado a ToListAsync para trabajar con la lista en memoria
+                .ToListAsync();
 
-            // Mapea el Reporte y asigna el DetalleReporteOrdenado
             var reporteOperadorDto = reporteOperador.Select(r =>
             {
                 var reporteDto = _mapper.Map<ReporteOperadorDto>(r.Reporte);
