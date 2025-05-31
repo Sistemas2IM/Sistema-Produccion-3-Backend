@@ -44,14 +44,11 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         [HttpGet("get")]
         public async Task<ActionResult<IEnumerable<TarjetaOfDto>>> GettarjetaOf()
         {
-            var query = _context.tarjetaOf
+            var tarjetasOrdenadas = await _context.tarjetaOf
                 .Include(u => u.idEstadoOfNavigation)
                 .Include(r => r.etiquetaOf)
                 .ThenInclude(o => o.idEtiquetaNavigation)
-                .AsQueryable();
-
-            // Ordenamiento condicional
-            var tarjetasOrdenadas = await query
+                .Where(t => t.archivada == false) // Incluye solo los registros donde archivada es false (excluye null y true)
                 .OrderBy(t => t.idEstadoOf == 1 ? 0 : 1)  // Primero las de estado 1
                 .Select(t => new
                 {
