@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Linq;
 using System.Text.Json;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
@@ -148,9 +149,9 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                     .Select(int.Parse)
                     .ToList();
 
-                // Filtrar por etiquetas
+                // Filtrar por etiquetas - añadiendo .Value para obtener el int de un int?
                 query = query.Where(p => p.tarjetaEtiqueta
-                .Any(te => ids.Contains(te.idTarjetaEtiqueta)));
+                    .Any(te => te.idEtiqueta.HasValue && ids.Contains(te.idEtiqueta.Value)));
             }
             if (idProceso.HasValue)
             {

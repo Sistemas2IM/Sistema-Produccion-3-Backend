@@ -685,7 +685,6 @@ public partial class base_nuevaContext : DbContext
             entity.Property(e => e.idMaterial).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.idReporte).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.observaciones).UseCollation("SQL_Latin1_General_CP1_CI_AS");
-            entity.Property(e => e.operador).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.tiroRetiro).UseCollation("SQL_Latin1_General_CP1_CI_AS");
 
             entity.HasOne(d => d.idMaterialNavigation).WithMany(p => p.detalleReporte).HasConstraintName("FK_DETALLE_MATERIAL");

@@ -399,6 +399,10 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                .ForMember(dest => dest.numOf, opt => opt.MapFrom(src => src.oFNavigation.oF))
                .ForMember(dest => dest.descripcionOf, opt => opt.MapFrom(src => src.oFNavigation.nombreOf))
                .ForMember(dest => dest.clienteOf, opt => opt.MapFrom(src => src.oFNavigation.clienteOf))
+               .ForMember(dest => dest.nombreCorto, opt => opt.MapFrom(src => src.maquinaNavigation.nombreCorto))
+               .ForMember(dest => dest.nombreMaquina, opt => opt.MapFrom(src => src.maquinaNavigation.nombreMaquina))
+               .ForMember(dest => dest.nombreOperacion, opt => opt.MapFrom(src => src.idOperacionNavigation.nombreOperacion))
+               .ForMember(dest => dest.prefijo, opt => opt.MapFrom(src => src.idOperacionNavigation.prefijo))
                .ReverseMap();
                 CreateMap<detalleReporte, UpdateDetalleReporteDto>()
                     .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));

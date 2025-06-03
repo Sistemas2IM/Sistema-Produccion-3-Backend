@@ -77,7 +77,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
         {
             var operacionProceso = await _context.detalleReporte
                 .Include(o => o.idProcesoNavigation)
-                //.Include(m => m.maquinaNavigation)
+                .Include(m => m.maquinaNavigation)
                 .Include(o => o.idOperacionNavigation)
                 .Where(o => o.idProcesoNavigation.oF == of)
                 .ToListAsync();
