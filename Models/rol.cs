@@ -24,5 +24,8 @@ public partial class rol
     public virtual ICollection<permiso> permiso { get; set; } = new List<permiso>();
 
     [InverseProperty("idRolNavigation")]
+    public virtual ICollection<permisoEspecifico> permisoEspecifico { get; set; } = new List<permisoEspecifico>();
+
+    [InverseProperty("idRolNavigation")]
     public virtual ICollection<usuario> usuario { get; set; } = new List<usuario>();
 }

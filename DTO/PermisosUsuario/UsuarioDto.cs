@@ -35,7 +35,7 @@ namespace Sistema_Produccion_3_Backend.DTO.PermisosUsuario
 
         public string? cargo { get; set; }
 
-        public List<PermisoMaquinaDto> permisosMaquina { get; set; }
+        public List<PermisoMaquinaDto>? permisosMaquina { get; set; }
 
     }
 }

@@ -61,5 +61,13 @@
         public string? actualizadoPor { get; set; }
 
         public bool? muestra { get; set; }
+
+        public bool? cancelada { get; set; }
+
+        public string? indicador { get; set; }
+
+        public bool? corridaCombinada { get; set; }
+
+        public int? lineNumSAP { get; set; }
     }
 }

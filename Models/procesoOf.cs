@@ -97,8 +97,23 @@ public partial class procesoOf
 
     public bool? muestra { get; set; }
 
+    public bool? cancelada { get; set; }
+
+    [StringLength(22)]
+    public string indicador { get; set; }
+
+    public bool? corridaCombinada { get; set; }
+
+    public int? lineNumSAP { get; set; }
+
     [InverseProperty("idProcesoNavigation")]
     public virtual ICollection<asignacion> asignacion { get; set; } = new List<asignacion>();
+
+    [InverseProperty("maestroNavigation")]
+    public virtual ICollection<corridaCombinada> corridaCombinadamaestroNavigation { get; set; } = new List<corridaCombinada>();
+
+    [InverseProperty("subordinadoNavigation")]
+    public virtual corridaCombinada corridaCombinadasubordinadoNavigation { get; set; }
 
     [InverseProperty("idProcesoNavigation")]
     public virtual ICollection<detalleOperacionProceso> detalleOperacionProceso { get; set; } = new List<detalleOperacionProceso>();

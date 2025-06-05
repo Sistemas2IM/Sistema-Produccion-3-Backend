@@ -86,6 +86,20 @@ namespace Sistema_Produccion_3_Backend.DTO.ReporteOperador.DetalleReporte
 
         public DateTime? fechaHora { get; set; }
 
+        public string? operador { get; set; }
+
+        public int? numAuxiliares { get; set; }
+
+        public int? maquina { get; set; }
+
+        public string? nombreMaquina { get; set; }
+
+        public string? nombreCorto { get; set; }
+
+        public string? nombreOperacion { get; set; }
+
+        public string? prefijo { get; set; }
+
         public MaterialDto? materialDto { get; set; }
 
         public OperacionesDto? operacionesDto { get; set; }

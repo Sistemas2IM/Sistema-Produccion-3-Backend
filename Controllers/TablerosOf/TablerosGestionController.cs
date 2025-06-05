@@ -92,9 +92,9 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             var procesoOf = await _context.procesoOf
                 .OrderBy(p => p.posicion)
                 .Where(f => f.idTableroNavigation.idArea == idArea)
-                .Include(u => u.detalleOperacionProceso)
+                .Include(u => u.detalleReporte)
                 .ThenInclude(o => o.idOperacionNavigation)
-                .Include(u => u.detalleOperacionProceso)
+                .Include(u => u.detalleReporte)
                 .ThenInclude(m => m.maquinaNavigation)
                 .Include(m => m.tarjetaCampo)
                 .Include(s => s.tarjetaEtiqueta)
@@ -107,6 +107,183 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 .ToListAsync();
             var procesoOfDto = _mapper.Map<List<ProcesoOfVistaTableroDto>>(procesoOf);
             return Ok(procesoOfDto);
+        }
+
+        [HttpGet("get/procesosOfGestion/filtros")]
+        public async Task<ActionResult<IEnumerable<ProcesoOfVistaTableroDto>>> GetProcesoOfAreaFiltro(
+        [FromQuery] int? idArea = null,
+        [FromQuery] DateTime? fechaInicio = null,
+        [FromQuery] DateTime? fechaFin = null,
+        [FromQuery] string? cliente = null,
+        [FromQuery] string? ejecutivo = null,
+        [FromQuery] string? articulo = null,
+        [FromQuery] int? oF = null,
+        [FromQuery] int? oV = null,
+        [FromQuery] string? lineaNegocio = null,
+        [FromQuery] string? idsEtiquetas = null,
+        [FromQuery] int? idProceso = null,
+        [FromQuery] int? tablero = null,
+        [FromQuery] string? vendedor = null) // Nuevo parámetro para el vendedor
+        {
+            try
+            {
+                // Validar el usuario si se proporciona el parámetro vendedor
+                if (!string.IsNullOrEmpty(vendedor))
+                {
+                    var usuario = await _context.usuario.FirstOrDefaultAsync(u => u.nombres + " " + u.apellidos == vendedor);
+                    if (usuario == null)
+                    {
+                        return NotFound("Usuario no encontrado");
+                    }
+                }
+
+                // Consulta base
+                var query = _context.procesoOf
+                    .OrderBy(p => p.posicion)
+                    .Include(u => u.detalleOperacionProceso)
+                    .ThenInclude(o => o.idOperacionNavigation)
+                    .Include(m => m.tarjetaCampo)
+                    .Include(s => s.tarjetaEtiqueta)
+                    .ThenInclude(e => e.idEtiquetaNavigation)
+                    .Include(f => f.oFNavigation)
+                    .Include(l => l.idPosturaNavigation)
+                    .Include(v => v.idMaterialNavigation)
+                    .Include(a => a.asignacion)
+                    .ThenInclude(u => u.userNavigation)
+                    .AsQueryable();
+
+                // Aplicar filtros condicionales
+                if (idArea.HasValue)
+                {
+                    query = query.Where(p => p.idTableroNavigation.idArea == idArea.Value);
+                }
+
+                if (fechaInicio.HasValue && fechaFin.HasValue)
+                {
+                    query = query.Where(p => p.fechaVencimiento >= fechaInicio.Value && p.fechaVencimiento <= fechaFin.Value);
+                }
+                else if (fechaInicio.HasValue)
+                {
+                    query = query.Where(p => p.fechaVencimiento >= fechaInicio.Value);
+                }
+                else if (fechaFin.HasValue)
+                {
+                    query = query.Where(p => p.fechaVencimiento <= fechaFin.Value);
+                }
+
+                if (!string.IsNullOrEmpty(cliente))
+                {
+                    query = query.Where(p => p.oFNavigation.clienteOf.Contains(cliente));
+                }
+
+                if (!string.IsNullOrEmpty(ejecutivo))
+                {
+                    query = query.Where(p => p.oFNavigation.vendedorOf.Contains(ejecutivo));
+                }
+
+                if (!string.IsNullOrEmpty(articulo))
+                {
+                    query = query.Where(p => p.oFNavigation.productoOf.Contains(articulo));
+                }
+
+                if (oF.HasValue)
+                {
+                    query = query.Where(p => p.oF == oF.Value);
+                }
+
+                if (oV.HasValue)
+                {
+                    query = query.Where(p => p.oV == oV.Value);
+                }
+
+                if (!string.IsNullOrEmpty(lineaNegocio))
+                {
+                    query = query.Where(p => p.oFNavigation.lineaDeNegocio.Contains(lineaNegocio));
+                }
+
+                if (!string.IsNullOrEmpty(idsEtiquetas))
+                {
+                    var idsEtiquetasLista = idsEtiquetas.Split(',')
+                        .Select(id => int.Parse(id))
+                        .ToList();
+
+                    query = query.Where(p => p.tarjetaEtiqueta
+                        .Any(etiquetaOf => idsEtiquetasLista.Contains((int)etiquetaOf.idTarjetaEtiqueta)));
+                }
+
+                if (idProceso.HasValue)
+                {
+                    query = query.Where(p => p.idProceso == idProceso.Value);
+                }
+
+                if (tablero.HasValue)
+                {
+                    query = query.Where(p => p.idTablero == tablero.Value);
+                }
+
+                // Aplicar filtros por usuario si se proporciona el parámetro vendedor
+                if (!string.IsNullOrEmpty(vendedor))
+                {
+                    switch (vendedor)
+                    {
+                        // Vendedores normales (solo ven sus propias órdenes)
+                        case "Claudia Ruano":
+                        case "Jenny Gálvez":
+                        case "Juan Mónico":
+                        case "Hugo Campos":
+                        case "Javier Toledo":
+                        case "Xiomara Cruz":
+                            query = query.Where(p => p.oFNavigation.vendedorOf == vendedor);
+                            break;
+
+                        // Encargados con acceso completo
+                        case "Eliseo Menjívar":
+                        case "Fátima García":
+                            // Ven todo excepto oficina y freelance
+                            query = query.Where(p => p.oFNavigation.vendedorOf != "Oficina");
+                            break;
+
+                        // Encargados con acceso restringido por línea de negocio
+                        case "Floridalma Alfaro":
+                            query = query.Where(p => p.oFNavigation.lineaDeNegocio == "FLEXO" &&
+                                                  p.oFNavigation.vendedorOf != "Oficina");
+                            break;
+
+                        // Cotizadores con diferentes niveles de acceso
+                        case "Ingrid Guevara":
+                        case "Katya":
+                        case "Elba Deleon":
+                            // Oficina y freelance
+                            query = query.Where(p => p.oFNavigation.vendedorOf != "Oficina");
+                            break;
+
+                        case "Diana Munguia":
+                            // Oficina, Engracia y Margarita
+                            query = query.Where(p => p.oFNavigation.vendedorOf == "Oficina" ||
+                                                  p.oFNavigation.vendedorOf == "Engracia Díaz" ||
+                                                  p.oFNavigation.vendedorOf == "Margarita Díaz");
+                            break;
+
+                        case "Wendy Del Cid":
+                            // Todos con línea de negocio promocionales
+                            query = query.Where(p => p.oFNavigation.lineaDeNegocio == "PROMO");
+                            break;
+
+                        default:
+                            return BadRequest("Usuario no tiene permisos configurados");
+                    }
+                }
+
+                // Ejecutar la consulta y mapear a DTO
+                var procesoOf = await query.ToListAsync();
+                var procesoOfDto = _mapper.Map<List<ProcesoOfVistaTableroDto>>(procesoOf);
+
+                return Ok(procesoOfDto);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error interno del servidor: {ex.Message}");
+            }
         }
 
         // GET: api/tarjetaOf VENDEDORES
@@ -181,7 +358,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                     case "Katya":
                     case "Elba Deleon":
                         // Oficina y freelance
-                        query = query.Where(t => t.vendedorOf == "Oficina" /*||
+                        query = query.Where(t => t.vendedorOf != "Oficina" /*||
                                                t.vendedorOf == "freelance"*/)
                                    .OrderBy(p => p.posicion);
                         break;
@@ -214,5 +391,118 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 return StatusCode(500, $"Error interno del servidor: {ex.Message}");
             }
         }
+
+        [HttpGet("get/tarjetasOf/Vendedor/Filtros")]
+        public async Task<ActionResult<IEnumerable<TarjetaOfDto>>> GetTarjetasOfVendedorFiltro(
+        [FromQuery] string vendedor,             // Vendedor (requerido para aplicar reglas)
+        [FromQuery] DateTime? fechaInicio = null,
+        [FromQuery] DateTime? fechaFin = null,
+        [FromQuery] string cliente = null,
+        [FromQuery] string ejecutivo = null,
+        [FromQuery] string articulo = null,
+        [FromQuery] int? of = null,
+        [FromQuery] int? ov = null,
+        [FromQuery] string? lineaNegocio = null,
+        [FromQuery] string? idsEtiquetas = null)
+        {
+            try
+            {
+                var usuario = await _context.usuario.FirstOrDefaultAsync(u => (u.nombres + " " + u.apellidos) == vendedor);
+                if (usuario == null)
+                {
+                    return NotFound("Usuario no encontrado");
+                }
+
+                var query = _context.tarjetaOf
+                    .Include(u => u.idEstadoOfNavigation)
+                    .Include(r => r.etiquetaOf)
+                    .ThenInclude(o => o.idEtiquetaNavigation)
+                    .AsQueryable();
+
+                // === Reglas por tipo de vendedor ===
+                switch (vendedor)
+                {
+                    case "Claudia Ruano":
+                    case "Jenny Gálvez":
+                    case "Juan Mónico":
+                    case "Hugo Campos":
+                    case "Javier Toledo":
+                    case "Xiomara Cruz":
+                        query = query.Where(t => t.vendedorOf == vendedor);
+                        break;
+
+                    case "Eliseo Menjívar":
+                    case "Fátima García":
+                        query = query.Where(t => t.vendedorOf != "Oficina" && t.vendedorOf != "freelance");
+                        break;
+
+                    case "Floridalma Alfaro":
+                        query = query.Where(t => t.lineaDeNegocio == "FLEXO" && t.vendedorOf != "Oficina" && t.vendedorOf != "freelance");
+                        break;
+
+                    case "Ingrid Guevara":
+                    case "Katya":
+                    case "Elba Deleon":
+                        query = query.Where(t => t.vendedorOf == "Oficina" || t.vendedorOf == "freelance");
+                        break;
+
+                    case "Diana Munguia":
+                        query = query.Where(t => t.vendedorOf == "Oficina" || t.vendedorOf == "Engracia Díaz" || t.vendedorOf == "Margarita Díaz");
+                        break;
+
+                    case "Wendy Del Cid":
+                        query = query.Where(t => t.lineaDeNegocio == "PROMO");
+                        break;
+
+                    default:
+                        return BadRequest("Usuario no tiene permisos configurados");
+                }
+
+                // === Aplicar filtros adicionales de búsqueda ===
+
+                if (fechaInicio.HasValue && fechaFin.HasValue)
+                    query = query.Where(p => p.fechaVencimiento >= fechaInicio && p.fechaVencimiento <= fechaFin);
+                else if (fechaInicio.HasValue)
+                    query = query.Where(p => p.fechaVencimiento >= fechaInicio);
+                else if (fechaFin.HasValue)
+                    query = query.Where(p => p.fechaVencimiento <= fechaFin);
+
+                if (!string.IsNullOrEmpty(cliente))
+                    query = query.Where(p => p.clienteOf.Contains(cliente));
+
+                if (!string.IsNullOrEmpty(ejecutivo))
+                    query = query.Where(p => p.vendedorOf.Contains(ejecutivo));
+
+                if (!string.IsNullOrEmpty(articulo))
+                    query = query.Where(p => p.productoOf.Contains(articulo));
+
+                if (!string.IsNullOrEmpty(lineaNegocio))
+                    query = query.Where(p => p.lineaDeNegocio.Contains(lineaNegocio));
+
+                if (of.HasValue)
+                    query = query.Where(p => p.oF == of.Value);
+
+                if (ov.HasValue)
+                    query = query.Where(p => p.oV == ov.Value);
+
+                if (!string.IsNullOrEmpty(idsEtiquetas))
+                {
+                    var idsEtiquetasLista = idsEtiquetas.Split(',').Select(id => int.Parse(id)).ToList();
+                    query = query.Where(p => p.etiquetaOf.Any(e => idsEtiquetasLista.Contains((int)e.idEtiqueta)));
+                }
+
+                // === Obtener resultado y retornar ===
+                var tarjetas = await query.OrderBy(p => p.posicion).ToListAsync();
+                var tarjetasDto = _mapper.Map<List<TarjetaOfDto>>(tarjetas);
+
+                return Ok(tarjetasDto);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error interno del servidor: {ex.Message}");
+            }
+        }
+
     }
+
 }

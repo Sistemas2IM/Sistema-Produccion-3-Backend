@@ -82,5 +82,11 @@ namespace Sistema_Produccion_3_Backend.DTO.ReporteOperador.DetalleReporte.Impres
         public bool? accionPorAuxiliar { get; set; }
 
         public DateTime? fechaHora { get; set; }
+
+        public string? operador { get; set; }
+
+        public int? numAuxiliares { get; set; }
+
+        public int? maquina { get; set; }
     }
 }

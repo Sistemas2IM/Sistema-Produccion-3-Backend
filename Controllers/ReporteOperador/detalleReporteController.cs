@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Sistema_Produccion_3_Backend.DTO.PermisosUsuario.Rol;
 using Sistema_Produccion_3_Backend.DTO.ReporteOperador.DetalleReporte;
 using Sistema_Produccion_3_Backend.DTO.ReporteOperador.DetalleReporte.Impresoras;
+using Sistema_Produccion_3_Backend.DTO.ReporteOperador.DetalleReporte.Operaciones.DetalleOperacionProceso;
 using Sistema_Produccion_3_Backend.Models;
 
 namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
@@ -68,6 +69,21 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
             }
 
             return Ok(detalleReporteDto);
+        }
+
+        // GET: api/detalleOperacionProceso
+        [HttpGet("get/of/{of}")]
+        public async Task<ActionResult<IEnumerable<DetalleReporteDto>>> GetdetalleOperacionProcesoOf(int of)
+        {
+            var operacionProceso = await _context.detalleReporte
+                .Include(o => o.idProcesoNavigation)
+                .Include(m => m.maquinaNavigation)
+                .Include(o => o.idOperacionNavigation)
+                .Where(o => o.idProcesoNavigation.oF == of)
+                .ToListAsync();
+            var operacionProcesoDto = _mapper.Map<List<DetalleReporteDto>>(operacionProceso);
+
+            return Ok(operacionProcesoDto);
         }
 
         // PUT: api/detalleReporte/5
@@ -160,6 +176,9 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
                         detalle.cantidadSobrante = dto.cantidadSobrante;
                         detalle.udCorrugados = dto.udCorrugados;
                         detalle.fechaHora = dto.fechaHora;
+                        detalle.operador = dto.operador;
+                        detalle.numAuxiliares = dto.numAuxiliares;
+                        detalle.maquina = dto.maquina;
                     }
 
                     _context.Entry(detalle).State = EntityState.Modified;
@@ -229,6 +248,21 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
                 ProcesosAgregados = detalleReportes
             });
         }
+
+        // DELETE: api/detalleReporte/5
+        [HttpDelete("delete/{id}")]
+        public async Task<IActionResult> DeletedetalleReporte(int id)
+        {
+            var detalleReporte = await _context.detalleReporte.FindAsync(id);
+            if (detalleReporte == null)
+            {
+                return NotFound("No se encontro el detalle con el id: " + id);
+            }
+            _context.detalleReporte.Remove(detalleReporte);
+            await _context.SaveChangesAsync();
+            return Ok("Se elimino el detalle con el id: " + id);
+        }
+
         private bool detalleReporteExists(int id)
         {
             return _context.detalleReporte.Any(e => e.idDetalleReporte == id);

@@ -25,4 +25,7 @@ public partial class subModulo
 
     [InverseProperty("idSubModuloNavigation")]
     public virtual ICollection<permiso> permiso { get; set; } = new List<permiso>();
+
+    [InverseProperty("idSubModuloNavigation")]
+    public virtual ICollection<permisoTipo> permisoTipo { get; set; } = new List<permisoTipo>();
 }

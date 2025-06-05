@@ -6,6 +6,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using SAPbobsCOM;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf;
 using Sistema_Produccion_3_Backend.DTO.ProductoTerminado;
 using Sistema_Produccion_3_Backend.DTO.ReporteOperador;
@@ -33,6 +34,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
         public async Task<ActionResult<IEnumerable<ReporteOperadorDto>>> GetreportesDeOperadores()
         {
             var reporteOperador = await _context.reportesDeOperadores
+                .Where(r => r.archivado == false || r.archivado == null) // Solo no archivados
                 .OrderByDescending(f => f.fechaDeCreacion)
                 .Include(r => r.idEstadoReporteNavigation)
                 .Include(p => p.idMaquinaNavigation)
@@ -45,6 +47,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
                     .ThenInclude(d => d.idTipoCierreNavigation) // Incluye la relación con 'idTipoCierre'
                 .Include(m => m.detalleReporte)
                     .ThenInclude(d => d.oFNavigation) // Incluye la relación con 'idTarjetaOf'
+                .Include(o => o.operadorNavigation)
                 .Select(m => new
                 {
                     Reporte = m,
@@ -64,29 +67,29 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
         public async Task<ActionResult<IEnumerable<ReporteOperadorDto>>> GetreportesDeOperadoresMaquina(int id)
         {
             var reporteOperador = await _context.reportesDeOperadores
+                .Where(u => u.idMaquina == id && (u.archivado == false || u.archivado == null)) // Filtro corregido
                 .OrderByDescending(f => f.fechaDeCreacion)
-                .Where(u => u.idMaquina == id)
                 .Include(r => r.idEstadoReporteNavigation)
                 .Include(p => p.idMaquinaNavigation)
                 .Include(sm => sm.idTipoReporteNavigation)
-                .Include(m => m.detalleReporte) // Incluye 'detalleReporte'
-                    .ThenInclude(d => d.idOperacionNavigation) // Incluye la relación con 'idOperacion'
                 .Include(m => m.detalleReporte)
-                    .ThenInclude(d => d.idMaterialNavigation) // Incluye la relación con 'idMaterial'
+                    .ThenInclude(d => d.idOperacionNavigation)
                 .Include(m => m.detalleReporte)
-                    .ThenInclude(d => d.idTipoCierreNavigation) // Incluye la relación con 'idTipoCierre'
+                    .ThenInclude(d => d.idMaterialNavigation)
                 .Include(m => m.detalleReporte)
-                    .ThenInclude(d => d.oFNavigation) // Incluye la relación con 'idTarjetaOf'
+                    .ThenInclude(d => d.idTipoCierreNavigation)
+                .Include(m => m.detalleReporte)
+                    .ThenInclude(d => d.oFNavigation)
+                .Include(o => o.operadorNavigation)
                 .Select(m => new
                 {
                     Reporte = m,
                     DetalleReporteOrdenado = m.detalleReporte
-                        .OrderBy(d => d.horaInicio) // Ordena 'detalleReporte' por 'horaInicio' (ascendente)
+                        .OrderBy(d => d.fechaHora) // Ordena detalles por fechaHora
                         .ToList()
                 })
-                .ToListAsync(); // Cambiado a ToListAsync para trabajar con la lista en memoria
+                .ToListAsync();
 
-            // Mapea el Reporte y asigna el DetalleReporteOrdenado
             var reporteOperadorDto = reporteOperador.Select(r =>
             {
                 var reporteDto = _mapper.Map<ReporteOperadorDto>(r.Reporte);
@@ -103,7 +106,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
         {
             var reporteOperador = await _context.reportesDeOperadores
                 .OrderByDescending(f => f.fechaDeCreacion)
-                .Where(u => u.idMaquina == id && u.operador == user)
+                .Where(u => u.idMaquina == id && u.operador == user && u.archivado == false || u.archivado == null)
                 .Include(r => r.idEstadoReporteNavigation)
                 .Include(p => p.idMaquinaNavigation)
                 .Include(sm => sm.idTipoReporteNavigation)
@@ -115,6 +118,14 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
                     .ThenInclude(d => d.idTipoCierreNavigation) // Incluye la relación con 'idTipoCierre'
                 .Include(m => m.detalleReporte)
                     .ThenInclude(d => d.oFNavigation) // Incluye la relación con 'idTarjetaOf'
+                .Include(o => o.operadorNavigation)
+                //.Select(m => new
+                //{
+                //    Reporte = m,
+                //    DetalleReporteOrdenado = m.detalleReporte
+                //    .OrderBy(d => d.horaInicio) // Ordena 'detalleReporte' por 'horaInicio' (ascendente)
+                //    .ToList()
+                //})
                 .ToArrayAsync();
 
             var reporteOperadorDto = _mapper.Map<List<ReporteOperadorDto>>(reporteOperador);
@@ -158,6 +169,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
                     .ThenInclude(d => d.idTipoCierreNavigation) // Incluye la relación con 'idTipoCierre'
                 .Include(m => m.detalleReporte)
                     .ThenInclude(d => d.oFNavigation) // Incluye la relación con 'idTarjetaOf'
+                .Include(o => o.operadorNavigation)
                 .FirstOrDefaultAsync(u => u.idReporte == id);
 
             if (reporteOperador == null)

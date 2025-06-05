@@ -16,6 +16,8 @@ public partial class areas
     [StringLength(200)]
     public string nombreArea { get; set; }
 
+    public int? secuencia { get; set; }
+
     [InverseProperty("idAreaNavigation")]
     public virtual ICollection<tablerosOf> tablerosOf { get; set; } = new List<tablerosOf>();
 

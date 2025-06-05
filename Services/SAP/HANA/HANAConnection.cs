@@ -14,11 +14,11 @@ namespace Sistema_Produccion_3_Backend.Services.SAP.HANA
             OCompany = new SAPbobsCOM.Company();
             OCompany.Server = "NDB@192.168.2.246:30013";
             OCompany.UserName = "manager";
-            OCompany.Password = "12345";
+            OCompany.Password = "Consap1.";
             OCompany.LicenseServer = "192.168.2.246";
             OCompany.DbUserName = "USERSAP";
             OCompany.DbPassword = "IMultiple$1992.";
-            OCompany.CompanyDB = "PRUEBAS_FACTURACION";
+            OCompany.CompanyDB = "NEXOS";
             OCompany.DbServerType = BoDataServerTypes.dst_HANADB;
             OCompany.UseTrusted = true;
             RetVal = OCompany.Connect();

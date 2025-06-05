@@ -63,6 +63,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[corridaCombinada]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[detalleBarniz]",
          "ObjectType": 0
       },
@@ -211,7 +215,15 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[permisoEspecifico]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[permisoMaquina]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[permisoTipo]",
          "ObjectType": 0
       },
       {
@@ -300,6 +312,10 @@
       },
       {
          "Name": "[dbo].[subModulo]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[sysdiagrams]",
          "ObjectType": 0
       },
       {

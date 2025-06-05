@@ -5,6 +5,7 @@ using Sistema_Produccion_3_Backend.DTO.Tableros.Posturas;
 using Sistema_Produccion_3_Backend.DTO.Tableros;
 using Sistema_Produccion_3_Backend.DTO.Catalogo.Maquinas;
 using Sistema_Produccion_3_Backend.DTO.Etiquetas.TarjetaEtiqueta;
+using Sistema_Produccion_3_Backend.DTO.ProcesoOf.Asignacion;
 
 namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
 {
@@ -81,6 +82,18 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
         public string? actualizadoPor { get; set; }
 
         public bool? muestra { get; set; }
+
+        public bool? cancelada { get; set; }
+
+        public string? indicador { get; set; }
+
+        public bool? corridaCombinada { get; set; }
+
+        public int? lineNumSAP { get; set; }
+
+        public int? secuenciaArea { get; set; }
+
+        public List<AsignacionDto>? asignacionDto { get; set; }
 
         public ProcesoPosturasOfDto? PosturasOfDto { get; set; }
 

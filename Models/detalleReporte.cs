@@ -101,6 +101,13 @@ public partial class detalleReporte
     [Column(TypeName = "datetime")]
     public DateTime? fechaHora { get; set; }
 
+    [StringLength(50)]
+    public string operador { get; set; }
+
+    public int? numAuxiliares { get; set; }
+
+    public int? maquina { get; set; }
+
     [ForeignKey("idMaterial")]
     [InverseProperty("detalleReporte")]
     public virtual material idMaterialNavigation { get; set; }
@@ -120,6 +127,10 @@ public partial class detalleReporte
     [ForeignKey("idTipoCierre")]
     [InverseProperty("detalleReporte")]
     public virtual tipoCierre idTipoCierreNavigation { get; set; }
+
+    [ForeignKey("maquina")]
+    [InverseProperty("detalleReporte")]
+    public virtual maquinas maquinaNavigation { get; set; }
 
     [ForeignKey("oF")]
     [InverseProperty("detalleReporte")]

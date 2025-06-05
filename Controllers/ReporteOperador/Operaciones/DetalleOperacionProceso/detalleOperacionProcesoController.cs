@@ -70,7 +70,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador.Operaciones.D
         {
             var operacionProceso = await _context.detalleOperacionProceso               
                 .Include(o => o.idProcesoNavigation)
-                .Include(m => m.maquinaNavigation)
+                //.Include(m => m.maquinaNavigation)
                 .Include(o => o.idOperacionNavigation)
                 .Where(o => o.idProcesoNavigation.oF == of)
                 .ToListAsync();
@@ -194,6 +194,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador.Operaciones.D
                         pt.cantSolicitada = dto.cantSolicitada;
                         pt.cantProducida = dto.cantProducida;
                         pt.maquina = dto.maquina;
+                        pt.numAuxiliares = dto.numAuxiliares;
                     }
 
                     _context.Entry(pt).State = EntityState.Modified;
@@ -254,6 +255,20 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador.Operaciones.D
                 Message = "Operaciones de Procesos agregados exitosamente.",
                 ProcesosAgregados = operacionProcesos
             });
+        }
+
+        // DELETE: api/detalleOperacionProceso/5
+        [HttpDelete("delete/{id}")]
+        public async Task<IActionResult> DeletedetalleOperacionProceso(int id)
+        {
+            var detalleOperacionProceso = await _context.detalleOperacionProceso.FindAsync(id);
+            if (detalleOperacionProceso == null)
+            {
+                return NotFound("No se encontro el registro con el ID: " + id);
+            }
+            _context.detalleOperacionProceso.Remove(detalleOperacionProceso);
+            await _context.SaveChangesAsync();
+            return Ok("Se elimino el registro con el ID: " + id);
         }
 
         private bool detalleOperacionProcesoExists(int id)

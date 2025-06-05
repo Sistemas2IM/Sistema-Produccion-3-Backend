@@ -33,5 +33,7 @@
         public DateTime? fechaCreacion { get; set; }
 
         public bool? muestra { get; set; }
+
+        public bool? cancelada { get; set; }
     }
 }

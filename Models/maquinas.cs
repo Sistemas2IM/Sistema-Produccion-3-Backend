@@ -24,11 +24,14 @@ public partial class maquinas
 
     public bool? necesitaAuxiliar { get; set; }
 
+    [StringLength(100)]
+    public string nombreAlterno { get; set; }
+
     [InverseProperty("idMaquinaNavigation")]
     public virtual ICollection<contenidoEntrega> contenidoEntrega { get; set; } = new List<contenidoEntrega>();
 
     [InverseProperty("maquinaNavigation")]
-    public virtual ICollection<detalleOperacionProceso> detalleOperacionProceso { get; set; } = new List<detalleOperacionProceso>();
+    public virtual ICollection<detalleReporte> detalleReporte { get; set; } = new List<detalleReporte>();
 
     [InverseProperty("idMaquinaNavigation")]
     public virtual ICollection<entregasProductoTerminado> entregasProductoTerminado { get; set; } = new List<entregasProductoTerminado>();

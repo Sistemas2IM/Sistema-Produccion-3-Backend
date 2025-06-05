@@ -40,6 +40,14 @@ namespace Sistema_Produccion_3_Backend.DTO.ReporteOperador
 
         public int? tipoObjeto { get; set; }
 
+        public bool? archivado { get; set; }
+
+        public bool? cancelado { get; set; }
+
+        public string? nombreEstado { get; set; }
+
+        public string? nombreUsuario { get; set; }
+
         public List<DetalleReporteDto>? detalleReporte { get; set; }
 
         public EstadoReporteDto? estadoReporteDto { get; set; }

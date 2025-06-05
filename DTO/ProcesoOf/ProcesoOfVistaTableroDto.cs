@@ -4,6 +4,9 @@ using Sistema_Produccion_3_Backend.DTO.Etiquetas.TarjetaEtiqueta;
 using Sistema_Produccion_3_Backend.DTO.ReporteOperador;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.Asignacion;
 using System.ComponentModel.DataAnnotations;
+using Sistema_Produccion_3_Backend.DTO.CorridaCombinada;
+using Sistema_Produccion_3_Backend.Models;
+using Sistema_Produccion_3_Backend.DTO.ReporteOperador.DetalleReporte;
 
 namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
 {
@@ -101,7 +104,15 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
 
         public bool? muestra { get; set; }
 
-        public List<DetalleProcesoOfDto>? detalleProcesoOf { get; set; }
+        public bool? cancelada { get; set; }
+
+        public string? indicador { get; set; }
+
+        public bool? corridaCombinada { get; set; }
+
+        public int? lineNumSAP { get; set; }
+
+        public List<DetalleReporteDto>? detalleProcesoOf { get; set; }
 
         public List<TarjetaCampoDto>? tarjetaCampoDto { get; set; }
 

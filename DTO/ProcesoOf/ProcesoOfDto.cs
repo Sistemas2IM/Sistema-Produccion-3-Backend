@@ -1,8 +1,10 @@
-﻿using Sistema_Produccion_3_Backend.DTO.Etiquetas.TarjetaEtiqueta;
+﻿using Sistema_Produccion_3_Backend.DTO.CorridaCombinada;
+using Sistema_Produccion_3_Backend.DTO.Etiquetas.TarjetaEtiqueta;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.Asignacion;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.CamposPersonalizados;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.DetalleProceso;
 using Sistema_Produccion_3_Backend.DTO.ReporteOperador;
+using Sistema_Produccion_3_Backend.DTO.ReporteOperador.DetalleReporte;
 using Sistema_Produccion_3_Backend.DTO.Tableros;
 using Sistema_Produccion_3_Backend.DTO.Tableros.Posturas;
 using System.ComponentModel.DataAnnotations;
@@ -20,6 +22,8 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
         public int? idTablero { get; set; }
 
         public int? idPostura { get; set; }
+
+        public string? nombrePostura { get; set; }
 
         public string? idMaterial { get; set; }
 
@@ -99,7 +103,15 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
 
         public bool? muestra { get; set; }
 
-        public List<DetalleProcesoOfDto>? detalleProcesoOf { get; set; }
+        public bool? cancelada { get; set; }
+
+        public string? indicador { get; set; }
+
+        public bool? corridaCombinada { get; set; }
+
+        public int? lineNumSAP { get; set; }
+
+        public List<DetalleReporteDto>? detalleProcesoOf { get; set; }
 
         public List<TarjetaCampoDto>? tarjetaCampoDto { get; set; }
 

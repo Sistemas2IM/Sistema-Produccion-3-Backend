@@ -36,5 +36,9 @@ namespace Sistema_Produccion_3_Backend.DTO.ReporteOperador
 
         public int? tipoObjeto { get; set; }
 
+        public bool? archivado { get; set; }
+
+        public bool? cancelado { get; set; }
+
     }
 }

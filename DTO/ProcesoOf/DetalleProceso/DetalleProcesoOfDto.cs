@@ -64,6 +64,8 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf.DetalleProceso
 
         public int? maquina { get; set; }
 
+        public int? numAuxiliares { get; set; }
+
         public MaquinaDto? maquinaDto { get; set; }
 
         public OperacionesDto? operacionesDto { get; set; }

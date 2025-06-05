@@ -24,7 +24,6 @@ namespace Sistema_Produccion_3_Backend.DTO.ProductoTerminado
 
         public string? areaRecibe { get; set; }
 
-        [JsonConverter(typeof(JsonDateConverter))]
         public DateTime? fechaRecepcion { get; set; }
 
         public int? numeroDeTarimas { get; set; }
@@ -56,6 +55,8 @@ namespace Sistema_Produccion_3_Backend.DTO.ProductoTerminado
         public int? of { get; set; }
 
         public DateTime? fechaDespacho { get; set; }
+
+        public string? nombreAlterno { get; set; }
 
         public string? codArticulo { get; set; }
 

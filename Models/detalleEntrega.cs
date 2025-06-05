@@ -45,6 +45,8 @@ public partial class detalleEntrega
     [StringLength(50)]
     public string unidad { get; set; }
 
+    public string comentario { get; set; }
+
     [ForeignKey("idEntregaPt")]
     [InverseProperty("detalleEntrega")]
     public virtual entregasProductoTerminado idEntregaPtNavigation { get; set; }

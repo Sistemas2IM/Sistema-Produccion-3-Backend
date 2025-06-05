@@ -12,5 +12,7 @@ namespace Sistema_Produccion_3_Backend.Models
         public string tiempo { get; set; }
         public int? velocidad_nominal { get; set; }
         public int? velocidad_efectiva { get; set; }
+        public int? cantidad_producita { get; set; }
+        public int? cantidad_no_conforme { get; set; }
     }
 }

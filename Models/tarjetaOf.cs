@@ -83,6 +83,8 @@ public partial class tarjetaOf
     [StringLength(25)]
     public string unidadMedida { get; set; }
 
+    public bool? cancelada { get; set; }
+
     [InverseProperty("oFNavigation")]
     public virtual ICollection<certificadoDeCalidad> certificadoDeCalidad { get; set; } = new List<certificadoDeCalidad>();
 

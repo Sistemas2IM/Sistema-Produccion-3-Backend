@@ -70,6 +70,8 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas
 
         public string? tipoMaquinaSAP { get; set; }
 
+        public int? lineNumSAP { get; set; }
+
         public object? DetalleProceso { get; set; }
 
         public string? serie { get; set; }
@@ -85,6 +87,10 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas
         public string? actualizadoPor { get; set; }
 
         public bool? muestra { get; set; }
+
+        public bool? cancelada { get; set; }
+
+        public string? indicador { get; set; }
 
         public PosturasOfDto? posturasOfDto { get; set; }
 

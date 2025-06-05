@@ -54,6 +54,10 @@ public partial class reportesDeOperadores
 
     public int? tipoObjeto { get; set; }
 
+    public bool? archivado { get; set; }
+
+    public bool? cancelado { get; set; }
+
     [InverseProperty("idReporteNavigation")]
     public virtual ICollection<detalleReporte> detalleReporte { get; set; } = new List<detalleReporte>();
 

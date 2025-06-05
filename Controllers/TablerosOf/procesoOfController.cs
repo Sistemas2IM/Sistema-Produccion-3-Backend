@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Linq;
 using System.Text.Json;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
@@ -41,14 +42,19 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         public async Task<ActionResult<IEnumerable<ProcesoOfDto>>> GetprocesoOf()
         {
             var procesoOf = await _context.procesoOf
-                .Include(u => u.detalleOperacionProceso)
+                .Where(x => x.archivada == false)
+                .Include(u => u.detalleReporte)
                 .ThenInclude(o => o.idOperacionNavigation)
+                .Include(u => u.detalleReporte)
+                .ThenInclude(m => m.maquinaNavigation)
                 .Include(m => m.tarjetaCampo)
                 .Include(s => s.tarjetaEtiqueta)
-                .Include(d => d.idPosturaNavigation)
-                .Include(c => c.idTableroNavigation)
-                .Include(v => v.idMaterialNavigation)
+                .ThenInclude(e => e.idEtiquetaNavigation)
                 .Include(f => f.oFNavigation)
+                .Include(l => l.idPosturaNavigation)
+                .Include(v => v.idMaterialNavigation)
+                .Include(a => a.asignacion)
+                .ThenInclude(u => u.userNavigation)
                 .ToListAsync();
 
             var procesoOfDto = _mapper.Map<List<ProcesoOfDto>>(procesoOf);
@@ -60,15 +66,23 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         public async Task<ActionResult<IEnumerable<ProcesoOfDto>>> GetprocesoOffiltros(
         [FromQuery] DateTime? fechaInicio = null,   // Parámetro opcional para la fecha de inicio del rango
         [FromQuery] DateTime? fechaFin = null,     // Parámetro opcional para la fecha de fin del rango
-        [FromQuery] string cliente = null,         // Parámetro opcional para el cliente
-        [FromQuery] string ejecutivo = null,
-        [FromQuery] int? tablero = null)      // Parámetro opcional para el ejecutivo
+        [FromQuery] string? cliente = null,         // Parámetro opcional para el cliente
+        [FromQuery] string? ejecutivo = null,
+        [FromQuery] string? articulo = null,     // Parámetro opcional para el artículo
+        [FromQuery] int? oF = null,               // Parámetro opcional para el oF
+        [FromQuery] int? oV = null,               // Parámetro opcional para el oV
+        [FromQuery] string? lineaNegocio = null, // Parámetro opcional para la línea de negocio
+        [FromQuery] string? idsEtiquetas = null, // Parámetro opcional para las etiquetas
+        [FromQuery] int? idProceso = null,        // Parámetro opcional para la postura
+        [FromQuery] bool archivada = false,          // Parámetro opcional para la postura
+        [FromQuery] int? tablero = null,
+        [FromQuery] string? disenador = null)      // Parámetro opcional para el ejecutivo
 
         {
             // Consulta base
             var query = _context.procesoOf
                 .OrderBy(p => p.posicion)
-                .Include(u => u.detalleOperacionProceso)
+                .Include(u => u.detalleReporte)
                 .ThenInclude(o => o.idOperacionNavigation)
                 .Include(m => m.tarjetaCampo)
                 .Include(s => s.tarjetaEtiqueta)
@@ -104,9 +118,56 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             {
                 query = query.Where(p => p.oFNavigation.vendedorOf.Contains(ejecutivo));
             }
+            if (!string.IsNullOrEmpty(articulo))
+            {
+                query = query.Where(p => p.oFNavigation.productoOf.Contains(articulo));
+            }
+            if (oF.HasValue)
+            {
+                query = query.Where(p => p.oF == oF.Value);
+            }
+            if (oV.HasValue)
+            {
+                query = query.Where(p => p.oV == oV.Value);
+            }
+            if (!string.IsNullOrEmpty(lineaNegocio))
+            {
+                query = query.Where(p => p.oFNavigation.lineaDeNegocio.Contains(lineaNegocio));
+            }
+            if (!string.IsNullOrEmpty(disenador))
+            {
+                query = query.Where(p =>
+                    p.asignacion.Any(a =>
+                        (a.userNavigation.nombres + " " + a.userNavigation.apellidos).Contains(disenador)
+                    )
+                );
+            }
+            if (!string.IsNullOrEmpty(idsEtiquetas))
+            {
+                // Convertir la cadena de IDs de etiquetas en una lista de enteros
+                var ids = idsEtiquetas.Split(',')
+                    .Select(int.Parse)
+                    .ToList();
+
+                // Filtrar por etiquetas - añadiendo .Value para obtener el int de un int?
+                query = query.Where(p => p.tarjetaEtiqueta
+                    .Any(te => te.idEtiqueta.HasValue && ids.Contains(te.idEtiqueta.Value)));
+            }
+            if (idProceso.HasValue)
+            {
+                query = query.Where(p => p.idProceso == idProceso.Value);
+            }
             if (tablero.HasValue)
             {
                 query = query.Where(p => p.idTablero == tablero.Value);
+            }
+            if (archivada)
+            {
+                query = query.Where(p => p.archivada == archivada);
+            }
+            else
+            {
+                query = query.Where(p => p.archivada == false);
             }
 
             // Ejecutar la consulta y mapear a DTO
@@ -121,7 +182,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         public async Task<ActionResult<ProcesoOfDto>> GetprocesoOf(int id)
         {
             var procesoOf = await _context.procesoOf
-                .Include(u => u.detalleOperacionProceso)
+                .Include(u => u.detalleReporte)
                 .ThenInclude(o => o.idOperacionNavigation)
                 .Include(m => m.tarjetaCampo)
                 .Include(s => s.tarjetaEtiqueta)
@@ -147,6 +208,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         {
             // Obtener todos los procesos asociados a la OF
             var procesos = await _context.procesoOf
+                .Where(x => x.archivada == false)
                 .Include(p => p.idPosturaNavigation)
                 .Include(v => v.idMaterialNavigation)
                 .Include(f => f.oFNavigation)
@@ -167,7 +229,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         public async Task<ActionResult<ListaProcesoOfDto>> GetprocesoOfTarjetaLista(int of)
         {
             var procesos = await _context.procesoOf
-                .Where(o => o.oF == of)
+                .Where(o => o.oF == of && o.archivada == false)
                 .Include(d => d.idPosturaNavigation)
                 .Include(c => c.idTableroNavigation)
                 .ThenInclude(v => v.idAreaNavigation)
@@ -176,29 +238,25 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 .Include(f => f.oFNavigation)
                 .Include(n => n.tarjetaCampo)
                 .Include(e => e.tarjetaEtiqueta)
+                .Include(a => a.asignacion)
+                .ThenInclude(u => u.userNavigation)
                 .ToListAsync();
-
-            // Ordenar los procesos según el criterio requerido
-            var procesosOrdenados = procesos.OrderBy(p =>
-                p.idTableroNavigation?.idTablero switch
-                {
-                    42 => 1,    // Primera prioridad (Tablero 42)
-                    44 => 2,    // Segunda prioridad (Tablero 44)
-                    _ => 3      // Resto de los procesos
-                })
-                .ThenBy(p => p.idTableroNavigation?.idTablero == 42 || p.idTableroNavigation?.idTablero == 44
-                    ? 0  // Mantener orden original para 42 y 44
-                    : p.idProceso)  // Ordenar por idProceso solo para el resto
-                .ToList();
 
             var dtos = new List<ListaProcesoOfDto>();
 
-            foreach (var proceso in procesosOrdenados)
+            foreach (var proceso in procesos)
             {
                 var dto = _mapper.Map<ListaProcesoOfDto>(proceso);
 
                 switch (proceso.tipoMaquinaSAP)
                 {
+                    case "preprensa":
+                        var detallePreprensa = await _context.procesoPreprensa
+                            .Where(p => p.idProceso == proceso.idProceso)
+                            .FirstOrDefaultAsync();
+                        dto.DetalleProceso = _mapper.Map<ProcesoPreprensaDto>(detallePreprensa);
+                        break;
+
                     case "impresion":
                         var detalleImpresora = await _context.procesoImpresora
                             .Where(p => p.idProceso == proceso.idProceso)
@@ -232,14 +290,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                             .Where(p => p.idProceso == proceso.idProceso)
                             .FirstOrDefaultAsync();
                         dto.DetalleProceso = _mapper.Map<ProcesoAcabadoDto>(detalleAcabado);
-                        break;
-
-                    case "preprensa":
-                        var detallePreprensa = await _context.procesoPreprensa
-                            .Where(p => p.idProceso == proceso.idProceso)
-                            .FirstOrDefaultAsync();
-                        dto.DetalleProceso = _mapper.Map<ProcesoPreprensaDto>(detallePreprensa);
-                        break;
+                        break;                   
 
                     case "serigrafia":
                         var detalleSerigrafia = await _context.procesoSerigrafia
@@ -283,6 +334,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
 
                 dtos.Add(dto);
             }
+            // Ordenamos por secuenciaArea
+            dtos = dtos.OrderBy(d => d.secuenciaArea ?? 999).ToList();
 
             return Ok(dtos);
         }
@@ -292,21 +345,21 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         public async Task<ActionResult<IEnumerable<ProcesoOfVistaTableroDto>>> GetprocesoOfTablero(int id)
         {
             var procesos = await _context.procesoOf
-                .OrderBy(p => p.posicion)
-                .Where(t => t.idTablero == id)
-                .Include(u => u.detalleOperacionProceso)
-                .ThenInclude(o => o.idOperacionNavigation)
-                .Include(u => u.detalleOperacionProceso)
-                .ThenInclude(m => m.maquinaNavigation)
-                .Include(m => m.tarjetaCampo)
-                .Include(s => s.tarjetaEtiqueta)
-                .ThenInclude(e => e.idEtiquetaNavigation)
-                .Include(f => f.oFNavigation)
-                .Include(l => l.idPosturaNavigation)
-                .Include(v => v.idMaterialNavigation)
-                .Include(a => a.asignacion)
-                .ThenInclude(u => u.userNavigation)
-                .ToListAsync();
+    .OrderBy(p => p.posicion)
+    .Where(t => t.idTablero == id && t.archivada == false)
+    .Include(u => u.detalleReporte)
+        .ThenInclude(o => o.idOperacionNavigation)
+    .Include(u => u.detalleReporte)
+        .ThenInclude(m => m.maquinaNavigation)
+    .Include(m => m.tarjetaCampo)
+    .Include(s => s.tarjetaEtiqueta)
+        .ThenInclude(e => e.idEtiquetaNavigation)
+    .Include(f => f.oFNavigation)
+    .Include(l => l.idPosturaNavigation)
+    .Include(v => v.idMaterialNavigation)
+    .Include(a => a.asignacion)
+    .ThenInclude(u => u.userNavigation)
+    .ToListAsync();
 
             var dtos = new List<ProcesoOfVistaTableroDto>();
 
@@ -410,8 +463,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         {
             var procesos = await _context.procesoOf
                 .OrderBy(p => p.posicion)
-                .Where(t => t.asignacion.Any(u => u.user == user))
-                .Include(u => u.detalleOperacionProceso)
+                .Where(t => t.asignacion.Any(u => u.user == user) && t.archivada == false)
+                .Include(u => u.detalleReporte)
                 .ThenInclude(o => o.idOperacionNavigation)
                 .Include(m => m.tarjetaCampo)
                 .Include(s => s.tarjetaEtiqueta)
@@ -682,6 +735,51 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                     if (dto.idProceso > 0)
                     {
                         proceso.posicion = dto.posicion;
+                    }
+
+                    _context.Entry(proceso).State = EntityState.Modified;
+                }
+            }
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error al actualizar los procesos.");
+            }
+
+            return Ok("Actualización realizada correctamente.");
+        }
+
+        [HttpPut("put/BatchUpdateArchivada")]
+        public async Task<IActionResult> BatchUpdateProcesosArchivo([FromBody] BatchUpdateArchivadaOf batchUpdateDto)
+        {
+            if (batchUpdateDto == null || batchUpdateDto.archivadaProcesosOf == null || !batchUpdateDto.archivadaProcesosOf.Any())
+            {
+                return BadRequest("No se enviaron datos para actualizar.");
+            }
+
+            var ids = batchUpdateDto.archivadaProcesosOf.Select(t => t.idProceso).ToList();
+
+            // Obtener todas los procesos of relacionadas
+            var procesos = await _context.procesoOf.Where(t => ids.Contains(t.idProceso)).ToListAsync();
+
+            if (!procesos.Any())
+            {
+                return NotFound("No se encontraron procesos para los IDs proporcionados.");
+            }
+
+            foreach (var dto in batchUpdateDto.archivadaProcesosOf)
+            {
+                var proceso = procesos.FirstOrDefault(t => t.idProceso == dto.idProceso);
+                if (proceso != null)
+                {
+                    if (dto.idProceso > 0)
+                    {
+                        proceso.archivada = dto.archivada;
+                        proceso.cancelada = dto.cancelada;
                     }
 
                     _context.Entry(proceso).State = EntityState.Modified;

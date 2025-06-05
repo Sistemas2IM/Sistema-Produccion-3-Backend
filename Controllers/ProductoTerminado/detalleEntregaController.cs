@@ -130,6 +130,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.ProductoTerminado
                         pt.nombreArticulo = dto.nombreArticulo;
                         pt.cantidadTotal = dto.cantidadTotal;
                         pt.unidad = dto.unidad;
+                        pt.comentario = dto.comentario;
                     }
 
                     _context.Entry(pt).State = EntityState.Modified;

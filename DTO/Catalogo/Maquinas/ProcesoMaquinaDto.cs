@@ -7,5 +7,7 @@
         public string? nombreMaquina { get; set; }
 
         public string? familiaNombre { get; set; }
+
+        public string? nombreAlterno { get; set; }
     }
 }
