@@ -111,105 +111,179 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
 
         [HttpGet("get/procesosOfGestion/filtros")]
         public async Task<ActionResult<IEnumerable<ProcesoOfVistaTableroDto>>> GetProcesoOfAreaFiltro(
-        [FromQuery] int? idArea = null,          // Parámetro obligatorio para el área
-        [FromQuery] DateTime? fechaInicio = null,   // Parámetro opcional para la fecha de inicio del rango
-        [FromQuery] DateTime? fechaFin = null,     // Parámetro opcional para la fecha de fin del rango
-        [FromQuery] string? cliente = null,         // Parámetro opcional para el cliente
+        [FromQuery] int? idArea = null,
+        [FromQuery] DateTime? fechaInicio = null,
+        [FromQuery] DateTime? fechaFin = null,
+        [FromQuery] string? cliente = null,
         [FromQuery] string? ejecutivo = null,
-        [FromQuery] string? articulo = null,     // Parámetro opcional para el artículo
-        [FromQuery] int? oF = null,               // Parámetro opcional para el oF
-        [FromQuery] int? oV = null,               // Parámetro opcional para el oV
-        [FromQuery] string? lineaNegocio = null, // Parámetro opcional para la línea de negocio
-        [FromQuery] string? idsEtiquetas = null, // Parámetro opcional para las etiquetas
-        [FromQuery] int? idProceso = null,        // Parámetro opcional para la postura
-        [FromQuery] int? tablero = null)      // Parámetro opcional para el ejecutivo
+        [FromQuery] string? articulo = null,
+        [FromQuery] int? oF = null,
+        [FromQuery] int? oV = null,
+        [FromQuery] string? lineaNegocio = null,
+        [FromQuery] string? idsEtiquetas = null,
+        [FromQuery] int? idProceso = null,
+        [FromQuery] int? tablero = null,
+        [FromQuery] string? vendedor = null) // Nuevo parámetro para el vendedor
         {
-            // Consulta base
-            var query = _context.procesoOf
-                .OrderBy(p => p.posicion)
-                .Include(u => u.detalleOperacionProceso)
-                .ThenInclude(o => o.idOperacionNavigation)
-                .Include(m => m.tarjetaCampo)
-                .Include(s => s.tarjetaEtiqueta)
-                .ThenInclude(e => e.idEtiquetaNavigation)
-                .Include(f => f.oFNavigation)
-                .Include(l => l.idPosturaNavigation)
-                .Include(v => v.idMaterialNavigation)
-                .Include(a => a.asignacion)
-                .ThenInclude(u => u.userNavigation)
-                .AsQueryable();
+            try
+            {
+                // Validar el usuario si se proporciona el parámetro vendedor
+                if (!string.IsNullOrEmpty(vendedor))
+                {
+                    var usuario = await _context.usuario.FirstOrDefaultAsync(u => u.nombres + " " + u.apellidos == vendedor);
+                    if (usuario == null)
+                    {
+                        return NotFound("Usuario no encontrado");
+                    }
+                }
 
-            // Aplicar filtros condicionales
-            if (idArea.HasValue)
-            {
-                // Filtrar por área
-                query = query.Where(p => p.idTableroNavigation.idArea == idArea.Value);
-            }
-            if (fechaInicio.HasValue && fechaFin.HasValue)
-            {
-                // Filtrar por rango de fechas (fechaVencimiento entre fechaInicio y fechaFin)
-                query = query.Where(p => p.fechaVencimiento >= fechaInicio.Value && p.fechaVencimiento <= fechaFin.Value);
-            }
-            else if (fechaInicio.HasValue)
-            {
-                // Si solo se proporciona fechaInicio, filtrar desde esa fecha en adelante
-                query = query.Where(p => p.fechaVencimiento >= fechaInicio.Value);
-            }
-            else if (fechaFin.HasValue)
-            {
-                // Si solo se proporciona fechaFin, filtrar hasta esa fecha
-                query = query.Where(p => p.fechaVencimiento <= fechaFin.Value);
-            }
-            if (!string.IsNullOrEmpty(cliente))
-            {
-                query = query.Where(p => p.oFNavigation.clienteOf.Contains(cliente));
-            }
-            if (!string.IsNullOrEmpty(ejecutivo))
-            {
-                query = query.Where(p => p.oFNavigation.vendedorOf.Contains(ejecutivo));
-            }
-            if (!string.IsNullOrEmpty(articulo))
-            {
-                query = query.Where(p => p.oFNavigation.productoOf.Contains(articulo));
-            }
-            if (oF.HasValue)
-            {
-                query = query.Where(p => p.oF == oF.Value);
-            }
-            if (oV.HasValue)
-            {
-                query = query.Where(p => p.oV == oV.Value);
-            }
-            if (!string.IsNullOrEmpty(lineaNegocio))
-            {
-                query = query.Where(p => p.oFNavigation.lineaDeNegocio.Contains(lineaNegocio));
-            }
-            // Filtro por IDs de etiquetas
-            if (!string.IsNullOrEmpty(idsEtiquetas))
-            {
-                // Convertir la cadena de IDs separados por comas en una lista de enteros
-                var idsEtiquetasLista = idsEtiquetas.Split(',')
-                    .Select(id => int.Parse(id))
-                    .ToList();
+                // Consulta base
+                var query = _context.procesoOf
+                    .OrderBy(p => p.posicion)
+                    .Include(u => u.detalleOperacionProceso)
+                    .ThenInclude(o => o.idOperacionNavigation)
+                    .Include(m => m.tarjetaCampo)
+                    .Include(s => s.tarjetaEtiqueta)
+                    .ThenInclude(e => e.idEtiquetaNavigation)
+                    .Include(f => f.oFNavigation)
+                    .Include(l => l.idPosturaNavigation)
+                    .Include(v => v.idMaterialNavigation)
+                    .Include(a => a.asignacion)
+                    .ThenInclude(u => u.userNavigation)
+                    .AsQueryable();
 
-                // Filtrar tarjetas que tengan al menos una de las etiquetas especificadas
-                query = query.Where(p => p.tarjetaEtiqueta
-                    .Any(etiquetaOf => idsEtiquetasLista.Contains((int)etiquetaOf.idTarjetaEtiqueta)));
-            }
-            if (idProceso.HasValue)
-            {
-                query = query.Where(p => p.idProceso == idProceso.Value);
-            }
-            if (tablero.HasValue)
-            {
-                query = query.Where(p => p.idTablero == tablero.Value);
-            }
+                // Aplicar filtros condicionales
+                if (idArea.HasValue)
+                {
+                    query = query.Where(p => p.idTableroNavigation.idArea == idArea.Value);
+                }
 
-            // Ejecutar la consulta y mapear a DTO
-            var procesoOf = await query.ToListAsync();
-            var procesoOfDto = _mapper.Map<List<ProcesoOfVistaTableroDto>>(procesoOf);
+                if (fechaInicio.HasValue && fechaFin.HasValue)
+                {
+                    query = query.Where(p => p.fechaVencimiento >= fechaInicio.Value && p.fechaVencimiento <= fechaFin.Value);
+                }
+                else if (fechaInicio.HasValue)
+                {
+                    query = query.Where(p => p.fechaVencimiento >= fechaInicio.Value);
+                }
+                else if (fechaFin.HasValue)
+                {
+                    query = query.Where(p => p.fechaVencimiento <= fechaFin.Value);
+                }
 
-            return Ok(procesoOfDto);
+                if (!string.IsNullOrEmpty(cliente))
+                {
+                    query = query.Where(p => p.oFNavigation.clienteOf.Contains(cliente));
+                }
+
+                if (!string.IsNullOrEmpty(ejecutivo))
+                {
+                    query = query.Where(p => p.oFNavigation.vendedorOf.Contains(ejecutivo));
+                }
+
+                if (!string.IsNullOrEmpty(articulo))
+                {
+                    query = query.Where(p => p.oFNavigation.productoOf.Contains(articulo));
+                }
+
+                if (oF.HasValue)
+                {
+                    query = query.Where(p => p.oF == oF.Value);
+                }
+
+                if (oV.HasValue)
+                {
+                    query = query.Where(p => p.oV == oV.Value);
+                }
+
+                if (!string.IsNullOrEmpty(lineaNegocio))
+                {
+                    query = query.Where(p => p.oFNavigation.lineaDeNegocio.Contains(lineaNegocio));
+                }
+
+                if (!string.IsNullOrEmpty(idsEtiquetas))
+                {
+                    var idsEtiquetasLista = idsEtiquetas.Split(',')
+                        .Select(id => int.Parse(id))
+                        .ToList();
+
+                    query = query.Where(p => p.tarjetaEtiqueta
+                        .Any(etiquetaOf => idsEtiquetasLista.Contains((int)etiquetaOf.idTarjetaEtiqueta)));
+                }
+
+                if (idProceso.HasValue)
+                {
+                    query = query.Where(p => p.idProceso == idProceso.Value);
+                }
+
+                if (tablero.HasValue)
+                {
+                    query = query.Where(p => p.idTablero == tablero.Value);
+                }
+
+                // Aplicar filtros por usuario si se proporciona el parámetro vendedor
+                if (!string.IsNullOrEmpty(vendedor))
+                {
+                    switch (vendedor)
+                    {
+                        // Vendedores normales (solo ven sus propias órdenes)
+                        case "Claudia Ruano":
+                        case "Jenny Gálvez":
+                        case "Juan Mónico":
+                        case "Hugo Campos":
+                        case "Javier Toledo":
+                        case "Xiomara Cruz":
+                            query = query.Where(p => p.oFNavigation.vendedorOf == vendedor);
+                            break;
+
+                        // Encargados con acceso completo
+                        case "Eliseo Menjívar":
+                        case "Fátima García":
+                            // Ven todo excepto oficina y freelance
+                            query = query.Where(p => p.oFNavigation.vendedorOf != "Oficina");
+                            break;
+
+                        // Encargados con acceso restringido por línea de negocio
+                        case "Floridalma Alfaro":
+                            query = query.Where(p => p.oFNavigation.lineaDeNegocio == "FLEXO" &&
+                                                  p.oFNavigation.vendedorOf != "Oficina");
+                            break;
+
+                        // Cotizadores con diferentes niveles de acceso
+                        case "Ingrid Guevara":
+                        case "Katya":
+                        case "Elba Deleon":
+                            // Oficina y freelance
+                            query = query.Where(p => p.oFNavigation.vendedorOf != "Oficina");
+                            break;
+
+                        case "Diana Munguia":
+                            // Oficina, Engracia y Margarita
+                            query = query.Where(p => p.oFNavigation.vendedorOf == "Oficina" ||
+                                                  p.oFNavigation.vendedorOf == "Engracia Díaz" ||
+                                                  p.oFNavigation.vendedorOf == "Margarita Díaz");
+                            break;
+
+                        case "Wendy Del Cid":
+                            // Todos con línea de negocio promocionales
+                            query = query.Where(p => p.oFNavigation.lineaDeNegocio == "PROMO");
+                            break;
+
+                        default:
+                            return BadRequest("Usuario no tiene permisos configurados");
+                    }
+                }
+
+                // Ejecutar la consulta y mapear a DTO
+                var procesoOf = await query.ToListAsync();
+                var procesoOfDto = _mapper.Map<List<ProcesoOfVistaTableroDto>>(procesoOf);
+
+                return Ok(procesoOfDto);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error interno del servidor: {ex.Message}");
+            }
         }
 
         // GET: api/tarjetaOf VENDEDORES
