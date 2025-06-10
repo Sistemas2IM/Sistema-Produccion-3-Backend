@@ -1169,7 +1169,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             }
 
             await _context.SaveChangesAsync();
-            return Ok("Proceso Of creado exitosamente.");
+            return Ok(proceso);
         }
 
         [HttpPost("post/procesoOfMaquina/batch")]
