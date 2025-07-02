@@ -34,7 +34,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.AnexosSAP
                 }
 
                 // Consulta SQL para obtener la ruta de los anexos
-                string query = @"
+                string query = $@"
                 SELECT 
                     T1.""trgtPath"" || '\' || T1.""FileName"" || '.' || T1.""FileExt"" AS ""AnexoOf"",
                     T1.""FileName"" AS ""NombreArchivo"",
@@ -42,11 +42,11 @@ namespace Sistema_Produccion_3_Backend.Controllers.AnexosSAP
                     T1.""U_permisoAnexo"" AS ""PermisoAnexo""
                 FROM OWOR T0 
                 LEFT JOIN ATC1 T1 ON T0.""AtcEntry"" = T1.""AbsEntry""
-                WHERE T0.""DocNum"" = ?";
+                WHERE T0.""DocNum"" = '{of}'";
 
                 // Ejecutar la consulta
                 var recordSet = (Recordset)oCompany.GetBusinessObject(BoObjectTypes.BoRecordset);
-                recordSet.DoQuery(query.Replace("?", of.ToString()));
+                recordSet.DoQuery(query);
 
                 // Verificar si hay resultados
                 if (recordSet.RecordCount == 0)

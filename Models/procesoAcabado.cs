@@ -66,6 +66,9 @@ public partial class procesoAcabado
     [StringLength(500)]
     public string tipoCierre { get; set; }
 
+    [StringLength(500)]
+    public string unidadProd { get; set; }
+
     [ForeignKey("idProceso")]
     [InverseProperty("procesoAcabado")]
     public virtual procesoOf idProcesoNavigation { get; set; }
