@@ -91,7 +91,54 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         {
             var procesoOf = await _context.procesoOf
                 .OrderBy(p => p.posicion)
-                .Where(f => f.idTableroNavigation.idArea == idArea)
+                .Where(f => f.idTableroNavigation.idArea == idArea && f.archivada == false && f.cancelada == false)
+                .Include(u => u.detalleReporte)
+                .ThenInclude(o => o.idOperacionNavigation)
+                .Include(u => u.detalleReporte)
+                .ThenInclude(m => m.maquinaNavigation)
+                .Include(m => m.tarjetaCampo)
+                .Include(s => s.tarjetaEtiqueta)
+                .ThenInclude(e => e.idEtiquetaNavigation)
+                .Include(f => f.oFNavigation)
+                .Include(l => l.idPosturaNavigation)
+                .Include(v => v.idMaterialNavigation)
+                .Include(a => a.asignacion)
+                .ThenInclude(u => u.userNavigation)
+                .ToListAsync();
+            var procesoOfDto = _mapper.Map<List<ProcesoOfVistaTableroDto>>(procesoOf);
+            return Ok(procesoOfDto);
+        }
+
+        // ===============================================================================
+
+        [HttpGet("get/tableros/linea/{linea}")]
+        public async Task<ActionResult<IEnumerable<TablerosOfDto>>> GetTablerosLineaNegocio(string linea)
+        {
+            var tableros = await _context.tablerosOf
+                .Include(t => t.idAreaNavigation)
+                .Include(t => t.idMaquinaNavigation)
+                    .ThenInclude(m => m.idFamiliaNavigation)
+                .Include(t => t.posturasOf)
+                    .ThenInclude(p => p.procesoOf)
+                        .ThenInclude(proc => proc.oFNavigation)
+                .Where(t => t.posturasOf.Any(p =>
+                    p.procesoOf.Any(proc =>
+                        proc.oFNavigation != null &&
+                        proc.oFNavigation.lineaDeNegocio == linea)))
+                .ToListAsync();
+
+            var tablerosDto = _mapper.Map<List<TablerosOfDto>>(tableros);
+            return Ok(tablerosDto);
+        }
+
+
+        // GET: api/procesoOf por Area
+        [HttpGet("get/procesosOf/linea{linea}")]
+        public async Task<ActionResult<IEnumerable<ProcesoOfVistaTableroDto>>> GetprocesoOfLineaNegocio(string linea)
+        {
+            var procesoOf = await _context.procesoOf
+                .OrderBy(p => p.posicion)
+                .Where(f => f.oFNavigation.lineaDeNegocio == linea && f.archivada == false && f.cancelada == false)
                 .Include(u => u.detalleReporte)
                 .ThenInclude(o => o.idOperacionNavigation)
                 .Include(u => u.detalleReporte)
@@ -180,7 +227,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 {
                     query = query.Where(p => p.oFNavigation.vendedorOf.Contains(ejecutivo));
                 }
-
+                
                 if (!string.IsNullOrEmpty(articulo))
                 {
                     query = query.Where(p => p.oFNavigation.productoOf.Contains(articulo));

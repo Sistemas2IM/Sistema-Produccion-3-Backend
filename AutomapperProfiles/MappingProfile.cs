@@ -704,6 +704,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             //Postura
             CreateMap<posturasOf, PosturasOfDto>()
                 .ForMember(dest => dest.tablerosOfDto, opt => opt.MapFrom(src => src.idTableroNavigation.nombreTablero))
+                //.ForMember(dest => dest.procesosOf, opt => opt.MapFrom(src => src.procesoOf))
                 .ReverseMap();
             CreateMap<posturasOf, ProcesoPosturasOfDto>().ReverseMap();
             CreateMap<posturasOf, AddPosturasOfDto>().ReverseMap();

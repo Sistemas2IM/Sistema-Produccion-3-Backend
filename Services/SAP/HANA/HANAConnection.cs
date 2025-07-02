@@ -18,7 +18,7 @@ namespace Sistema_Produccion_3_Backend.Services.SAP.HANA
             OCompany.LicenseServer = "192.168.2.246";
             OCompany.DbUserName = "USERSAP";
             OCompany.DbPassword = "IMultiple$1992.";
-            OCompany.CompanyDB = "NEXOS";
+            OCompany.CompanyDB = "SBO_IMPRESOSMULTIPLES";
             OCompany.DbServerType = BoDataServerTypes.dst_HANADB;
             OCompany.UseTrusted = true;
             RetVal = OCompany.Connect();

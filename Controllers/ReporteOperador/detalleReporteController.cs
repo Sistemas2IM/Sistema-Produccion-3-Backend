@@ -147,6 +147,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
                     // Actualizar propiedades específicas
                     if (dto.idDetalleReporte != 0)
                     {
+                        detalle.idProceso = dto.idProceso;
                         detalle.idOperacion = dto.idOperacion;
                         detalle.oF = dto.oF;
                         detalle.numeroFila = dto.numeroFila;
@@ -156,6 +157,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
                         detalle.descripcion = dto.descripcion;
                         detalle.cliente = dto.cliente;
                         detalle.tiroRetiro = dto.tiroRetiro;
+                        detalle.cantProducir = dto.cantProducir;
                         detalle.cantidadRecibida = dto.cantidadRecibida;
                         detalle.cantidadProducida = dto.cantidadProducida;
                         detalle.cantidadDanada = dto.cantidadDanada;
