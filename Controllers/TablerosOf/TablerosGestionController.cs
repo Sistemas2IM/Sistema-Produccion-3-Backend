@@ -156,6 +156,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             return Ok(procesoOfDto);
         }
 
+        // ==============================================================================
+
         [HttpGet("get/procesosOfGestion/filtros")]
         public async Task<ActionResult<IEnumerable<ProcesoOfVistaTableroDto>>> GetProcesoOfAreaFiltro(
         [FromQuery] int? idArea = null,
@@ -290,6 +292,13 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                             query = query.Where(p => p.oFNavigation.vendedorOf != "Oficina");
                             break;
 
+                        // Gerente de ventas con acceso completo
+                        case "Manuel Díaz":
+                        case "Root Admin":
+                        case "Gabriela Menendez":
+                            // No aplica filtro, ve todo
+                            break;
+
                         // Encargados con acceso restringido por línea de negocio
                         case "Floridalma Alfaro":
                             query = query.Where(p => p.oFNavigation.lineaDeNegocio == "FLEXO" &&
@@ -390,6 +399,13 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                         query = query.Where(t => t.vendedorOf != "Oficina" /*&&
                                                t.vendedorOf != "freelance"*/)
                                    .OrderBy(p => p.posicion);
+                        break;
+
+                    // Gerente de ventas con acceso completo
+                    case "Manuel Díaz":
+                    case "Root Admin":
+                    case "Gabriela Menendez":
+                        // No aplica filtro, ve todo
                         break;
 
                     // Encargados con acceso restringido por línea de negocio
