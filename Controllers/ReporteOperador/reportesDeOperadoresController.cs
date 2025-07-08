@@ -119,16 +119,22 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
                 .Include(m => m.detalleReporte)
                     .ThenInclude(d => d.oFNavigation) // Incluye la relación con 'idTarjetaOf'
                 .Include(o => o.operadorNavigation)
-                //.Select(m => new
-                //{
-                //    Reporte = m,
-                //    DetalleReporteOrdenado = m.detalleReporte
-                //    .OrderBy(d => d.horaInicio) // Ordena 'detalleReporte' por 'horaInicio' (ascendente)
-                //    .ToList()
-                //})
+                .Select(m => new
+                {
+                    Reporte = m,
+                    DetalleReporteOrdenado = m.detalleReporte
+                    .OrderBy(d => d.fechaHora) // Ordena 'detalleReporte' por 'horaInicio' (ascendente)
+                    .ToList()
+                })
                 .ToArrayAsync();
 
-            var reporteOperadorDto = _mapper.Map<List<ReporteOperadorDto>>(reporteOperador);
+            var reporteOperadorDto = reporteOperador.Select(r =>
+            {
+                var reporteDto = _mapper.Map<ReporteOperadorDto>(r.Reporte);
+                reporteDto.detalleReporte = _mapper.Map<List<DetalleReporteDto>>(r.DetalleReporteOrdenado);
+                return reporteDto;
+
+            }).ToList();
 
             return Ok(reporteOperadorDto);
         }
