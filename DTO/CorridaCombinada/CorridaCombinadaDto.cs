@@ -11,5 +11,11 @@
         public string? oF { get; set; } // de subordinado / proceso of
 
         public string? productoOf { get; set; } // de subordinado / proceso of
+
+        public string? cantOf { get; set; } // de subordinado / proceso of
+
+        public string? fechaVencmiento { get; set; } // de subordinado / proceso of
+
+        public string? serie { get; set; } // de subordinado / proceso of
     }
 }

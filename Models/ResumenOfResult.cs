@@ -11,6 +11,8 @@ namespace Sistema_Produccion_3_Backend.Models
         public int? oF { get; set; }
         [StringLength(500)]
         public string maquina { get; set; }
+        [StringLength(22)]
+        public string indicador { get; set; }
         [Column("horas_mq_planificadas", TypeName = "decimal(38,2)")]
         public decimal? horas_mq_planificadas { get; set; }
         [Column("horas_mq_arreglo_planificadas", TypeName = "decimal(38,2)")]

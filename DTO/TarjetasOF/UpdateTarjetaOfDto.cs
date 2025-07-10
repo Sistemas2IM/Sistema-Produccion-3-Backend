@@ -1,4 +1,6 @@
-﻿namespace Sistema_Produccion_3_Backend.DTO.TarjetasOF
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Sistema_Produccion_3_Backend.DTO.TarjetasOF
 {
     public class UpdateTarjetaOfDto
     {
@@ -29,6 +31,10 @@
         public DateTime? fechaUltimaActualizacion { get; set; }
 
         public DateTime? fechaVencimiento { get; set; }
+
+        public DateTime? inicio { get; set; }
+
+        public DateTime? finalizacion { get; set; }
 
         public int? posicion { get; set; }
 

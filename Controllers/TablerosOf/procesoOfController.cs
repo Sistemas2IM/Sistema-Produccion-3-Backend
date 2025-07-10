@@ -1,8 +1,6 @@
-﻿using System.Diagnostics;
-using System.Linq;
-using System.Text.Json;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.Elfie.Serialization;
 using Microsoft.EntityFrameworkCore;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.BusquedaProcesos;
@@ -21,6 +19,9 @@ using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.Troquelado;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.UpdateMaquina;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.UpdateSAP;
 using Sistema_Produccion_3_Backend.Models;
+using System.Diagnostics;
+using System.Linq;
+using System.Text.Json;
 
 namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
 {
@@ -55,7 +56,39 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 .Include(v => v.idMaterialNavigation)
                 .Include(a => a.asignacion)
                 .ThenInclude(u => u.userNavigation)
+                .Include(p => p.corridaCombinadamaestroNavigation)
+                .Include(p => p.corridaCombinadasubordinadoNavigation)
                 .ToListAsync();
+
+            foreach (var proceso in procesoOf)
+            {
+                // Cargar subordinados de corridaCombinadamaestroNavigation (lista 1:N)
+                if (proceso.corridaCombinadamaestroNavigation != null)
+                {
+                    foreach (var corrida in proceso.corridaCombinadamaestroNavigation)
+                    {
+                        if (corrida.subordinado != null)
+                        {
+                            var subordinado = await _context.procesoOf
+                                .Include(p => p.oFNavigation)
+                                .FirstOrDefaultAsync(p => p.idProceso == corrida.subordinado);
+
+                            corrida.subordinadoNavigation = subordinado;
+                        }
+                    }
+                }
+
+                // Cargar subordinado de corridaCombinadasubordinadoNavigation (1:1)
+                if (proceso.corridaCombinadasubordinadoNavigation?.subordinado != null)
+                {
+                    var subordinado = await _context.procesoOf
+                        .Include(p => p.oFNavigation)
+                        .FirstOrDefaultAsync(p => p.idProceso == proceso.corridaCombinadasubordinadoNavigation.subordinado);
+
+                    proceso.corridaCombinadasubordinadoNavigation.subordinadoNavigation = subordinado;
+                }
+            }
+
 
             var procesoOfDto = _mapper.Map<List<ProcesoOfDto>>(procesoOf);
 
@@ -74,7 +107,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         [FromQuery] string? lineaNegocio = null, // Parámetro opcional para la línea de negocio
         [FromQuery] string? idsEtiquetas = null, // Parámetro opcional para las etiquetas
         [FromQuery] int? idProceso = null,        // Parámetro opcional para la postura
-        [FromQuery] bool archivada = false,          // Parámetro opcional para la postura
+        [FromQuery] bool mostrarArchivados = false,          // Parámetro opcional para la postura
         [FromQuery] int? tablero = null,
         [FromQuery] string? disenador = null)      // Parámetro opcional para el ejecutivo
 
@@ -92,6 +125,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 .Include(v => v.idMaterialNavigation)
                 .Include(a => a.asignacion)
                 .ThenInclude(u => u.userNavigation)
+                .Include(p => p.corridaCombinadamaestroNavigation)
+                .Include(p => p.corridaCombinadasubordinadoNavigation)
                 .AsQueryable();
 
             // Aplicar filtros condicionales
@@ -161,14 +196,9 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             {
                 query = query.Where(p => p.idTablero == tablero.Value);
             }
-            if (archivada)
-            {
-                query = query.Where(p => p.archivada == archivada);
-            }
-            else
-            {
-                query = query.Where(p => p.archivada == false);
-            }
+           // ✅ Aplicar el filtro solo si NO se quieren mostrar los archivados
+            if (!mostrarArchivados)
+                        query = query.Where(p => p.archivada == false);
 
             // Ejecutar la consulta y mapear a DTO
             var procesoOf = await query.ToListAsync();
@@ -177,20 +207,46 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             return Ok(procesoOfDto);
         }
 
-        // GET: api/procesoOf/5
+        // GET GENERAL
         [HttpGet("get/{id}")]
         public async Task<ActionResult<ProcesoOfDto>> GetprocesoOf(int id)
         {
             var procesoOf = await _context.procesoOf
-                .Include(u => u.detalleReporte)
-                .ThenInclude(o => o.idOperacionNavigation)
+                .Include(u => u.detalleReporte).ThenInclude(o => o.idOperacionNavigation)
                 .Include(m => m.tarjetaCampo)
                 .Include(s => s.tarjetaEtiqueta)
                 .Include(d => d.idPosturaNavigation)
                 .Include(c => c.idTableroNavigation)
                 .Include(v => v.idMaterialNavigation)
                 .Include(f => f.oFNavigation)
+                .Include(p => p.corridaCombinadamaestroNavigation)
+                .Include(p => p.corridaCombinadasubordinadoNavigation)
                 .FirstOrDefaultAsync(u => u.idProceso == id);
+
+            // Cargar subordinadoNavigation manualmente
+            if (procesoOf?.corridaCombinadamaestroNavigation != null)
+            {
+                foreach (var corrida in procesoOf.corridaCombinadamaestroNavigation)
+                {
+                    if (corrida.subordinado != null)
+                    {
+                        var subordinado = await _context.procesoOf
+                            .Include(p => p.oFNavigation)
+                            .FirstOrDefaultAsync(p => p.idProceso == corrida.subordinado);
+
+                        corrida.subordinadoNavigation = subordinado;
+                    }
+                }
+            }
+
+            if (procesoOf?.corridaCombinadasubordinadoNavigation?.subordinado != null)
+            {
+                var subordinado = await _context.procesoOf
+                    .Include(p => p.oFNavigation)
+                    .FirstOrDefaultAsync(p => p.idProceso == procesoOf.corridaCombinadasubordinadoNavigation.subordinado);
+
+                procesoOf.corridaCombinadasubordinadoNavigation.subordinadoNavigation = subordinado;
+            }
 
             var procesoOfDto = _mapper.Map<ProcesoOfDto>(procesoOf);
 
@@ -212,9 +268,36 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 .Include(p => p.idPosturaNavigation)
                 .Include(v => v.idMaterialNavigation)
                 .Include(f => f.oFNavigation)
+                .Include(p => p.corridaCombinadamaestroNavigation)
+                .Include(p => p.corridaCombinadasubordinadoNavigation)
                 .FirstOrDefaultAsync(u => u.oF == of);
 
-                var procesoOfDto = _mapper.Map<ProcesoOfDto>(procesos);
+            // Cargar subordinadoNavigation manualmente
+            if (procesos?.corridaCombinadamaestroNavigation != null)
+            {
+                foreach (var corrida in procesos.corridaCombinadamaestroNavigation)
+                {
+                    if (corrida.subordinado != null)
+                    {
+                        var subordinado = await _context.procesoOf
+                            .Include(p => p.oFNavigation)
+                            .FirstOrDefaultAsync(p => p.idProceso == corrida.subordinado);
+
+                        corrida.subordinadoNavigation = subordinado;
+                    }
+                }
+            }
+
+            if (procesos?.corridaCombinadasubordinadoNavigation?.subordinado != null)
+            {
+                var subordinado = await _context.procesoOf
+                    .Include(p => p.oFNavigation)
+                    .FirstOrDefaultAsync(p => p.idProceso == procesos.corridaCombinadasubordinadoNavigation.subordinado);
+
+                procesos.corridaCombinadasubordinadoNavigation.subordinadoNavigation = subordinado;
+            }
+
+            var procesoOfDto = _mapper.Map<ProcesoOfDto>(procesos);
 
                 if (procesoOfDto == null)
                 {
@@ -240,7 +323,39 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 .Include(e => e.tarjetaEtiqueta)
                 .Include(a => a.asignacion)
                 .ThenInclude(u => u.userNavigation)
+                .Include(p => p.corridaCombinadamaestroNavigation)
+                .Include(p => p.corridaCombinadasubordinadoNavigation)
                 .ToListAsync();
+
+            foreach (var proceso in procesos)
+            {
+                // Cargar subordinados de corridaCombinadamaestroNavigation (lista 1:N)
+                if (proceso.corridaCombinadamaestroNavigation != null)
+                {
+                    foreach (var corrida in proceso.corridaCombinadamaestroNavigation)
+                    {
+                        if (corrida.subordinado != null)
+                        {
+                            var subordinado = await _context.procesoOf
+                                .Include(p => p.oFNavigation)
+                                .FirstOrDefaultAsync(p => p.idProceso == corrida.subordinado);
+
+                            corrida.subordinadoNavigation = subordinado;
+                        }
+                    }
+                }
+
+                // Cargar subordinado de corridaCombinadasubordinadoNavigation (1:1)
+                if (proceso.corridaCombinadasubordinadoNavigation?.subordinado != null)
+                {
+                    var subordinado = await _context.procesoOf
+                        .Include(p => p.oFNavigation)
+                        .FirstOrDefaultAsync(p => p.idProceso == proceso.corridaCombinadasubordinadoNavigation.subordinado);
+
+                    proceso.corridaCombinadasubordinadoNavigation.subordinadoNavigation = subordinado;
+                }
+            }
+
 
             var dtos = new List<ListaProcesoOfDto>();
 
@@ -359,7 +474,39 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
     .Include(v => v.idMaterialNavigation)
     .Include(a => a.asignacion)
     .ThenInclude(u => u.userNavigation)
+    .Include(p => p.corridaCombinadamaestroNavigation)
+    .Include(p => p.corridaCombinadasubordinadoNavigation)
     .ToListAsync();
+
+            foreach (var proceso in procesos)
+            {
+                // Cargar subordinados de corridaCombinadamaestroNavigation (lista 1:N)
+                if (proceso.corridaCombinadamaestroNavigation != null)
+                {
+                    foreach (var corrida in proceso.corridaCombinadamaestroNavigation)
+                    {
+                        if (corrida.subordinado != null)
+                        {
+                            var subordinado = await _context.procesoOf
+                                .Include(p => p.oFNavigation)
+                                .FirstOrDefaultAsync(p => p.idProceso == corrida.subordinado);
+
+                            corrida.subordinadoNavigation = subordinado;
+                        }
+                    }
+                }
+
+                // Cargar subordinado de corridaCombinadasubordinadoNavigation (1:1)
+                if (proceso.corridaCombinadasubordinadoNavigation?.subordinado != null)
+                {
+                    var subordinado = await _context.procesoOf
+                        .Include(p => p.oFNavigation)
+                        .FirstOrDefaultAsync(p => p.idProceso == proceso.corridaCombinadasubordinadoNavigation.subordinado);
+
+                    proceso.corridaCombinadasubordinadoNavigation.subordinadoNavigation = subordinado;
+                }
+            }
+
 
             var dtos = new List<ProcesoOfVistaTableroDto>();
 
@@ -474,7 +621,39 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 .Include(v => v.idMaterialNavigation)
                 .Include(a => a.asignacion)
                 .ThenInclude(u => u.userNavigation)
+                .Include(p => p.corridaCombinadamaestroNavigation)
+                .Include(p => p.corridaCombinadasubordinadoNavigation)
                 .ToListAsync();
+
+            foreach (var proceso in procesos)
+            {
+                // Cargar subordinados de corridaCombinadamaestroNavigation (lista 1:N)
+                if (proceso.corridaCombinadamaestroNavigation != null)
+                {
+                    foreach (var corrida in proceso.corridaCombinadamaestroNavigation)
+                    {
+                        if (corrida.subordinado != null)
+                        {
+                            var subordinado = await _context.procesoOf
+                                .Include(p => p.oFNavigation)
+                                .FirstOrDefaultAsync(p => p.idProceso == corrida.subordinado);
+
+                            corrida.subordinadoNavigation = subordinado;
+                        }
+                    }
+                }
+
+                // Cargar subordinado de corridaCombinadasubordinadoNavigation (1:1)
+                if (proceso.corridaCombinadasubordinadoNavigation?.subordinado != null)
+                {
+                    var subordinado = await _context.procesoOf
+                        .Include(p => p.oFNavigation)
+                        .FirstOrDefaultAsync(p => p.idProceso == proceso.corridaCombinadasubordinadoNavigation.subordinado);
+
+                    proceso.corridaCombinadasubordinadoNavigation.subordinadoNavigation = subordinado;
+                }
+            }
+
 
             var dtos = new List<ProcesoOfVistaTableroDto>();
 
@@ -582,7 +761,35 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 .Include(p => p.idPosturaNavigation)
                 .Include(v => v.idMaterialNavigation)
                 .Include(f => f.oFNavigation)
+                .Include(p => p.corridaCombinadamaestroNavigation)
+                .Include(p => p.corridaCombinadasubordinadoNavigation)
                 .FirstOrDefaultAsync(u => u.idProceso == id);
+
+            // Cargar subordinadoNavigation manualmente
+            if (proceso?.corridaCombinadamaestroNavigation != null)
+            {
+                foreach (var corrida in proceso.corridaCombinadamaestroNavigation)
+                {
+                    if (corrida.subordinado != null)
+                    {
+                        var subordinado = await _context.procesoOf
+                            .Include(p => p.oFNavigation)
+                            .FirstOrDefaultAsync(p => p.idProceso == corrida.subordinado);
+
+                        corrida.subordinadoNavigation = subordinado;
+                    }
+                }
+            }
+
+            if (proceso?.corridaCombinadasubordinadoNavigation?.subordinado != null)
+            {
+                var subordinado = await _context.procesoOf
+                    .Include(p => p.oFNavigation)
+                    .FirstOrDefaultAsync(p => p.idProceso == proceso.corridaCombinadasubordinadoNavigation.subordinado);
+
+                proceso.corridaCombinadasubordinadoNavigation.subordinadoNavigation = subordinado;
+            }
+
             if (proceso == null) return NotFound();
 
             // Mapear el modelo general al DTO principal
@@ -1169,7 +1376,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             }
 
             await _context.SaveChangesAsync();
-            return Ok("Proceso Of creado exitosamente.");
+            return CreatedAtAction("GetprocesoOf", new { id = proceso.idProceso }, proceso);
         }
 
         [HttpPost("post/procesoOfMaquina/batch")]

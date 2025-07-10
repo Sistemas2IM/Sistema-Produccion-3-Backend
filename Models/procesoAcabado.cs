@@ -16,9 +16,6 @@ public partial class procesoAcabado
     public int idProceso { get; set; }
 
     [StringLength(500)]
-    public string cantidadMrequerido { get; set; }
-
-    [StringLength(500)]
     public string cantidadDemasia { get; set; }
 
     [StringLength(500)]
@@ -65,6 +62,12 @@ public partial class procesoAcabado
 
     [StringLength(500)]
     public string tipoCierre { get; set; }
+
+    [StringLength(500)]
+    public string unidadProd { get; set; }
+
+    [StringLength(500)]
+    public string cantidadMrequerido { get; set; }
 
     [ForeignKey("idProceso")]
     [InverseProperty("procesoAcabado")]
