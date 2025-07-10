@@ -55,5 +55,11 @@
         public bool? corridaCombinada { get; set; }
 
         public int? lineNumSAP { get; set; }
+
+        public string? indicadorProces { get; set; }
+
+        public bool? reproceso { get; set; }
+
+        public string? correlativoCC { get; set; }
     }
 }

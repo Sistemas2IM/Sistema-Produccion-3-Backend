@@ -74,6 +74,12 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas
 
         public int? lineNumSAP { get; set; }
 
+        public string? indicadorProces { get; set; }
+
+        public bool? reproceso { get; set; }
+
+        public string? correlativoCC { get; set; }
+
         public PosturasOfDto? posturasOfDto { get; set; }
     }
 }
