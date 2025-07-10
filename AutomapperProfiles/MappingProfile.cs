@@ -162,6 +162,11 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForMember(dest => dest.asignacionDto, opt => opt.MapFrom(src => src.asignacion))
                 .ForMember(dest => dest.serie, opt => opt.MapFrom(src => src.oFNavigation.seriesOf))
                 .ForMember(dest => dest.fechaVencimiento, opt => opt.MapFrom(src => src.oFNavigation.fechaVencimiento))
+                .ForMember(dest => dest.subordinadas, opt => opt.MapFrom(src =>
+                src.corridaCombinadamaestroNavigation
+                    .Concat(src.corridaCombinadasubordinadoNavigation != null
+                        ? new List<corridaCombinada> { src.corridaCombinadasubordinadoNavigation }
+                        : new List<corridaCombinada>())))
                 .ReverseMap();
             CreateMap<procesoOf, ProcesoOfVistaTableroDto>()
                 .ForMember(dest => dest.detalleProcesoOf, opt => opt.MapFrom(src => src.detalleReporte))
@@ -180,6 +185,11 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForMember(dest => dest.asignacionDto, opt => opt.MapFrom(src => src.asignacion))
                 .ForMember(dest => dest.serie, opt => opt.MapFrom(src => src.oFNavigation.seriesOf))
                 .ForMember(dest => dest.fechaVencimiento, opt => opt.MapFrom(src => src.oFNavigation.fechaVencimiento))
+                .ForMember(dest => dest.subordinadas, opt => opt.MapFrom(src =>
+                src.corridaCombinadamaestroNavigation
+                    .Concat(src.corridaCombinadasubordinadoNavigation != null
+                        ? new List<corridaCombinada> { src.corridaCombinadasubordinadoNavigation }
+                        : new List<corridaCombinada>())))
                 .ReverseMap();
             CreateMap<procesoOf, ListaProcesoOfDto>()
                 .ForMember(dest => dest.PosturasOfDto, opt => opt.MapFrom(src => src.idPosturaNavigation))
@@ -197,7 +207,12 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForMember(dest => dest.tarjetaEtiquetaDto, opt => opt.MapFrom(src => src.tarjetaEtiqueta))
                 .ForMember(dest => dest.asignacionDto, opt => opt.MapFrom(src => src.asignacion))
                 .ForMember(dest => dest.fechaVencimiento, opt => opt.MapFrom(src => src.oFNavigation.fechaVencimiento))
-                .ForMember(dest => dest.secuenciaArea, opt => opt.MapFrom(src => src.idTableroNavigation.idAreaNavigation.secuencia)
+                .ForMember(dest => dest.secuenciaArea, opt => opt.MapFrom(src => src.idTableroNavigation.idAreaNavigation.secuencia))
+                .ForMember(dest => dest.subordinadas, opt => opt.MapFrom(src =>
+                src.corridaCombinadamaestroNavigation
+                    .Concat(src.corridaCombinadasubordinadoNavigation != null
+                        ? new List<corridaCombinada> { src.corridaCombinadasubordinadoNavigation }
+                        : new List<corridaCombinada>()))
                 )
                 .ReverseMap();
             CreateMap<procesoOf, ProcesosBusquedaDto>()
@@ -228,6 +243,11 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                     .ForMember(dest => dest.fsc, opt => opt.MapFrom(src => src.oFNavigation.fsc))
                     .ForMember(dest => dest.serie, opt => opt.MapFrom(src => src.oFNavigation.seriesOf))
                     .ForMember(dest => dest.fechaVencimiento, opt => opt.MapFrom(src => src.oFNavigation.fechaVencimiento))
+                    .ForMember(dest => dest.subordinadas, opt => opt.MapFrom(src =>
+                    src.corridaCombinadamaestroNavigation
+                        .Concat(src.corridaCombinadasubordinadoNavigation != null
+                            ? new List<corridaCombinada> { src.corridaCombinadasubordinadoNavigation }
+                            : new List<corridaCombinada>())))
                     .ReverseMap();
 
                 CreateMap<procesoOf, AddProcesoOfMaquinas>()
@@ -771,6 +791,9 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             CreateMap<corridaCombinada, CorridaCombinadaDto>()
                 .ForMember(dest => dest.oF, opt => opt.MapFrom(src => src.subordinadoNavigation.oF))
                 .ForMember(dest => dest.productoOf, opt => opt.MapFrom(src => src.subordinadoNavigation.productoOf))
+                .ForMember(dest => dest.cantOf, opt => opt.MapFrom(src => src.subordinadoNavigation.oFNavigation.cantidadOf))
+                .ForMember(dest => dest.fechaVencmiento, opt => opt.MapFrom(src => src.subordinadoNavigation.fechaVencimiento))
+                .ForMember(dest => dest.serie, opt => opt.MapFrom(src => src.subordinadoNavigation.oFNavigation.seriesOf))
                 .ReverseMap();
             CreateMap<corridaCombinada, AddCorridaCombinadaDto>().ReverseMap();
             CreateMap<UpdateCorridaCombinadaDto, corridaCombinada>()

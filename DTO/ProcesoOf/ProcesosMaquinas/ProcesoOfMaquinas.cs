@@ -1,4 +1,5 @@
 ﻿
+using Sistema_Produccion_3_Backend.DTO.CorridaCombinada;
 using Sistema_Produccion_3_Backend.DTO.ReporteOperador;
 using Sistema_Produccion_3_Backend.DTO.Tableros.Posturas;
 
@@ -95,6 +96,8 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas
         public PosturasOfDto? posturasOfDto { get; set; }
 
         public MaterialDto? materialDto { get; set; }
+
+        public List<CorridaCombinadaDto>? subordinadas { get; set; }
 
     }
 }

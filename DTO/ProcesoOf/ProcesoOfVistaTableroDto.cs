@@ -119,5 +119,7 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
         public List<TarjetaEtiquetaDto>? tarjetaEtiquetaDto { get; set; }
 
         public MaterialDto? materialDto { get; set; }
+
+        public List<CorridaCombinadaDto>? subordinadas { get; set; }
     }
 }
