@@ -75,7 +75,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         [FromQuery] int? of = null,                // Parámetro opcional para el número de OF
         [FromQuery] int? ov = null,                // Parámetro opcional para el número de OV
         [FromQuery] string? lineaNegocio = null,    // Parámetro opcional para la línea de negocio
-        [FromQuery] string? idsEtiquetas = null)    // Parámetro opcional para los IDs de etiquetas (separados por comas)
+        [FromQuery] string? idsEtiquetas = null,
+        [FromQuery] bool mostrarArchivados = false)
         {
             // Consulta base
             var query = _context.tarjetaOf
@@ -149,6 +150,10 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 query = query.Where(p => p.etiquetaOf
                     .Any(etiquetaOf => idsEtiquetasLista.Contains((int)etiquetaOf.idEtiqueta)));
             }
+
+            // ✅ Aplicar el filtro solo si NO se quieren mostrar los archivados
+            if (!mostrarArchivados)
+                query = query.Where(p => p.archivada == false);
 
             // Ejecutar la consulta y mapear a DTO
             var tarjetaOf = await query

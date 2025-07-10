@@ -1,11 +1,12 @@
-﻿using Sistema_Produccion_3_Backend.DTO.ProcesoOf.CamposPersonalizados;
-using Sistema_Produccion_3_Backend.DTO.ProcesoOf.DetalleProceso;
-using Sistema_Produccion_3_Backend.DTO.ReporteOperador;
-using Sistema_Produccion_3_Backend.DTO.Tableros.Posturas;
-using Sistema_Produccion_3_Backend.DTO.Tableros;
-using Sistema_Produccion_3_Backend.DTO.Catalogo.Maquinas;
+﻿using Sistema_Produccion_3_Backend.DTO.Catalogo.Maquinas;
+using Sistema_Produccion_3_Backend.DTO.CorridaCombinada;
 using Sistema_Produccion_3_Backend.DTO.Etiquetas.TarjetaEtiqueta;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.Asignacion;
+using Sistema_Produccion_3_Backend.DTO.ProcesoOf.CamposPersonalizados;
+using Sistema_Produccion_3_Backend.DTO.ProcesoOf.DetalleProceso;
+using Sistema_Produccion_3_Backend.DTO.ReporteOperador;
+using Sistema_Produccion_3_Backend.DTO.Tableros;
+using Sistema_Produccion_3_Backend.DTO.Tableros.Posturas;
 
 namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
 {
@@ -102,6 +103,8 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
         public List<TarjetaCampoDto>? tarjetaCampoDto { get; set; }
 
         public List<TarjetaEtiquetaDto>? tarjetaEtiquetaDto { get; set; }
+
+        public List<CorridaCombinadaDto>? subordinadas { get; set; }
 
     }
 }

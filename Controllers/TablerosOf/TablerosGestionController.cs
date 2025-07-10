@@ -172,6 +172,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         [FromQuery] string? idsEtiquetas = null,
         [FromQuery] int? idProceso = null,
         [FromQuery] int? tablero = null,
+        [FromQuery] bool mostrarArchivados = false, // Parámetro opcional para la postura
         [FromQuery] string? vendedor = null) // Nuevo parámetro para el vendedor
         {
             try
@@ -269,6 +270,9 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 {
                     query = query.Where(p => p.idTablero == tablero.Value);
                 }
+                // ✅ Aplicar el filtro solo si NO se quieren mostrar los archivados
+                if (!mostrarArchivados)
+                    query = query.Where(p => p.archivada == false);
 
                 // Aplicar filtros por usuario si se proporciona el parámetro vendedor
                 if (!string.IsNullOrEmpty(vendedor))
@@ -466,6 +470,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         [FromQuery] int? of = null,
         [FromQuery] int? ov = null,
         [FromQuery] string? lineaNegocio = null,
+        [FromQuery] bool mostrarArchivados = false,   // Parámetro opcional para la postura
         [FromQuery] string? idsEtiquetas = null)
         {
             try
@@ -553,6 +558,9 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                     var idsEtiquetasLista = idsEtiquetas.Split(',').Select(id => int.Parse(id)).ToList();
                     query = query.Where(p => p.etiquetaOf.Any(e => idsEtiquetasLista.Contains((int)e.idEtiqueta)));
                 }
+                // ✅ Aplicar el filtro solo si NO se quieren mostrar los archivados
+                if (!mostrarArchivados)
+                    query = query.Where(p => p.archivada == false);
 
                 // === Obtener resultado y retornar ===
                 var tarjetas = await query.OrderBy(p => p.posicion).ToListAsync();
