@@ -1096,7 +1096,6 @@ public partial class base_nuevaContext : DbContext
         {
             entity.Property(e => e.barniz).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.cantidadDemasia).UseCollation("SQL_Latin1_General_CP1_CI_AS");
-            entity.Property(e => e.cantidadMrequerido).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.detalleBarniz).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.detalleNum).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.foil).UseCollation("SQL_Latin1_General_CP1_CI_AS");
