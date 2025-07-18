@@ -161,7 +161,10 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForMember(dest => dest.fsc, opt => opt.MapFrom(src => src.oFNavigation.fsc))
                 .ForMember(dest => dest.asignacionDto, opt => opt.MapFrom(src => src.asignacion))
                 .ForMember(dest => dest.serie, opt => opt.MapFrom(src => src.oFNavigation.seriesOf))
-                .ForMember(dest => dest.fechaVencimiento, opt => opt.MapFrom(src => src.oFNavigation.fechaVencimiento))
+                .ForMember(dest => dest.fechaVencimiento, opt => opt.MapFrom(src =>
+                        src.corridaCombinada == true
+                            ? src.fechaVencimiento
+                            : src.oFNavigation.fechaVencimiento))
                 .ForMember(dest => dest.subordinadas, opt => opt.MapFrom(src =>
                 src.corridaCombinadamaestroNavigation
                     .Concat(src.corridaCombinadasubordinadoNavigation != null
@@ -184,7 +187,10 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForMember(dest => dest.fsc, opt => opt.MapFrom(src => src.oFNavigation.fsc))
                 .ForMember(dest => dest.asignacionDto, opt => opt.MapFrom(src => src.asignacion))
                 .ForMember(dest => dest.serie, opt => opt.MapFrom(src => src.oFNavigation.seriesOf))
-                .ForMember(dest => dest.fechaVencimiento, opt => opt.MapFrom(src => src.oFNavigation.fechaVencimiento))
+                .ForMember(dest => dest.fechaVencimiento, opt => opt.MapFrom(src =>
+                        src.corridaCombinada == true
+                            ? src.fechaVencimiento
+                            : src.oFNavigation.fechaVencimiento))
                 .ForMember(dest => dest.subordinadas, opt => opt.MapFrom(src =>
                 src.corridaCombinadamaestroNavigation
                     .Concat(src.corridaCombinadasubordinadoNavigation != null
@@ -206,7 +212,10 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForMember(dest => dest.tarjetaCampoDto, opt => opt.MapFrom(src => src.tarjetaCampo))
                 .ForMember(dest => dest.tarjetaEtiquetaDto, opt => opt.MapFrom(src => src.tarjetaEtiqueta))
                 .ForMember(dest => dest.asignacionDto, opt => opt.MapFrom(src => src.asignacion))
-                .ForMember(dest => dest.fechaVencimiento, opt => opt.MapFrom(src => src.oFNavigation.fechaVencimiento))
+                .ForMember(dest => dest.fechaVencimiento, opt => opt.MapFrom(src =>
+                        src.corridaCombinada == true
+                            ? src.fechaVencimiento
+                            : src.oFNavigation.fechaVencimiento))
                 .ForMember(dest => dest.secuenciaArea, opt => opt.MapFrom(src => src.idTableroNavigation.idAreaNavigation.secuencia))
                 .ForMember(dest => dest.subordinadas, opt => opt.MapFrom(src =>
                 src.corridaCombinadamaestroNavigation
@@ -242,7 +251,10 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                     .ForMember(dest => dest.unidadMedida, opt => opt.MapFrom(src => src.oFNavigation.unidadMedida))
                     .ForMember(dest => dest.fsc, opt => opt.MapFrom(src => src.oFNavigation.fsc))
                     .ForMember(dest => dest.serie, opt => opt.MapFrom(src => src.oFNavigation.seriesOf))
-                    .ForMember(dest => dest.fechaVencimiento, opt => opt.MapFrom(src => src.oFNavigation.fechaVencimiento))
+                    .ForMember(dest => dest.fechaVencimiento, opt => opt.MapFrom(src =>
+                        src.corridaCombinada == true
+                            ? src.fechaVencimiento
+                            : src.oFNavigation.fechaVencimiento))
                     .ForMember(dest => dest.subordinadas, opt => opt.MapFrom(src =>
                     src.corridaCombinadamaestroNavigation
                         .Concat(src.corridaCombinadasubordinadoNavigation != null
@@ -423,6 +435,11 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                .ForMember(dest => dest.nombreMaquina, opt => opt.MapFrom(src => src.maquinaNavigation.nombreMaquina))
                .ForMember(dest => dest.nombreOperacion, opt => opt.MapFrom(src => src.idOperacionNavigation.nombreOperacion))
                .ForMember(dest => dest.prefijo, opt => opt.MapFrom(src => src.idOperacionNavigation.prefijo))
+               .ForMember(dest => dest.indicador, opt => opt.MapFrom(src => src.idProcesoNavigation.indicador))
+               .ForMember(dest => dest.indicadorProceso, opt => opt.MapFrom(src => src.idProcesoNavigation.indicadorProceso))
+               .ForMember(dest => dest.corridaCombinada, opt => opt.MapFrom(src => src.idProcesoNavigation.corridaCombinada))
+               .ForMember(dest => dest.reproceso, opt => opt.MapFrom(src => src.idProcesoNavigation.reproceso))
+               .ForMember(dest => dest.correlativoCC, opt => opt.MapFrom(src => src.idProcesoNavigation.correlativoCC))
                .ReverseMap();
                 CreateMap<detalleReporte, UpdateDetalleReporteDto>()
                     .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));

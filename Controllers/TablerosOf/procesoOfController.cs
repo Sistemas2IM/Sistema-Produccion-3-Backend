@@ -311,21 +311,48 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         [HttpGet("get/lista/oF/{of}")]
         public async Task<ActionResult<ListaProcesoOfDto>> GetprocesoOfTarjetaLista(int of)
         {
-            var procesos = await _context.procesoOf
+            // Procesos normales ligados a una OF
+            var procesosNormales = await _context.procesoOf
                 .Where(o => o.oF == of && o.archivada == false)
                 .Include(d => d.idPosturaNavigation)
                 .Include(c => c.idTableroNavigation)
-                .ThenInclude(v => v.idAreaNavigation)
+                    .ThenInclude(v => v.idAreaNavigation)
                 .Include(c => c.idTableroNavigation)
-                .ThenInclude(m => m.idMaquinaNavigation)
+                    .ThenInclude(m => m.idMaquinaNavigation)
                 .Include(f => f.oFNavigation)
                 .Include(n => n.tarjetaCampo)
                 .Include(e => e.tarjetaEtiqueta)
                 .Include(a => a.asignacion)
-                .ThenInclude(u => u.userNavigation)
+                    .ThenInclude(u => u.userNavigation)
                 .Include(p => p.corridaCombinadamaestroNavigation)
                 .Include(p => p.corridaCombinadasubordinadoNavigation)
                 .ToListAsync();
+
+            // Procesos maestros de corrida combinada (no ligados directamente a una OF)
+            var procesosMaestros = await _context.procesoOf
+                .Where(p => p.corridaCombinada == true && p.oF == null && p.archivada == false)
+                .Include(p => p.corridaCombinadamaestroNavigation)
+                    .ThenInclude(c => c.subordinadoNavigation)
+                        .ThenInclude(s => s.oFNavigation)
+                .Include(d => d.idPosturaNavigation)
+                .Include(c => c.idTableroNavigation)
+                    .ThenInclude(v => v.idAreaNavigation)
+                .Include(c => c.idTableroNavigation)
+                    .ThenInclude(m => m.idMaquinaNavigation)
+                .Include(n => n.tarjetaCampo)
+                .Include(e => e.tarjetaEtiqueta)
+                .Include(a => a.asignacion)
+                    .ThenInclude(u => u.userNavigation)
+                .ToListAsync();
+
+            // Filtramos solo los procesos maestros cuyos subordinados tengan la OF solicitada
+            var procesosMaestrosConOf = procesosMaestros
+                .Where(m => m.corridaCombinadamaestroNavigation
+                    .Any(c => c.subordinadoNavigation?.oF == of))
+                .ToList();
+
+            // Combinamos ambos conjuntos
+            var procesos = procesosNormales.Concat(procesosMaestrosConOf).ToList();
 
             foreach (var proceso in procesos)
             {
@@ -1375,8 +1402,29 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                     return BadRequest("Tipo de máquina no soportado.");
             }
 
+            // Correlativo para Corrida Combinada
+            if (proceso.corridaCombinada == true)
+            {
+                var ultimos = await _context.procesoOf
+                    .Where(p => p.corridaCombinada == true && p.correlativoCC != null)
+                    .OrderByDescending(p => p.correlativoCC)
+                    .Select(p => p.correlativoCC)
+                    .ToListAsync();
+
+                int ultimoNumero = 0;
+                if (ultimos.Any())
+                {
+                    var ultimo = ultimos.First();
+                    int.TryParse(ultimo, out ultimoNumero);
+                }
+
+                proceso.correlativoCC = (ultimoNumero + 1).ToString("D5");
+            }
+
+
             await _context.SaveChangesAsync();
-            return CreatedAtAction("GetprocesoOf", new { id = proceso.idProceso }, proceso);
+            return Ok(new { idProceso = proceso.idProceso });
+
         }
 
         [HttpPost("post/procesoOfMaquina/batch")]
