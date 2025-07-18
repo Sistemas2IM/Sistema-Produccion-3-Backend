@@ -71,20 +71,43 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
             return Ok(detalleReporteDto);
         }
 
-        // GET: api/detalleOperacionProceso
         [HttpGet("get/of/{of}")]
         public async Task<ActionResult<IEnumerable<DetalleReporteDto>>> GetdetalleOperacionProcesoOf(int of)
         {
-            var operacionProceso = await _context.detalleReporte
-                .Include(o => o.idProcesoNavigation)
-                .Include(m => m.maquinaNavigation)
-                .Include(o => o.idOperacionNavigation)
-                .Where(o => o.idProcesoNavigation.oF == of)
+            // 1. Detalles normales (proceso ligado directamente a la OF)
+            var detallesNormales = await _context.detalleReporte
+                .Include(d => d.idProcesoNavigation)
+                .Include(d => d.maquinaNavigation)
+                .Include(d => d.idOperacionNavigation)
+                .Where(d => d.idProcesoNavigation.oF == of)
                 .ToListAsync();
-            var operacionProcesoDto = _mapper.Map<List<DetalleReporteDto>>(operacionProceso);
 
-            return Ok(operacionProcesoDto);
+            // 2. Detalles de procesos maestros (sin OF, pero con subordinados que sí la tienen)
+            var detallesMaestros = await _context.detalleReporte
+                .Include(d => d.idProcesoNavigation)
+                    .ThenInclude(p => p.corridaCombinadamaestroNavigation)
+                        .ThenInclude(c => c.subordinadoNavigation)
+                            .ThenInclude(s => s.oFNavigation)
+                .Include(d => d.maquinaNavigation)
+                .Include(d => d.idOperacionNavigation)
+                .Where(d => d.idProcesoNavigation.oF == null && d.idProcesoNavigation.corridaCombinada == true)
+                .ToListAsync();
+
+            // 3. Filtrar solo los detalles de procesos maestros que tengan al menos un subordinado con esa OF
+            var detallesMaestrosFiltrados = detallesMaestros
+                .Where(d => d.idProcesoNavigation.corridaCombinadamaestroNavigation
+                    .Any(c => c.subordinadoNavigation?.oF == of))
+                .ToList();
+
+            // 4. Combinar ambos resultados
+            var detallesCombinados = detallesNormales.Concat(detallesMaestrosFiltrados).ToList();
+
+            // 5. Mapear a DTO
+            var detallesDto = _mapper.Map<List<DetalleReporteDto>>(detallesCombinados);
+
+            return Ok(detallesDto);
         }
+
 
         // PUT: api/detalleReporte/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754

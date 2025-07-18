@@ -107,7 +107,7 @@ public partial class procesoOf
     public int? lineNumSAP { get; set; }
 
     [StringLength(25)]
-    public string indicadorProces { get; set; }
+    public string indicadorProceso { get; set; }
 
     public bool? reproceso { get; set; }
 
