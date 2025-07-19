@@ -65,6 +65,9 @@ public partial class usuario
     public virtual rol idRolNavigation { get; set; }
 
     [InverseProperty("usuario")]
+    public virtual ICollection<logCambiosOf> logCambiosOf { get; set; } = new List<logCambiosOf>();
+
+    [InverseProperty("usuario")]
     public virtual ICollection<logCambiosProceso> logCambiosProceso { get; set; } = new List<logCambiosProceso>();
 
     [InverseProperty("usuarioNavigation")]

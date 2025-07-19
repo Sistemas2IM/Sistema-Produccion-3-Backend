@@ -167,6 +167,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[logCambiosOf]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[logCambiosProceso]",
          "ObjectType": 0
       },
