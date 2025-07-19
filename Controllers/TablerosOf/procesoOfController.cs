@@ -1199,9 +1199,6 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             return Ok("Proceso Of actualizado exitosamente.");
         }
 
-
-
-
         // POST: api/procesoOf
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("post")]
