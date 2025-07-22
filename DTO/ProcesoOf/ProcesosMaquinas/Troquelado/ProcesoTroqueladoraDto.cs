@@ -1,9 +1,13 @@
-﻿namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.Troquelado
+﻿using System.Text.Json.Serialization;
+
+namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.Troquelado
 {
     public class ProcesoTroqueladoraDto
     {
+        [JsonIgnore]
         public int idProcesoTroqueladora { get; set; }
 
+        [JsonIgnore]
         public int? idProceso { get; set; }
 
         public string? idTroquel { get; set; }

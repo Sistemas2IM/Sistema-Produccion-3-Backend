@@ -1,4 +1,7 @@
-﻿namespace Sistema_Produccion_3_Backend.DTO.CorridaCombinada
+﻿using Sistema_Produccion_3_Backend.Services;
+using System.Text.Json.Serialization;
+
+namespace Sistema_Produccion_3_Backend.DTO.CorridaCombinada
 {
     public class CorridaCombinadaDto
     {
@@ -14,7 +17,8 @@
 
         public string? cantOf { get; set; } // de subordinado / proceso of
 
-        public string? fechaVencmiento { get; set; } // de subordinado / proceso of
+        //[JsonConverter(typeof(JsonDateConverter))]
+        public DateTime? fechaVencmiento { get; set; } // de subordinado / proceso of
 
         public string? serie { get; set; } // de subordinado / proceso of
     }
