@@ -1,8 +1,13 @@
-﻿namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.Pegadora
+﻿using System.Text.Json.Serialization;
+
+namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.Pegadora
 {
     public class ProcesoPegadoraDto
     {
+        [JsonIgnore]
         public int idProcesoPegadora { get; set; }
+
+        [JsonIgnore]
 
         public int? idProceso { get; set; }
 

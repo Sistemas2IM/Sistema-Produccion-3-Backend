@@ -14,6 +14,10 @@ namespace Sistema_Produccion_3_Backend.Models
         public string maquina { get; set; }
         [StringLength(22)]
         public string indicador { get; set; }
+        [StringLength(25)]
+        public string indicadorProceso { get; set; }
+        public bool? reproceso { get; set; }
+        public bool? corridaCombinada { get; set; }
         [Column("horas_mq_planificadas", TypeName = "decimal(38,2)")]
         public decimal? horas_mq_planificadas { get; set; }
         [Column("horas_mq_arreglo_planificadas", TypeName = "decimal(38,2)")]

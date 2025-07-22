@@ -3,6 +3,7 @@ using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Sistema_Produccion_3_Backend.ApiKey;
@@ -33,9 +34,8 @@ builder.Services.AddSwaggerGen();
 // Configuración de HttpClient para llamadas HTTP
 builder.Services.AddHttpClient();
 
-// Automapper - uso de DTO
-builder.Services.AddAutoMapper(typeof(MappingProfile));
-builder.Services.AddAutoMapper(typeof(Program));
+// AUTOMAPPER
+builder.Services.AddAutoMapper(cfg => cfg.AddProfile<MappingProfile>());
 
 // API KEY de seguridad ------------------------------------------------------------
 builder.Services.AddTransient<IApiKeyValidation, ApiKeyValidation>();
