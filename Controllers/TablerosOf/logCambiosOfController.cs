@@ -46,6 +46,19 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             return Ok(logCambiosOfDto);
         }
 
+        // GET: API/logCambiosOfController
+        [HttpGet("get/oF/{id}")]
+        public async Task<ActionResult<IEnumerable<logCambiosOfDto>>> GetlogCambiosOfByOF(int id)
+        {
+            var logCambiosOf = await _context.logCambiosOf
+                .Where(x => x.oF == id)
+                .ToListAsync();
+
+            var logCambiosOfDto = _mapper.Map<List<logCambiosOfDto>>(logCambiosOf);
+
+            return Ok(logCambiosOfDto);
+        }
+
         // POST api/<logCambiosOfController>
         [HttpPost("post")]
         public async Task<ActionResult<logCambiosOfDto>> PostlogCambiosOf(AddlogCambiosOfDto addlogCambiosOfDto)

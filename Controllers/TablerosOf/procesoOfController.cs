@@ -19,6 +19,7 @@ using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.Troquelado;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.UpdateMaquina;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.UpdateSAP;
 using Sistema_Produccion_3_Backend.Models;
+using Sistema_Produccion_3_Backend.Services.RequestLock;
 using System.Diagnostics;
 using System.Linq;
 using System.Text.Json;
@@ -31,11 +32,13 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
     {
         private readonly base_nuevaContext _context;
         private readonly IMapper _mapper;
+        private readonly IRequestLockService _lockService;
 
-        public procesoOfController(base_nuevaContext context, IMapper mapper)
+        public procesoOfController(base_nuevaContext context, IMapper mapper, IRequestLockService lockService)
         {
             _context = context;
             _mapper = mapper;
+            _lockService = lockService;
         }
 
         // GET: api/procesoOf
@@ -1252,6 +1255,11 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         [HttpPost("post")]
         public async Task<ActionResult<procesoOf>> PostprocesoOf(AddProcesoOfDto addProcesoOf)
         {
+            // Supongamos que oF debe ser único
+            var lockKey = $"post-proceso-of-{addProcesoOf.oF}";
+
+            using var _ = await _lockService.AcquireLockAsync(lockKey);
+
             var procesoOf = _mapper.Map<procesoOf>(addProcesoOf);
             _context.procesoOf.Add(procesoOf);
             await _context.SaveChangesAsync();
