@@ -1267,6 +1267,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             return CreatedAtAction("GetprocesoOf", new { id = procesoOf.idProceso }, procesoOf);
         }
 
+
         // POST: BATCH
         [HttpPost("post/BatchAdd")]
         public async Task<IActionResult> BatchAddProcesoOf([FromBody] BatchAddProcesoOf batchAddDto)
