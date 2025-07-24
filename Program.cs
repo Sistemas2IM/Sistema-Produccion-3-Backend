@@ -1,17 +1,19 @@
-using Microsoft.EntityFrameworkCore;
-using Sistema_Produccion_3_Backend.Models;
-using Sistema_Produccion_3_Backend.AutomapperProfiles;
-using Sistema_Produccion_3_Backend.Services;
-using System.Text;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using Sistema_Produccion_3_Backend.ApiKey;
-using Microsoft.OpenApi.Models;
-using FluentValidation.AspNetCore;
 using FluentValidation;
-using Sistema_Produccion_3_Backend.Validators.Auth;
+using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using Sistema_Produccion_3_Backend.ApiKey;
+using Sistema_Produccion_3_Backend.AutomapperProfiles;
+using Sistema_Produccion_3_Backend.Models;
+using Sistema_Produccion_3_Backend.Services;
+using Sistema_Produccion_3_Backend.Services.RequestLock;
+using Sistema_Produccion_3_Backend.Validators.Auth;
 using Sistema_Produccion_3_Backend.Validators.ProductoTerminado;
+using System.Text;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -32,9 +34,8 @@ builder.Services.AddSwaggerGen();
 // Configuración de HttpClient para llamadas HTTP
 builder.Services.AddHttpClient();
 
-// Automapper - uso de DTO
-builder.Services.AddAutoMapper(typeof(MappingProfile));
-builder.Services.AddAutoMapper(typeof(Program));
+// AUTOMAPPER
+builder.Services.AddAutoMapper(cfg => cfg.AddProfile<MappingProfile>());
 
 // API KEY de seguridad ------------------------------------------------------------
 builder.Services.AddTransient<IApiKeyValidation, ApiKeyValidation>();
@@ -69,6 +70,9 @@ builder.Services.AddSwaggerGen(c =>
         }
     });
 });
+
+builder.Services.AddSingleton<IRequestLockService, RequestLockService>();
+
 //---------------------------------------------------------------------------------
 
 // Servicios de Autenticación de Usuarios

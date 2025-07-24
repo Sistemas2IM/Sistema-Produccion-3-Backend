@@ -94,6 +94,12 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
 
         public int? secuenciaArea { get; set; }
 
+        public string? indicadorProceso { get; set; }
+
+        public bool? reproceso { get; set; }
+
+        public string? correlativoCC { get; set; }
+
         public List<AsignacionDto>? asignacionDto { get; set; }
 
         public ProcesoPosturasOfDto? PosturasOfDto { get; set; }

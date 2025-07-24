@@ -20,6 +20,16 @@ namespace Sistema_Produccion_3_Backend.DTO.ReporteOperador.DetalleReporte
 
         public int? idTipoCierre { get; set; }
 
+        public string? indicador { get; set; }
+
+        public string? indicadorProceso { get; set; }
+
+        public bool? corridaCombinada { get; set; }
+
+        public bool? reproceso { get; set; }
+
+        public string? correlativoCC { get; set; }
+
         public int? oF { get; set; }
 
         public int? numeroFila { get; set; }

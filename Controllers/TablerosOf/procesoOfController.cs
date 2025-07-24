@@ -19,6 +19,7 @@ using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.Troquelado;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.UpdateMaquina;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.UpdateSAP;
 using Sistema_Produccion_3_Backend.Models;
+using Sistema_Produccion_3_Backend.Services.RequestLock;
 using System.Diagnostics;
 using System.Linq;
 using System.Text.Json;
@@ -31,11 +32,13 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
     {
         private readonly base_nuevaContext _context;
         private readonly IMapper _mapper;
+        private readonly IRequestLockService _lockService;
 
-        public procesoOfController(base_nuevaContext context, IMapper mapper)
+        public procesoOfController(base_nuevaContext context, IMapper mapper, IRequestLockService lockService)
         {
             _context = context;
             _mapper = mapper;
+            _lockService = lockService;
         }
 
         // GET: api/procesoOf
@@ -97,115 +100,163 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
 
         [HttpGet("get/filtros")]
         public async Task<ActionResult<IEnumerable<ProcesoOfDto>>> GetprocesoOffiltros(
-        [FromQuery] DateTime? fechaInicio = null,   // Parámetro opcional para la fecha de inicio del rango
-        [FromQuery] DateTime? fechaFin = null,     // Parámetro opcional para la fecha de fin del rango
-        [FromQuery] string? cliente = null,         // Parámetro opcional para el cliente
-        [FromQuery] string? ejecutivo = null,
-        [FromQuery] string? articulo = null,     // Parámetro opcional para el artículo
-        [FromQuery] int? oF = null,               // Parámetro opcional para el oF
-        [FromQuery] int? oV = null,               // Parámetro opcional para el oV
-        [FromQuery] string? lineaNegocio = null, // Parámetro opcional para la línea de negocio
-        [FromQuery] string? idsEtiquetas = null, // Parámetro opcional para las etiquetas
-        [FromQuery] int? idProceso = null,        // Parámetro opcional para la postura
-        [FromQuery] bool mostrarArchivados = false,          // Parámetro opcional para la postura
-        [FromQuery] int? tablero = null,
-        [FromQuery] string? disenador = null)      // Parámetro opcional para el ejecutivo
-
+    [FromQuery] DateTime? fechaInicio = null,
+    [FromQuery] DateTime? fechaFin = null,
+    [FromQuery] string? cliente = null,
+    [FromQuery] string? ejecutivo = null,
+    [FromQuery] string? articulo = null,
+    [FromQuery] int? oF = null,
+    [FromQuery] int? oV = null,
+    [FromQuery] string? lineaNegocio = null,
+    [FromQuery] string? idsEtiquetas = null,
+    [FromQuery] int? idProceso = null,
+    [FromQuery] bool mostrarArchivados = false,
+    [FromQuery] int? tablero = null,
+    [FromQuery] string? disenador = null)
         {
-            // Consulta base
-            var query = _context.procesoOf
+            // ============================
+            // 1. Procesos NORMALES (con OF)
+            // ============================
+            var queryNormales = _context.procesoOf
                 .OrderBy(p => p.posicion)
-                .Include(u => u.detalleReporte)
-                .ThenInclude(o => o.idOperacionNavigation)
+                .Include(u => u.detalleReporte).ThenInclude(o => o.idOperacionNavigation)
                 .Include(m => m.tarjetaCampo)
-                .Include(s => s.tarjetaEtiqueta)
-                .ThenInclude(e => e.idEtiquetaNavigation)
+                .Include(s => s.tarjetaEtiqueta).ThenInclude(e => e.idEtiquetaNavigation)
                 .Include(f => f.oFNavigation)
                 .Include(l => l.idPosturaNavigation)
                 .Include(v => v.idMaterialNavigation)
-                .Include(a => a.asignacion)
-                .ThenInclude(u => u.userNavigation)
+                .Include(a => a.asignacion).ThenInclude(u => u.userNavigation)
                 .Include(p => p.corridaCombinadamaestroNavigation)
                 .Include(p => p.corridaCombinadasubordinadoNavigation)
+                .Where(p => p.oF != null && (mostrarArchivados || p.archivada == false))
                 .AsQueryable();
 
-            // Aplicar filtros condicionales
+            // Filtros para procesos normales
             if (fechaInicio.HasValue && fechaFin.HasValue)
-            {
-                // Filtrar por rango de fechas (fechaVencimiento entre fechaInicio y fechaFin)
-                query = query.Where(p => p.fechaVencimiento >= fechaInicio.Value && p.fechaVencimiento <= fechaFin.Value);
-            }
+                queryNormales = queryNormales.Where(p => p.fechaVencimiento >= fechaInicio && p.fechaVencimiento <= fechaFin);
             else if (fechaInicio.HasValue)
-            {
-                // Si solo se proporciona fechaInicio, filtrar desde esa fecha en adelante
-                query = query.Where(p => p.fechaVencimiento >= fechaInicio.Value);
-            }
+                queryNormales = queryNormales.Where(p => p.fechaVencimiento >= fechaInicio);
             else if (fechaFin.HasValue)
-            {
-                // Si solo se proporciona fechaFin, filtrar hasta esa fecha
-                query = query.Where(p => p.fechaVencimiento <= fechaFin.Value);
-            }
+                queryNormales = queryNormales.Where(p => p.fechaVencimiento <= fechaFin);
+
             if (!string.IsNullOrEmpty(cliente))
-            {
-                query = query.Where(p => p.oFNavigation.clienteOf.Contains(cliente));
-            }
+                queryNormales = queryNormales.Where(p => p.oFNavigation.clienteOf.Contains(cliente));
+
             if (!string.IsNullOrEmpty(ejecutivo))
-            {
-                query = query.Where(p => p.oFNavigation.vendedorOf.Contains(ejecutivo));
-            }
+                queryNormales = queryNormales.Where(p => p.oFNavigation.vendedorOf.Contains(ejecutivo));
+
             if (!string.IsNullOrEmpty(articulo))
-            {
-                query = query.Where(p => p.oFNavigation.productoOf.Contains(articulo));
-            }
+                queryNormales = queryNormales.Where(p => p.productoOf.Contains(articulo));
+
             if (oF.HasValue)
-            {
-                query = query.Where(p => p.oF == oF.Value);
-            }
+                queryNormales = queryNormales.Where(p => p.oF == oF);
+
             if (oV.HasValue)
-            {
-                query = query.Where(p => p.oV == oV.Value);
-            }
+                queryNormales = queryNormales.Where(p => p.oV == oV);
+
             if (!string.IsNullOrEmpty(lineaNegocio))
-            {
-                query = query.Where(p => p.oFNavigation.lineaDeNegocio.Contains(lineaNegocio));
-            }
+                queryNormales = queryNormales.Where(p => p.oFNavigation.lineaDeNegocio.Contains(lineaNegocio));
+
             if (!string.IsNullOrEmpty(disenador))
-            {
-                query = query.Where(p =>
+                queryNormales = queryNormales.Where(p =>
                     p.asignacion.Any(a =>
-                        (a.userNavigation.nombres + " " + a.userNavigation.apellidos).Contains(disenador)
-                    )
-                );
-            }
+                        (a.userNavigation.nombres + " " + a.userNavigation.apellidos).Contains(disenador)));
+
             if (!string.IsNullOrEmpty(idsEtiquetas))
             {
-                // Convertir la cadena de IDs de etiquetas en una lista de enteros
-                var ids = idsEtiquetas.Split(',')
-                    .Select(int.Parse)
-                    .ToList();
-
-                // Filtrar por etiquetas - añadiendo .Value para obtener el int de un int?
-                query = query.Where(p => p.tarjetaEtiqueta
-                    .Any(te => te.idEtiqueta.HasValue && ids.Contains(te.idEtiqueta.Value)));
+                var ids = idsEtiquetas.Split(',').Select(int.Parse).ToList();
+                queryNormales = queryNormales.Where(p =>
+                    p.tarjetaEtiqueta.Any(te => te.idEtiqueta.HasValue && ids.Contains(te.idEtiqueta.Value)));
             }
+
             if (idProceso.HasValue)
-            {
-                query = query.Where(p => p.idProceso == idProceso.Value);
-            }
+                queryNormales = queryNormales.Where(p => p.idProceso == idProceso);
+
             if (tablero.HasValue)
+                queryNormales = queryNormales.Where(p => p.idTablero == tablero.Value);
+
+            var procesosNormales = await queryNormales.ToListAsync();
+
+            // ============================================
+            // 2. Procesos MAESTROS de corrida combinada
+            // ============================================
+            var queryMaestros = _context.procesoOf
+                .Where(p => p.corridaCombinada == true && p.oF == null && (mostrarArchivados || p.archivada == false))
+                .Include(p => p.corridaCombinadamaestroNavigation)
+                    .ThenInclude(c => c.subordinadoNavigation)
+                        .ThenInclude(s => s.oFNavigation)
+                .Include(p => p.detalleReporte).ThenInclude(o => o.idOperacionNavigation)
+                .Include(p => p.tarjetaCampo)
+                .Include(p => p.tarjetaEtiqueta).ThenInclude(e => e.idEtiquetaNavigation)
+                .Include(p => p.idPosturaNavigation)
+                .Include(p => p.idMaterialNavigation)
+                .Include(p => p.asignacion).ThenInclude(u => u.userNavigation);
+
+            var procesosMaestrosRaw = await queryMaestros.ToListAsync();
+
+            // Filtrar procesos maestros con base en filtros aplicados a subordinados
+            var procesosMaestros = procesosMaestrosRaw
+                .Where(m => m.corridaCombinadamaestroNavigation.Any(c =>
+                {
+                    var sub = c.subordinadoNavigation;
+                    var ofNav = sub?.oFNavigation;
+
+                    if (sub == null || ofNav == null) return false;
+
+                    return
+                        (!fechaInicio.HasValue || sub.fechaVencimiento >= fechaInicio) &&
+                        (!fechaFin.HasValue || sub.fechaVencimiento <= fechaFin) &&
+                        (string.IsNullOrEmpty(cliente) || ofNav.clienteOf.Contains(cliente)) &&
+                        (string.IsNullOrEmpty(ejecutivo) || ofNav.vendedorOf.Contains(ejecutivo)) &&
+                        (string.IsNullOrEmpty(articulo) || ofNav.productoOf.Contains(articulo)) &&
+                        (!oF.HasValue || sub.oF == oF) &&
+                        (!oV.HasValue || sub.oV == oV) &&
+                        (string.IsNullOrEmpty(lineaNegocio) || ofNav.lineaDeNegocio.Contains(lineaNegocio));
+                }))
+                .ToList();
+
+            // ========================
+            // 3. Combinar resultados
+            // ========================
+            var procesos = procesosNormales.Concat(procesosMaestros).ToList();
+
+            // ========================
+            // 4. Cargar subordinados
+            // ========================
+            foreach (var proceso in procesos)
             {
-                query = query.Where(p => p.idTablero == tablero.Value);
+                if (proceso.corridaCombinadamaestroNavigation != null)
+                {
+                    foreach (var corrida in proceso.corridaCombinadamaestroNavigation)
+                    {
+                        if (corrida.subordinado != null)
+                        {
+                            var subordinado = await _context.procesoOf
+                                .Include(p => p.oFNavigation)
+                                .FirstOrDefaultAsync(p => p.idProceso == corrida.subordinado);
+
+                            corrida.subordinadoNavigation = subordinado;
+                        }
+                    }
+                }
+
+                if (proceso.corridaCombinadasubordinadoNavigation?.subordinado != null)
+                {
+                    var subordinado = await _context.procesoOf
+                        .Include(p => p.oFNavigation)
+                        .FirstOrDefaultAsync(p => p.idProceso == proceso.corridaCombinadasubordinadoNavigation.subordinado);
+
+                    proceso.corridaCombinadasubordinadoNavigation.subordinadoNavigation = subordinado;
+                }
             }
-           // ✅ Aplicar el filtro solo si NO se quieren mostrar los archivados
-            if (!mostrarArchivados)
-                        query = query.Where(p => p.archivada == false);
 
-            // Ejecutar la consulta y mapear a DTO
-            var procesoOf = await query.ToListAsync();
-            var procesoOfDto = _mapper.Map<List<ProcesoOfDto>>(procesoOf);
-
+            // ========================
+            // 5. Mapear y devolver DTOs
+            // ========================
+            var procesoOfDto = _mapper.Map<List<ProcesoOfDto>>(procesos);
             return Ok(procesoOfDto);
         }
+
 
         // GET GENERAL
         [HttpGet("get/{id}")]
@@ -311,21 +362,48 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         [HttpGet("get/lista/oF/{of}")]
         public async Task<ActionResult<ListaProcesoOfDto>> GetprocesoOfTarjetaLista(int of)
         {
-            var procesos = await _context.procesoOf
+            // Procesos normales ligados a una OF
+            var procesosNormales = await _context.procesoOf
                 .Where(o => o.oF == of && o.archivada == false)
                 .Include(d => d.idPosturaNavigation)
                 .Include(c => c.idTableroNavigation)
-                .ThenInclude(v => v.idAreaNavigation)
+                    .ThenInclude(v => v.idAreaNavigation)
                 .Include(c => c.idTableroNavigation)
-                .ThenInclude(m => m.idMaquinaNavigation)
+                    .ThenInclude(m => m.idMaquinaNavigation)
                 .Include(f => f.oFNavigation)
                 .Include(n => n.tarjetaCampo)
                 .Include(e => e.tarjetaEtiqueta)
                 .Include(a => a.asignacion)
-                .ThenInclude(u => u.userNavigation)
+                    .ThenInclude(u => u.userNavigation)
                 .Include(p => p.corridaCombinadamaestroNavigation)
                 .Include(p => p.corridaCombinadasubordinadoNavigation)
                 .ToListAsync();
+
+            // Procesos maestros de corrida combinada (no ligados directamente a una OF)
+            var procesosMaestros = await _context.procesoOf
+                .Where(p => p.corridaCombinada == true && p.oF == null && p.archivada == false)
+                .Include(p => p.corridaCombinadamaestroNavigation)
+                    .ThenInclude(c => c.subordinadoNavigation)
+                        .ThenInclude(s => s.oFNavigation)
+                .Include(d => d.idPosturaNavigation)
+                .Include(c => c.idTableroNavigation)
+                    .ThenInclude(v => v.idAreaNavigation)
+                .Include(c => c.idTableroNavigation)
+                    .ThenInclude(m => m.idMaquinaNavigation)
+                .Include(n => n.tarjetaCampo)
+                .Include(e => e.tarjetaEtiqueta)
+                .Include(a => a.asignacion)
+                    .ThenInclude(u => u.userNavigation)
+                .ToListAsync();
+
+            // Filtramos solo los procesos maestros cuyos subordinados tengan la OF solicitada
+            var procesosMaestrosConOf = procesosMaestros
+                .Where(m => m.corridaCombinadamaestroNavigation
+                    .Any(c => c.subordinadoNavigation?.oF == of))
+                .ToList();
+
+            // Combinamos ambos conjuntos
+            var procesos = procesosNormales.Concat(procesosMaestrosConOf).ToList();
 
             foreach (var proceso in procesos)
             {
@@ -1172,20 +1250,23 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             return Ok("Proceso Of actualizado exitosamente.");
         }
 
-
-
-
         // POST: api/procesoOf
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("post")]
         public async Task<ActionResult<procesoOf>> PostprocesoOf(AddProcesoOfDto addProcesoOf)
         {
+            // Supongamos que oF debe ser único
+            var lockKey = $"post-proceso-of-{addProcesoOf.oF}";
+
+            using var _ = await _lockService.AcquireLockAsync(lockKey);
+
             var procesoOf = _mapper.Map<procesoOf>(addProcesoOf);
             _context.procesoOf.Add(procesoOf);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetprocesoOf", new { id = procesoOf.idProceso }, procesoOf);
         }
+
 
         // POST: BATCH
         [HttpPost("post/BatchAdd")]
@@ -1375,8 +1456,29 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                     return BadRequest("Tipo de máquina no soportado.");
             }
 
+            // Correlativo para Corrida Combinada
+            if (proceso.corridaCombinada == true)
+            {
+                var ultimos = await _context.procesoOf
+                    .Where(p => p.corridaCombinada == true && p.correlativoCC != null)
+                    .OrderByDescending(p => p.correlativoCC)
+                    .Select(p => p.correlativoCC)
+                    .ToListAsync();
+
+                int ultimoNumero = 0;
+                if (ultimos.Any())
+                {
+                    var ultimo = ultimos.First();
+                    int.TryParse(ultimo, out ultimoNumero);
+                }
+
+                proceso.correlativoCC = (ultimoNumero + 1).ToString("D5");
+            }
+
+
             await _context.SaveChangesAsync();
-            return CreatedAtAction("GetprocesoOf", new { id = proceso.idProceso }, proceso);
+            return Ok(new { idProceso = proceso.idProceso });
+
         }
 
         [HttpPost("post/procesoOfMaquina/batch")]

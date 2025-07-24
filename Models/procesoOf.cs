@@ -106,6 +106,14 @@ public partial class procesoOf
 
     public int? lineNumSAP { get; set; }
 
+    [StringLength(25)]
+    public string indicadorProceso { get; set; }
+
+    public bool? reproceso { get; set; }
+
+    [StringLength(50)]
+    public string correlativoCC { get; set; }
+
     [InverseProperty("idProcesoNavigation")]
     public virtual ICollection<asignacion> asignacion { get; set; } = new List<asignacion>();
 

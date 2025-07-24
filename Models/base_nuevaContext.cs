@@ -89,6 +89,8 @@ public partial class base_nuevaContext : DbContext
 
     public virtual DbSet<listasEmpaque> listasEmpaque { get; set; }
 
+    public virtual DbSet<logCambiosOf> logCambiosOf { get; set; }
+
     public virtual DbSet<logCambiosProceso> logCambiosProceso { get; set; }
 
     public virtual DbSet<maquinas> maquinas { get; set; }
@@ -887,6 +889,19 @@ public partial class base_nuevaContext : DbContext
             entity.Property(e => e.empaque).UseCollation("SQL_Latin1_General_CP1_CI_AS");
         });
 
+        modelBuilder.Entity<logCambiosOf>(entity =>
+        {
+            entity.HasKey(e => e.log_id).HasName("PK__logCambi__9E2397E0DEEB3C79");
+
+            entity.Property(e => e.estado_anterior).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.nuevo_estado).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.usuario_id).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+
+            entity.HasOne(d => d.oFNavigation).WithMany(p => p.logCambiosOf).HasConstraintName("FK_OF");
+
+            entity.HasOne(d => d.usuario).WithMany(p => p.logCambiosOf).HasConstraintName("FK_USUARIO_LOG");
+        });
+
         modelBuilder.Entity<logCambiosProceso>(entity =>
         {
             entity.HasKey(e => e.log_id).HasName("PK__logCambi__9E2397E0C8C6A3C6");
@@ -1274,6 +1289,7 @@ public partial class base_nuevaContext : DbContext
             entity.Property(e => e.nombreTarjeta).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.productoOf).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.programadoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.reproceso).HasDefaultValue(false);
             entity.Property(e => e.serieNumeracion).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.tipoMaquinaSAP).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.tiroRetiro).UseCollation("SQL_Latin1_General_CP1_CI_AS");

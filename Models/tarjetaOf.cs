@@ -108,6 +108,9 @@ public partial class tarjetaOf
     public virtual estadosOf idEstadoOfNavigation { get; set; }
 
     [InverseProperty("oFNavigation")]
+    public virtual ICollection<logCambiosOf> logCambiosOf { get; set; } = new List<logCambiosOf>();
+
+    [InverseProperty("oFNavigation")]
     public virtual ICollection<notasOf> notasOf { get; set; } = new List<notasOf>();
 
     [InverseProperty("oFNavigation")]
