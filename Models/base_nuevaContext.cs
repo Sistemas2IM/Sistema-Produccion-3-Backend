@@ -15,6 +15,8 @@ public partial class base_nuevaContext : DbContext
 
     public virtual DbSet<HistoricoDatos> HistoricoDatos { get; set; }
 
+    public virtual DbSet<anexos_NEXO> anexos_NEXO { get; set; }
+
     public virtual DbSet<areas> areas { get; set; }
 
     public virtual DbSet<articuloOv> articuloOv { get; set; }
@@ -208,6 +210,13 @@ public partial class base_nuevaContext : DbContext
             entity.Property(e => e.IDProcedimiento).UseCollation("SQL_Latin1_General_CP1_CI_AS");
         });
 
+        modelBuilder.Entity<anexos_NEXO>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__anexos_N__3214EC076FC81350");
+
+            entity.Property(e => e.FechaSubida).HasDefaultValueSql("(getdate())");
+        });
+
         modelBuilder.Entity<areas>(entity =>
         {
             entity.HasKey(e => e.idArea).HasName("PK_AREAS");
@@ -230,7 +239,7 @@ public partial class base_nuevaContext : DbContext
 
         modelBuilder.Entity<asignacion>(entity =>
         {
-            entity.HasKey(e => e.idAsignacion).HasName("PK_ASIGNACION");
+            entity.HasKey(e => e.idAsignacion).HasName("PK__asignaci__E1714478BB8AE70F");
 
             entity.Property(e => e.user).UseCollation("SQL_Latin1_General_CP1_CI_AS");
 

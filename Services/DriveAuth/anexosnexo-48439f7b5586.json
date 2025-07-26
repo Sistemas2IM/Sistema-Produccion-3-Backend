@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "anexosnexo",
+  "private_key_id": "48439f7b55864f36494cb42bcee2038cac140972",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCiLMw9I4zXbuDW\nWcoilBLVCR8EaDb1npTJoX+ONBrxVqlA+kvWtcypHRvHNBe/rYFXqyxZ848tKUhl\nPFpXcYJ+rgQCjuf0Ai+Dfmw4htjuauMJgCERZPW4nW4a7c/blhuN+Xtbm64M5re+\nJ3G80cU6JLGu/PjrbH8zq3ZW9/0gS+yViBHYm29O4d6vhKLHuTYPi+7AaSk46c5T\nXdO73OT4aMOewsJH1yRuVGcaIiK+3YOlUrZ7pB9HJgkhgvksgKGUhfIBS9ZdXHQf\n9apgFBewWOBSaLYkwD71qbF7PkyKYJlpi5IXZzH4nHQQqKVGpA0+oZuqz3pdZYj6\nmVTNK/KXAgMBAAECggEAGqoh9KV9OUi+SBAgV5ogFI343xkhfDYUQai/l8qCaY71\nqjzdLlLa8S1bjV/HzdjBzP/UfX+52VOR1y9arUj5C0oiV6dWhPy9AjJNqeemEGFb\nrgq2pS0D59Rer6fNRs4B/tB302Kf9fgTWv0SStj0xDAXVO28Ib1Hlt/Ix9jjciU2\niDjZcbVYf91ImIr3spZG9Rlk24l6zXmaNIGi2Zk8YjdfAbQajm/q5yvwfDl+8yKg\n9GpSgxZomB9J1vOhf8zw5m8lMxhjr++fTNJsm2dug3XimgrPopD94aplOG5SS0qr\ndLloKYR7F2uo5mDF7IaL/Zgtutg5mDWxJOdRM0CjkQKBgQDXXc3osW4XMqiFoUOa\nEEGvC55Ej/33Wb+1gfyrmtTp5f8C94W3rnjlKm0SvKP6bYlG+pSvd8461aGrC6AD\nfAnMr5MFFURwrLkJDWq5Cs3ztglQ2vcHHgzPGWbsYQ94xdhHnz5Y5B/4EPEmccuh\nKqBEjUeg1BVYffEwhi7QZMd80QKBgQDAxdkTyyg1JV0s3uRKYaGc6TFW33TqXMj1\nsI/qRUJsw9pAWT1YFWIot5hR5wOclZIlqybGwLjhSG5bZSqXDXPtrS1IaCLv/LPs\nlpsch0twwMW0mfdHxEWMI9wRi+XNil/wBLN6lUBMWuZABLhNqvDxnKSJDRv6u9jO\n2TVnlpGy5wKBgDEAD7xUukae6QbWZSolbrxj+VOCK3devSaP96wXoz/Aa6ACLzNW\nh/0kBQMRVoHA8E3s721o5cwvFQR0tah1TUl73Qh4CUVVlxf/LHwDgE5l6YKy/ydo\nZ+Oq1OcNQlbpNMc+7RGOfdOUDzn/BCScLTDLsDNgbabfqMOwk/AoLdcxAoGBALSP\nXHGOw31sHubtazVEV0UKox00tmTiPZTrKRGMh9gqZl4JeEzt0oBC3xgv4pEjA73m\nnq5hS4ov9rYCfy72+dPwdk6ww7C3qKt8sZK6Iu5ckZJE+HovG9lUqUeCGuA3sP62\n2ImEDLK4HZxvD1YoPACC8RYxwjhLBJtSlhQN0zCXAoGACszGAb+TVd6mxwoFpIbv\nkwDx5M0Uj/1hg8GxEjURUcjlvlHTwZMd/JuJnlgurrvr8eMfYvgty+ExupD81Qhc\nEcykYtrvnqgFVIj/ZC33ZgUFXQb6caYxAqfPz3Rhy9mfR/kgc0ZMPbxp8Umokg9D\npWlANnMs/JNh+Zp8P48Psmg=\n-----END PRIVATE KEY-----\n",
+  "client_email": "anexos-nexo-uploader@anexosnexo.iam.gserviceaccount.com",
+  "client_id": "105228861305111493497",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/anexos-nexo-uploader%40anexosnexo.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

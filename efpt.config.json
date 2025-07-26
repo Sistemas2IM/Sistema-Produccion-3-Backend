@@ -15,6 +15,10 @@
    "T4TemplatePath": null,
    "Tables": [
       {
+         "Name": "[dbo].[anexos_NEXO]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[areas]",
          "ObjectType": 0
       },

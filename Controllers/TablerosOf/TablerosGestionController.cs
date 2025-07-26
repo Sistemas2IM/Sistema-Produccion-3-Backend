@@ -292,6 +292,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                         // Encargados con acceso completo
                         case "Eliseo Menjívar":
                         case "Fátima García":
+                        case "Oscar Chavez":
                             // Ven todo excepto oficina y freelance
                             query = query.Where(p => p.oFNavigation.vendedorOf != "Oficina");
                             break;
@@ -399,6 +400,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                     // Encargados con acceso completo
                     case "Eliseo Menjívar":
                     case "Fátima García":
+                    case "Oscar Chavez":
                         // Ven todo excepto oficina y freelance
                         query = query.Where(t => t.vendedorOf != "Oficina" /*&&
                                                t.vendedorOf != "freelance"*/)

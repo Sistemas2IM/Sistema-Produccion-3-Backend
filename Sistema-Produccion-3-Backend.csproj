@@ -34,6 +34,8 @@
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
     <PackageReference Include="EfCore.SchemaCompare" Version="9.0.0" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.1" />
+    <PackageReference Include="Google.Apis.Auth" Version="1.70.0" />
+    <PackageReference Include="Google.Apis.Drive.v3" Version="1.70.0.3834" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.7" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.7" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.7" />
@@ -70,10 +72,6 @@
     <Reference Include="Sap.Data.Hana.v4.5">
       <HintPath>..\..\..\..\..\Windows\Microsoft.NET\assembly\GAC_MSIL\Sap.Data.Hana.v4.5\v4.0_2.17.22.0__0326b8ea63db4bc4\Sap.Data.Hana.v4.5.dll</HintPath>
     </Reference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Controllers\AnexosNEXO\" />
   </ItemGroup>
 
 </Project>

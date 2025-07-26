@@ -100,19 +100,19 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
 
         [HttpGet("get/filtros")]
         public async Task<ActionResult<IEnumerable<ProcesoOfDto>>> GetprocesoOffiltros(
-    [FromQuery] DateTime? fechaInicio = null,
-    [FromQuery] DateTime? fechaFin = null,
-    [FromQuery] string? cliente = null,
-    [FromQuery] string? ejecutivo = null,
-    [FromQuery] string? articulo = null,
-    [FromQuery] int? oF = null,
-    [FromQuery] int? oV = null,
-    [FromQuery] string? lineaNegocio = null,
-    [FromQuery] string? idsEtiquetas = null,
-    [FromQuery] int? idProceso = null,
-    [FromQuery] bool mostrarArchivados = false,
-    [FromQuery] int? tablero = null,
-    [FromQuery] string? disenador = null)
+        [FromQuery] DateTime? fechaInicio = null,
+        [FromQuery] DateTime? fechaFin = null,
+        [FromQuery] string? cliente = null,
+        [FromQuery] string? ejecutivo = null,
+        [FromQuery] string? articulo = null,
+        [FromQuery] int? oF = null,
+        [FromQuery] int? oV = null,
+        [FromQuery] string? lineaNegocio = null,
+        [FromQuery] string? idsEtiquetas = null,
+        [FromQuery] int? idProceso = null,
+        [FromQuery] bool mostrarArchivados = false,
+        [FromQuery] int? tablero = null,
+        [FromQuery] string? disenador = null)
         {
             // ============================
             // 1. Procesos NORMALES (con OF)
@@ -211,6 +211,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                         (string.IsNullOrEmpty(articulo) || ofNav.productoOf.Contains(articulo)) &&
                         (!oF.HasValue || sub.oF == oF) &&
                         (!oV.HasValue || sub.oV == oV) &&
+                        (!idProceso.HasValue || m.idProceso == idProceso) &&
                         (string.IsNullOrEmpty(lineaNegocio) || ofNav.lineaDeNegocio.Contains(lineaNegocio));
                 }))
                 .ToList();

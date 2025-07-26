@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Sistema_Produccion_3_Backend.DTO.AnexosNEXO;
 using Sistema_Produccion_3_Backend.DTO.Bitacora;
 using Sistema_Produccion_3_Backend.DTO.Calidad.CertificadoCalidad;
 using Sistema_Produccion_3_Backend.DTO.Calidad.CertificadoCalidad.DetalleCertificado;
@@ -824,6 +825,12 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             CreateMap<UpdateCorridaCombinadaDto, corridaCombinada>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             CreateMap<corridaCombinada, AddBatchCorridaCombinada>().ReverseMap();
+
+            // ANEXOS NEXO =============================================================================================
+            CreateMap<anexos_NEXO, anexos_NEXO_Dto>().ReverseMap();
+            CreateMap<anexos_NEXO, AddAnexoNEXODto>().ReverseMap();
+            CreateMap<UpdateAnexoNEXODto, anexos_NEXO>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
         }
     }
 }
