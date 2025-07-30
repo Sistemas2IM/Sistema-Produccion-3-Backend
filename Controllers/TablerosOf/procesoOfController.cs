@@ -112,7 +112,10 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         [FromQuery] int? idProceso = null,
         [FromQuery] bool mostrarArchivados = false,
         [FromQuery] int? tablero = null,
-        [FromQuery] string? disenador = null)
+        [FromQuery] string? disenador = null,
+        [FromQuery] string? indicador = null,
+        [FromQuery] string? indicadorProceso = null,
+        [FromQuery] bool? reproceso = false)
         {
             // ============================
             // 1. Procesos NORMALES (con OF)
@@ -132,6 +135,14 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 .AsQueryable();
 
             // Filtros para procesos normales
+
+            if (!string.IsNullOrEmpty(indicador))
+                queryNormales = queryNormales.Where(p => p.indicador.Contains(indicador));
+
+            if (!string.IsNullOrEmpty(indicadorProceso))
+                queryNormales = queryNormales.Where(p => p.indicadorProceso.Contains(indicadorProceso));
+
+
             if (fechaInicio.HasValue && fechaFin.HasValue)
                 queryNormales = queryNormales.Where(p => p.fechaVencimiento >= fechaInicio && p.fechaVencimiento <= fechaFin);
             else if (fechaInicio.HasValue)
@@ -175,6 +186,15 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             if (tablero.HasValue)
                 queryNormales = queryNormales.Where(p => p.idTablero == tablero.Value);
 
+            if (reproceso.HasValue && reproceso.Value)
+            {
+                queryNormales = queryNormales.Where(p => p.reproceso == true);
+            }
+            else if (reproceso.HasValue && !reproceso.Value)
+            {
+                queryNormales = queryNormales.Where(p => p.reproceso == false);
+            }
+
             var procesosNormales = await queryNormales.ToListAsync();
 
             // ============================================
@@ -183,8 +203,6 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             var queryMaestros = _context.procesoOf
                 .Where(p => p.corridaCombinada == true && p.oF == null && (mostrarArchivados || p.archivada == false))
                 .Include(p => p.corridaCombinadamaestroNavigation)
-                    .ThenInclude(c => c.subordinadoNavigation)
-                        .ThenInclude(s => s.oFNavigation)
                 .Include(p => p.detalleReporte).ThenInclude(o => o.idOperacionNavigation)
                 .Include(p => p.tarjetaCampo)
                 .Include(p => p.tarjetaEtiqueta).ThenInclude(e => e.idEtiquetaNavigation)
@@ -194,7 +212,31 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
 
             var procesosMaestrosRaw = await queryMaestros.ToListAsync();
 
-            // Filtrar procesos maestros con base en filtros aplicados a subordinados
+            // ============================================
+            // 3. Cargar subordinados completos
+            // ============================================
+            foreach (var proceso in procesosMaestrosRaw)
+            {
+                if (proceso.corridaCombinadamaestroNavigation != null)
+                {
+                    foreach (var corrida in proceso.corridaCombinadamaestroNavigation)
+                    {
+                        if (corrida.subordinado != null)
+                        {
+                            var subordinado = await _context.procesoOf
+                                .Include(p => p.oFNavigation)
+                                .Include(p => p.asignacion).ThenInclude(a => a.userNavigation)
+                                .FirstOrDefaultAsync(p => p.idProceso == corrida.subordinado);
+
+                            corrida.subordinadoNavigation = subordinado;
+                        }
+                    }
+                }
+            }
+
+            // ============================================
+            // 4. Filtrar procesos maestros ya completos
+            // ============================================
             var procesosMaestros = procesosMaestrosRaw
                 .Where(m => m.corridaCombinadamaestroNavigation.Any(c =>
                 {
@@ -212,35 +254,27 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                         (!oF.HasValue || sub.oF == oF) &&
                         (!oV.HasValue || sub.oV == oV) &&
                         (!idProceso.HasValue || m.idProceso == idProceso) &&
-                        (string.IsNullOrEmpty(lineaNegocio) || ofNav.lineaDeNegocio.Contains(lineaNegocio));
+                        (string.IsNullOrEmpty(lineaNegocio) || ofNav.lineaDeNegocio.Contains(lineaNegocio)) &&
+                        (!reproceso.HasValue || sub.reproceso == reproceso.Value) &&
+                        (string.IsNullOrEmpty(indicador) || (sub.indicador != null && sub.indicador.Contains(indicador))) &&
+                        (string.IsNullOrEmpty(indicadorProceso) ||
+                            (!string.IsNullOrEmpty(sub.indicadorProceso) &&
+                             sub.indicadorProceso.Trim().ToLower().Contains(indicadorProceso.Trim().ToLower()))) &&
+                        (string.IsNullOrEmpty(disenador) || sub.asignacion.Any(a =>
+                            (a.userNavigation.nombres + " " + a.userNavigation.apellidos).Contains(disenador)));
                 }))
                 .ToList();
 
             // ========================
-            // 3. Combinar resultados
+            // 5. Combinar resultados
             // ========================
             var procesos = procesosNormales.Concat(procesosMaestros).ToList();
 
             // ========================
-            // 4. Cargar subordinados
+            // 6. Cargar subordinado si el proceso es subordinado
             // ========================
             foreach (var proceso in procesos)
             {
-                if (proceso.corridaCombinadamaestroNavigation != null)
-                {
-                    foreach (var corrida in proceso.corridaCombinadamaestroNavigation)
-                    {
-                        if (corrida.subordinado != null)
-                        {
-                            var subordinado = await _context.procesoOf
-                                .Include(p => p.oFNavigation)
-                                .FirstOrDefaultAsync(p => p.idProceso == corrida.subordinado);
-
-                            corrida.subordinadoNavigation = subordinado;
-                        }
-                    }
-                }
-
                 if (proceso.corridaCombinadasubordinadoNavigation?.subordinado != null)
                 {
                     var subordinado = await _context.procesoOf
@@ -251,8 +285,9 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 }
             }
 
+
             // ========================
-            // 5. Mapear y devolver DTOs
+            // 7. Mapear y devolver DTOs
             // ========================
             var procesoOfDto = _mapper.Map<List<ProcesoOfDto>>(procesos);
             return Ok(procesoOfDto);

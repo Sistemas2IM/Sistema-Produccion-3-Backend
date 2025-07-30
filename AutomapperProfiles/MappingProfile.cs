@@ -756,6 +756,8 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             CreateMap<posturasOf, AddPosturasOfDto>().ReverseMap();
             CreateMap<UpdatePosturasOfDto, posturasOf>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<UpdateBatchPosturasOf, posturasOf>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             // Area
             CreateMap<areas, AreasDto>().ReverseMap(); // <------ General

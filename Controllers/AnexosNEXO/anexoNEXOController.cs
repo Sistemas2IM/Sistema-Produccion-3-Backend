@@ -249,7 +249,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.AnexosNEXO
             return createdFolder.Id;
         }
 
-        [HttpGet("get/files-drive")]
+        [HttpGet("get/filesDrive")]
         public async Task<IActionResult> GetAnexosFilesDrive([FromQuery] string tipoEntidad, [FromQuery] int entidadId)
         {
             try
@@ -269,34 +269,43 @@ namespace Sistema_Produccion_3_Backend.Controllers.AnexosNEXO
                     try
                     {
                         var request = driveService.Files.Get(anexo.RutaArchivo);
-                        var stream = new MemoryStream();
-                        await request.DownloadAsync(stream);
-                        stream.Position = 0;
+                        request.SupportsAllDrives = true;
 
-                        archivosAdjuntos.Add(new AnexoResponse
+                        // Obtener metadatos (para mimeType y nombre real del archivo)
+                        var fileMetadata = await request.ExecuteAsync();
+
+                        using (var stream = new MemoryStream())
                         {
-                            FileBytes = stream.ToArray(),
-                            ContentType = request.Execute().MimeType,
-                            FileName = anexo.NombreArchivo,
-                            FileDate = anexo.FechaSubida.ToString("yyyy-MM-dd HH:mm")
-                        });
+                            // Descargar contenido
+                            await request.DownloadAsync(stream);
+                            stream.Position = 0;
+
+                            archivosAdjuntos.Add(new AnexoResponse
+                            {
+                                FileBytes = stream.ToArray(),
+                                ContentType = fileMetadata.MimeType,
+                                FileName = fileMetadata.Name,
+                                FileDate = anexo.FechaSubida.ToString("yyyy-MM-dd HH:mm")
+                            });
+                        }
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine($"Error al obtener archivo de Drive: {ex.Message}");
+                        Console.WriteLine($"Error al obtener archivo {anexo.RutaArchivo}: {ex.Message}");
                     }
                 }
 
                 if (archivosAdjuntos.Count == 0)
-                    return NotFound("No se pudieron cargar los archivos desde Drive.");
+                    return NotFound("No se pudieron cargar los archivos anexos.");
 
                 return Ok(archivosAdjuntos);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Error: {ex.Message}");
+                return StatusCode(500, $"Error al obtener archivos: {ex.Message}");
             }
         }
+
 
 
         private DriveService GetDriveService()

@@ -24,6 +24,6 @@
 
         public string? unidad { get; set; }
 
-        public string comentario { get; set; }
+        public string? comentario { get; set; }
     }
 }

@@ -239,7 +239,7 @@ public partial class base_nuevaContext : DbContext
 
         modelBuilder.Entity<asignacion>(entity =>
         {
-            entity.HasKey(e => e.idAsignacion).HasName("PK__asignaci__E1714478BB8AE70F");
+            entity.HasKey(e => e.idAsignacion).HasName("PK_ASIGNACION");
 
             entity.Property(e => e.user).UseCollation("SQL_Latin1_General_CP1_CI_AS");
 

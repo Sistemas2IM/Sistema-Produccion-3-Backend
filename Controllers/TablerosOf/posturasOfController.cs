@@ -105,5 +105,86 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         {
             return _context.posturasOf.Any(e => e.idPostura == id);
         }
+
+        // POST BATCH
+        [HttpPost("post/BatchAdd")]
+        public async Task<ActionResult> BatchAddPosturasOf([FromBody] BatchAddPosturasOf batchAddPosturasOf)
+        {
+            if (batchAddPosturasOf == null || batchAddPosturasOf.addBatchPosturasOf == null || !batchAddPosturasOf.addBatchPosturasOf.Any())
+            {
+                return BadRequest("No se enviaron datos para agregar.");
+            }
+
+            var posturas = batchAddPosturasOf.addBatchPosturasOf.Select(dto => _mapper.Map<posturasOf>(dto)).ToList();
+
+            await _context.posturasOf.AddRangeAsync(posturas);
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Ocurrió un error al guardar las posturas: {ex.Message}");
+            }
+
+            // Retornar los registros creados
+            return Ok(new
+            {
+                Message = "Posturas agregadas exitosamente.",
+                posturas = posturas
+            });
+        }
+
+        // PUT BATCH
+        [HttpPut("put/BatchUpdate")]
+        public async Task<IActionResult> BatchUpdatePosturasOf([FromBody] BatchUpdatePosturaOf batchUpdatePosturaOf)
+        {
+            if (batchUpdatePosturaOf == null || batchUpdatePosturaOf.updateBatchPosturasOf == null || !batchUpdatePosturaOf.updateBatchPosturasOf.Any())
+            {
+                return BadRequest("No se encontraron posturas para los IDs proporcionados");
+            }
+
+            var ids = batchUpdatePosturaOf.updateBatchPosturasOf.Select(t => t.idPostura).ToList();
+
+            // Obtener todas las posturas relacionadas
+            var posturas = await _context.posturasOf.Where(t => ids.Contains(t.idPostura)).ToListAsync();
+
+            if (!posturas.Any())
+            {
+                return NotFound("No se encontraron posturas para los IDs proporcionados.");
+            }
+
+            foreach (var dto in batchUpdatePosturaOf.updateBatchPosturasOf)
+            {
+                var postura = posturas.FirstOrDefault(t => t.idPostura == dto.idPostura);
+                if (postura != null)
+                {
+                    // Actualizar propiedades específicas
+                    if (dto.idPostura != 0)
+                    {
+                        postura.nombrePostura = dto.nombrePostura;
+                        postura.secuencia = dto.secuencia;
+                        postura.idTablero = dto.idTablero;
+                    }
+                    _context.Entry(postura).State = EntityState.Modified;
+                }
+            }
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error al actualizar las posturas.");
+            }
+
+            return Ok(new
+            {
+                Message = "Posturas actualizadas exitosamente.",
+                posturas = posturas
+            });
+        }
     }
 }
