@@ -102,6 +102,10 @@ namespace Sistema_Produccion_3_Backend.DTO.ReporteOperador.DetalleReporte
 
         public int? maquina { get; set; }
 
+        public DateOnly? fecha { get; set; }
+
+        public string? actualizadoPor { get; set; }
+
         public string? nombreMaquina { get; set; }
 
         public string? nombreCorto { get; set; }

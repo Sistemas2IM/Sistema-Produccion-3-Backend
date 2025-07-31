@@ -21,6 +21,8 @@ namespace Sistema_Produccion_3_Backend.DTO.Tableros
 
         public string? nombreAlternoMaquina { get; set; }
 
+        public string? nombreArea { get; set; }
+
         public List<PosturasOfDto>? posturasOfDto { get; set; }
 
     }

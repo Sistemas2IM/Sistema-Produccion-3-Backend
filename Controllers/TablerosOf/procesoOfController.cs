@@ -115,7 +115,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         [FromQuery] string? disenador = null,
         [FromQuery] string? indicador = null,
         [FromQuery] string? indicadorProceso = null,
-        [FromQuery] bool? reproceso = false)
+        [FromQuery] bool? reproceso = null)
         {
             // ============================
             // 1. Procesos NORMALES (con OF)
@@ -173,7 +173,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                     p.asignacion.Any(a =>
                         (a.userNavigation.nombres + " " + a.userNavigation.apellidos).Contains(disenador)));
 
-            if (!string.IsNullOrEmpty(idsEtiquetas))
+            if (!string.IsNullOrEmpty(idsEtiquetas)) 
             {
                 var ids = idsEtiquetas.Split(',').Select(int.Parse).ToList();
                 queryNormales = queryNormales.Where(p =>
@@ -185,15 +185,6 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
 
             if (tablero.HasValue)
                 queryNormales = queryNormales.Where(p => p.idTablero == tablero.Value);
-
-            if (reproceso.HasValue && reproceso.Value)
-            {
-                queryNormales = queryNormales.Where(p => p.reproceso == true);
-            }
-            else if (reproceso.HasValue && !reproceso.Value)
-            {
-                queryNormales = queryNormales.Where(p => p.reproceso == false);
-            }
 
             var procesosNormales = await queryNormales.ToListAsync();
 
@@ -254,8 +245,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                         (!oF.HasValue || sub.oF == oF) &&
                         (!oV.HasValue || sub.oV == oV) &&
                         (!idProceso.HasValue || m.idProceso == idProceso) &&
-                        (string.IsNullOrEmpty(lineaNegocio) || ofNav.lineaDeNegocio.Contains(lineaNegocio)) &&
-                        (!reproceso.HasValue || sub.reproceso == reproceso.Value) &&
+                        (string.IsNullOrEmpty(lineaNegocio) || ofNav.lineaDeNegocio.Contains(lineaNegocio)) &&                        
                         (string.IsNullOrEmpty(indicador) || (sub.indicador != null && sub.indicador.Contains(indicador))) &&
                         (string.IsNullOrEmpty(indicadorProceso) ||
                             (!string.IsNullOrEmpty(sub.indicadorProceso) &&
@@ -289,7 +279,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             // ========================
             // 7. Mapear y devolver DTOs
             // ========================
-            var procesoOfDto = _mapper.Map<List<ProcesoOfDto>>(procesos);
+       var procesoOfDto = _mapper.Map<List<ProcesoOfDto>>(procesos);
             return Ok(procesoOfDto);
         }
 

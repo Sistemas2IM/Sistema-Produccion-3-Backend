@@ -1,4 +1,6 @@
-﻿namespace Sistema_Produccion_3_Backend.DTO.ReporteOperador.DetalleReporte
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Sistema_Produccion_3_Backend.DTO.ReporteOperador.DetalleReporte
 {
     public class AddDetalleReporteDto
     {
@@ -83,5 +85,9 @@
         public int? numAuxiliares { get; set; }
 
         public int? maquina { get; set; }
+
+        public DateOnly? fecha { get; set; }
+
+        public string? actualizadoPor { get; set; }
     }
 }

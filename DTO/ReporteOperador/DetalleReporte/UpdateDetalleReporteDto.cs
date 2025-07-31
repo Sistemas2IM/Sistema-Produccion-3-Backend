@@ -81,5 +81,9 @@
         public int? numAuxiliares { get; set; }
 
         public int? maquina { get; set; }
+
+        public DateOnly? fecha { get; set; }
+
+        public string? actualizadoPor { get; set; }
     }
 }

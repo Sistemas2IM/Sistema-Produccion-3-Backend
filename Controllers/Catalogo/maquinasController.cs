@@ -28,7 +28,9 @@ namespace Sistema_Produccion_3_Backend.Controllers.Catalogo
         [HttpGet("get")]
         public async Task<ActionResult<IEnumerable<MaquinaDto>>> Getmaquinas()
         {
-            var maquina = await _context.maquinas.ToListAsync();
+            var maquina = await _context.maquinas
+                .Include(m => m.idFamiliaNavigation)
+                .ToListAsync();
             var maquinaDto = _mapper.Map<List<MaquinaDto>>(maquina);
 
             return Ok(maquinaDto);
@@ -38,7 +40,10 @@ namespace Sistema_Produccion_3_Backend.Controllers.Catalogo
         [HttpGet("get/{id}")]
         public async Task<ActionResult<MaquinaDto>> Getmaquinas(int id)
         {
-            var maquinas = await _context.maquinas.FindAsync(id);
+            var maquinas = await _context.maquinas
+                .Include(m => m.idFamiliaNavigation)
+                .FirstOrDefaultAsync(u => u.idMaquina == id);
+
             var maquinaDto = _mapper.Map<MaquinaDto>(maquinas);
 
             if (maquinaDto == null)
