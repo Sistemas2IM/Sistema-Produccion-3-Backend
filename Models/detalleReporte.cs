@@ -108,6 +108,11 @@ public partial class detalleReporte
 
     public int? maquina { get; set; }
 
+    public DateOnly? fecha { get; set; }
+
+    [StringLength(50)]
+    public string actualizadoPor { get; set; }
+
     [ForeignKey("idMaterial")]
     [InverseProperty("detalleReporte")]
     public virtual material idMaterialNavigation { get; set; }

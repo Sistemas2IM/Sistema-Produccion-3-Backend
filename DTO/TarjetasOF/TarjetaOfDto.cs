@@ -72,6 +72,10 @@ namespace Sistema_Produccion_3_Backend.DTO.TarjetasOF
 
         public string? estadonombre { get; set; }
 
+        public bool? cancelada { get; set; }
+
+        public string? estadoOfSap { get; set; }
+
         //public EstadoOfDto? estadoOfDto { get; set; }
 
     }
