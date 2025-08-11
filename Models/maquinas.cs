@@ -27,14 +27,6 @@ public partial class maquinas
     [StringLength(100)]
     public string nombreAlterno { get; set; }
 
-    public string descripcion { get; set; }
-
-    public string textoAyuda { get; set; }
-
-    public int? velocidadObjetivo { get; set; }
-
-    public int? velocidadMaxima { get; set; }
-
     [InverseProperty("idMaquinaNavigation")]
     public virtual ICollection<contenidoEntrega> contenidoEntrega { get; set; } = new List<contenidoEntrega>();
 

@@ -85,6 +85,9 @@ public partial class tarjetaOf
 
     public bool? cancelada { get; set; }
 
+    [StringLength(50)]
+    public string estadoOfSap { get; set; }
+
     [InverseProperty("oFNavigation")]
     public virtual ICollection<certificadoDeCalidad> certificadoDeCalidad { get; set; } = new List<certificadoDeCalidad>();
 
