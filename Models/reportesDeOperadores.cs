@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Sistema_Produccion_3_Backend.Models;
 
+[Index("auxiliar", Name = "AUXILIAR_REPORTE_FK")]
 [Index("idEstadoReporte", Name = "ESTADO_REPORTE_FK")]
 [Index("idMaquina", Name = "MAQUINA_REPORTE_FK")]
 [Index("operador", Name = "OPERADOR_REPORTE_FK")]
@@ -63,6 +64,10 @@ public partial class reportesDeOperadores
 
     [StringLength(50)]
     public string aprobadoPor { get; set; }
+
+    [ForeignKey("auxiliar")]
+    [InverseProperty("reportesDeOperadores")]
+    public virtual auxiliares auxiliarNavigation { get; set; }
 
     [InverseProperty("idReporteNavigation")]
     public virtual ICollection<detalleReporte> detalleReporte { get; set; } = new List<detalleReporte>();

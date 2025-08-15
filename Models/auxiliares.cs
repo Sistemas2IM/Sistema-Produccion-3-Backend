@@ -15,4 +15,7 @@ public partial class auxiliares
 
     [StringLength(50)]
     public string nombre { get; set; }
+
+    [InverseProperty("auxiliarNavigation")]
+    public virtual ICollection<reportesDeOperadores> reportesDeOperadores { get; set; } = new List<reportesDeOperadores>();
 }

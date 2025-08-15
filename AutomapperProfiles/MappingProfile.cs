@@ -422,6 +422,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForMember(dest => dest.maquinaDto, opt => opt.MapFrom(src => src.idMaquinaNavigation))
                 .ForMember(dest => dest.detalleReporte, opt => opt.MapFrom(src => src.detalleReporte))
                 .ForMember(dest => dest.nombreUsuario, opt => opt.MapFrom(src => src.operadorNavigation.nombres + " " + src.operadorNavigation.apellidos))
+                .ForMember(dest => dest.nombreAuxiliar, opt => opt.MapFrom(src => src.auxiliarNavigation.nombre))
                 .ReverseMap();
             CreateMap<reportesDeOperadores, AddReporteOperadorDto>().ReverseMap();
             CreateMap<UpdateReporteOperadorDto, reportesDeOperadores>()

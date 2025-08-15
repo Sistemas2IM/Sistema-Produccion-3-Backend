@@ -1429,6 +1429,8 @@ public partial class base_nuevaContext : DbContext
         {
             entity.HasKey(e => e.idReporte).HasName("PK_REPORTESDEOPERADORES");
 
+            entity.ToTable(tb => tb.HasTrigger("trg_BloquearDetalleReporte"));
+
             entity.Property(e => e.idReporte).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.actualizadoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.archivado).HasDefaultValue(false);
@@ -1437,6 +1439,8 @@ public partial class base_nuevaContext : DbContext
             entity.Property(e => e.operador).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.turno).UseCollation("SQL_Latin1_General_CP1_CI_AS");
 
+            entity.HasOne(d => d.auxiliarNavigation).WithMany(p => p.reportesDeOperadores).HasConstraintName("FK_AUXILIAR_REPORTE");
+
             entity.HasOne(d => d.idEstadoReporteNavigation).WithMany(p => p.reportesDeOperadores).HasConstraintName("FK_REPORTES_ESTADO");
 
             entity.HasOne(d => d.idMaquinaNavigation).WithMany(p => p.reportesDeOperadores).HasConstraintName("FK_REPORTES_MAQUINA");
@@ -1444,8 +1448,6 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.idTipoReporteNavigation).WithMany(p => p.reportesDeOperadores).HasConstraintName("FK_REPORTES_TIPO");
 
             entity.HasOne(d => d.operadorNavigation).WithMany(p => p.reportesDeOperadores).HasConstraintName("FK_REPORTES_OPERADOR");
-
-            entity.ToTable(tb => tb.UseSqlOutputClause(false));
         });
 
         modelBuilder.Entity<rol>(entity =>

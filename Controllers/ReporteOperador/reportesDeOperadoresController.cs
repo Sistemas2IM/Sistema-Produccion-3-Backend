@@ -48,6 +48,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
                 .Include(m => m.detalleReporte)
                     .ThenInclude(d => d.oFNavigation)
                 .Include(o => o.operadorNavigation)
+                .Include(a => a.auxiliarNavigation)
                 .ToListAsync(); // Trae todos los datos primero
 
             var reporteOperadorDto = reporteOperador.Select(m =>
@@ -89,6 +90,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
             .Include(m => m.detalleReporte)
                 .ThenInclude(d => d.oFNavigation)
             .Include(o => o.operadorNavigation)
+            .Include(a => a.auxiliarNavigation)
             .ToListAsync();
 
                     // Ordenamos en memoria
@@ -134,6 +136,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
         .Include(m => m.detalleReporte)
             .ThenInclude(d => d.oFNavigation)
         .Include(o => o.operadorNavigation)
+        .Include(a => a.auxiliarNavigation)
         .ToListAsync(); // Trae los datos primero
 
             var reporteOperadorDto = reporteOperador.Select(m =>
@@ -193,6 +196,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
                 .Include(m => m.detalleReporte)
                     .ThenInclude(d => d.oFNavigation) // Incluye la relación con 'idTarjetaOf'
                 .Include(o => o.operadorNavigation)
+                .Include(a => a.auxiliarNavigation)
                 .FirstOrDefaultAsync(u => u.idReporte == id);
 
             if (reporteOperador == null)
