@@ -204,6 +204,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
                         detalle.operador = dto.operador;
                         detalle.numAuxiliares = dto.numAuxiliares;
                         detalle.maquina = dto.maquina;
+                        detalle.fecha = dto.fecha;
+                        detalle.actualizadoPor = dto.actualizadoPor;
                     }
 
                     _context.Entry(detalle).State = EntityState.Modified;

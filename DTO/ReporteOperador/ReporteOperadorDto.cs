@@ -44,6 +44,10 @@ namespace Sistema_Produccion_3_Backend.DTO.ReporteOperador
 
         public bool? cancelado { get; set; }
 
+        public string? enviadoPor { get; set; }
+
+        public string? aprobadoPor { get; set; }
+
         public string? nombreEstado { get; set; }
 
         public string? nombreUsuario { get; set; }

@@ -89,5 +89,7 @@ namespace Sistema_Produccion_3_Backend.DTO.ReporteOperador.DetalleReporte
         public DateOnly? fecha { get; set; }
 
         public string? actualizadoPor { get; set; }
+
+        public bool? bloqueada { get; set; }
     }
 }

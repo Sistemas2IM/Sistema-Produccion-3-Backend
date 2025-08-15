@@ -39,103 +39,117 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
                 .Include(r => r.idEstadoReporteNavigation)
                 .Include(p => p.idMaquinaNavigation)
                 .Include(sm => sm.idTipoReporteNavigation)
-                .Include(m => m.detalleReporte) // Incluye 'detalleReporte'
-                    .ThenInclude(d => d.idOperacionNavigation) // Incluye la relación con 'idOperacion'
                 .Include(m => m.detalleReporte)
-                    .ThenInclude(d => d.idMaterialNavigation) // Incluye la relación con 'idMaterial'
+                    .ThenInclude(d => d.idOperacionNavigation)
                 .Include(m => m.detalleReporte)
-                    .ThenInclude(d => d.idTipoCierreNavigation) // Incluye la relación con 'idTipoCierre'
+                    .ThenInclude(d => d.idMaterialNavigation)
                 .Include(m => m.detalleReporte)
-                    .ThenInclude(d => d.oFNavigation) // Incluye la relación con 'idTarjetaOf'
+                    .ThenInclude(d => d.idTipoCierreNavigation)
+                .Include(m => m.detalleReporte)
+                    .ThenInclude(d => d.oFNavigation)
                 .Include(o => o.operadorNavigation)
-                .Select(m => new
-                {
-                    Reporte = m,
-                    DetalleReporteOrdenado = m.detalleReporte
-                        .OrderBy(d => d.horaInicio) // Ordena 'detalleReporte' por 'fechaDeCreacion'
-                        .ToList()
-                })
-                .ToArrayAsync();
+                .ToListAsync(); // Trae todos los datos primero
 
-            var reporteOperadorDto = _mapper.Map<List<ReporteOperadorDto>>(reporteOperador.Select(r => r.Reporte).ToList());
+            var reporteOperadorDto = reporteOperador.Select(m =>
+            {
+                var detalleOrdenado = m.detalleReporte
+                    .OrderBy(d =>
+                        d.fecha.HasValue
+                            ? d.fecha.Value.ToDateTime(TimeOnly.MinValue)
+                                .Add(d.horaInicio.HasValue ? d.horaInicio.Value.ToTimeSpan() : TimeSpan.Zero)
+                            : DateTime.MinValue
+                    )
+                    .ToList();
+
+                var dto = _mapper.Map<ReporteOperadorDto>(m);
+                dto.detalleReporte = _mapper.Map<List<DetalleReporteDto>>(detalleOrdenado);
+                return dto;
+            }).ToList();
 
             return Ok(reporteOperadorDto);
         }
+
 
         // GET: api/reportesDeOperadores por maquina
         [HttpGet("get/idMaquina/{id}")]
         public async Task<ActionResult<IEnumerable<ReporteOperadorDto>>> GetreportesDeOperadoresMaquina(int id)
         {
             var reporteOperador = await _context.reportesDeOperadores
-                .Where(u => u.idMaquina == id && (u.archivado == false || u.archivado == null)) // Filtro corregido
-                .OrderByDescending(f => f.fechaDeCreacion)
-                .Include(r => r.idEstadoReporteNavigation)
-                .Include(p => p.idMaquinaNavigation)
-                .Include(sm => sm.idTipoReporteNavigation)
-                .Include(m => m.detalleReporte)
-                    .ThenInclude(d => d.idOperacionNavigation)
-                .Include(m => m.detalleReporte)
-                    .ThenInclude(d => d.idMaterialNavigation)
-                .Include(m => m.detalleReporte)
-                    .ThenInclude(d => d.idTipoCierreNavigation)
-                .Include(m => m.detalleReporte)
-                    .ThenInclude(d => d.oFNavigation)
-                .Include(o => o.operadorNavigation)
-                .Select(m => new
-                {
-                    Reporte = m,
-                    DetalleReporteOrdenado = m.detalleReporte
-                        .OrderBy(d => d.fechaHora) // Ordena detalles por fechaHora
-                        .ToList()
-                })
-                .ToListAsync();
+            .Where(u => u.idMaquina == id && (u.archivado == false || u.archivado == null))
+            .OrderByDescending(f => f.fechaDeCreacion)
+            .Include(r => r.idEstadoReporteNavigation)
+            .Include(p => p.idMaquinaNavigation)
+            .Include(sm => sm.idTipoReporteNavigation)
+            .Include(m => m.detalleReporte)
+                .ThenInclude(d => d.idOperacionNavigation)
+            .Include(m => m.detalleReporte)
+                .ThenInclude(d => d.idMaterialNavigation)
+            .Include(m => m.detalleReporte)
+                .ThenInclude(d => d.idTipoCierreNavigation)
+            .Include(m => m.detalleReporte)
+                .ThenInclude(d => d.oFNavigation)
+            .Include(o => o.operadorNavigation)
+            .ToListAsync();
 
-            var reporteOperadorDto = reporteOperador.Select(r =>
-            {
-                var reporteDto = _mapper.Map<ReporteOperadorDto>(r.Reporte);
-                reporteDto.detalleReporte = _mapper.Map<List<DetalleReporteDto>>(r.DetalleReporteOrdenado);
-                return reporteDto;
-            }).ToList();
+                    // Ordenamos en memoria
+                    var reporteOperadorDto = reporteOperador.Select(m =>
+                    {
+                        var detalleOrdenado = m.detalleReporte
+                            .OrderBy(d =>
+                                d.fecha.HasValue
+                                    ? d.fecha.Value.ToDateTime(TimeOnly.MinValue)
+                                        .Add(d.horaInicio.HasValue ? d.horaInicio.Value.ToTimeSpan() : TimeSpan.Zero)
+                                    : DateTime.MinValue
+                            )
+                            .ToList();
 
-            return Ok(reporteOperadorDto);
-        }
+                        var dto = _mapper.Map<ReporteOperadorDto>(m);
+                        dto.detalleReporte = _mapper.Map<List<DetalleReporteDto>>(detalleOrdenado);
+                        return dto;
+                    }).ToList();
+
+                    return Ok(reporteOperadorDto);
+
+         }
 
         // GET: api/reportesDeOperadores por maquina
         [HttpGet("get/Maquina/{id}/Operador/{user}")]
         public async Task<ActionResult<IEnumerable<ReporteOperadorDto>>> GetreportesDeOperadoresMaquinaBitacora(int id, string user)
         {
             var reporteOperador = await _context.reportesDeOperadores
-                .Where(u =>
-                    u.idMaquina == id &&
-                    u.operador == user &&
-                    (u.archivado == false || u.archivado == null))
-                .OrderByDescending(f => f.fechaDeCreacion)
-                .Include(r => r.idEstadoReporteNavigation)
-                .Include(p => p.idMaquinaNavigation)
-                .Include(sm => sm.idTipoReporteNavigation)
-                .Include(m => m.detalleReporte)
-                    .ThenInclude(d => d.idOperacionNavigation)
-                .Include(m => m.detalleReporte)
-                    .ThenInclude(d => d.idMaterialNavigation)
-                .Include(m => m.detalleReporte)
-                    .ThenInclude(d => d.idTipoCierreNavigation)
-                .Include(m => m.detalleReporte)
-                    .ThenInclude(d => d.oFNavigation)
-                .Include(o => o.operadorNavigation)
-                .Select(m => new
-                {
-                    Reporte = m,
-                    DetalleReporteOrdenado = m.detalleReporte
-                        .OrderBy(d => d.fechaHora) // Ordena detalles por fechaHora
-                        .ToList()
-                })
-                .ToListAsync();
+        .Where(u =>
+            u.idMaquina == id &&
+            u.operador == user &&
+            (u.archivado == false || u.archivado == null))
+        .OrderByDescending(f => f.fechaDeCreacion)
+        .Include(r => r.idEstadoReporteNavigation)
+        .Include(p => p.idMaquinaNavigation)
+        .Include(sm => sm.idTipoReporteNavigation)
+        .Include(m => m.detalleReporte)
+            .ThenInclude(d => d.idOperacionNavigation)
+        .Include(m => m.detalleReporte)
+            .ThenInclude(d => d.idMaterialNavigation)
+        .Include(m => m.detalleReporte)
+            .ThenInclude(d => d.idTipoCierreNavigation)
+        .Include(m => m.detalleReporte)
+            .ThenInclude(d => d.oFNavigation)
+        .Include(o => o.operadorNavigation)
+        .ToListAsync(); // Trae los datos primero
 
-            var reporteOperadorDto = reporteOperador.Select(r =>
+            var reporteOperadorDto = reporteOperador.Select(m =>
             {
-                var reporteDto = _mapper.Map<ReporteOperadorDto>(r.Reporte);
-                reporteDto.detalleReporte = _mapper.Map<List<DetalleReporteDto>>(r.DetalleReporteOrdenado);
-                return reporteDto;
+                var detalleOrdenado = m.detalleReporte
+                    .OrderBy(d =>
+                        d.fecha.HasValue
+                            ? d.fecha.Value.ToDateTime(TimeOnly.MinValue)
+                                .Add(d.horaInicio.HasValue ? d.horaInicio.Value.ToTimeSpan() : TimeSpan.Zero)
+                            : DateTime.MinValue
+                    )
+                    .ToList();
+
+                var dto = _mapper.Map<ReporteOperadorDto>(m);
+                dto.detalleReporte = _mapper.Map<List<DetalleReporteDto>>(detalleOrdenado);
+                return dto;
             }).ToList();
 
             return Ok(reporteOperadorDto);

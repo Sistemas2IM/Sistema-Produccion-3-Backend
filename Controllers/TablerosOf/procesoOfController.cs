@@ -18,6 +18,7 @@ using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.Serigrafia;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.Troquelado;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.UpdateMaquina;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.UpdateSAP;
+using Sistema_Produccion_3_Backend.DTO.ReporteOperador.DetalleReporte;
 using Sistema_Produccion_3_Backend.Models;
 using Sistema_Produccion_3_Backend.Services.RequestLock;
 using System.Diagnostics;
@@ -564,27 +565,37 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         public async Task<ActionResult<IEnumerable<ProcesoOfVistaTableroDto>>> GetprocesoOfTablero(int id)
         {
             var procesos = await _context.procesoOf
-    .OrderBy(p => p.posicion)
-    .Where(t => t.idTablero == id && t.archivada == false)
-    .Include(u => u.detalleReporte)
-        .ThenInclude(o => o.idOperacionNavigation)
-    .Include(u => u.detalleReporte)
-        .ThenInclude(m => m.maquinaNavigation)
-    .Include(m => m.tarjetaCampo)
-    .Include(s => s.tarjetaEtiqueta)
-        .ThenInclude(e => e.idEtiquetaNavigation)
-    .Include(f => f.oFNavigation)
-    .Include(l => l.idPosturaNavigation)
-    .Include(v => v.idMaterialNavigation)
-    .Include(a => a.asignacion)
-    .ThenInclude(u => u.userNavigation)
-    .Include(p => p.corridaCombinadamaestroNavigation)
-    .Include(p => p.corridaCombinadasubordinadoNavigation)
-    .ToListAsync();
+                .OrderBy(p => p.posicion)
+                .Where(t => t.idTablero == id && t.archivada == false)
+                .Include(u => u.detalleReporte)
+                    .ThenInclude(o => o.idOperacionNavigation)
+                .Include(u => u.detalleReporte)
+                    .ThenInclude(m => m.maquinaNavigation)
+                .Include(m => m.tarjetaCampo)
+                .Include(s => s.tarjetaEtiqueta)
+                    .ThenInclude(e => e.idEtiquetaNavigation)
+                .Include(f => f.oFNavigation)
+                .Include(l => l.idPosturaNavigation)
+                .Include(v => v.idMaterialNavigation)
+                .Include(a => a.asignacion)
+                    .ThenInclude(u => u.userNavigation)
+                .Include(p => p.corridaCombinadamaestroNavigation)
+                .Include(p => p.corridaCombinadasubordinadoNavigation)
+                .Select(p => new
+                {
+                    Proceso = p,
+                    DetalleReporteOrdenado = p.detalleReporte
+                        .OrderBy(d => d.fechaHora)
+                        .ThenBy(d => d.horaInicio)
+                        .ToList()
+                })
+                .ToListAsync();
 
-            foreach (var proceso in procesos)
+            // Cargar subordinados de corrida combinada
+            foreach (var procesoWrapper in procesos)
             {
-                // Cargar subordinados de corridaCombinadamaestroNavigation (lista 1:N)
+                var proceso = procesoWrapper.Proceso;
+
                 if (proceso.corridaCombinadamaestroNavigation != null)
                 {
                     foreach (var corrida in proceso.corridaCombinadamaestroNavigation)
@@ -600,7 +611,6 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                     }
                 }
 
-                // Cargar subordinado de corridaCombinadasubordinadoNavigation (1:1)
                 if (proceso.corridaCombinadasubordinadoNavigation?.subordinado != null)
                 {
                     var subordinado = await _context.procesoOf
@@ -611,90 +621,69 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 }
             }
 
-
             var dtos = new List<ProcesoOfVistaTableroDto>();
 
-            foreach (var proceso in procesos)
+            foreach (var procesoWrapper in procesos)
             {
+                var proceso = procesoWrapper.Proceso;
                 var dto = _mapper.Map<ProcesoOfVistaTableroDto>(proceso);
+                dto.detalleProcesoOf = _mapper.Map<List<DetalleReporteDto>>(procesoWrapper.DetalleReporteOrdenado);
 
                 switch (proceso.tipoMaquinaSAP)
                 {
                     case "impresion":
-                        var detalleImpresora = await _context.procesoImpresora
-                            .Where(p => p.idProceso == proceso.idProceso)
-                            .FirstOrDefaultAsync();
-                        dto.DetalleProceso = _mapper.Map<ProcesoImpresoraDto>(detalleImpresora);
+                        dto.DetalleProceso = _mapper.Map<ProcesoImpresoraDto>(
+                            await _context.procesoImpresora.FirstOrDefaultAsync(p => p.idProceso == proceso.idProceso));
                         break;
 
                     case "troquel":
-                        var detalleTroqueladora = await _context.procesoTroqueladora
-                            .Where(p => p.idProceso == proceso.idProceso)
-                            .FirstOrDefaultAsync();
-                        dto.DetalleProceso = _mapper.Map<ProcesoTroqueladoraDto>(detalleTroqueladora);
+                        dto.DetalleProceso = _mapper.Map<ProcesoTroqueladoraDto>(
+                            await _context.procesoTroqueladora.FirstOrDefaultAsync(p => p.idProceso == proceso.idProceso));
                         break;
 
                     case "barniz":
-                        var detalleBarnizadora = await _context.procesoBarniz
-                            .Where(p => p.idProceso == proceso.idProceso)
-                            .FirstOrDefaultAsync();
-                        dto.DetalleProceso = _mapper.Map<ProcesoBarnizDto>(detalleBarnizadora);
+                        dto.DetalleProceso = _mapper.Map<ProcesoBarnizDto>(
+                            await _context.procesoBarniz.FirstOrDefaultAsync(p => p.idProceso == proceso.idProceso));
                         break;
 
                     case "pegadora":
-                        var detallePegadora = await _context.procesoPegadora
-                            .Where(p => p.idProceso == proceso.idProceso)
-                            .FirstOrDefaultAsync();
-                        dto.DetalleProceso = _mapper.Map<ProcesoPegadoraDto>(detallePegadora);
+                        dto.DetalleProceso = _mapper.Map<ProcesoPegadoraDto>(
+                            await _context.procesoPegadora.FirstOrDefaultAsync(p => p.idProceso == proceso.idProceso));
                         break;
 
                     case "acabado":
-                        var detalleAcabado = await _context.procesoAcabado
-                            .Where(p => p.idProceso == proceso.idProceso)
-                            .FirstOrDefaultAsync();
-                        dto.DetalleProceso = _mapper.Map<ProcesoAcabadoDto>(detalleAcabado);
+                        dto.DetalleProceso = _mapper.Map<ProcesoAcabadoDto>(
+                            await _context.procesoAcabado.FirstOrDefaultAsync(p => p.idProceso == proceso.idProceso));
                         break;
 
                     case "preprensa":
-                        var detallePreprensa = await _context.procesoPreprensa
-                            .Where(p => p.idProceso == proceso.idProceso)
-                            .FirstOrDefaultAsync();
-                        dto.DetalleProceso = _mapper.Map<ProcesoPreprensaDto>(detallePreprensa);
+                        dto.DetalleProceso = _mapper.Map<ProcesoPreprensaDto>(
+                            await _context.procesoPreprensa.FirstOrDefaultAsync(p => p.idProceso == proceso.idProceso));
                         break;
 
-                        case "serigrafia":
-                        var detalleSerigrafia = await _context.procesoSerigrafia
-                            .Where(p => p.idProceso == proceso.idProceso)
-                            .FirstOrDefaultAsync();
-                        dto.DetalleProceso = _mapper.Map<ProcesoSerigrafiaDto>(detalleSerigrafia);
+                    case "serigrafia":
+                        dto.DetalleProceso = _mapper.Map<ProcesoSerigrafiaDto>(
+                            await _context.procesoSerigrafia.FirstOrDefaultAsync(p => p.idProceso == proceso.idProceso));
                         break;
 
-                        case "impresionFlexo":
-                        var detalleImpresionFlexo = await _context.procesoImpresoraFlexo
-                        .Where(p => p.idProceso == proceso.idProceso)
-                        .FirstOrDefaultAsync();
-                        dto.DetalleProceso = _mapper.Map<ProcesoImpresoraFlexoDto>(detalleImpresionFlexo);
+                    case "impresionFlexo":
+                        dto.DetalleProceso = _mapper.Map<ProcesoImpresoraFlexoDto>(
+                            await _context.procesoImpresoraFlexo.FirstOrDefaultAsync(p => p.idProceso == proceso.idProceso));
                         break;
 
-                        case "acabadoFlexo":
-                        var detalleAcabadoFlexo = await _context.procesoAcabadoFlexo
-                            .Where(p => p.idProceso == proceso.idProceso)
-                            .FirstOrDefaultAsync();
-                        dto.DetalleProceso = _mapper.Map<ProcesoAcabadoFlexoDto>(detalleAcabadoFlexo);
+                    case "acabadoFlexo":
+                        dto.DetalleProceso = _mapper.Map<ProcesoAcabadoFlexoDto>(
+                            await _context.procesoAcabadoFlexo.FirstOrDefaultAsync(p => p.idProceso == proceso.idProceso));
                         break;
 
-                        case "mangaFlexo":
-                        var detalleMangaFlexo = await _context.procesoMangaFlexo
-                            .Where(p => p.idProceso == proceso.idProceso)
-                            .FirstOrDefaultAsync();
-                        dto.DetalleProceso = _mapper.Map<ProcesoMangaFlexoDto>(detalleMangaFlexo);
+                    case "mangaFlexo":
+                        dto.DetalleProceso = _mapper.Map<ProcesoMangaFlexoDto>(
+                            await _context.procesoMangaFlexo.FirstOrDefaultAsync(p => p.idProceso == proceso.idProceso));
                         break;
 
-                        case "procesosFlexo":
-                        var detalleProcesosFlexo = await _context.procesosFlexo
-                        .Where(p => p.idProceso == proceso.idProceso)
-                        .FirstOrDefaultAsync();
-                        dto.DetalleProceso = _mapper.Map<ProcesosFlexoDto>(detalleProcesosFlexo);
+                    case "procesosFlexo":
+                        dto.DetalleProceso = _mapper.Map<ProcesosFlexoDto>(
+                            await _context.procesosFlexo.FirstOrDefaultAsync(p => p.idProceso == proceso.idProceso));
                         break;
 
                     default:
@@ -707,6 +696,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
 
             return Ok(dtos);
         }
+
 
         // GET: api/procesoOf
         [HttpGet("get/tablero/user/{user}")]

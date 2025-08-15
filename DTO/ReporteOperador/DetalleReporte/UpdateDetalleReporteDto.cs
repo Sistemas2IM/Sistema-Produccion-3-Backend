@@ -85,5 +85,7 @@
         public DateOnly? fecha { get; set; }
 
         public string? actualizadoPor { get; set; }
+
+        public bool? bloqueada { get; set; }
     }
 }

@@ -58,6 +58,12 @@ public partial class reportesDeOperadores
 
     public bool? cancelado { get; set; }
 
+    [StringLength(50)]
+    public string enviadoPor { get; set; }
+
+    [StringLength(50)]
+    public string aprobadoPor { get; set; }
+
     [InverseProperty("idReporteNavigation")]
     public virtual ICollection<detalleReporte> detalleReporte { get; set; } = new List<detalleReporte>();
 

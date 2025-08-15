@@ -239,7 +239,7 @@ public partial class base_nuevaContext : DbContext
 
         modelBuilder.Entity<asignacion>(entity =>
         {
-            entity.HasKey(e => e.idAsignacion).HasName("PK_ASIGNACION");
+            entity.HasKey(e => e.idAsignacion).HasName("PK__asignaci__E1714478BB8AE70F");
 
             entity.Property(e => e.user).UseCollation("SQL_Latin1_General_CP1_CI_AS");
 
@@ -691,6 +691,7 @@ public partial class base_nuevaContext : DbContext
         {
             entity.HasKey(e => e.idDetalleReporte).HasName("PK_DETALLEREPORTE");
 
+            entity.Property(e => e.bloqueada).HasDefaultValue(false);
             entity.Property(e => e.cliente).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.descripcion).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.idMaterial).UseCollation("SQL_Latin1_General_CP1_CI_AS");
@@ -1443,6 +1444,8 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.idTipoReporteNavigation).WithMany(p => p.reportesDeOperadores).HasConstraintName("FK_REPORTES_TIPO");
 
             entity.HasOne(d => d.operadorNavigation).WithMany(p => p.reportesDeOperadores).HasConstraintName("FK_REPORTES_OPERADOR");
+
+            entity.ToTable(tb => tb.UseSqlOutputClause(false));
         });
 
         modelBuilder.Entity<rol>(entity =>
