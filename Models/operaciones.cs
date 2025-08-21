@@ -25,6 +25,8 @@ public partial class operaciones
     [StringLength(3)]
     public string prefijo { get; set; }
 
+    public bool? sumativa { get; set; }
+
     [InverseProperty("idOperacionNavigation")]
     public virtual ICollection<detalleOperacionProceso> detalleOperacionProceso { get; set; } = new List<detalleOperacionProceso>();
 
@@ -34,4 +36,7 @@ public partial class operaciones
     [ForeignKey("familiaMaquina")]
     [InverseProperty("operaciones")]
     public virtual familliaDeMaquina familiaMaquinaNavigation { get; set; }
+
+    [InverseProperty("idOperacionNavigation")]
+    public virtual ICollection<listaItem> listaItem { get; set; } = new List<listaItem>();
 }

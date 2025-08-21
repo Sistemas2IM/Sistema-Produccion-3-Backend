@@ -31,6 +31,11 @@ using Sistema_Produccion_3_Backend.DTO.Etiquetas.EtiquetaOf;
 using Sistema_Produccion_3_Backend.DTO.Etiquetas.EtiquetaOf.BatchEtiquetaOf;
 using Sistema_Produccion_3_Backend.DTO.Etiquetas.TarjetaEtiqueta;
 using Sistema_Produccion_3_Backend.DTO.Etiquetas.TarjetaEtiqueta.BatchTarjetaEtiqueta;
+using Sistema_Produccion_3_Backend.DTO.ListaDeOperaciones;
+using Sistema_Produccion_3_Backend.DTO.ListaDeOperaciones.ListaItem;
+using Sistema_Produccion_3_Backend.DTO.ListaDeOperaciones.ListaItem.Batch;
+using Sistema_Produccion_3_Backend.DTO.ListaDeOperaciones.ListaMaquina;
+using Sistema_Produccion_3_Backend.DTO.ListaDeOperaciones.ListaMaquina.Batch;
 using Sistema_Produccion_3_Backend.DTO.LoginAuth;
 using Sistema_Produccion_3_Backend.DTO.LoginAuth.SesionOperador;
 using Sistema_Produccion_3_Backend.DTO.Logistica;
@@ -835,6 +840,30 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             CreateMap<anexos_NEXO, AddAnexoNEXODto>().ReverseMap();
             CreateMap<UpdateAnexoNEXODto, anexos_NEXO>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            // LISTA DE OPERACIONES ===================================================================================
+            CreateMap<listaDeOperaciones, listaDeOperacionesDto>().ReverseMap();
+            CreateMap<listaDeOperaciones, AddListaDeOperacionesDto>().ReverseMap();
+            CreateMap<UpdateListaDeOperacionesDto, listaDeOperaciones>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            {
+                CreateMap<listaItem, listaItemDto>().ReverseMap();
+                CreateMap<listaItem, AddListaItemDto>().ReverseMap();
+                CreateMap<UpdateListaItemDto, listaItem>()
+                    .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+                CreateMap<listaItem, BatchAddListaItemDto>().ReverseMap();
+                CreateMap<BatchUpdateListaItemDto, listaItem>()
+                    .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+                CreateMap<listaMaquina, listaMaquinaDto>().ReverseMap();
+                CreateMap<listaMaquina, AddListaMaquinaDto>().ReverseMap();
+                CreateMap<UpdateListaMaquinaDto, listaMaquina>()
+                    .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+                CreateMap<listaMaquina, BatchAddListaMaquinaDto>().ReverseMap();
+                CreateMap<BatchUpdateListaMaquinaDto, listaMaquina>()
+                    .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            }
         }
     }
 }

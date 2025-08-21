@@ -13,8 +13,6 @@ public partial class base_nuevaContext : DbContext
     {
     }
 
-    public virtual DbSet<HistoricoDatos> HistoricoDatos { get; set; }
-
     public virtual DbSet<anexos_NEXO> anexos_NEXO { get; set; }
 
     public virtual DbSet<areas> areas { get; set; }
@@ -88,6 +86,12 @@ public partial class base_nuevaContext : DbContext
     public virtual DbSet<generalidadColor> generalidadColor { get; set; }
 
     public virtual DbSet<gira> gira { get; set; }
+
+    public virtual DbSet<listaDeOperaciones> listaDeOperaciones { get; set; }
+
+    public virtual DbSet<listaItem> listaItem { get; set; }
+
+    public virtual DbSet<listaMaquina> listaMaquina { get; set; }
 
     public virtual DbSet<listasEmpaque> listasEmpaque { get; set; }
 
@@ -203,13 +207,6 @@ public partial class base_nuevaContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<HistoricoDatos>(entity =>
-        {
-            entity.HasKey(e => e.ID).HasName("PK__Historic__3214EC270C355F8F");
-
-            entity.Property(e => e.IDProcedimiento).UseCollation("SQL_Latin1_General_CP1_CI_AS");
-        });
-
         modelBuilder.Entity<anexos_NEXO>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__anexos_N__3214EC076FC81350");
@@ -890,6 +887,54 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.idVehiculoNavigation).WithMany(p => p.gira).HasConstraintName("FK_GIRA_VEHICULO");
         });
 
+        modelBuilder.Entity<listaDeOperaciones>(entity =>
+        {
+            entity.HasKey(e => e.idLista).HasName("PK__listaDeO__6C8A0FE5D17F6C83");
+
+            entity.HasMany(d => d.idMaquina).WithMany(p => p.idLista)
+                .UsingEntity<Dictionary<string, object>>(
+                    "PruebaClaveCompuesta",
+                    r => r.HasOne<maquinas>().WithMany()
+                        .HasForeignKey("idMaquina")
+                        .OnDelete(DeleteBehavior.ClientSetNull)
+                        .HasConstraintName("FK_MAQUINOLA"),
+                    l => l.HasOne<listaDeOperaciones>().WithMany()
+                        .HasForeignKey("idLista")
+                        .OnDelete(DeleteBehavior.ClientSetNull)
+                        .HasConstraintName("FK_LISTA"),
+                    j =>
+                    {
+                        j.HasKey("idLista", "idMaquina").HasName("PK__PruebaCl__DE7180942E82DF97");
+                        j.HasIndex(new[] { "idLista", "idMaquina" }, "MAQUINA_LISTA_FK");
+                    });
+        });
+
+        modelBuilder.Entity<listaItem>(entity =>
+        {
+            entity.HasKey(e => e.idListaItem).HasName("PK__listaIte__6688B8E42ED32F4F");
+
+            entity.HasOne(d => d.idListaNavigation).WithMany(p => p.listaItem)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK_LISTA_DETALLE");
+
+            entity.HasOne(d => d.idOperacionNavigation).WithMany(p => p.listaItem)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK_LISTA_OPERACION");
+        });
+
+        modelBuilder.Entity<listaMaquina>(entity =>
+        {
+            entity.HasKey(e => e.idListaMaquina).HasName("PK__listaMaq__836831C80664B053");
+
+            entity.HasOne(d => d.idListaNavigation).WithMany(p => p.listaMaquina)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK_LISTA_ASIGNACION");
+
+            entity.HasOne(d => d.idMaquinaNavigation).WithMany(p => p.listaMaquina)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK_LISTA_MAQUINA");
+        });
+
         modelBuilder.Entity<listasEmpaque>(entity =>
         {
             entity.HasKey(e => e.idEmpaque).HasName("PK__listasEm__3AF2C2D965ECFF3E");
@@ -1012,6 +1057,7 @@ public partial class base_nuevaContext : DbContext
 
             entity.Property(e => e.nombreOperacion).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.prefijo).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.sumativa).HasDefaultValue(false);
             entity.Property(e => e.tipoOperacion).UseCollation("SQL_Latin1_General_CP1_CI_AS");
 
             entity.HasOne(d => d.familiaMaquinaNavigation).WithMany(p => p.operaciones).HasConstraintName("FK_FAMILIA_MAQUINA");

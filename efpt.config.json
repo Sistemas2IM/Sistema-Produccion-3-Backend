@@ -163,7 +163,15 @@
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[HistoricoDatos]",
+         "Name": "[dbo].[listaDeOperaciones]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[listaItem]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[listaMaquina]",
          "ObjectType": 0
       },
       {
@@ -292,6 +300,10 @@
       },
       {
          "Name": "[dbo].[procesoTroqueladora]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[PruebaClaveCompuesta]",
          "ObjectType": 0
       },
       {
