@@ -842,13 +842,19 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             // LISTA DE OPERACIONES ===================================================================================
-            CreateMap<listaDeOperaciones, listaDeOperacionesDto>().ReverseMap();
+            CreateMap<listaDeOperaciones, listaDeOperacionesDto>()
+                .ForMember(dest => dest.items, opt => opt.MapFrom(src => src.listaItem))
+                .ReverseMap();
             CreateMap<listaDeOperaciones, AddListaDeOperacionesDto>().ReverseMap();
             CreateMap<UpdateListaDeOperacionesDto, listaDeOperaciones>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             {
-                CreateMap<listaItem, listaItemDto>().ReverseMap();
+                CreateMap<listaItem, listaItemDto>()
+                    .ForMember(dest => dest.prefijo, opt => opt.MapFrom(src => src.idOperacionNavigation.prefijo))
+                    .ForMember(dest => dest.tipoOperacion, opt => opt.MapFrom(src => src.idOperacionNavigation.tipoOperacion))
+                    .ForMember(dest => dest.nombreOperacion, opt => opt.MapFrom(src => src.idOperacionNavigation.nombreOperacion))
+                    .ReverseMap();
                 CreateMap<listaItem, AddListaItemDto>().ReverseMap();
                 CreateMap<UpdateListaItemDto, listaItem>()
                     .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));

@@ -25,7 +25,10 @@ namespace Sistema_Produccion_3_Backend.Controllers.ListaDeOperaciones
         [HttpGet("get")]
         public async Task<ActionResult<IEnumerable<listaDeOperacionesDto>>> GetListaDeOperaciones()
         {
-            var listaDeOperaciones = await _context.listaDeOperaciones.ToListAsync();
+            var listaDeOperaciones = await _context.listaDeOperaciones
+                .Include(lo => lo.listaItem)
+                .ThenInclude(o => o.idOperacionNavigation)
+                .ToListAsync();
             var listaDeOperacionesDto = _mapper.Map<List<listaDeOperacionesDto>>(listaDeOperaciones);
 
             return Ok(listaDeOperacionesDto);
@@ -35,7 +38,10 @@ namespace Sistema_Produccion_3_Backend.Controllers.ListaDeOperaciones
         [HttpGet("get/{id}")]
         public async Task<ActionResult<listaDeOperacionesDto>> GetListaDeOperaciones(int id)
         {
-            var listaDeOperaciones = await _context.listaDeOperaciones.FindAsync(id);
+            var listaDeOperaciones = await _context.listaDeOperaciones
+                .Include(lo => lo.listaItem)
+                .ThenInclude(o => o.idOperacionNavigation)
+                .FirstOrDefaultAsync(lo => lo.idLista == id);
             var listaDeOperacionesDto = _mapper.Map<listaDeOperacionesDto>(listaDeOperaciones);
 
             if (listaDeOperacionesDto == null)
