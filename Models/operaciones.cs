@@ -25,7 +25,7 @@ public partial class operaciones
     [StringLength(3)]
     public string prefijo { get; set; }
 
-    public bool? sumativa { get; set; }
+    //public bool? sumativa { get; set; }
 
     [InverseProperty("idOperacionNavigation")]
     public virtual ICollection<detalleOperacionProceso> detalleOperacionProceso { get; set; } = new List<detalleOperacionProceso>();

@@ -1057,7 +1057,7 @@ public partial class base_nuevaContext : DbContext
 
             entity.Property(e => e.nombreOperacion).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.prefijo).UseCollation("SQL_Latin1_General_CP1_CI_AS");
-            entity.Property(e => e.sumativa).HasDefaultValue(false);
+            //entity.Property(e => e.sumativa).HasDefaultValue(false);
             entity.Property(e => e.tipoOperacion).UseCollation("SQL_Latin1_General_CP1_CI_AS");
 
             entity.HasOne(d => d.familiaMaquinaNavigation).WithMany(p => p.operaciones).HasConstraintName("FK_FAMILIA_MAQUINA");
