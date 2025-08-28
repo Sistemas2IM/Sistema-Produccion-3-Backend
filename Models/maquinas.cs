@@ -65,8 +65,4 @@ public partial class maquinas
 
     [InverseProperty("idMaquinaNavigation")]
     public virtual ICollection<tablerosOf> tablerosOf { get; set; } = new List<tablerosOf>();
-
-    [ForeignKey("idMaquina")]
-    [InverseProperty("idMaquina")]
-    public virtual ICollection<listaDeOperaciones> idLista { get; set; } = new List<listaDeOperaciones>();
 }

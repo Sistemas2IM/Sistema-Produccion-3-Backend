@@ -24,8 +24,4 @@ public partial class listaDeOperaciones
 
     [InverseProperty("idListaNavigation")]
     public virtual ICollection<listaMaquina> listaMaquina { get; set; } = new List<listaMaquina>();
-
-    [ForeignKey("idLista")]
-    [InverseProperty("idLista")]
-    public virtual ICollection<maquinas> idMaquina { get; set; } = new List<maquinas>();
 }

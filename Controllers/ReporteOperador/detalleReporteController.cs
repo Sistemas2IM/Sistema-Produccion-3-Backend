@@ -38,6 +38,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
                 .Include(r => r.idMaterialNavigation)
                 .Include(p => p.idTipoCierreNavigation)
                 .Include(sm => sm.oFNavigation)
+                .Include(m => m.maquinaNavigation)
                 .ToArrayAsync();
 
             if (detalleReporte == null || detalleReporte.Length == 0)
@@ -59,6 +60,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
                 .Include(r => r.idMaterialNavigation)
                 .Include(p => p.idTipoCierreNavigation)
                 .Include(sm => sm.oFNavigation)
+                .Include(m => m.maquinaNavigation)
                 .FirstOrDefaultAsync(u => u.idDetalleReporte == id);
 
             var detalleReporteDto = _mapper.Map<DetalleReporteDto>(detalleReporte);

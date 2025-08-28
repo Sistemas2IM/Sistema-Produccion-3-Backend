@@ -26,7 +26,6 @@ public partial class procesoOf
     [StringLength(25)]
     public string idMaterial { get; set; }
 
-    [StringLength(254)]
     public string nombreTarjeta { get; set; }
 
     [StringLength(200)]

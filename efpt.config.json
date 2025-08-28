@@ -303,10 +303,6 @@
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[PruebaClaveCompuesta]",
-         "ObjectType": 0
-      },
-      {
          "Name": "[dbo].[refreshToken]",
          "ObjectType": 0
       },
