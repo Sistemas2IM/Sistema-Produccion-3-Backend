@@ -30,6 +30,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Catalogo
         {
             var maquina = await _context.maquinas
                 .Include(m => m.idFamiliaNavigation)
+                .Include(li => li.listaMaquina)
                 .ToListAsync();
             var maquinaDto = _mapper.Map<List<MaquinaDto>>(maquina);
 
@@ -42,6 +43,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Catalogo
         {
             var maquinas = await _context.maquinas
                 .Include(m => m.idFamiliaNavigation)
+                .Include(li => li.listaMaquina)
                 .FirstOrDefaultAsync(u => u.idMaquina == id);
 
             var maquinaDto = _mapper.Map<MaquinaDto>(maquinas);

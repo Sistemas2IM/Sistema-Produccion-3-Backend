@@ -1,4 +1,5 @@
-﻿using Sistema_Produccion_3_Backend.Models;
+﻿using Sistema_Produccion_3_Backend.DTO.ListaDeOperaciones.ListaMaquina;
+using Sistema_Produccion_3_Backend.Models;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Sistema_Produccion_3_Backend.DTO.Catalogo.Maquinas
@@ -18,5 +19,7 @@ namespace Sistema_Produccion_3_Backend.DTO.Catalogo.Maquinas
         public string? nombreAlterno { get; set; }
 
         public string? familiaNombre { get; set; }
+
+        public List<listaMaquinaDto>? listaMaquinaDto { get; set; }
     }
 }

@@ -492,6 +492,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             // CATALOGOS ==============================================================================================
             CreateMap<maquinas, MaquinaDto>()
                 .ForMember(dest => dest.familiaNombre, opt => opt.MapFrom(src => src.idFamiliaNavigation.nombreFamilia))
+                .ForMember(dest => dest.listaMaquinaDto, opt => opt.MapFrom(src => src.listaMaquina))
                 .ReverseMap();
             CreateMap<maquinas, ProcesoMaquinaDto>()
                 .ForMember(dest => dest.familiaNombre, opt => opt.MapFrom(src => src.idFamiliaNavigation.nombreFamilia))
