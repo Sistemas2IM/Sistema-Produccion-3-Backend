@@ -9,11 +9,13 @@ using Microsoft.EntityFrameworkCore;
 namespace Sistema_Produccion_3_Backend.Models;
 
 [Index("idTipoCierre", Name = "DETALLE_TIPO_CIERRE_FK")]
+[Index("maquina", Name = "MAQUINA_FK")]
 [Index("idMaterial", Name = "MATERIAL_DETALLE_FK")]
 [Index("oF", Name = "OF_DETALLE_REPORTE_FK")]
 [Index("idOperacion", Name = "OPERACION_DETALLE_FK")]
 [Index("idProceso", Name = "PROCESO_REPORTE_FK")]
 [Index("idReporte", Name = "REPORTE_DETALLE_FK")]
+[Index("idTransferencia", Name = "TRANSFERENCIA_FK")]
 public partial class detalleReporte
 {
     [Key]
@@ -115,6 +117,8 @@ public partial class detalleReporte
 
     public bool? bloqueada { get; set; }
 
+    public int? idTransferencia { get; set; }
+
     [ForeignKey("idMaterial")]
     [InverseProperty("detalleReporte")]
     public virtual material idMaterialNavigation { get; set; }
@@ -135,6 +139,10 @@ public partial class detalleReporte
     [InverseProperty("detalleReporte")]
     public virtual tipoCierre idTipoCierreNavigation { get; set; }
 
+    [ForeignKey("idTransferencia")]
+    [InverseProperty("detalleReporte")]
+    public virtual transferenciaProceso idTransferenciaNavigation { get; set; }
+
     [ForeignKey("maquina")]
     [InverseProperty("detalleReporte")]
     public virtual maquinas maquinaNavigation { get; set; }
@@ -142,4 +150,7 @@ public partial class detalleReporte
     [ForeignKey("oF")]
     [InverseProperty("detalleReporte")]
     public virtual tarjetaOf oFNavigation { get; set; }
+
+    [InverseProperty("idProduccionNavigation")]
+    public virtual ICollection<transferenciaProceso> transferenciaProceso { get; set; } = new List<transferenciaProceso>();
 }

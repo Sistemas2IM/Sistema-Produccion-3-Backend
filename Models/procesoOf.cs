@@ -26,6 +26,7 @@ public partial class procesoOf
     [StringLength(25)]
     public string idMaterial { get; set; }
 
+    [StringLength(254)]
     public string nombreTarjeta { get; set; }
 
     [StringLength(200)]
@@ -185,4 +186,10 @@ public partial class procesoOf
 
     [InverseProperty("idProcesoNavigation")]
     public virtual ICollection<tarjetaEtiqueta> tarjetaEtiqueta { get; set; } = new List<tarjetaEtiqueta>();
+
+    [InverseProperty("idDestinoNavigation")]
+    public virtual ICollection<transferenciaProceso> transferenciaProcesoidDestinoNavigation { get; set; } = new List<transferenciaProceso>();
+
+    [InverseProperty("idOrigenNavigation")]
+    public virtual ICollection<transferenciaProceso> transferenciaProcesoidOrigenNavigation { get; set; } = new List<transferenciaProceso>();
 }

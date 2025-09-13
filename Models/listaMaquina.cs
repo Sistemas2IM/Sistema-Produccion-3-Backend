@@ -19,6 +19,8 @@ public partial class listaMaquina
 
     public int? idMaquina { get; set; }
 
+    public bool? alterna { get; set; }
+
     [ForeignKey("idLista")]
     [InverseProperty("listaMaquina")]
     public virtual listaDeOperaciones idListaNavigation { get; set; }

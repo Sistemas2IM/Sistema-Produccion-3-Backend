@@ -99,6 +99,8 @@ public partial class base_nuevaContext : DbContext
 
     public virtual DbSet<logCambiosProceso> logCambiosProceso { get; set; }
 
+    public virtual DbSet<lotePliego> lotePliego { get; set; }
+
     public virtual DbSet<maquinas> maquinas { get; set; }
 
     public virtual DbSet<material> material { get; set; }
@@ -169,6 +171,10 @@ public partial class base_nuevaContext : DbContext
 
     public virtual DbSet<sesionOperador> sesionOperador { get; set; }
 
+    public virtual DbSet<solicitudMateriales> solicitudMateriales { get; set; }
+
+    public virtual DbSet<solicitudMaterialesOf> solicitudMaterialesOf { get; set; }
+
     public virtual DbSet<subModulo> subModulo { get; set; }
 
     public virtual DbSet<sysdiagrams> sysdiagrams { get; set; }
@@ -196,6 +202,8 @@ public partial class base_nuevaContext : DbContext
     public virtual DbSet<tipoPleca> tipoPleca { get; set; }
 
     public virtual DbSet<tipoReporte> tipoReporte { get; set; }
+
+    public virtual DbSet<transferenciaProceso> transferenciaProceso { get; set; }
 
     public virtual DbSet<turnos> turnos { get; set; }
 
@@ -236,7 +244,7 @@ public partial class base_nuevaContext : DbContext
 
         modelBuilder.Entity<asignacion>(entity =>
         {
-            entity.HasKey(e => e.idAsignacion).HasName("PK_ASIGNACION");
+            entity.HasKey(e => e.idAsignacion).HasName("PK__asignaci__E1714478BB8AE70F");
 
             entity.Property(e => e.user).UseCollation("SQL_Latin1_General_CP1_CI_AS");
 
@@ -706,6 +714,8 @@ public partial class base_nuevaContext : DbContext
 
             entity.HasOne(d => d.idTipoCierreNavigation).WithMany(p => p.detalleReporte).HasConstraintName("FK_DETALLE_TIPOCIERRE");
 
+            entity.HasOne(d => d.idTransferenciaNavigation).WithMany(p => p.detalleReporte).HasConstraintName("FK_TRANSFERENCIA_REPORTE");
+
             entity.HasOne(d => d.maquinaNavigation).WithMany(p => p.detalleReporte).HasConstraintName("FK_MAQUINA_OPERACION_PROCESO");
 
             entity.HasOne(d => d.oFNavigation).WithMany(p => p.detalleReporte).HasConstraintName("FK_DETALLE_OF");
@@ -909,6 +919,8 @@ public partial class base_nuevaContext : DbContext
         {
             entity.HasKey(e => e.idListaMaquina).HasName("PK__listaMaq__836831C80664B053");
 
+            entity.Property(e => e.alterna).HasDefaultValue(false);
+
             entity.HasOne(d => d.idListaNavigation).WithMany(p => p.listaMaquina)
                 .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_LISTA_ASIGNACION");
@@ -953,6 +965,17 @@ public partial class base_nuevaContext : DbContext
                 .HasConstraintName("FK_PROCESO");
 
             entity.HasOne(d => d.usuario).WithMany(p => p.logCambiosProceso).HasConstraintName("FK_USUARIO");
+        });
+
+        modelBuilder.Entity<lotePliego>(entity =>
+        {
+            entity.HasKey(e => e.idLote).HasName("PK_LOTEPLIEGO");
+
+            entity.Property(e => e.creadoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+
+            entity.HasOne(d => d.creadoPorNavigation).WithMany(p => p.lotePliego).HasConstraintName("FK_CREADO_POR");
+
+            entity.HasOne(d => d.idSolicitudNavigation).WithMany(p => p.lotePliego).HasConstraintName("FK_LOTEPLIEGO_SOLICITUD");
         });
 
         modelBuilder.Entity<maquinas>(entity =>
@@ -1317,7 +1340,11 @@ public partial class base_nuevaContext : DbContext
         {
             entity.HasKey(e => e.idProceso).HasName("PK_PROCESOOF");
 
-            entity.ToTable(tb => tb.HasTrigger("trg_UpdateTarjetaOf"));
+            entity.ToTable(tb =>
+                {
+                    tb.HasTrigger("trg_BloquearDetallesFinalizados");
+                    tb.HasTrigger("trg_UpdateTarjetaOf");
+                });
 
             entity.Property(e => e.actualizadoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.cancelada).HasDefaultValue(false);
@@ -1536,6 +1563,26 @@ public partial class base_nuevaContext : DbContext
                 .HasConstraintName("FK_OPERADOR");
         });
 
+        modelBuilder.Entity<solicitudMateriales>(entity =>
+        {
+            entity.HasKey(e => e.idSolicitud).HasName("PK_SOLICITUDMATERIALES");
+
+            entity.Property(e => e.idSolicitud).ValueGeneratedNever();
+        });
+
+        modelBuilder.Entity<solicitudMaterialesOf>(entity =>
+        {
+            entity.HasKey(e => new { e.oF, e.idSolicitud }).HasName("PK_SOLICITUDMATERIALESOF");
+
+            entity.HasOne(d => d.idSolicitudNavigation).WithMany(p => p.solicitudMaterialesOf)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_SOLICITU_OF");
+
+            entity.HasOne(d => d.oFNavigation).WithMany(p => p.solicitudMaterialesOf)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_OF_SOLICITUD");
+        });
+
         modelBuilder.Entity<subModulo>(entity =>
         {
             entity.HasKey(e => e.idSubModulo).HasName("PK_SUBMODULO");
@@ -1682,6 +1729,26 @@ public partial class base_nuevaContext : DbContext
             entity.HasKey(e => e.idTipoReporte).HasName("PK_TIPOREPORTE");
 
             entity.Property(e => e.nombreTipoReporte).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+        });
+
+        modelBuilder.Entity<transferenciaProceso>(entity =>
+        {
+            entity.HasKey(e => e.idTransferencia).HasName("PK_TRANSFERENCIAPROCESO");
+
+            entity.Property(e => e.enviadoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.recibidoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+
+            entity.HasOne(d => d.enviadoPorNavigation).WithMany(p => p.transferenciaProcesoenviadoPorNavigation).HasConstraintName("FK_ENVIADO_POR");
+
+            entity.HasOne(d => d.idDestinoNavigation).WithMany(p => p.transferenciaProcesoidDestinoNavigation).HasConstraintName("FK_TRANSFER_ID_DESTINO_OF");
+
+            entity.HasOne(d => d.idLoteNavigation).WithMany(p => p.transferenciaProceso).HasConstraintName("FK_TRANSFER_LOTEPLIEG");
+
+            entity.HasOne(d => d.idOrigenNavigation).WithMany(p => p.transferenciaProcesoidOrigenNavigation).HasConstraintName("FK_TRANSFER_ID_ORIGEN_OF");
+
+            entity.HasOne(d => d.idProduccionNavigation).WithMany(p => p.transferenciaProceso).HasConstraintName("FK_PRODUCCION_ORIGEN");
+
+            entity.HasOne(d => d.recibidoPorNavigation).WithMany(p => p.transferenciaProcesorecibidoPorNavigation).HasConstraintName("FK_RECIBIDO_POR");
         });
 
         modelBuilder.Entity<turnos>(entity =>

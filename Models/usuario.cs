@@ -70,6 +70,9 @@ public partial class usuario
     [InverseProperty("usuario")]
     public virtual ICollection<logCambiosProceso> logCambiosProceso { get; set; } = new List<logCambiosProceso>();
 
+    [InverseProperty("creadoPorNavigation")]
+    public virtual ICollection<lotePliego> lotePliego { get; set; } = new List<lotePliego>();
+
     [InverseProperty("usuarioNavigation")]
     public virtual ICollection<pausasMaquina> pausasMaquina { get; set; } = new List<pausasMaquina>();
 
@@ -84,4 +87,10 @@ public partial class usuario
 
     [InverseProperty("operadorNavigation")]
     public virtual ICollection<sesionOperador> sesionOperador { get; set; } = new List<sesionOperador>();
+
+    [InverseProperty("enviadoPorNavigation")]
+    public virtual ICollection<transferenciaProceso> transferenciaProcesoenviadoPorNavigation { get; set; } = new List<transferenciaProceso>();
+
+    [InverseProperty("recibidoPorNavigation")]
+    public virtual ICollection<transferenciaProceso> transferenciaProcesorecibidoPorNavigation { get; set; } = new List<transferenciaProceso>();
 }

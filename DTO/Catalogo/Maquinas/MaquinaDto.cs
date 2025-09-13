@@ -20,6 +20,6 @@ namespace Sistema_Produccion_3_Backend.DTO.Catalogo.Maquinas
 
         public string? familiaNombre { get; set; }
 
-        public List<listaMaquinaDto>? listaMaquinaDto { get; set; }
+        public List<listaMaquinaCatalogoDto>? listaMaquinaCatalogoDto { get; set; }
     }
 }

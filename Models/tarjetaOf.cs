@@ -118,4 +118,7 @@ public partial class tarjetaOf
 
     [InverseProperty("oFNavigation")]
     public virtual ICollection<procesoOf> procesoOf { get; set; } = new List<procesoOf>();
+
+    [InverseProperty("oFNavigation")]
+    public virtual ICollection<solicitudMaterialesOf> solicitudMaterialesOf { get; set; } = new List<solicitudMaterialesOf>();
 }

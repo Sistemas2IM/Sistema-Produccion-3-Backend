@@ -5,5 +5,7 @@
         public int? idLista { get; set; }
 
         public int? idMaquina { get; set; }
+
+        public bool? alterna { get; set; }
     }
 }

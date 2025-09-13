@@ -45,6 +45,28 @@ namespace Sistema_Produccion_3_Backend.Controllers.ListaDeOperaciones.ListaMaqui
             return Ok(listaMaquinaDto);
         }
 
+        // GET api/listaMaquina/get/idMaquina/{id}
+        [HttpGet("get/idMaquina/{id}")]
+        public async Task<ActionResult<IEnumerable<listaMaquinaDto>>> GetListaMaquinaId(int id)
+        {
+            var listMaquinas = await _context.listaMaquina
+                .Include(lm => lm.idListaNavigation)
+                    .ThenInclude(lo => lo.listaItem)
+                        .ThenInclude(li => li.idOperacionNavigation)
+                .Where(lm => lm.idMaquina == id)
+                .ToListAsync();
+
+            if (listMaquinas == null || !listMaquinas.Any())
+            {
+                return NotFound($"No se encontró la máquina con el id {id}");
+            }
+
+            var listaMaquinaDtos = _mapper.Map<List<listaMaquinaDto>>(listMaquinas);
+            return Ok(listaMaquinaDtos);
+        }
+
+
+
         // POST api/<listaMaquinaController>
         [HttpPost("post")]
         public async Task<ActionResult<listaItem>> PostListaMaquina(AddListaMaquinaDto addListaMaquinaDto)
@@ -95,16 +117,20 @@ namespace Sistema_Produccion_3_Backend.Controllers.ListaDeOperaciones.ListaMaqui
             {
                 return BadRequest("No se enviaron datos para agregar.");
             }
-            var listaMaquinas = _mapper.Map<List<listaMaquina>>(batchAddDto.addBatchlistaMaquinas);
-            _context.listaMaquina.AddRange(listaMaquinas);
+
+            var listaMaquinas = batchAddDto.addBatchlistaMaquinas.Select(dto => _mapper.Map<listaMaquina>(dto)).ToList();
+
+            await _context.listaMaquina.AddRangeAsync(listaMaquinas);
+
             try
             {
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateException)
+            catch (DbUpdateException ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Error al agregar las máquinas.");
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Error al agregar las máquinas. {ex.Message}");
             }
+
             return Ok(new
             {
                 Message = "Máquinas agregadas correctamente.",

@@ -187,6 +187,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[lotePliego]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[maquinas]",
          "ObjectType": 0
       },
@@ -327,6 +331,14 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[solicitudMateriales]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[solicitudMaterialesOf]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[subModulo]",
          "ObjectType": 0
       },
@@ -380,6 +392,10 @@
       },
       {
          "Name": "[dbo].[tipoReporte]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[transferenciaProceso]",
          "ObjectType": 0
       },
       {

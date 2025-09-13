@@ -102,8 +102,11 @@ namespace Sistema_Produccion_3_Backend.Controllers.ListaDeOperaciones.ListaItem
             {
                 return BadRequest("No se enviaron datos para agregar.");
             }
-            var listaItems = _mapper.Map<List<listaItem>>(batchAddDto.addBatchListaItemDto);
-            _context.listaItem.AddRange(listaItems);
+
+            var listaItems = batchAddDto.addBatchListaItemDto.Select(dto => _mapper.Map<listaItem>(dto)).ToList();
+
+            await _context.listaItem.AddRangeAsync(listaItems);
+
             try
             {
                 await _context.SaveChangesAsync();
@@ -112,6 +115,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.ListaDeOperaciones.ListaItem
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, "Error al agregar los items.");
             }
+
             return Ok(new
             {
                 Message = "Items agregados correctamente.",

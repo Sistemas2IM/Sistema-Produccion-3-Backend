@@ -1,4 +1,5 @@
 ﻿using Sistema_Produccion_3_Backend.DTO.ListaDeOperaciones.ListaItem;
+using Sistema_Produccion_3_Backend.DTO.ListaDeOperaciones.ListaMaquina;
 using Sistema_Produccion_3_Backend.Models;
 
 namespace Sistema_Produccion_3_Backend.DTO.ListaDeOperaciones

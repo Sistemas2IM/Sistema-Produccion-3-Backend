@@ -2,6 +2,6 @@
 {
     public class AddBatchListaMaquinaDto
     {
-        public List<AddBatchListaMaquinaDto>? addBatchlistaMaquinas { get; set; }
+        public List<BatchAddListaMaquinaDto>? addBatchlistaMaquinas { get; set; }
     }
 }

@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Sistema_Produccion_3_Backend.Models;
 
 [Index("oF", Name = "OF_FK")]
+[Index("usuario_id", Name = "USUARIO_FK")]
 public partial class logCambiosOf
 {
     [Key]

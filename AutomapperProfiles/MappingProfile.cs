@@ -85,6 +85,10 @@ using Sistema_Produccion_3_Backend.DTO.ReporteOperador.DetalleReporte.Operacione
 using Sistema_Produccion_3_Backend.DTO.ReporteOperador.DetalleReporte.Operaciones.DetalleOperacionProceso;
 using Sistema_Produccion_3_Backend.DTO.ReporteOperador.EstadoReporte;
 using Sistema_Produccion_3_Backend.DTO.ReporteOperador.PausaMaquina;
+using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.LotePliego;
+using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.SolicitudMateriales;
+using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.SolicitudMaterialOF;
+using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.TransferenciaProceso;
 using Sistema_Produccion_3_Backend.DTO.Tableros;
 using Sistema_Produccion_3_Backend.DTO.Tableros.Areas;
 using Sistema_Produccion_3_Backend.DTO.Tableros.Posturas;
@@ -492,7 +496,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             // CATALOGOS ==============================================================================================
             CreateMap<maquinas, MaquinaDto>()
                 .ForMember(dest => dest.familiaNombre, opt => opt.MapFrom(src => src.idFamiliaNavigation.nombreFamilia))
-                .ForMember(dest => dest.listaMaquinaDto, opt => opt.MapFrom(src => src.listaMaquina))
+                .ForMember(dest => dest.listaMaquinaCatalogoDto, opt => opt.MapFrom(src => src.listaMaquina))
                 .ReverseMap();
             CreateMap<maquinas, ProcesoMaquinaDto>()
                 .ForMember(dest => dest.familiaNombre, opt => opt.MapFrom(src => src.idFamiliaNavigation.nombreFamilia))
@@ -863,14 +867,44 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 CreateMap<BatchUpdateListaItemDto, listaItem>()
                     .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
-                CreateMap<listaMaquina, listaMaquinaDto>().ReverseMap();
+                CreateMap<listaMaquina, listaMaquinaDto>()
+                    .ForMember(dest => dest.listaDeOperacionesDto, opt => opt.MapFrom(src => src.idListaNavigation))
+                    .ReverseMap();
+                CreateMap<listaMaquina, listaMaquinaCatalogoDto>()
+                    .ForMember(dest => dest.nombreLista, opt => opt.MapFrom(src => src.idListaNavigation.nombreLista))
+                    .ReverseMap();
+
                 CreateMap<listaMaquina, AddListaMaquinaDto>().ReverseMap();
+
                 CreateMap<UpdateListaMaquinaDto, listaMaquina>()
                     .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
                 CreateMap<listaMaquina, BatchAddListaMaquinaDto>().ReverseMap();
+
                 CreateMap<BatchUpdateListaMaquinaDto, listaMaquina>()
                     .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             }
+
+            // SOLICITUD DE MATERIALES
+            CreateMap<solicitudMateriales, solicitudMaterialesDto>().ReverseMap();
+            CreateMap<solicitudMateriales, AddSolicitudMaterialesDto>().ReverseMap();
+            CreateMap<solicitudMateriales, UpdateSolicitudMaterialesDto>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            CreateMap<solicitudMaterialesOf, solicitudMaterialesOfDto>().ReverseMap();
+            CreateMap<solicitudMaterialesOf, AddSolicitudMaterialesOfDto>().ReverseMap();
+            CreateMap<solicitudMaterialesOf, UpdateSolicitudMaterialesOfDto>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            CreateMap<lotePliego, lotePliegoDto>().ReverseMap();
+            CreateMap<lotePliego, AddLotePliegoDto>().ReverseMap();
+            CreateMap<lotePliego, UpdateLotePliegoDto>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            CreateMap<transferenciaProceso, transferenciaProcesoDto>().ReverseMap();
+            CreateMap<transferenciaProceso, AddTransferenciaProcesoDto>().ReverseMap();
+            CreateMap<transferenciaProceso, UpdateTransferenciaProcesoDto>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
         }
     }
 }
