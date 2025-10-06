@@ -100,6 +100,14 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
 
         public string? correlativoCC { get; set; }
 
+        public int? orden { get; set; }
+
+        public int? subOrden { get; set; }
+
+        public int? procesoAnterior { get; set; }
+
+        public int? ProcesoSiguiente { get; set; }
+
         public List<AsignacionDto>? asignacionDto { get; set; }
 
         public ProcesoPosturasOfDto? PosturasOfDto { get; set; }

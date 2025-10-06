@@ -75,5 +75,13 @@
         public bool? reproceso { get; set; }
 
         public string? correlativoCC { get; set; }
+
+        public int? orden { get; set; }
+
+        public int? subOrden { get; set; }
+
+        public int? procesoAnterior { get; set; }
+
+        public int? ProcesoSiguiente { get; set; }
     }
 }

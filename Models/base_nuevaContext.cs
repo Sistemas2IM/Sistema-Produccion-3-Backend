@@ -1360,6 +1360,8 @@ public partial class base_nuevaContext : DbContext
             entity.Property(e => e.tipoMaquinaSAP).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.tiroRetiro).UseCollation("SQL_Latin1_General_CP1_CI_AS");
 
+            entity.HasOne(d => d.ProcesoSiguienteNavigation).WithMany(p => p.InverseProcesoSiguienteNavigation).HasConstraintName("FK_PROCESO_SIGUIENTE");
+
             entity.HasOne(d => d.idMaterialNavigation).WithMany(p => p.procesoOf).HasConstraintName("FK_PROCESO_MATERIAL");
 
             entity.HasOne(d => d.idPosturaNavigation).WithMany(p => p.procesoOf).HasConstraintName("FK_PROCESO_POSTURA_");
@@ -1367,6 +1369,8 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.idTableroNavigation).WithMany(p => p.procesoOf).HasConstraintName("FK_PROCESO_TABLERO");
 
             entity.HasOne(d => d.oFNavigation).WithMany(p => p.procesoOf).HasConstraintName("FK_PROCESO_OF");
+
+            entity.HasOne(d => d.procesoAnteriorNavigation).WithMany(p => p.InverseprocesoAnteriorNavigation).HasConstraintName("FK_PROCESO_ANTERIOR");
         });
 
         modelBuilder.Entity<procesoPegadora>(entity =>

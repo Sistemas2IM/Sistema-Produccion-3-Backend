@@ -13,7 +13,7 @@ namespace Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.TransferenciaPr
 
         public string? tipo { get; set; }
 
-        public int? estado { get; set; }
+        public string? estado { get; set; }
 
         public int? idOrigen { get; set; }
 

@@ -99,6 +99,14 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas
 
         public string? correlativoCC { get; set; }
 
+        public int? orden { get; set; }
+
+        public int? subOrden { get; set; }
+
+        public int? procesoAnterior { get; set; }
+
+        public int? ProcesoSiguiente { get; set; }
+
         public PosturasOfDto? posturasOfDto { get; set; }
 
         public MaterialDto? materialDto { get; set; }

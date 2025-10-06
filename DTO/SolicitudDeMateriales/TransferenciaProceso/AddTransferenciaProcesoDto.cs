@@ -8,7 +8,7 @@
 
         public string? tipo { get; set; }
 
-        public int? estado { get; set; }
+        public string? estado { get; set; }
 
         public int? idOrigen { get; set; }
 

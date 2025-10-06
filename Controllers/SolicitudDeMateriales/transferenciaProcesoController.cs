@@ -47,6 +47,71 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales
             return Ok(transferenciaProcesoDto);
         }
 
+        [HttpGet("get/transferenciasProcesos/pendientesOf/{of}")]
+        public async Task<ActionResult<IEnumerable<transferenciaProcesoDto>>> GetTransferenciasPendientesOf(int of)
+        {
+            // Filtrar en base de datos usando navegación
+            var transferenciasProcesos = await _context.transferenciaProceso
+                .Include(t => t.idOrigenNavigation) // trae también el procesoOf
+                .Where(t => t.estado == "Pendiente" // o el valor de estado pendiente en tu BD
+                    && t.idOrigenNavigation.oF == of) // aquí filtras por OF
+                .ToListAsync();
+
+            var transferenciasProcesosDto = _mapper.Map<List<transferenciaProcesoDto>>(transferenciasProcesos);
+
+            if (transferenciasProcesosDto == null || !transferenciasProcesosDto.Any())
+            {
+                return NotFound($"No se encontraron transferencias pendientes para la orden de fabricación {of}");
+            }
+
+            return Ok(transferenciasProcesosDto);
+        }
+
+        [HttpGet("get/transferenciasProcesos/pendientesOfLote/{of}")]
+        public async Task<ActionResult<IEnumerable<transferenciaProcesoDto>>> GetTransferenciasPendientesOfLote(int of)
+        {
+            // Incluimos la cadena completa de navegación para evitar Lazy Loading
+            var transferenciasProcesos = await _context.transferenciaProceso
+                .Include(t => t.idLoteNavigation)
+                    .ThenInclude(l => l.idSolicitudNavigation)
+                        .ThenInclude(s => s.solicitudMaterialesOf)
+                            .ThenInclude(smof => smof.oFNavigation)
+                .Where(t => t.estado == "Pendiente" &&
+                            t.idLoteNavigation.idSolicitudNavigation.solicitudMaterialesOf
+                                .Any(smof => smof.oFNavigation.oF == of)) // Filtro usando Any
+                .ToListAsync();
+
+            var transferenciasProcesosDto = _mapper.Map<List<transferenciaProcesoDto>>(transferenciasProcesos);
+
+            if (transferenciasProcesosDto == null || !transferenciasProcesosDto.Any())
+            {
+                return NotFound($"No se encontraron transferencias pendientes para la orden de fabricación {of}");
+            }
+
+            return Ok(transferenciasProcesosDto);
+        }
+
+
+        [HttpGet("get/transferenciasProcesos/confirmadas/{idDestino}")]
+        public async Task<ActionResult<IEnumerable<transferenciaProcesoDto>>> GetTransferenciasConfirmadasDestino(int idDestino)
+        {
+            // Filtrar en base de datos usando navegación
+            var transferenciasProcesos = await _context.transferenciaProceso
+                .Include(t => t.idOrigenNavigation) // trae también el procesoOf
+                .Where(t => t.estado == "Confirmada" // o el valor de estado pendiente en tu BD
+                    && t.idDestino == idDestino) // aquí filtras por OF
+                .ToListAsync();
+
+            var transferenciasProcesosDto = _mapper.Map<List<transferenciaProcesoDto>>(transferenciasProcesos);
+
+            if (transferenciasProcesosDto == null || !transferenciasProcesosDto.Any())
+            {
+                return NotFound($"No se encontraron transferencias pendientes para el proceso con id: {idDestino}");
+            }
+
+            return Ok(transferenciasProcesosDto);
+        }
+
         // POST api/<transferenciaProcesoController>
         [HttpPost("post")]
         public async Task<ActionResult<transferenciaProceso>> PostetiquetaOf(AddTransferenciaProcesoDto addTransferenciaProcesoDto)

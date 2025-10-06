@@ -27,7 +27,8 @@ public partial class transferenciaProceso
     [StringLength(50)]
     public string tipo { get; set; }
 
-    public int? estado { get; set; }
+    [StringLength(25)]
+    public string estado { get; set; }
 
     public int? idOrigen { get; set; }
 

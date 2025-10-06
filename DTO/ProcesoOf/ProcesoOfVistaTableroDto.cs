@@ -118,6 +118,14 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
 
         public string? correlativoCC { get; set; }
 
+        public int? orden { get; set; }
+
+        public int? subOrden { get; set; }
+
+        public int? procesoAnterior { get; set; }
+
+        public int? ProcesoSiguiente { get; set; }
+
         public List<DetalleReporteDto>? detalleProcesoOf { get; set; }
 
         public List<TarjetaCampoDto>? tarjetaCampoDto { get; set; }

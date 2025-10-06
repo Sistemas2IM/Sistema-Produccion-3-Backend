@@ -11,6 +11,8 @@ namespace Sistema_Produccion_3_Backend.Models;
 [Index("idMaterial", Name = "MATERIAL_PROCESO_FK")]
 [Index("oF", Name = "OF_PROCESO_FK")]
 [Index("idPostura", Name = "POSTURA_PROCESO_FK")]
+[Index("procesoAnterior", Name = "PROCESO_ANTERIOR_FK")]
+[Index("ProcesoSiguiente", Name = "PROCESO_SIGUIENTE_FK")]
 [Index("idTablero", Name = "TABLERO_PROCESO_FK")]
 public partial class procesoOf
 {
@@ -114,6 +116,24 @@ public partial class procesoOf
     [StringLength(50)]
     public string correlativoCC { get; set; }
 
+    public int? orden { get; set; }
+
+    public int? subOrden { get; set; }
+
+    public int? procesoAnterior { get; set; }
+
+    public int? ProcesoSiguiente { get; set; }
+
+    [InverseProperty("ProcesoSiguienteNavigation")]
+    public virtual ICollection<procesoOf> InverseProcesoSiguienteNavigation { get; set; } = new List<procesoOf>();
+
+    [InverseProperty("procesoAnteriorNavigation")]
+    public virtual ICollection<procesoOf> InverseprocesoAnteriorNavigation { get; set; } = new List<procesoOf>();
+
+    [ForeignKey("ProcesoSiguiente")]
+    [InverseProperty("InverseProcesoSiguienteNavigation")]
+    public virtual procesoOf ProcesoSiguienteNavigation { get; set; }
+
     [InverseProperty("idProcesoNavigation")]
     public virtual ICollection<asignacion> asignacion { get; set; } = new List<asignacion>();
 
@@ -153,6 +173,10 @@ public partial class procesoOf
 
     [InverseProperty("idProcesoNavigation")]
     public virtual ICollection<procesoAcabadoFlexo> procesoAcabadoFlexo { get; set; } = new List<procesoAcabadoFlexo>();
+
+    [ForeignKey("procesoAnterior")]
+    [InverseProperty("InverseprocesoAnteriorNavigation")]
+    public virtual procesoOf procesoAnteriorNavigation { get; set; }
 
     [InverseProperty("idProcesoNavigation")]
     public virtual ICollection<procesoBarniz> procesoBarniz { get; set; } = new List<procesoBarniz>();

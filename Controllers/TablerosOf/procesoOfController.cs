@@ -391,7 +391,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         {
             // Procesos normales ligados a una OF
             var procesosNormales = await _context.procesoOf
-                .Where(o => o.oF == of && o.archivada == false)
+                .Where(o => o.oF == of && o.cancelada == false)
                 .Include(d => d.idPosturaNavigation)
                 .Include(c => c.idTableroNavigation)
                     .ThenInclude(v => v.idAreaNavigation)
@@ -408,7 +408,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
 
             // Procesos maestros de corrida combinada (no ligados directamente a una OF)
             var procesosMaestros = await _context.procesoOf
-                .Where(p => p.corridaCombinada == true && p.oF == null && p.archivada == false)
+                .Where(p => p.corridaCombinada == true && p.oF == null && p.cancelada == false)
                 .Include(p => p.corridaCombinadamaestroNavigation)
                     .ThenInclude(c => c.subordinadoNavigation)
                         .ThenInclude(s => s.oFNavigation)
@@ -1441,6 +1441,112 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             return Ok("Proceso Of actualizado exitosamente.");
         }
 
+        [HttpPut("put/procesoOfMaquinas/batch")]
+        public async Task<IActionResult> UpdateBatchProcesoOf([FromBody] List<UpdateBatchProcesoOfMaquina> dtos)
+        {
+            if (dtos == null || !dtos.Any())
+                return BadRequest("No se proporcionaron procesos para actualizar.");
+
+            var resultados = new List<object>();
+
+            foreach (var dto in dtos)
+            {
+                if (dto.idProceso <= 0)
+                {
+                    resultados.Add(new { dto.idProceso, estado = "Error", mensaje = "idProceso inválido" });
+                    continue;
+                }
+
+                var procesoExistente = await _context.procesoOf.FindAsync(dto.idProceso);
+                if (procesoExistente == null)
+                {
+                    resultados.Add(new { dto.idProceso, estado = "Error", mensaje = "Proceso no encontrado" });
+                    continue;
+                }
+
+                // Mapear campos
+                _mapper.Map(dto, procesoExistente);
+                _context.procesoOf.Update(procesoExistente);
+
+                // Validar si detalleProceso tiene datos reales
+                bool tieneDetalle = false;
+                if (dto.DetalleProceso != null)
+                {
+                    switch (dto.DetalleProceso)
+                    {
+                        case Newtonsoft.Json.Linq.JObject jObj:
+                            tieneDetalle = jObj.HasValues;
+                            break;
+                        case Newtonsoft.Json.Linq.JArray jArr:
+                            tieneDetalle = jArr.HasValues;
+                            break;
+                        default:
+                            tieneDetalle = true; // Otros tipos de objeto, asumimos que tiene datos
+                            break;
+                    }
+                }
+
+                // Solo actualizar detalle si realmente tiene datos
+                if (!string.IsNullOrEmpty(dto.tipoMaquinaSAP) && tieneDetalle)
+                {
+                    try
+                    {
+                        switch (dto.tipoMaquinaSAP)
+                        {
+                            case "preprensa":
+                                await ActualizarDetalleMaquina<procesoPreprensa, UpProcesoPreprensaDto>(dto.idProceso, dto.DetalleProceso);
+                                break;
+                            case "impresion":
+                                await ActualizarDetalleMaquina<procesoImpresora, UpProcesoImpresoraDto>(dto.idProceso, dto.DetalleProceso);
+                                break;
+                            case "troquel":
+                                await ActualizarDetalleMaquina<procesoTroqueladora, UpProcesoTroqueladoDto>(dto.idProceso, dto.DetalleProceso);
+                                break;
+                            case "pegadora":
+                                await ActualizarDetalleMaquina<procesoPegadora, UpProcesoPegadoraDto>(dto.idProceso, dto.DetalleProceso);
+                                break;
+                            case "acabado":
+                                await ActualizarDetalleMaquina<procesoAcabado, UpProcesoAcabadoDto>(dto.idProceso, dto.DetalleProceso);
+                                break;
+                            case "barniz":
+                                await ActualizarDetalleMaquina<procesoBarniz, UpProcesoBarnizDto>(dto.idProceso, dto.DetalleProceso);
+                                break;
+                            case "serigrafia":
+                                await ActualizarDetalleMaquina<procesoSerigrafia, UpProcesoSerigrafia>(dto.idProceso, dto.DetalleProceso);
+                                break;
+                            case "impresionFlexo":
+                                await ActualizarDetalleMaquina<procesoImpresoraFlexo, UpProcesoImpresoraFlexoDto>(dto.idProceso, dto.DetalleProceso);
+                                break;
+                            case "acabadoFlexo":
+                                await ActualizarDetalleMaquina<procesoAcabadoFlexo, UpProcesoAcabadoFlexoDto>(dto.idProceso, dto.DetalleProceso);
+                                break;
+                            case "mangaFlexo":
+                                await ActualizarDetalleMaquina<procesoMangaFlexo, UpProcesoMangaFlexoDto>(dto.idProceso, dto.DetalleProceso);
+                                break;
+                            case "procesosFlexo":
+                                await ActualizarDetalleMaquina<procesosFlexo, UpProcesosFlexoDto>(dto.idProceso, dto.DetalleProceso);
+                                break;
+                            default:
+                                resultados.Add(new { dto.idProceso, estado = "Error", mensaje = "Tipo de máquina no soportado" });
+                                continue;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        resultados.Add(new { dto.idProceso, estado = "Error", mensaje = ex.Message });
+                        continue;
+                    }
+                }
+
+                resultados.Add(new { dto.idProceso, estado = "OK", mensaje = tieneDetalle ? "Actualizado con detalle" : "Actualizado sin detalle" });
+            }
+
+            await _context.SaveChangesAsync();
+
+            return Ok(resultados);
+        }
+
+
         // POST: api/procesoOf
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("post")]
@@ -1812,13 +1918,16 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             // Buscar el detalle existente en la base de datos
             var detalleExistente = await _context.Set<TEntity>().FirstOrDefaultAsync(e => EF.Property<int>(e, "idProceso") == idProceso);
 
-            if (detalleExistente == null)
-            {
-                // Si no existe, se crea un nuevo detalle
+            if(detalleExistente == null)
+{
                 var nuevoDetalle = JsonSerializer.Deserialize<TDto>(detalleProceso.ToString());
                 if (nuevoDetalle != null)
                 {
                     var entidad = _mapper.Map<TEntity>(nuevoDetalle);
+
+                    // 🔑 Forzar que el detalle tenga idProceso válido
+                    _context.Entry(entidad).Property("idProceso").CurrentValue = idProceso;
+
                     _context.Set<TEntity>().Add(entidad);
                 }
             }

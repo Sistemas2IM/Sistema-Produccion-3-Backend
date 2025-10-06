@@ -1,4 +1,7 @@
-﻿namespace Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.SolicitudMateriales
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.SolicitudMateriales
 {
     public class solicitudMaterialesDto
     {
@@ -6,7 +9,7 @@
 
         public string? trabajo { get; set; }
 
-        public int? tipoPreparacion { get; set; }
+        public string? tipoPreparacion { get; set; }
 
         public DateTime? fechaSolicitud { get; set; }
 
@@ -18,7 +21,7 @@
 
         public int? cantidadPorCortar { get; set; }
 
-        public int? estado { get; set; }
+        public string? estado { get; set; }
 
         public int? tiraje { get; set; }
 
@@ -35,5 +38,33 @@
         public int? excedente { get; set; }
 
         public string? solicitadoPor { get; set; }
+
+        public int? idSap { get; set; }
+
+        public decimal? anchoHojaPulg { get; set; }
+
+        public decimal? anchoPliegoPulg { get; set; }
+
+        public decimal? largoPliegoPulg { get; set; }
+
+        public decimal? areaApulg { get; set; }
+
+        public decimal? areaA { get; set; }
+
+        public decimal? areaBpulg { get; set; }
+
+        public decimal? areaB { get; set; }
+
+        public decimal? largoHojaPulg { get; set; }
+
+        public string? compra { get; set; }
+
+        public string? comentarios { get; set; }
+
+        public string? interna { get; set; }
+
+        public string? programada { get; set; }
+
+        public string? rerefencia { get; set; }
     }
 }

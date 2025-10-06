@@ -88,6 +88,9 @@ public partial class tarjetaOf
     [StringLength(50)]
     public string estadoOfSap { get; set; }
 
+    [StringLength(25)]
+    public string modoSecuencia { get; set; }
+
     [InverseProperty("oFNavigation")]
     public virtual ICollection<certificadoDeCalidad> certificadoDeCalidad { get; set; } = new List<certificadoDeCalidad>();
 

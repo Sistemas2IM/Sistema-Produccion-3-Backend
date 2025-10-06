@@ -2,7 +2,7 @@
 
 namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas
 {
-    public class AddProcesoOfMaquinas
+    public class UpdateBatchProcesoOfMaquina
     {
         public int idProceso { get; set; }
 

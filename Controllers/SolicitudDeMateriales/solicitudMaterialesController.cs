@@ -47,7 +47,24 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales
 
             return Ok(solicitudMaterialesDto);
         }
- 
+
+        // GET api/<solicitudMaterialesController>/5
+        [HttpGet("get/idSap/{idSap}")]
+        public async Task<ActionResult<IEnumerable<solicitudMaterialesDto>>> GetSolicitudIdSap(int idSap)
+        {
+            var solicitudMateriales = await _context.solicitudMateriales
+                .Where(s => s.idSap == idSap)
+                .FirstOrDefaultAsync();
+            var solicitudMaterialesDto = _mapper.Map<solicitudMaterialesDto>(solicitudMateriales);
+
+            if (solicitudMaterialesDto == null)
+            {
+                return NotFound($"No se encontro el registro con el id: {idSap}");
+            }
+
+            return Ok(solicitudMaterialesDto);
+        }
+
         // POST api/<solicitudMaterialesController>
         [HttpPost("post")]
         public async Task<ActionResult<solicitudMaterialesDto>> PostSolicitud(AddSolicitudMaterialesDto solicitudMaterialesDto)

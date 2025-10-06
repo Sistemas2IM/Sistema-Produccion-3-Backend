@@ -287,6 +287,9 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 CreateMap<UpProcesoOfMaquinas, procesoOf>()
                     .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
+                CreateMap<UpdateBatchProcesoOfMaquina, procesoOf>()
+                    .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
 
                 CreateMap<procesoAcabado, ProcesoAcabadoDto>().ReverseMap();
                 CreateMap<procesoBarniz, ProcesoBarnizDto>().ReverseMap();
@@ -888,22 +891,22 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             // SOLICITUD DE MATERIALES
             CreateMap<solicitudMateriales, solicitudMaterialesDto>().ReverseMap();
             CreateMap<solicitudMateriales, AddSolicitudMaterialesDto>().ReverseMap();
-            CreateMap<solicitudMateriales, UpdateSolicitudMaterialesDto>()
+            CreateMap<UpdateSolicitudMaterialesDto, solicitudMateriales>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             CreateMap<solicitudMaterialesOf, solicitudMaterialesOfDto>().ReverseMap();
             CreateMap<solicitudMaterialesOf, AddSolicitudMaterialesOfDto>().ReverseMap();
-            CreateMap<solicitudMaterialesOf, UpdateSolicitudMaterialesOfDto>()
+            CreateMap<UpdateSolicitudMaterialesOfDto, solicitudMaterialesOf>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             CreateMap<lotePliego, lotePliegoDto>().ReverseMap();
             CreateMap<lotePliego, AddLotePliegoDto>().ReverseMap();
-            CreateMap<lotePliego, UpdateLotePliegoDto>()
+            CreateMap<UpdateLotePliegoDto, lotePliego>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             CreateMap<transferenciaProceso, transferenciaProcesoDto>().ReverseMap();
             CreateMap<transferenciaProceso, AddTransferenciaProcesoDto>().ReverseMap();
-            CreateMap<transferenciaProceso, UpdateTransferenciaProcesoDto>()
+            CreateMap<UpdateTransferenciaProcesoDto, transferenciaProceso>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
         }
     }

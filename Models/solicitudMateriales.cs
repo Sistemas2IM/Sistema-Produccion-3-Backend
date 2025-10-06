@@ -16,7 +16,8 @@ public partial class solicitudMateriales
     [StringLength(50)]
     public string trabajo { get; set; }
 
-    public int? tipoPreparacion { get; set; }
+    [StringLength(50)]
+    public string tipoPreparacion { get; set; }
 
     [Column(TypeName = "datetime")]
     public DateTime? fechaSolicitud { get; set; }
@@ -32,7 +33,8 @@ public partial class solicitudMateriales
 
     public int? cantidadPorCortar { get; set; }
 
-    public int? estado { get; set; }
+    [StringLength(25)]
+    public string estado { get; set; }
 
     public int? tiraje { get; set; }
 
@@ -52,6 +54,47 @@ public partial class solicitudMateriales
 
     [StringLength(50)]
     public string solicitadoPor { get; set; }
+
+    public int? idSap { get; set; }
+
+    [Column(TypeName = "numeric(20, 0)")]
+    public decimal? anchoHojaPulg { get; set; }
+
+    [Column(TypeName = "numeric(20, 0)")]
+    public decimal? anchoPliegoPulg { get; set; }
+
+    [Column(TypeName = "numeric(20, 0)")]
+    public decimal? largoPliegoPulg { get; set; }
+
+    [Column(TypeName = "numeric(20, 0)")]
+    public decimal? areaApulg { get; set; }
+
+    [Column(TypeName = "numeric(20, 0)")]
+    public decimal? areaA { get; set; }
+
+    [Column(TypeName = "numeric(20, 0)")]
+    public decimal? areaBpulg { get; set; }
+
+    [Column(TypeName = "numeric(20, 0)")]
+    public decimal? areaB { get; set; }
+
+    [Column(TypeName = "numeric(20, 0)")]
+    public decimal? largoHojaPulg { get; set; }
+
+    [StringLength(100)]
+    public string compra { get; set; }
+
+    [StringLength(500)]
+    public string comentarios { get; set; }
+
+    [StringLength(100)]
+    public string interna { get; set; }
+
+    [StringLength(100)]
+    public string programada { get; set; }
+
+    [StringLength(100)]
+    public string rerefencia { get; set; }
 
     [InverseProperty("idSolicitudNavigation")]
     public virtual ICollection<lotePliego> lotePliego { get; set; } = new List<lotePliego>();
