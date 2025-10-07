@@ -2,23 +2,8 @@
 using Sistema_Produccion_3_Backend.DTO.AnexosNEXO;
 using Sistema_Produccion_3_Backend.DTO.Bitacora;
 using Sistema_Produccion_3_Backend.DTO.Calidad.CertificadoCalidad;
-using Sistema_Produccion_3_Backend.DTO.Calidad.CertificadoCalidad.DetalleCertificado;
-using Sistema_Produccion_3_Backend.DTO.Calidad.CertificadoCalidad.Especificaciones;
-using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica;
-using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica.DetalleImpresion;
-using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica.DetalleImpresion.DetalleBarniz;
-using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica.DetalleImpresion.DetalleSecado;
-using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica.DetalleImpresion.Filtros;
-using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica.DetalleImpresion.FormulacionTintas;
-using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica.DetalleImpresion.FormulacionTintas.EspacioColor;
-using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica.DetalleImpresion.FormulacionTintas.GeneralidadColor;
-using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica.DetalleImpresion.SecuenciaDeColor;
-using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica.DetallePegado;
-using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica.DetallePegado.TipoPega;
-using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica.DetallePegado.TipoPegado;
-using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica.DetalleTroquelado;
-using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica.DetalleTroquelado.TipoAcabado;
-using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnica.DetalleTroquelado.TipoPleca;
+using Sistema_Produccion_3_Backend.DTO.Calidad.CertificadoCalidad.DetalleCertificadoCalidad;
+using Sistema_Produccion_3_Backend.DTO.Calidad.CertificadoCalidad.DetalleCertificadoCalidad.Batch;
 using Sistema_Produccion_3_Backend.DTO.Catalogo.FamiliaMaquina;
 using Sistema_Produccion_3_Backend.DTO.Catalogo.Maquinas;
 using Sistema_Produccion_3_Backend.DTO.Catalogo.Motoristas;
@@ -577,145 +562,22 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             // CERTIFICADO DE CALIDAD =================================================================================
-            CreateMap<certificadoDeCalidad, CertificadoCalidadDto>()
-                .ForMember(dest => dest.detalleCertificado, opt => opt.MapFrom(src => src.detalleCertificado))
-                .ReverseMap();
-            CreateMap<certificadoDeCalidad, AddCertificadoCalidadDto>().ReverseMap();
-            CreateMap<UpdateCertificadoCalidadDto, certificadoDeCalidad>()
+            CreateMap<certificadoCalidad, CertificadoCalidadDto>().ReverseMap();
+            CreateMap<certificadoCalidad, AddCertificadoCalidadDto>().ReverseMap();
+            CreateMap<UpdateCertificadoCalidadDto, certificadoCalidad>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            {
+                CreateMap<detalleCertificadoCalidad, DetalleCertificadoCalidadDto>().ReverseMap();
+                CreateMap<detalleCertificadoCalidad, AddDetalleCertificadoCalidadDto>().ReverseMap();
+                CreateMap<UpdateDetalleCertificadoCalidadDto, detalleCertificadoCalidad>()
+                    .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
-            CreateMap<detalleCertificado, DetalleCertificadoDto>()
-                .ForMember(dest => dest.especificaciones, opt => opt.MapFrom(src => src.idCaracteristaNavigation))
-                .ReverseMap();
-            CreateMap<detalleCertificado, AddDetalleCertificadoDto>().ReverseMap();
-            CreateMap<UpdateDetalleCertificadoDto, detalleCertificado>()
-                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
-
-            CreateMap<especificaciones, EspecificacionesCerDto>().ReverseMap();
-            CreateMap<especificaciones, AddEspecificacionesCerDto>().ReverseMap();
-            CreateMap<UpdateEspecificacionesCerDto, especificaciones>()
-                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+                CreateMap<detalleCertificadoCalidad, AddBatchDetalleCertificadoC>().ReverseMap();
+                CreateMap<UpdateBatchDetalleCertificadoC, detalleCertificadoCalidad>()
+                    .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            }
 
             // FICHA TECNICA DE CALIDAD ==============================================================================
-            CreateMap<fichaTecnica, FichaTecnicaDto>()
-                .ForMember(dest => dest.TipoFicha, opt => opt.MapFrom(src => src.idTipoFichaNavigation.nombre))
-                .ReverseMap();
-            CreateMap<fichaTecnica, AddFichaTecnicaDto>().ReverseMap();
-            CreateMap<UpdateFichaTecnicaDto, fichaTecnica>()
-                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember == null));
-
-            {
-                // Detalle de Impresion - Ficha Tecnica
-                CreateMap<detalleImpresion, DetalleImpresionDto>()
-                    .ForMember(dest => dest.detalleBarnizDto, opt => opt.MapFrom(src => src.detalleBarniz))
-                    .ForMember(dest => dest.detalleSecadoDto, opt => opt.MapFrom(src => src.detalleSecado))
-                    .ForMember(dest => dest.filtrosDto, opt => opt.MapFrom(src => src.filtros))
-                    .ForMember(dest => dest.formulacionTintasDto, opt => opt.MapFrom(src => src.formulacionTintas))
-                    .ForMember(dest => dest.secuenciaDeColorDto, opt => opt.MapFrom(src => src.secuenciaDeColor))
-                    .ReverseMap();
-                CreateMap<detalleImpresion, AddDetalleImpresionDto>().ReverseMap();
-                CreateMap<UpdateDetalleImpresionDto, detalleImpresion>()
-                    .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
-                {
-                    // Detalle de Barniz - impresion --------------------------------------------------------
-                    CreateMap<detalleBarniz, DetalleBarnizDto>()
-                         .ForMember(dest => dest.potenciaLamparaUvDto, opt => opt.MapFrom(src => src.potenciaLamparaUv))
-                         .ReverseMap();
-                    CreateMap<detalleBarniz, AddDetalleBarnizDto>().ReverseMap();
-                    CreateMap<UpdateDetalleBarnizDto, detalleBarniz>()
-                         .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
-                    {
-                        // Potencia Lampara Uv
-                        CreateMap<potenciaLamparaUv, PotenciaLamparaUvDto>().ReverseMap();
-                        CreateMap<potenciaLamparaUv, AddPotenciaLamparaUvDto>().ReverseMap();
-                        CreateMap<UpdatePotenciaLamparaUvDto, potenciaLamparaUv>()
-                          .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
-                    }
-
-
-                    // Detalle Secado - Impresion -----------------------------------------------------------
-                    CreateMap<detalleSecado, DetalleSecadoDto>().ReverseMap();
-                    CreateMap<detalleSecado, AddDetalleSecado>().ReverseMap();
-                    CreateMap<UpdateDetalleSecado, detalleSecado>()
-                        .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
-
-                    // Filtros - Impresion ------------------------------------------------------------------
-                    CreateMap<filtros, FiltrosDto>().ReverseMap();
-                    CreateMap<filtros, AddFiltrosDto>().ReverseMap();
-                    CreateMap<UpdateFiltrosDto, filtros>()
-                        .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
-
-                    // Secuencia de Color -----------------------------------------------------------------
-                    CreateMap<secuenciaDeColor, SecuenciaDeColorDto>().ReverseMap();
-                    CreateMap<secuenciaDeColor, AddSecuenciaDeColorDto>().ReverseMap();
-                    CreateMap<UpdateSecuenciaDeColorDto, secuenciaDeColor>()
-                        .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
-
-                    // Formulacion de Tintas --------------------------------------------------------------
-                    CreateMap<formulacionTintas, FormulacionTintasDto>()
-                        .ForMember(dest => dest.espacioColorDto, opt => opt.MapFrom(src => src.espacioColor))
-                        .ReverseMap();
-                    CreateMap<formulacionTintas, AddFormulacionTintasDto>().ReverseMap();
-                    CreateMap<UpdateFormulacionTintasDto, formulacionTintas>()
-                        .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
-                    {
-                        // Espacio de color
-                        CreateMap<espacioColor, EspacioColorDto>()
-                            .ForMember(dest => dest.generalidadColorDto, opt => opt.MapFrom(src => src.generalidadColor))
-                            .ReverseMap();
-                        CreateMap<espacioColor, AddEspacioColorDto>().ReverseMap();
-                        CreateMap<UpdateEspacioColorDto, espacioColor>()
-                            .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
-
-                        // Generalidad de color
-                        CreateMap<generalidadColor, GeneralidadColorDto>().ReverseMap();
-                        CreateMap<generalidadColor, AddGeneralidadColorDto>().ReverseMap();
-                        CreateMap<UpdateGeneralidadColorDto, generalidadColor>()
-                            .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
-                    }
-                }
-
-                // Detalle de Pegado - Ficha Tecnica
-                CreateMap<detallePegado, DetallePegadoDto>()
-                    .ForMember(dest => dest.tipoPegaDto, opt => opt.MapFrom(src => src.tipoPega))
-                    .ForMember(dest => dest.tipoPegadoDto, opt => opt.MapFrom(src => src.tipoPegado))
-                    .ReverseMap();
-                CreateMap<detallePegado, AddDetallePegadoDto>().ReverseMap();
-                CreateMap<UpdateDetallePegadoDto, detallePegado>()
-                    .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
-                {
-                    CreateMap<tipoPega, TipoPegaDto>().ReverseMap();
-                    CreateMap<tipoPega, AddTipoPegaDto>().ReverseMap();
-                    CreateMap<UpdateTipoPegaDto, tipoPega>()
-                        .ForAllMembers(opts => opts.Condition((src, dest, srcMmeber) => srcMmeber != null));
-
-                    CreateMap<tipoPegado, TipoPegadoDto>().ReverseMap();
-                    CreateMap<tipoPegado, AddTipoPegadoDto>().ReverseMap();
-                    CreateMap<UpdateTipoPegadoDto, tipoPegado>()
-                        .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
-                }
-
-                // Detalle de Troquelado - Ficha Tecnica
-                CreateMap<detalleTroquelado, DetalleTroqueladoDto>()
-                    .ForMember(dest => dest.tipoAcabadoDto, opt => opt.MapFrom(src => src.tipoAcabado))
-                    .ForMember(dest => dest.tipoPlecaDto, opt => opt.MapFrom(src => src.tipoPleca))
-                    .ReverseMap();
-                CreateMap<detalleTroquelado, AddDetalleTroqueladoDto>().ReverseMap();
-                CreateMap<UpdateDetalleTroqueladoDto, detalleTroquelado>()
-                    .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
-
-                {
-                    CreateMap<tipoAcabado, TipoAcabadoDto>().ReverseMap();
-                    CreateMap<tipoAcabado, AddTipoAcabadoDto>().ReverseMap();
-                    CreateMap<UpdateTipoAcabadoDto, tipoAcabado>()
-                        .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
-
-                    CreateMap<tipoPleca, TipoPlecaDto>().ReverseMap();
-                    CreateMap<tipoPleca, AddTipoPlecaDto>().ReverseMap();
-                    CreateMap<UpdateTipoPlecaDto, tipoPleca>()
-                        .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
-                }
-            }
 
 
             // LOGISTICA - GIRA =======================================================================================

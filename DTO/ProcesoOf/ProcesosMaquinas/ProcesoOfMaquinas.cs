@@ -2,6 +2,7 @@
 using Sistema_Produccion_3_Backend.DTO.CorridaCombinada;
 using Sistema_Produccion_3_Backend.DTO.ReporteOperador;
 using Sistema_Produccion_3_Backend.DTO.Tableros.Posturas;
+using System.ComponentModel.DataAnnotations;
 
 namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas
 {
@@ -106,6 +107,12 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas
         public int? procesoAnterior { get; set; }
 
         public int? ProcesoSiguiente { get; set; }
+
+        public int? dependenciasAnteriores { get; set; }
+
+        public int? dependenciasSiguientes { get; set; }
+
+        public string? modoSecuenciacion { get; set; }
 
         public PosturasOfDto? posturasOfDto { get; set; }
 

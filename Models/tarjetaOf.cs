@@ -92,6 +92,9 @@ public partial class tarjetaOf
     public string modoSecuencia { get; set; }
 
     [InverseProperty("oFNavigation")]
+    public virtual ICollection<certificadoCalidad> certificadoCalidad { get; set; } = new List<certificadoCalidad>();
+
+    [InverseProperty("oFNavigation")]
     public virtual ICollection<certificadoDeCalidad> certificadoDeCalidad { get; set; } = new List<certificadoDeCalidad>();
 
     [InverseProperty("oFNavigation")]
@@ -105,6 +108,9 @@ public partial class tarjetaOf
 
     [InverseProperty("oFNavigation")]
     public virtual ICollection<etiquetaOf> etiquetaOf { get; set; } = new List<etiquetaOf>();
+
+    [InverseProperty("oFNavigation")]
+    public virtual ICollection<fichaClienteOf> fichaClienteOf { get; set; } = new List<fichaClienteOf>();
 
     [InverseProperty("oFNavigation")]
     public virtual ICollection<fichaTecnica> fichaTecnica { get; set; } = new List<fichaTecnica>();

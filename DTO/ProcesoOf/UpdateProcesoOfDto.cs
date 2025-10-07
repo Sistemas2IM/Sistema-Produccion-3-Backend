@@ -69,5 +69,11 @@
         public int? procesoAnterior { get; set; }
 
         public int? ProcesoSiguiente { get; set; }
+
+        public int? dependenciasAnteriores { get; set; }
+
+        public int? dependenciasSiguientes { get; set; }
+
+        public string? modoSecuenciacion { get; set; }
     }
 }

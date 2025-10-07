@@ -59,6 +59,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[certificadoCalidad]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[certificadoDeCalidad]",
          "ObjectType": 0
       },
@@ -79,7 +83,15 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[detalleCertificadoCalidad]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[detalleEntrega]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[detalleFichaClientes]",
          "ObjectType": 0
       },
       {
@@ -143,7 +155,15 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[fichaClienteOf]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[fichaTecnica]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[fichaTecnicaCliente]",
          "ObjectType": 0
       },
       {
@@ -323,6 +343,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[seccionDocumento]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[secuenciaDeColor]",
          "ObjectType": 0
       },
@@ -408,6 +432,10 @@
       },
       {
          "Name": "[dbo].[variablesDeAgua]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[variablesTecnicas]",
          "ObjectType": 0
       },
       {

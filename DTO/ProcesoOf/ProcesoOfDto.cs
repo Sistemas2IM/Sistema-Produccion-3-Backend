@@ -123,6 +123,12 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
 
         public int? ProcesoSiguiente { get; set; }
 
+        public int? dependenciasAnteriores { get; set; }
+
+        public int? dependenciasSiguientes { get; set; }
+
+        public string? modoSecuenciacion { get; set; }
+
         public List<DetalleReporteDto>? detalleProcesoOf { get; set; }
 
         public List<TarjetaCampoDto>? tarjetaCampoDto { get; set; }

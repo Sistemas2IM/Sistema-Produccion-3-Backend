@@ -1538,7 +1538,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                     }
                 }
 
-                resultados.Add(new { dto.idProceso, estado = "OK", mensaje = tieneDetalle ? "Actualizado con detalle" : "Actualizado sin detalle" });
+                resultados.Add(new { dto.idProceso, estado = "OK", mensaje = tieneDetalle ? "Proceso actualizado" : "" });
             }
 
             await _context.SaveChangesAsync();

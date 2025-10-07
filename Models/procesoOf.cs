@@ -124,6 +124,13 @@ public partial class procesoOf
 
     public int? ProcesoSiguiente { get; set; }
 
+    public int? dependenciasAnteriores { get; set; }
+
+    public int? dependenciasSiguientes { get; set; }
+
+    [StringLength(25)]
+    public string modoSecuenciacion { get; set; }
+
     [InverseProperty("ProcesoSiguienteNavigation")]
     public virtual ICollection<procesoOf> InverseProcesoSiguienteNavigation { get; set; } = new List<procesoOf>();
 

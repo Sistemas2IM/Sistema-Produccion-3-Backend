@@ -19,6 +19,9 @@ public partial class areas
     public int? secuencia { get; set; }
 
     [InverseProperty("idAreaNavigation")]
+    public virtual ICollection<seccionDocumento> seccionDocumento { get; set; } = new List<seccionDocumento>();
+
+    [InverseProperty("idAreaNavigation")]
     public virtual ICollection<tablerosOf> tablerosOf { get; set; } = new List<tablerosOf>();
 
     [InverseProperty("idAreaNavigation")]

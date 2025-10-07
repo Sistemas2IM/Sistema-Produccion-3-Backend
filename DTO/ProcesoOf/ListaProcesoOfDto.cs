@@ -108,6 +108,12 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
 
         public int? ProcesoSiguiente { get; set; }
 
+        public int? dependenciasAnteriores { get; set; }
+
+        public int? dependenciasSiguientes { get; set; }
+
+        public string? modoSecuenciacion { get; set; }
+
         public List<AsignacionDto>? asignacionDto { get; set; }
 
         public ProcesoPosturasOfDto? PosturasOfDto { get; set; }

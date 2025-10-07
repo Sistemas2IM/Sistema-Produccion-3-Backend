@@ -35,6 +35,8 @@ public partial class base_nuevaContext : DbContext
 
     public virtual DbSet<cargo> cargo { get; set; }
 
+    public virtual DbSet<certificadoCalidad> certificadoCalidad { get; set; }
+
     public virtual DbSet<certificadoDeCalidad> certificadoDeCalidad { get; set; }
 
     public virtual DbSet<contenidoEntrega> contenidoEntrega { get; set; }
@@ -45,7 +47,11 @@ public partial class base_nuevaContext : DbContext
 
     public virtual DbSet<detalleCertificado> detalleCertificado { get; set; }
 
+    public virtual DbSet<detalleCertificadoCalidad> detalleCertificadoCalidad { get; set; }
+
     public virtual DbSet<detalleEntrega> detalleEntrega { get; set; }
+
+    public virtual DbSet<detalleFichaClientes> detalleFichaClientes { get; set; }
 
     public virtual DbSet<detalleGira> detalleGira { get; set; }
 
@@ -77,7 +83,11 @@ public partial class base_nuevaContext : DbContext
 
     public virtual DbSet<familliaDeMaquina> familliaDeMaquina { get; set; }
 
+    public virtual DbSet<fichaClienteOf> fichaClienteOf { get; set; }
+
     public virtual DbSet<fichaTecnica> fichaTecnica { get; set; }
+
+    public virtual DbSet<fichaTecnicaCliente> fichaTecnicaCliente { get; set; }
 
     public virtual DbSet<filtros> filtros { get; set; }
 
@@ -167,6 +177,8 @@ public partial class base_nuevaContext : DbContext
 
     public virtual DbSet<rol> rol { get; set; }
 
+    public virtual DbSet<seccionDocumento> seccionDocumento { get; set; }
+
     public virtual DbSet<secuenciaDeColor> secuenciaDeColor { get; set; }
 
     public virtual DbSet<sesionOperador> sesionOperador { get; set; }
@@ -210,6 +222,8 @@ public partial class base_nuevaContext : DbContext
     public virtual DbSet<usuario> usuario { get; set; }
 
     public virtual DbSet<variablesDeAgua> variablesDeAgua { get; set; }
+
+    public virtual DbSet<variablesTecnicas> variablesTecnicas { get; set; }
 
     public virtual DbSet<vehiculo> vehiculo { get; set; }
 
@@ -521,6 +535,26 @@ public partial class base_nuevaContext : DbContext
             entity.Property(e => e.nombreCargo).UseCollation("SQL_Latin1_General_CP1_CI_AS");
         });
 
+        modelBuilder.Entity<certificadoCalidad>(entity =>
+        {
+            entity.HasKey(e => e.idCertificadoCalidad).HasName("PK__certific__3110B5197AEA4595");
+
+            entity.Property(e => e.elaboradoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.fechaCreacion).HasDefaultValueSql("(getdate())");
+
+            entity.HasOne(d => d.elaboradoPorNavigation).WithMany(p => p.certificadoCalidad)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__certifica__elabo__546180BB");
+
+            entity.HasOne(d => d.idFichaClienteNavigation).WithMany(p => p.certificadoCalidad)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__certifica__idFic__52793849");
+
+            entity.HasOne(d => d.oFNavigation).WithMany(p => p.certificadoCalidad)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__certificadoC__oF__536D5C82");
+        });
+
         modelBuilder.Entity<certificadoDeCalidad>(entity =>
         {
             entity.HasKey(e => e.idCertificado).HasName("PK_CERTIFICADODECALIDAD");
@@ -592,6 +626,21 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.idCertificadoNavigation).WithMany(p => p.detalleCertificado).HasConstraintName("FK_DETALLE_CERTIFIC");
         });
 
+        modelBuilder.Entity<detalleCertificadoCalidad>(entity =>
+        {
+            entity.HasKey(e => e.DetalleID).HasName("PK__detalleC__6E19D6FA3406FD39");
+
+            entity.Property(e => e.fechaCreacion).HasDefaultValueSql("(getdate())");
+
+            entity.HasOne(d => d.idCertificadoCalidadNavigation).WithMany(p => p.detalleCertificadoCalidad)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__detalleCe__idCer__5832119F");
+
+            entity.HasOne(d => d.idVariableNavigation).WithMany(p => p.detalleCertificadoCalidad)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__detalleCe__idVar__592635D8");
+        });
+
         modelBuilder.Entity<detalleEntrega>(entity =>
         {
             entity.HasKey(e => e.idDetalleEntrega).HasName("PK_DETALLEENTREGA");
@@ -609,6 +658,21 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.tipoEmpaqueNavigation).WithMany(p => p.detalleEntrega)
                 .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_EMPAQUE");
+        });
+
+        modelBuilder.Entity<detalleFichaClientes>(entity =>
+        {
+            entity.HasKey(e => e.DetalleID).HasName("PK__detalleF__6E19D6FAE127E0BD");
+
+            entity.Property(e => e.fechaCreacion).HasDefaultValueSql("(getdate())");
+
+            entity.HasOne(d => d.idFichaClienteNavigation).WithMany(p => p.detalleFichaClientes)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__detalleFi__idFic__4DB4832C");
+
+            entity.HasOne(d => d.idVariableNavigation).WithMany(p => p.detalleFichaClientes)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__detalleFi__idVar__4EA8A765");
         });
 
         modelBuilder.Entity<detalleGira>(entity =>
@@ -829,6 +893,22 @@ public partial class base_nuevaContext : DbContext
             entity.Property(e => e.nombreFamilia).UseCollation("SQL_Latin1_General_CP1_CI_AS");
         });
 
+        modelBuilder.Entity<fichaClienteOf>(entity =>
+        {
+            entity.HasKey(e => new { e.idFichaCliente, e.oF }).HasName("PK__fichaCli__5F9654BEF26F92E0");
+
+            entity.Property(e => e.fechaVinculo).HasDefaultValueSql("(getdate())");
+            entity.Property(e => e.vigente).HasDefaultValue(true);
+
+            entity.HasOne(d => d.idFichaClienteNavigation).WithMany(p => p.fichaClienteOf)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__fichaClie__idFic__5DEAEAF5");
+
+            entity.HasOne(d => d.oFNavigation).WithMany(p => p.fichaClienteOf)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__fichaCliente__oF__5EDF0F2E");
+        });
+
         modelBuilder.Entity<fichaTecnica>(entity =>
         {
             entity.HasKey(e => e.idFichaTecnica).HasName("PK_FICHATECNICA");
@@ -848,6 +928,20 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.idTipoFichaNavigation).WithMany(p => p.fichaTecnica).HasConstraintName("FK_TIPOFICHA");
 
             entity.HasOne(d => d.oFNavigation).WithMany(p => p.fichaTecnica).HasConstraintName("FK_FICHATEC_OF");
+        });
+
+        modelBuilder.Entity<fichaTecnicaCliente>(entity =>
+        {
+            entity.HasKey(e => e.idFichaCliente).HasName("PK__fichaTec__5CB71703E14AB9A5");
+
+            entity.Property(e => e.elaboradoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.fechaCreacion).HasDefaultValueSql("(getdate())");
+            entity.Property(e => e.version).HasDefaultValue(1);
+            entity.Property(e => e.vigente).HasDefaultValue(true);
+
+            entity.HasOne(d => d.elaboradoPorNavigation).WithMany(p => p.fichaTecnicaCliente)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__fichaTecn__elabo__49E3F248");
         });
 
         modelBuilder.Entity<filtros>(entity =>
@@ -1518,6 +1612,19 @@ public partial class base_nuevaContext : DbContext
             entity.Property(e => e.nombreRol).UseCollation("SQL_Latin1_General_CP1_CI_AS");
         });
 
+        modelBuilder.Entity<seccionDocumento>(entity =>
+        {
+            entity.HasKey(e => e.idSeccion).HasName("PK__seccionD__94B87A7C7D6885E9");
+
+            entity.Property(e => e.activo).HasDefaultValue(true);
+            entity.Property(e => e.fechaCreacion).HasDefaultValueSql("(getdate())");
+            entity.Property(e => e.ordenVisual).HasDefaultValue(1);
+
+            entity.HasOne(d => d.idAreaNavigation).WithMany(p => p.seccionDocumento)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__seccionDo__idAre__1D114BD1");
+        });
+
         modelBuilder.Entity<secuenciaDeColor>(entity =>
         {
             entity.HasKey(e => e.idSecuencia).HasName("PK_SECUENCIADECOLOR");
@@ -1791,6 +1898,24 @@ public partial class base_nuevaContext : DbContext
             entity.Property(e => e.vis).UseCollation("SQL_Latin1_General_CP1_CI_AS");
 
             entity.HasOne(d => d.idReporteAuditoriaNavigation).WithMany(p => p.variablesDeAgua).HasConstraintName("FK_VARIABLES_REPORTE");
+        });
+
+        modelBuilder.Entity<variablesTecnicas>(entity =>
+        {
+            entity.HasKey(e => e.idVariable).HasName("PK__variable__EF2620BCC792F36B");
+
+            entity.Property(e => e.activo).HasDefaultValue(true);
+            entity.Property(e => e.certificadoCalidad).HasDefaultValue(false);
+            entity.Property(e => e.fechaCreacion).HasDefaultValueSql("(getdate())");
+            entity.Property(e => e.fichaCliente).HasDefaultValue(false);
+            entity.Property(e => e.fichaProceso).HasDefaultValue(false);
+            entity.Property(e => e.fichaTecnica).HasDefaultValue(false);
+            entity.Property(e => e.obligatorio).HasDefaultValue(false);
+            entity.Property(e => e.ordenVisual).HasDefaultValue(1);
+
+            entity.HasOne(d => d.idSeccionNavigation).WithMany(p => p.variablesTecnicas)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__variables__idSec__278EDA44");
         });
 
         modelBuilder.Entity<vehiculo>(entity =>
