@@ -18,11 +18,23 @@ public partial class areas
 
     public int? secuencia { get; set; }
 
+    [InverseProperty("areaAnteriorNavigation")]
+    public virtual ICollection<procesoOf> procesoOfareaAnteriorNavigation { get; set; } = new List<procesoOf>();
+
+    [InverseProperty("areaSiguienteNavigation")]
+    public virtual ICollection<procesoOf> procesoOfareaSiguienteNavigation { get; set; } = new List<procesoOf>();
+
     [InverseProperty("idAreaNavigation")]
     public virtual ICollection<seccionDocumento> seccionDocumento { get; set; } = new List<seccionDocumento>();
 
     [InverseProperty("idAreaNavigation")]
     public virtual ICollection<tablerosOf> tablerosOf { get; set; } = new List<tablerosOf>();
+
+    [InverseProperty("areaDestinoNavigation")]
+    public virtual ICollection<transferenciaProceso> transferenciaProcesoareaDestinoNavigation { get; set; } = new List<transferenciaProceso>();
+
+    [InverseProperty("areaOrigenNavigation")]
+    public virtual ICollection<transferenciaProceso> transferenciaProcesoareaOrigenNavigation { get; set; } = new List<transferenciaProceso>();
 
     [InverseProperty("idAreaNavigation")]
     public virtual ICollection<usuario> usuario { get; set; } = new List<usuario>();

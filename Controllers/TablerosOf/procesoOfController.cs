@@ -48,6 +48,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         {
             var procesoOf = await _context.procesoOf
                 .Where(x => x.archivada == false)
+                .Include(u => u.idTableroNavigation)
+                .ThenInclude(a => a.idAreaNavigation)
                 .Include(u => u.detalleReporte)
                 .ThenInclude(o => o.idOperacionNavigation)
                 .Include(u => u.detalleReporte)
@@ -123,6 +125,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             // ============================
             var queryNormales = _context.procesoOf
                 .OrderBy(p => p.posicion)
+                .Include(u => u.idTableroNavigation)
+                .ThenInclude(a => a.idAreaNavigation)
                 .Include(u => u.detalleReporte).ThenInclude(o => o.idOperacionNavigation)
                 .Include(m => m.tarjetaCampo)
                 .Include(s => s.tarjetaEtiqueta).ThenInclude(e => e.idEtiquetaNavigation)
@@ -142,7 +146,6 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
 
             if (!string.IsNullOrEmpty(indicadorProceso))
                 queryNormales = queryNormales.Where(p => p.indicadorProceso.Contains(indicadorProceso));
-
 
             if (fechaInicio.HasValue && fechaFin.HasValue)
                 queryNormales = queryNormales.Where(p => p.fechaVencimiento >= fechaInicio && p.fechaVencimiento <= fechaFin);
@@ -284,13 +287,14 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             return Ok(procesoOfDto);
         }
 
-
         // GET GENERAL
         [HttpGet("get/{id}")]
         public async Task<ActionResult<ProcesoOfDto>> GetprocesoOf(int id)
         {
             var procesoOf = await _context.procesoOf
                 .Include(u => u.detalleReporte).ThenInclude(o => o.idOperacionNavigation)
+                .Include(u => u.idTableroNavigation)
+                .ThenInclude(a => a.idAreaNavigation)
                 .Include(m => m.tarjetaCampo)
                 .Include(s => s.tarjetaEtiqueta)
                 .Include(d => d.idPosturaNavigation)
@@ -343,6 +347,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             // Obtener todos los procesos asociados a la OF
             var procesos = await _context.procesoOf
                 .Where(x => x.archivada == false)
+                .Include(u => u.idTableroNavigation)
+                .ThenInclude(a => a.idAreaNavigation)
                 .Include(p => p.idPosturaNavigation)
                 .Include(v => v.idMaterialNavigation)
                 .Include(f => f.oFNavigation)
@@ -392,6 +398,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             // Procesos normales ligados a una OF
             var procesosNormales = await _context.procesoOf
                 .Where(o => o.oF == of && o.cancelada == false)
+                    .Include(u => u.idTableroNavigation)
+                .ThenInclude(a => a.idAreaNavigation)
                 .Include(d => d.idPosturaNavigation)
                 .Include(c => c.idTableroNavigation)
                     .ThenInclude(v => v.idAreaNavigation)
@@ -567,6 +575,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             // Procesos normales ligados a una OF
             var procesosNormales = await _context.procesoOf
                 .Where(o => o.oF == of)
+                .Include(u => u.idTableroNavigation)
+                    .ThenInclude(a => a.idAreaNavigation)
                 .Include(d => d.idPosturaNavigation)
                 .Include(c => c.idTableroNavigation)
                     .ThenInclude(v => v.idAreaNavigation)
@@ -742,6 +752,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             var procesos = await _context.procesoOf
                 .OrderBy(p => p.posicion)
                 .Where(t => t.idTablero == id && t.archivada == false)
+                .Include(u => u.idTableroNavigation)
+                    .ThenInclude(a => a.idAreaNavigation)
                 .Include(u => u.detalleReporte)
                     .ThenInclude(o => o.idOperacionNavigation)
                 .Include(u => u.detalleReporte)
@@ -880,6 +892,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             var procesos = await _context.procesoOf
                 .OrderBy(p => p.posicion)
                 .Where(t => t.asignacion.Any(u => u.user == user) && t.archivada == false)
+                .Include(u => u.idTableroNavigation)
+                    .ThenInclude(a => a.idAreaNavigation)
                 .Include(u => u.detalleReporte)
                 .ThenInclude(o => o.idOperacionNavigation)
                 .Include(m => m.tarjetaCampo)
@@ -1027,6 +1041,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         {
             // Cargar datos generales del proceso
             var proceso = await _context.procesoOf
+                .Include(u => u.idTableroNavigation)
+                    .ThenInclude(a => a.idAreaNavigation)
                 .Include(p => p.idPosturaNavigation)
                 .Include(v => v.idMaterialNavigation)
                 .Include(f => f.oFNavigation)

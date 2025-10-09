@@ -8,11 +8,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Sistema_Produccion_3_Backend.Models;
 
+[Index("areaAnterior", Name = "AREA_ANTERIOR_FK")]
+[Index("areaSiguiente", Name = "AREA_SIGUIENTE_FK")]
 [Index("idMaterial", Name = "MATERIAL_PROCESO_FK")]
 [Index("oF", Name = "OF_PROCESO_FK")]
 [Index("idPostura", Name = "POSTURA_PROCESO_FK")]
 [Index("procesoAnterior", Name = "PROCESO_ANTERIOR_FK")]
-[Index("ProcesoSiguiente", Name = "PROCESO_SIGUIENTE_FK")]
+[Index("procesoSiguiente", Name = "PROCESO_SIGUIENTE_FK")]
 [Index("idTablero", Name = "TABLERO_PROCESO_FK")]
 public partial class procesoOf
 {
@@ -122,24 +124,34 @@ public partial class procesoOf
 
     public int? procesoAnterior { get; set; }
 
-    public int? ProcesoSiguiente { get; set; }
+    public int? procesoSiguiente { get; set; }
 
-    public int? dependenciasAnteriores { get; set; }
+    [StringLength(250)]
+    public string dependenciasAnteriores { get; set; }
 
-    public int? dependenciasSiguientes { get; set; }
+    [StringLength(250)]
+    public string dependenciasSiguientes { get; set; }
 
     [StringLength(25)]
     public string modoSecuenciacion { get; set; }
 
-    [InverseProperty("ProcesoSiguienteNavigation")]
-    public virtual ICollection<procesoOf> InverseProcesoSiguienteNavigation { get; set; } = new List<procesoOf>();
+    public int? areaAnterior { get; set; }
+
+    public int? areaSiguiente { get; set; }
 
     [InverseProperty("procesoAnteriorNavigation")]
     public virtual ICollection<procesoOf> InverseprocesoAnteriorNavigation { get; set; } = new List<procesoOf>();
 
-    [ForeignKey("ProcesoSiguiente")]
-    [InverseProperty("InverseProcesoSiguienteNavigation")]
-    public virtual procesoOf ProcesoSiguienteNavigation { get; set; }
+    [InverseProperty("procesoSiguienteNavigation")]
+    public virtual ICollection<procesoOf> InverseprocesoSiguienteNavigation { get; set; } = new List<procesoOf>();
+
+    [ForeignKey("areaAnterior")]
+    [InverseProperty("procesoOfareaAnteriorNavigation")]
+    public virtual areas areaAnteriorNavigation { get; set; }
+
+    [ForeignKey("areaSiguiente")]
+    [InverseProperty("procesoOfareaSiguienteNavigation")]
+    public virtual areas areaSiguienteNavigation { get; set; }
 
     [InverseProperty("idProcesoNavigation")]
     public virtual ICollection<asignacion> asignacion { get; set; } = new List<asignacion>();
@@ -205,6 +217,10 @@ public partial class procesoOf
 
     [InverseProperty("idProcesoNavigation")]
     public virtual ICollection<procesoSerigrafia> procesoSerigrafia { get; set; } = new List<procesoSerigrafia>();
+
+    [ForeignKey("procesoSiguiente")]
+    [InverseProperty("InverseprocesoSiguienteNavigation")]
+    public virtual procesoOf procesoSiguienteNavigation { get; set; }
 
     [InverseProperty("idProcesoNavigation")]
     public virtual ICollection<procesoTroqueladora> procesoTroqueladora { get; set; } = new List<procesoTroqueladora>();

@@ -88,11 +88,15 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas
 
         public int? procesoAnterior { get; set; }
 
-        public int? ProcesoSiguiente { get; set; }
+        public int? procesoSiguiente { get; set; }
 
-        public int? dependenciasAnteriores { get; set; }
+        public string? dependenciasAnteriores { get; set; }
 
-        public int? dependenciasSiguientes { get; set; }
+        public string? dependenciasSiguientes { get; set; }
+
+        public int? areaAnterior { get; set; }
+
+        public int? areaSiguiente { get; set; }
 
         public string? modoSecuenciacion { get; set; }
 

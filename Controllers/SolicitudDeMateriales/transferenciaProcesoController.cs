@@ -67,6 +67,27 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales
             return Ok(transferenciasProcesosDto);
         }
 
+        [HttpGet("get/transferenciasProcesos/pendientes/area/{idArea}/of/{oF}")]
+        public async Task<ActionResult<IEnumerable<transferenciaProcesoDto>>> GetTransferenciasPendientesOfArea(int idArea, int oF)
+        {
+            // Filtrar en base de datos usando navegación
+            var transferenciasProcesos = await _context.transferenciaProceso
+                .Include(t => t.idOrigenNavigation) // trae también el procesoOf
+                .Include(t => t.areaDestinoNavigation)
+                .Where(t => t.estado == "Pendiente" // o el valor de estado pendiente en tu BD
+                    && t.areaDestinoNavigation.idArea == idArea && t.idOrigenNavigation.oF == oF) // aquí filtras por OF
+                .ToListAsync();
+
+            var transferenciasProcesosDto = _mapper.Map<List<transferenciaProcesoDto>>(transferenciasProcesos);
+
+            if (transferenciasProcesosDto == null || !transferenciasProcesosDto.Any())
+            {
+                return NotFound($"No se encontraron transferencias pendientes");
+            }
+
+            return Ok(transferenciasProcesosDto);
+        }
+
         [HttpGet("get/transferenciasProcesos/pendientesOf/procesoDestino/{id_destino}")]
         public async Task<ActionResult<IEnumerable<transferenciaProcesoDto>>> GetTransferenciasPendientesOfProcesoDestino(int id_destino)
         {

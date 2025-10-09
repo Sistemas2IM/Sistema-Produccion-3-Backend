@@ -29,5 +29,9 @@
         public string? observaciones { get; set; }
 
         public int? idProduccion { get; set; }
+
+        public int? areaOrigen { get; set; }
+
+        public int? areaDestino { get; set; }
     }
 }

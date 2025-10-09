@@ -1454,7 +1454,9 @@ public partial class base_nuevaContext : DbContext
             entity.Property(e => e.tipoMaquinaSAP).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.tiroRetiro).UseCollation("SQL_Latin1_General_CP1_CI_AS");
 
-            entity.HasOne(d => d.ProcesoSiguienteNavigation).WithMany(p => p.InverseProcesoSiguienteNavigation).HasConstraintName("FK_PROCESO_SIGUIENTE");
+            entity.HasOne(d => d.areaAnteriorNavigation).WithMany(p => p.procesoOfareaAnteriorNavigation).HasConstraintName("FK_AREA_SIGUENTE");
+
+            entity.HasOne(d => d.areaSiguienteNavigation).WithMany(p => p.procesoOfareaSiguienteNavigation).HasConstraintName("FK_AREA_ANTERIOR");
 
             entity.HasOne(d => d.idMaterialNavigation).WithMany(p => p.procesoOf).HasConstraintName("FK_PROCESO_MATERIAL");
 
@@ -1465,6 +1467,8 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.oFNavigation).WithMany(p => p.procesoOf).HasConstraintName("FK_PROCESO_OF");
 
             entity.HasOne(d => d.procesoAnteriorNavigation).WithMany(p => p.InverseprocesoAnteriorNavigation).HasConstraintName("FK_PROCESO_ANTERIOR");
+
+            entity.HasOne(d => d.procesoSiguienteNavigation).WithMany(p => p.InverseprocesoSiguienteNavigation).HasConstraintName("FK_PROCESO_SIGUIENTE");
         });
 
         modelBuilder.Entity<procesoPegadora>(entity =>
@@ -1848,6 +1852,10 @@ public partial class base_nuevaContext : DbContext
 
             entity.Property(e => e.enviadoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.recibidoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+
+            entity.HasOne(d => d.areaDestinoNavigation).WithMany(p => p.transferenciaProcesoareaDestinoNavigation).HasConstraintName("FK_AREA_DESTINO");
+
+            entity.HasOne(d => d.areaOrigenNavigation).WithMany(p => p.transferenciaProcesoareaOrigenNavigation).HasConstraintName("FK_AREA_ORIGEN");
 
             entity.HasOne(d => d.enviadoPorNavigation).WithMany(p => p.transferenciaProcesoenviadoPorNavigation).HasConstraintName("FK_ENVIADO_POR");
 

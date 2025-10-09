@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Sistema_Produccion_3_Backend.Models;
 
+[Index("areaDestino", Name = "AREA_DESTINO_FK")]
+[Index("areaOrigen", Name = "AREA_ORIGEN_FK")]
 [Index("idDestino", Name = "ID_DESTINO_FK")]
 [Index("idOrigen", Name = "ID_ORIGEN_FK")]
 [Index("idProduccion", Name = "ID_PRODUCCION_ORIGEN_FK")]
@@ -54,6 +56,18 @@ public partial class transferenciaProceso
     public string observaciones { get; set; }
 
     public int? idProduccion { get; set; }
+
+    public int? areaOrigen { get; set; }
+
+    public int? areaDestino { get; set; }
+
+    [ForeignKey("areaDestino")]
+    [InverseProperty("transferenciaProcesoareaDestinoNavigation")]
+    public virtual areas areaDestinoNavigation { get; set; }
+
+    [ForeignKey("areaOrigen")]
+    [InverseProperty("transferenciaProcesoareaOrigenNavigation")]
+    public virtual areas areaOrigenNavigation { get; set; }
 
     [InverseProperty("idTransferenciaNavigation")]
     public virtual ICollection<detalleReporte> detalleReporte { get; set; } = new List<detalleReporte>();

@@ -34,5 +34,9 @@ namespace Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.TransferenciaPr
         public string? observaciones { get; set; }
 
         public int? idProduccion { get; set; }
+
+        public int? areaOrigen { get; set; }
+
+        public int? areaDestino { get; set; }
     }
 }

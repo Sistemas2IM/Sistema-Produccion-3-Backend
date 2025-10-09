@@ -4,6 +4,11 @@ using Sistema_Produccion_3_Backend.DTO.Bitacora;
 using Sistema_Produccion_3_Backend.DTO.Calidad.CertificadoCalidad;
 using Sistema_Produccion_3_Backend.DTO.Calidad.CertificadoCalidad.DetalleCertificadoCalidad;
 using Sistema_Produccion_3_Backend.DTO.Calidad.CertificadoCalidad.DetalleCertificadoCalidad.Batch;
+using Sistema_Produccion_3_Backend.DTO.Calidad.FichaClienteOf;
+using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnicaCliente;
+using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnicaCliente.DetalleFichaClientes;
+using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnicaCliente.DetalleFichaClientes.Batch;
+using Sistema_Produccion_3_Backend.DTO.Calidad.VariablesTecnicas;
 using Sistema_Produccion_3_Backend.DTO.Catalogo.FamiliaMaquina;
 using Sistema_Produccion_3_Backend.DTO.Catalogo.Maquinas;
 using Sistema_Produccion_3_Backend.DTO.Catalogo.Motoristas;
@@ -147,6 +152,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
 
             // PROCESOS OF ==========================================================================================
             CreateMap<procesoOf, ProcesoOfDto>()
+                .ForMember(dest => dest.idArea, opt => opt.MapFrom(src => src.idTableroNavigation.idArea))
                 .ForMember(dest => dest.detalleProcesoOf, opt => opt.MapFrom(src => src.detalleReporte))
                 .ForMember(dest => dest.tarjetaCampoDto, opt => opt.MapFrom(src => src.tarjetaCampo))
                 .ForMember(dest => dest.tarjetaEtiquetaDto, opt => opt.MapFrom(src => src.tarjetaEtiqueta))
@@ -175,6 +181,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                         : new List<corridaCombinada>())))
                 .ReverseMap();
             CreateMap<procesoOf, ProcesoOfVistaTableroDto>()
+                .ForMember(dest => dest.idArea, opt => opt.MapFrom(src => src.idTableroNavigation.idArea))
                 .ForMember(dest => dest.detalleProcesoOf, opt => opt.MapFrom(src => src.detalleReporte))
                 .ForMember(dest => dest.tarjetaCampoDto, opt => opt.MapFrom(src => src.tarjetaCampo))
                 .ForMember(dest => dest.tarjetaEtiquetaDto, opt => opt.MapFrom(src => src.tarjetaEtiqueta))
@@ -201,6 +208,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                         : new List<corridaCombinada>())))
                 .ReverseMap();
             CreateMap<procesoOf, ListaProcesoOfDto>()
+                .ForMember(dest => dest.idArea, opt => opt.MapFrom(src => src.idTableroNavigation.idArea))
                 .ForMember(dest => dest.PosturasOfDto, opt => opt.MapFrom(src => src.idPosturaNavigation))
                 .ForMember(dest => dest.TablerosOfDto, opt => opt.MapFrom(src => src.idTableroNavigation))
                 .ForMember(dest => dest.cliente, opt => opt.MapFrom(src => src.oFNavigation.clienteOf))
@@ -243,6 +251,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             {
                 CreateMap<procesoOf, ProcesoOfMaquinas>()
+                    .ForMember(dest => dest.idArea, opt => opt.MapFrom(src => src.idTableroNavigation.idArea))
                     .ForMember(dest => dest.posturasOfDto, opt => opt.MapFrom(src => src.idPosturaNavigation))
                     .ForMember(dest => dest.materialDto, opt => opt.MapFrom(src => src.idMaterialNavigation))
                     .ForMember(dest => dest.cliente, opt => opt.MapFrom(src => src.oFNavigation.clienteOf))
@@ -561,6 +570,8 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             CreateMap<UpdateAsignacionDto, asignacion>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
+            //CALIDAD ================================================================================================
+
             // CERTIFICADO DE CALIDAD =================================================================================
             CreateMap<certificadoCalidad, CertificadoCalidadDto>().ReverseMap();
             CreateMap<certificadoCalidad, AddCertificadoCalidadDto>().ReverseMap();
@@ -578,7 +589,35 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             }
 
             // FICHA TECNICA DE CALIDAD ==============================================================================
+            CreateMap<fichaTecnicaCliente, FichaTecnicaClienteDto>()
+                .ReverseMap();
+            CreateMap<fichaTecnicaCliente, AddFichaTecnicaClienteDto>().ReverseMap();
+            CreateMap<UpdateFichaTecnicaClienteDto, fichaTecnicaCliente>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
+            {
+                CreateMap<detalleFichaClientes, DetalleFichaClientesDto>().ReverseMap();
+                CreateMap<detalleFichaClientes, AddDetalleFichaClientesDto>().ReverseMap();
+                CreateMap<UpdateDetalleFichaClientesDto, detalleFichaClientes>()
+                    .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+                CreateMap<detalleFichaClientes, AddBatchDetalleFichaClientesDto>().ReverseMap();
+                CreateMap<UpdateBatchDetalleFichaClientesDto, detalleFichaClientes>()
+                    .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            }
+
+            CreateMap<variablesTecnicas, VariablesTecnicasDto>().ReverseMap();
+            CreateMap<variablesTecnicas, AddVariablesTecnicasDto>().ReverseMap();
+            CreateMap<UpdateVariablesTecnicasDto, variablesTecnicas>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            // Ficha cliente of
+            CreateMap<fichaClienteOf, FichaClienteOfDto>().ReverseMap();
+            CreateMap<fichaClienteOf, AddFichaClienteOfDto>().ReverseMap();
+            CreateMap<UpdateFichaClienteOfDto, fichaClienteOf>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            // ========================================================================================================
 
             // LOGISTICA - GIRA =======================================================================================
             CreateMap<gira, GiraDto>()
@@ -750,7 +789,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                     .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             }
 
-            // SOLICITUD DE MATERIALES
+            // SOLICITUD DE MATERIALES ================================================================================
             CreateMap<solicitudMateriales, solicitudMaterialesDto>().ReverseMap();
             CreateMap<solicitudMateriales, AddSolicitudMaterialesDto>().ReverseMap();
             CreateMap<UpdateSolicitudMaterialesDto, solicitudMateriales>()
