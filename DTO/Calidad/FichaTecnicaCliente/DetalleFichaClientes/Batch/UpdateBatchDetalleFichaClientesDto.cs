@@ -2,7 +2,7 @@
 {
     public class UpdateBatchDetalleFichaClientesDto
     {
-        public int? DetalleID { get; set; }
+        public int? idDetalle { get; set; }
 
         public int? idFichaCliente { get; set; }
 

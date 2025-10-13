@@ -39,7 +39,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.FichaTecnicaCliente.D
         public async Task<ActionResult<DetalleFichaClientesDto>> GetDetalleFichaClientes(int id)
         {
             var detalleFichaClientes = await _context.detalleFichaClientes
-                .FirstOrDefaultAsync(u => u.DetalleID == id);
+                .FirstOrDefaultAsync(u => u.idDetalle == id);
 
             if (detalleFichaClientes == null)
             {
@@ -60,7 +60,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.FichaTecnicaCliente.D
             _context.detalleFichaClientes.Add(detalleFichaClientes);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetDetalleFichaClientes", new { id = detalleFichaClientes.DetalleID }, detalleFichaClientes);
+            return CreatedAtAction("GetDetalleFichaClientes", new { id = detalleFichaClientes.idDetalle }, detalleFichaClientes);
         }
 
         // PUT api/<detalleFichaClientesController>/5
@@ -139,11 +139,11 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.FichaTecnicaCliente.D
             foreach (var dto in updateDetalleFichaDto)
             {
                 // Validar ID
-                if (dto.DetalleID <= 0)
+                if (dto.idDetalle <= 0)
                 {
                     resultados.Add(new
                     {
-                        id = dto.DetalleID,
+                        id = dto.idDetalle,
                         estado = "Error",
                         mensaje = "ID inválido."
                     });
@@ -152,13 +152,13 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.FichaTecnicaCliente.D
 
                 // Buscar registro existente
                 var existente = await _context.detalleFichaClientes
-                    .FirstOrDefaultAsync(x => x.DetalleID == dto.DetalleID);
+                    .FirstOrDefaultAsync(x => x.idDetalle == dto.idDetalle);
 
                 if (existente == null)
                 {
                     resultados.Add(new
                     {
-                        id = dto.DetalleID,
+                        id = dto.idDetalle,
                         estado = "Error",
                         mensaje = "Detalle no encontrado."
                     });
@@ -173,7 +173,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.FichaTecnicaCliente.D
 
                 resultados.Add(new
                 {
-                    id = dto.DetalleID,
+                    id = dto.idDetalle,
                     estado = "OK",
                     mensaje = "Actualizado correctamente."
                 });
@@ -198,7 +198,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.FichaTecnicaCliente.D
 
         private bool detalleFichaClientesExists(int id)
         {
-            return _context.detalleFichaClientes.Any(e => e.DetalleID == id);
+            return _context.detalleFichaClientes.Any(e => e.idDetalle == id);
         }
     }
 }

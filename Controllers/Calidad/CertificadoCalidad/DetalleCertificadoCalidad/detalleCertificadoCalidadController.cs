@@ -40,7 +40,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.CertificadoCalidad.De
         public async Task<ActionResult<DetalleCertificadoCalidadDto>> Get(int id)
         {
             var detalleCertificadoCalidad = await _context.detalleCertificadoCalidad
-                .FirstOrDefaultAsync(u => u.DetalleID == id);
+                .FirstOrDefaultAsync(u => u.idDetalle == id);
             if (detalleCertificadoCalidad == null)
             {
                 return NotFound();
@@ -60,7 +60,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.CertificadoCalidad.De
 
             var detalleCertificadoCalidadDto = _mapper.Map<DetalleCertificadoCalidadDto>(detalleCertificadoCalidad);
 
-            return CreatedAtAction("Get", new { id = detalleCertificadoCalidad.DetalleID }, detalleCertificadoCalidadDto);
+            return CreatedAtAction("Get", new { id = detalleCertificadoCalidad.idDetalle }, detalleCertificadoCalidadDto);
         }
 
         // PUT api/<detalleCertificadoCalidadController>/5
@@ -138,11 +138,11 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.CertificadoCalidad.De
             foreach (var dto in detallesDto)
             {
                 // Validar ID
-                if (dto.DetalleID <= 0)
+                if (dto.idDetalle <= 0)
                 {
                     resultados.Add(new
                     {
-                        id = dto.DetalleID,
+                        id = dto.idDetalle,
                         estado = "Error",
                         mensaje = "ID inválido."
                     });
@@ -151,13 +151,13 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.CertificadoCalidad.De
 
                 // Buscar registro existente
                 var existente = await _context.detalleCertificadoCalidad
-                    .FirstOrDefaultAsync(x => x.DetalleID == dto.DetalleID);
+                    .FirstOrDefaultAsync(x => x.idDetalle == dto.idDetalle);
 
                 if (existente == null)
                 {
                     resultados.Add(new
                     {
-                        id = dto.DetalleID,
+                        id = dto.idDetalle,
                         estado = "Error",
                         mensaje = "Detalle no encontrado."
                     });
@@ -172,7 +172,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.CertificadoCalidad.De
 
                 resultados.Add(new
                 {
-                    id = dto.DetalleID,
+                    id = dto.idDetalle,
                     estado = "OK",
                     mensaje = "Actualizado correctamente."
                 });
@@ -197,7 +197,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.CertificadoCalidad.De
 
         private bool detalleCertificadoCalidadExists(int id)
         {
-            return _context.detalleCertificadoCalidad.Any(e => e.DetalleID == id);
+            return _context.detalleCertificadoCalidad.Any(e => e.idDetalle == id);
         }
     }
 }

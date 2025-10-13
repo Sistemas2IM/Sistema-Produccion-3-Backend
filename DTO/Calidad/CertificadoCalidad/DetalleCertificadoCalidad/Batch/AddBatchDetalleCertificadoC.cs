@@ -2,8 +2,6 @@
 {
     public class AddBatchDetalleCertificadoC
     {
-        public int? DetalleID { get; set; }
-
         public int? idCertificadoCalidad { get; set; }
 
         public int? idVariable { get; set; }

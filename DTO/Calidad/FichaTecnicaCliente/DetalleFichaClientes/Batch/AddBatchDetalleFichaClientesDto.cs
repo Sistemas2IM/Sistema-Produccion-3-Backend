@@ -2,8 +2,6 @@
 {
     public class AddBatchDetalleFichaClientesDto
     {
-        public int? DetalleID { get; set; }
-
         public int? idFichaCliente { get; set; }
 
         public int? idVariable { get; set; }

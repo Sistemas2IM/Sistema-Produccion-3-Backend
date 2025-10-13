@@ -628,7 +628,7 @@ public partial class base_nuevaContext : DbContext
 
         modelBuilder.Entity<detalleCertificadoCalidad>(entity =>
         {
-            entity.HasKey(e => e.DetalleID).HasName("PK__detalleC__6E19D6FA3406FD39");
+            entity.HasKey(e => e.idDetalle).HasName("PK__detalleC__6E19D6FA3406FD39");
 
             entity.Property(e => e.fechaCreacion).HasDefaultValueSql("(getdate())");
 
@@ -662,7 +662,7 @@ public partial class base_nuevaContext : DbContext
 
         modelBuilder.Entity<detalleFichaClientes>(entity =>
         {
-            entity.HasKey(e => e.DetalleID).HasName("PK__detalleF__6E19D6FAE127E0BD");
+            entity.HasKey(e => e.idDetalle).HasName("PK__detalleF__6E19D6FAE127E0BD");
 
             entity.Property(e => e.fechaCreacion).HasDefaultValueSql("(getdate())");
 

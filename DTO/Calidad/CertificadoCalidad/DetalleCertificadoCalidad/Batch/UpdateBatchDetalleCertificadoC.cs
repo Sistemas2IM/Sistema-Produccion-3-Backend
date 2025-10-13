@@ -2,7 +2,7 @@
 {
     public class UpdateBatchDetalleCertificadoC
     {
-        public int? DetalleID { get; set; }
+        public int? idDetalle { get; set; }
 
         public int? idCertificadoCalidad { get; set; }
 

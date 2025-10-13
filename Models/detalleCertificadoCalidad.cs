@@ -11,7 +11,7 @@ namespace Sistema_Produccion_3_Backend.Models;
 public partial class detalleCertificadoCalidad
 {
     [Key]
-    public int DetalleID { get; set; }
+    public int idDetalle { get; set; }
 
     public int idCertificadoCalidad { get; set; }
 
