@@ -2,9 +2,9 @@
 {
     public class AddFichaTecnicaClienteDto
     {
-        public int? codClienteSAP { get; set; }
+        public string? codClienteSAP { get; set; }
 
-        public int? codProductoSAP { get; set; }
+        public string? codProductoSAP { get; set; }
 
         public string? elaboradoPor { get; set; }
 

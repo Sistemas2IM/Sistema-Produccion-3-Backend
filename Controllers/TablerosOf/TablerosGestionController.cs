@@ -27,9 +27,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         {
             var procesoOf = await _context.procesoOf
                 .Where(f => f.oFNavigation.lineaDeNegocio == "FLEXO")
-                .Include(u => u.detalleOperacionProceso)
-                .ThenInclude(o => o.idOperacionNavigation)
-                .Include(m => m.tarjetaCampo)
+                .Include(o => o.detalleReporte)
+                .ThenInclude(d => d.idOperacionNavigation)
                 .Include(s => s.tarjetaEtiqueta)
                 .ThenInclude(e => e.idEtiquetaNavigation)
                 .Include(d => d.idPosturaNavigation)
@@ -96,7 +95,6 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 .ThenInclude(o => o.idOperacionNavigation)
                 .Include(u => u.detalleReporte)
                 .ThenInclude(m => m.maquinaNavigation)
-                .Include(m => m.tarjetaCampo)
                 .Include(s => s.tarjetaEtiqueta)
                 .ThenInclude(e => e.idEtiquetaNavigation)
                 .Include(f => f.oFNavigation)
@@ -143,7 +141,6 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 .ThenInclude(o => o.idOperacionNavigation)
                 .Include(u => u.detalleReporte)
                 .ThenInclude(m => m.maquinaNavigation)
-                .Include(m => m.tarjetaCampo)
                 .Include(s => s.tarjetaEtiqueta)
                 .ThenInclude(e => e.idEtiquetaNavigation)
                 .Include(f => f.oFNavigation)
@@ -190,9 +187,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 // Consulta base
                 var query = _context.procesoOf
                     .OrderBy(p => p.posicion)
-                    .Include(u => u.detalleOperacionProceso)
-                    .ThenInclude(o => o.idOperacionNavigation)
-                    .Include(m => m.tarjetaCampo)
+                    .Include(o => o.detalleReporte)
+                    .ThenInclude(d => d.idOperacionNavigation)
                     .Include(s => s.tarjetaEtiqueta)
                     .ThenInclude(e => e.idEtiquetaNavigation)
                     .Include(f => f.oFNavigation)

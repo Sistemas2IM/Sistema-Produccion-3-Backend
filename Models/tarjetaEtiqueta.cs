@@ -8,8 +8,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Sistema_Produccion_3_Backend.Models;
 
-[Index("idEtiqueta", Name = "ETIQUETAS_TARJETA_FK")]
-[Index("idProceso", Name = "TARJETAS_ETIQUETA_FK")]
 public partial class tarjetaEtiqueta
 {
     [Key]

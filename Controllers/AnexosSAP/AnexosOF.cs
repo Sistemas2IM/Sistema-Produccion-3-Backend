@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using SAPbobsCOM;
-using Sistema_Produccion_3_Backend.DTO.Bitacora;
 using Sistema_Produccion_3_Backend.Services.SAP.HANA;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using JsonSerializer = System.Text.Json.JsonSerializer;

@@ -32,27 +32,7 @@
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[auditoriaDeCalidad]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[auditoriaDeProcesos]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[auditoriaDeProductos]",
-         "ObjectType": 0
-      },
-      {
          "Name": "[dbo].[auxiliares]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[bitacora]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[camposPersonalizados]",
          "ObjectType": 0
       },
       {
@@ -64,23 +44,7 @@
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[certificadoDeCalidad]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[contenidoEntrega]",
-         "ObjectType": 0
-      },
-      {
          "Name": "[dbo].[corridaCombinada]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[detalleBarniz]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[detalleCertificado]",
          "ObjectType": 0
       },
       {
@@ -96,43 +60,11 @@
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[detalleGira]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[detalleImpresion]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[detalleOperacionProceso]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[detallePegado]",
-         "ObjectType": 0
-      },
-      {
          "Name": "[dbo].[detalleReporte]",
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[detalleSecado]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[detalleTroquelado]",
-         "ObjectType": 0
-      },
-      {
          "Name": "[dbo].[entregasProductoTerminado]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[espacioColor]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[especificaciones]",
          "ObjectType": 0
       },
       {
@@ -160,27 +92,7 @@
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[fichaTecnica]",
-         "ObjectType": 0
-      },
-      {
          "Name": "[dbo].[fichaTecnicaCliente]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[filtros]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[formulacionTintas]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[generalidadColor]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[gira]",
          "ObjectType": 0
       },
       {
@@ -228,14 +140,6 @@
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[motorista]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[movimientoOf]",
-         "ObjectType": 0
-      },
-      {
          "Name": "[dbo].[notasOf]",
          "ObjectType": 0
       },
@@ -268,15 +172,7 @@
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[porcentajeDeAgua]",
-         "ObjectType": 0
-      },
-      {
          "Name": "[dbo].[posturasOf]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[potenciaLamparaUv]",
          "ObjectType": 0
       },
       {
@@ -332,10 +228,6 @@
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[reporteDeAuditoria]",
-         "ObjectType": 0
-      },
-      {
          "Name": "[dbo].[reportesDeOperadores]",
          "ObjectType": 0
       },
@@ -345,10 +237,6 @@
       },
       {
          "Name": "[dbo].[seccionDocumento]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[secuenciaDeColor]",
          "ObjectType": 0
       },
       {
@@ -368,15 +256,7 @@
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[sysdiagrams]",
-         "ObjectType": 0
-      },
-      {
          "Name": "[dbo].[tablerosOf]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[tarjetaCampo]",
          "ObjectType": 0
       },
       {
@@ -388,31 +268,7 @@
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[tipoAcabado]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[tipoCierre]",
-         "ObjectType": 0
-      },
-      {
          "Name": "[dbo].[tipoDeObjetos]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[tipoFicha]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[tipoPega]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[tipoPegado]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[tipoPleca]",
          "ObjectType": 0
       },
       {
@@ -432,15 +288,7 @@
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[variablesDeAgua]",
-         "ObjectType": 0
-      },
-      {
          "Name": "[dbo].[variablesTecnicas]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[vehiculo]",
          "ObjectType": 0
       },
       {

@@ -13,7 +13,7 @@ public partial class seccionDocumento
     [Key]
     public int idSeccion { get; set; }
 
-    public int idArea { get; set; }
+    public int? idArea { get; set; }
 
     [Required]
     [StringLength(100)]
@@ -29,9 +29,15 @@ public partial class seccionDocumento
     [Column(TypeName = "datetime")]
     public DateTime? fechaCreacion { get; set; }
 
+    public int? tipoDocumento { get; set; }
+
     [ForeignKey("idArea")]
     [InverseProperty("seccionDocumento")]
     public virtual areas idAreaNavigation { get; set; }
+
+    [ForeignKey("tipoDocumento")]
+    [InverseProperty("seccionDocumento")]
+    public virtual tipoDeObjetos tipoDocumentoNavigation { get; set; }
 
     [InverseProperty("idSeccionNavigation")]
     public virtual ICollection<variablesTecnicas> variablesTecnicas { get; set; } = new List<variablesTecnicas>();

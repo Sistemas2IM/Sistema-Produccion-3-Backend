@@ -58,7 +58,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.FichaTecnicaCliente
             _context.fichaTecnicaCliente.Add(fichaTecnicaCliente);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("Get", new { id = fichaTecnicaCliente.idFichaCliente }, fichaTecnicaCliente);
+            return CreatedAtAction("GetFichaCliente", new { id = fichaTecnicaCliente.idFichaCliente }, fichaTecnicaCliente);
         }
 
         // PUT api/<fichaTecnicaClienteController>/5

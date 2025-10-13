@@ -14,9 +14,13 @@ public partial class fichaTecnicaCliente
     [Key]
     public int idFichaCliente { get; set; }
 
-    public int codClienteSAP { get; set; }
+    [Required]
+    [StringLength(50)]
+    public string codClienteSAP { get; set; }
 
-    public int codProductoSAP { get; set; }
+    [Required]
+    [StringLength(50)]
+    public string codProductoSAP { get; set; }
 
     [Required]
     [StringLength(50)]

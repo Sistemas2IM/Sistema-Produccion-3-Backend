@@ -34,7 +34,6 @@ namespace Sistema_Produccion_3_Backend.Controllers.ProductoTerminado
         {
             var productoTerminado = await _context.entregasProductoTerminado
                 .OrderByDescending(f => f.fechaCreacion)
-                .Include(u => u.contenidoEntrega)
                 .Include(r => r.detalleEntrega)
                 .Include(p => p.idEstadoReporteNavigation)
                 .Include(sm => sm.idMaquinaNavigation)
@@ -51,7 +50,6 @@ namespace Sistema_Produccion_3_Backend.Controllers.ProductoTerminado
         public async Task<ActionResult<ProductoTerminadoDto>> GetentregasProductoTerminado(int id)
         {
             var entregasProductoTerminado = await _context.entregasProductoTerminado
-                .Include(u => u.contenidoEntrega)
                 .Include(r => r.detalleEntrega)
                 .Include(p => p.idEstadoReporteNavigation)
                 .Include(sm => sm.idMaquinaNavigation)
@@ -73,7 +71,6 @@ namespace Sistema_Produccion_3_Backend.Controllers.ProductoTerminado
         public async Task<ActionResult<IEnumerable<ProductoTerminadoDto>>> GetEntregasProductoTerminadoOf(int of)
         {
             var entregasProductoTerminado = await _context.entregasProductoTerminado
-                .Include(u => u.contenidoEntrega)
                 .Include(r => r.detalleEntrega)
                 .Include(p => p.idEstadoReporteNavigation)
                 .Include(sm => sm.idMaquinaNavigation)

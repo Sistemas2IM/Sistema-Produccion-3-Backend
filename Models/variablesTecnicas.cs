@@ -13,23 +13,20 @@ public partial class variablesTecnicas
     [Key]
     public int idVariable { get; set; }
 
-    public int idSeccion { get; set; }
+    public int? idSeccion { get; set; }
 
-    [Required]
     [StringLength(100)]
     public string nombre { get; set; }
 
-    [Required]
     [StringLength(150)]
     public string etiqueta { get; set; }
 
-    [Required]
     [StringLength(20)]
     public string tipoDato { get; set; }
 
     public bool? obligatorio { get; set; }
 
-    public int ordenVisual { get; set; }
+    public int? ordenVisual { get; set; }
 
     public string valoresPosibles { get; set; }
 

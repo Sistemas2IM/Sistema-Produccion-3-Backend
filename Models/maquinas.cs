@@ -35,9 +35,6 @@ public partial class maquinas
 
     public int? velocidadMaxima { get; set; }
 
-    [InverseProperty("idMaquinaNavigation")]
-    public virtual ICollection<contenidoEntrega> contenidoEntrega { get; set; } = new List<contenidoEntrega>();
-
     [InverseProperty("maquinaNavigation")]
     public virtual ICollection<detalleReporte> detalleReporte { get; set; } = new List<detalleReporte>();
 

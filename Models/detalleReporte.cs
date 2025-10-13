@@ -135,10 +135,6 @@ public partial class detalleReporte
     [InverseProperty("detalleReporte")]
     public virtual reportesDeOperadores idReporteNavigation { get; set; }
 
-    [ForeignKey("idTipoCierre")]
-    [InverseProperty("detalleReporte")]
-    public virtual tipoCierre idTipoCierreNavigation { get; set; }
-
     [ForeignKey("idTransferencia")]
     [InverseProperty("detalleReporte")]
     public virtual transferenciaProceso idTransferenciaNavigation { get; set; }

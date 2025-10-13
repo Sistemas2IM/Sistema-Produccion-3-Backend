@@ -30,9 +30,6 @@ namespace Sistema_Produccion_3_Backend.Controllers.Buscadores.TablerosOf
 
             // Buscar en la tabla procesoOf
             var procesosOf = await _context.procesoOf
-                .Include(u => u.detalleOperacionProceso)
-                .ThenInclude(o => o.idOperacionNavigation)
-                .Include(m => m.tarjetaCampo)
                 .Include(s => s.tarjetaEtiqueta)
                 .Include(d => d.idPosturaNavigation)
                 .Include(c => c.idTableroNavigation)

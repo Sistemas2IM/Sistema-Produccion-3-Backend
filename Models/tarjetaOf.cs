@@ -95,12 +95,6 @@ public partial class tarjetaOf
     public virtual ICollection<certificadoCalidad> certificadoCalidad { get; set; } = new List<certificadoCalidad>();
 
     [InverseProperty("oFNavigation")]
-    public virtual ICollection<certificadoDeCalidad> certificadoDeCalidad { get; set; } = new List<certificadoDeCalidad>();
-
-    [InverseProperty("oFNavigation")]
-    public virtual ICollection<detalleGira> detalleGira { get; set; } = new List<detalleGira>();
-
-    [InverseProperty("oFNavigation")]
     public virtual ICollection<detalleReporte> detalleReporte { get; set; } = new List<detalleReporte>();
 
     [InverseProperty("ofNavigation")]
@@ -111,9 +105,6 @@ public partial class tarjetaOf
 
     [InverseProperty("oFNavigation")]
     public virtual ICollection<fichaClienteOf> fichaClienteOf { get; set; } = new List<fichaClienteOf>();
-
-    [InverseProperty("oFNavigation")]
-    public virtual ICollection<fichaTecnica> fichaTecnica { get; set; } = new List<fichaTecnica>();
 
     [ForeignKey("idEstadoOf")]
     [InverseProperty("tarjetaOf")]

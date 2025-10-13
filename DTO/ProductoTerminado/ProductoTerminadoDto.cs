@@ -1,6 +1,5 @@
 ﻿using Sistema_Produccion_3_Backend.DTO.Catalogo.Maquinas;
 using Sistema_Produccion_3_Backend.DTO.OV;
-using Sistema_Produccion_3_Backend.DTO.ProductoTerminado.ContenidoEntrega;
 using Sistema_Produccion_3_Backend.DTO.ProductoTerminado.DetalleEntrega;
 using Sistema_Produccion_3_Backend.DTO.ReporteOperador.EstadoReporte;
 using Sistema_Produccion_3_Backend.DTO.TarjetasOF;
@@ -67,8 +66,6 @@ namespace Sistema_Produccion_3_Backend.DTO.ProductoTerminado
         public string? cantidadOf { get; set; }
 
         public string? fsc { get; set; }
-
-        public List<ContenidoEntregaDto>? contenidoEntregado { get; set; }
 
         public List<DetalleEntregaDto>? detalleEntrega { get; set; }
 

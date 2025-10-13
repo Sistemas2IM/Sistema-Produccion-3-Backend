@@ -163,9 +163,6 @@ public partial class procesoOf
     public virtual corridaCombinada corridaCombinadasubordinadoNavigation { get; set; }
 
     [InverseProperty("idProcesoNavigation")]
-    public virtual ICollection<detalleOperacionProceso> detalleOperacionProceso { get; set; } = new List<detalleOperacionProceso>();
-
-    [InverseProperty("idProcesoNavigation")]
     public virtual ICollection<detalleReporte> detalleReporte { get; set; } = new List<detalleReporte>();
 
     [ForeignKey("idMaterial")]
@@ -227,9 +224,6 @@ public partial class procesoOf
 
     [InverseProperty("idProcesoNavigation")]
     public virtual ICollection<procesosFlexo> procesosFlexo { get; set; } = new List<procesosFlexo>();
-
-    [InverseProperty("idProcesoNavigation")]
-    public virtual ICollection<tarjetaCampo> tarjetaCampo { get; set; } = new List<tarjetaCampo>();
 
     [InverseProperty("idProcesoNavigation")]
     public virtual ICollection<tarjetaEtiqueta> tarjetaEtiqueta { get; set; } = new List<tarjetaEtiqueta>();

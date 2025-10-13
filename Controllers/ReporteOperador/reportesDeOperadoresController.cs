@@ -44,7 +44,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
                 .Include(m => m.detalleReporte)
                     .ThenInclude(d => d.idMaterialNavigation)
                 .Include(m => m.detalleReporte)
-                    .ThenInclude(d => d.idTipoCierreNavigation)
+                    
                 .Include(m => m.detalleReporte)
                     .ThenInclude(d => d.oFNavigation)
                 .Include(o => o.operadorNavigation)
@@ -86,7 +86,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
             .Include(m => m.detalleReporte)
                 .ThenInclude(d => d.idMaterialNavigation)
             .Include(m => m.detalleReporte)
-                .ThenInclude(d => d.idTipoCierreNavigation)
+               
             .Include(m => m.detalleReporte)
                 .ThenInclude(d => d.oFNavigation)
             .Include(o => o.operadorNavigation)
@@ -131,8 +131,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
             .ThenInclude(d => d.idOperacionNavigation)
         .Include(m => m.detalleReporte)
             .ThenInclude(d => d.idMaterialNavigation)
-        .Include(m => m.detalleReporte)
-            .ThenInclude(d => d.idTipoCierreNavigation)
+        .Include(m => m.detalleReporte) 
         .Include(m => m.detalleReporte)
             .ThenInclude(d => d.oFNavigation)
         .Include(o => o.operadorNavigation)
@@ -192,7 +191,6 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
                 .Include(m => m.detalleReporte)
                     .ThenInclude(d => d.idMaterialNavigation) // Incluye la relación con 'idMaterial'
                 .Include(m => m.detalleReporte)
-                    .ThenInclude(d => d.idTipoCierreNavigation) // Incluye la relación con 'idTipoCierre'
                 .Include(m => m.detalleReporte)
                     .ThenInclude(d => d.oFNavigation) // Incluye la relación con 'idTarjetaOf'
                 .Include(o => o.operadorNavigation)

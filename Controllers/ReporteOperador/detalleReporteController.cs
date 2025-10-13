@@ -36,7 +36,6 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
                 .OrderBy(h => h.horaInicio)
                 .Include(u => u.idOperacionNavigation)
                 .Include(r => r.idMaterialNavigation)
-                .Include(p => p.idTipoCierreNavigation)
                 .Include(sm => sm.oFNavigation)
                 .Include(m => m.maquinaNavigation)
                 .ToArrayAsync();
@@ -58,7 +57,6 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
             var detalleReporte = await _context.detalleReporte
                 .Include(u => u.idOperacionNavigation)
                 .Include(r => r.idMaterialNavigation)
-                .Include(p => p.idTipoCierreNavigation)
                 .Include(sm => sm.oFNavigation)
                 .Include(m => m.maquinaNavigation)
                 .FirstOrDefaultAsync(u => u.idDetalleReporte == id);

@@ -15,4 +15,7 @@ public partial class tipoDeObjetos
 
     [StringLength(200)]
     public string nombreTipoDeObjeto { get; set; }
+
+    [InverseProperty("tipoDocumentoNavigation")]
+    public virtual ICollection<seccionDocumento> seccionDocumento { get; set; } = new List<seccionDocumento>();
 }
