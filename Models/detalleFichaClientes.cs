@@ -22,9 +22,27 @@ public partial class detalleFichaClientes
     [Column(TypeName = "datetime")]
     public DateTime? fechaCreacion { get; set; }
 
+    public int? idUnidad { get; set; }
+
+    [StringLength(25)]
+    public string toleranciaPromedio { get; set; }
+
+    [StringLength(25)]
+    public string toleranciaMinima { get; set; }
+
+    [StringLength(25)]
+    public string toleranciaMaxima { get; set; }
+
+    [StringLength(25)]
+    public string toleranciaMedida { get; set; }
+
     [ForeignKey("idFichaCliente")]
     [InverseProperty("detalleFichaClientes")]
     public virtual fichaTecnicaCliente idFichaClienteNavigation { get; set; }
+
+    [ForeignKey("idUnidad")]
+    [InverseProperty("detalleFichaClientes")]
+    public virtual unidadesMedida idUnidadNavigation { get; set; }
 
     [ForeignKey("idVariable")]
     [InverseProperty("detalleFichaClientes")]

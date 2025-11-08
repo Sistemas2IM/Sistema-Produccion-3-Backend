@@ -104,7 +104,7 @@ public partial class tarjetaOf
     public virtual ICollection<etiquetaOf> etiquetaOf { get; set; } = new List<etiquetaOf>();
 
     [InverseProperty("oFNavigation")]
-    public virtual ICollection<fichaClienteOf> fichaClienteOf { get; set; } = new List<fichaClienteOf>();
+    public virtual ICollection<fichaTecnicaCliente> fichaTecnicaCliente { get; set; } = new List<fichaTecnicaCliente>();
 
     [ForeignKey("idEstadoOf")]
     [InverseProperty("tarjetaOf")]

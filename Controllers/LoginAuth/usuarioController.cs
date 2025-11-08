@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Sistema_Produccion_3_Backend.DTO.PermisosUsuario;
 using Sistema_Produccion_3_Backend.DTO.PermisosUsuario.Diseño;
+using Sistema_Produccion_3_Backend.DTO.PermisosUsuario.Operadores;
+using Sistema_Produccion_3_Backend.DTO.ReporteOperador.DetalleReporte.Operaciones;
 using Sistema_Produccion_3_Backend.Models;
 
 namespace Sistema_Produccion_3_Backend.Controllers.LoginAuth
@@ -53,6 +55,28 @@ namespace Sistema_Produccion_3_Backend.Controllers.LoginAuth
 
             return Ok(usuariosDto);
         }
+
+        // GET: api/usuario
+        [HttpGet("get/operadores/area/{idArea}")]
+        public async Task<ActionResult<IEnumerable<OperadoresDto>>> GetusuarioOperador(int idArea)
+        {
+            var usuarios = await _context.usuario
+                // 🔹 Filtra SOLO usuarios del área solicitada
+                .Where(u => u.idArea == idArea && u.idCargo == 1)
+                .OrderByDescending(f => f.fechaDeCreacion)
+                .Include(a => a.idAreaNavigation)
+                // 🔹 Incluye solo las máquinas asignadas
+                .Include(u => u.permisoMaquina
+                    .Where(pm => pm.asignada == true))
+                .ThenInclude(pm => pm.maquinaNavigation)
+                .ToListAsync();
+
+            var usuariosDto = _mapper.Map<List<OperadoresDto>>(usuarios);
+
+            return Ok(usuariosDto);
+        }
+
+
 
         // GET: api/usuario/get/{user}
         [HttpGet("get/{user}")]

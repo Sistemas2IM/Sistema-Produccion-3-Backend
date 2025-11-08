@@ -25,9 +25,18 @@ public partial class detalleCertificadoCalidad
     [Column(TypeName = "datetime")]
     public DateTime? fechaCreacion { get; set; }
 
+    public int? idUnidad { get; set; }
+
+    [StringLength(25)]
+    public string toleranciaMedida { get; set; }
+
     [ForeignKey("idCertificadoCalidad")]
     [InverseProperty("detalleCertificadoCalidad")]
     public virtual certificadoCalidad idCertificadoCalidadNavigation { get; set; }
+
+    [ForeignKey("idUnidad")]
+    [InverseProperty("detalleCertificadoCalidad")]
+    public virtual unidadesMedida idUnidadNavigation { get; set; }
 
     [ForeignKey("idVariable")]
     [InverseProperty("detalleCertificadoCalidad")]

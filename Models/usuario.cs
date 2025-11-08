@@ -49,11 +49,20 @@ public partial class usuario
     [InverseProperty("userNavigation")]
     public virtual ICollection<asignacion> asignacion { get; set; } = new List<asignacion>();
 
-    [InverseProperty("elaboradoPorNavigation")]
-    public virtual ICollection<certificadoCalidad> certificadoCalidad { get; set; } = new List<certificadoCalidad>();
+    [InverseProperty("actualizadoPorNavigation")]
+    public virtual ICollection<certificadoCalidad> certificadoCalidadactualizadoPorNavigation { get; set; } = new List<certificadoCalidad>();
 
     [InverseProperty("elaboradoPorNavigation")]
-    public virtual ICollection<fichaTecnicaCliente> fichaTecnicaCliente { get; set; } = new List<fichaTecnicaCliente>();
+    public virtual ICollection<certificadoCalidad> certificadoCalidadelaboradoPorNavigation { get; set; } = new List<certificadoCalidad>();
+
+    [InverseProperty("actualizadoPorNavigation")]
+    public virtual ICollection<fichaTecnicaCliente> fichaTecnicaClienteactualizadoPorNavigation { get; set; } = new List<fichaTecnicaCliente>();
+
+    [InverseProperty("elaboradoPorNavigation")]
+    public virtual ICollection<fichaTecnicaCliente> fichaTecnicaClienteelaboradoPorNavigation { get; set; } = new List<fichaTecnicaCliente>();
+
+    [InverseProperty("operadorNavigation")]
+    public virtual ICollection<horariosOperativos> horariosOperativos { get; set; } = new List<horariosOperativos>();
 
     [ForeignKey("idArea")]
     [InverseProperty("usuario")]

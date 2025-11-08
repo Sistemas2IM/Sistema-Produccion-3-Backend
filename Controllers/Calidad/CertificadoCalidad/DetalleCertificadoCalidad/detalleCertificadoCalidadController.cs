@@ -28,6 +28,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.CertificadoCalidad.De
         public async Task<ActionResult<IEnumerable<DetalleCertificadoCalidadDto>>> GetDetalleCertificadoCalidad()
         {
             var detalleCertificadoCalidad = await _context.detalleCertificadoCalidad
+                .Include(v => v.idVariableNavigation)
+                .Include(u => u.idUnidadNavigation)
                 .ToListAsync();
 
             var detalleCertificadoCalidadDto = _mapper.Map<List<DetalleCertificadoCalidadDto>>(detalleCertificadoCalidad);
@@ -40,6 +42,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.CertificadoCalidad.De
         public async Task<ActionResult<DetalleCertificadoCalidadDto>> Get(int id)
         {
             var detalleCertificadoCalidad = await _context.detalleCertificadoCalidad
+                .Include(v => v.idVariableNavigation)
+                .Include(u => u.idUnidadNavigation)
                 .FirstOrDefaultAsync(u => u.idDetalle == id);
             if (detalleCertificadoCalidad == null)
             {

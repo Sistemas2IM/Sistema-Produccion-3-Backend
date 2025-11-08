@@ -39,6 +39,18 @@ public partial class fichaTecnicaCliente
     [Column(TypeName = "datetime")]
     public DateTime? fechaCreacion { get; set; }
 
+    public int? oF { get; set; }
+
+    [StringLength(50)]
+    public string actualizadoPor { get; set; }
+
+    [Column(TypeName = "datetime")]
+    public DateTime? fechaActualizacion { get; set; }
+
+    [ForeignKey("actualizadoPor")]
+    [InverseProperty("fichaTecnicaClienteactualizadoPorNavigation")]
+    public virtual usuario actualizadoPorNavigation { get; set; }
+
     [InverseProperty("idFichaClienteNavigation")]
     public virtual ICollection<certificadoCalidad> certificadoCalidad { get; set; } = new List<certificadoCalidad>();
 
@@ -46,9 +58,10 @@ public partial class fichaTecnicaCliente
     public virtual ICollection<detalleFichaClientes> detalleFichaClientes { get; set; } = new List<detalleFichaClientes>();
 
     [ForeignKey("elaboradoPor")]
-    [InverseProperty("fichaTecnicaCliente")]
+    [InverseProperty("fichaTecnicaClienteelaboradoPorNavigation")]
     public virtual usuario elaboradoPorNavigation { get; set; }
 
-    [InverseProperty("idFichaClienteNavigation")]
-    public virtual ICollection<fichaClienteOf> fichaClienteOf { get; set; } = new List<fichaClienteOf>();
+    [ForeignKey("oF")]
+    [InverseProperty("fichaTecnicaCliente")]
+    public virtual tarjetaOf oFNavigation { get; set; }
 }

@@ -8,6 +8,8 @@
 
         public int? maquina { get; set; }
 
+        public string? nombreMaquina { get; set; }
+
         public bool? asignada { get; set; }
 
     }

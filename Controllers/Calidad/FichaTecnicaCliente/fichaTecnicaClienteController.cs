@@ -26,6 +26,9 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.FichaTecnicaCliente
         public async Task<ActionResult<IEnumerable<FichaTecnicaClienteDto>>> GetFichaCliente()
         {
             var fichaTecnicaCliente = await _context.fichaTecnicaCliente
+                .Include(f => f.detalleFichaClientes)
+                .ThenInclude(d => d.idVariableNavigation)
+                .Include(f => f.oFNavigation)
                 .ToListAsync();
 
             var fichaTecnicaClienteDto = _mapper.Map<List<FichaTecnicaClienteDto>>(fichaTecnicaCliente);
@@ -38,6 +41,9 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.FichaTecnicaCliente
         public async Task<ActionResult<FichaTecnicaClienteDto>> GetFichaCliente(int id)
         {
             var fichaTecnicaCliente = await _context.fichaTecnicaCliente
+                .Include(c => c.detalleFichaClientes)
+                .ThenInclude(d => d.idVariableNavigation)
+                .Include(f => f.oFNavigation)
                 .FirstOrDefaultAsync(u => u.idFichaCliente == id);
 
             if (fichaTecnicaCliente == null)
@@ -46,6 +52,22 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.FichaTecnicaCliente
             }
 
             var fichaTecnicaClienteDto = _mapper.Map<FichaTecnicaClienteDto>(fichaTecnicaCliente);
+            return Ok(fichaTecnicaClienteDto);
+        }
+
+        // GET api/<fichaTecnicaClienteController>/5
+        [HttpGet("get/of/{of}")]
+        public async Task<ActionResult<IEnumerable<FichaTecnicaClienteDto>>> GetFichaClienteOf(int of)
+        {
+            var fichaTecnicaCliente = await _context.fichaTecnicaCliente            
+                .Include(f => f.detalleFichaClientes)
+                .ThenInclude(d => d.idVariableNavigation)
+                .Include(f => f.oFNavigation)
+                .Where(f => f.oF == of)
+                .ToListAsync();
+
+            var fichaTecnicaClienteDto = _mapper.Map<List<FichaTecnicaClienteDto>>(fichaTecnicaCliente);
+
             return Ok(fichaTecnicaClienteDto);
         }
 

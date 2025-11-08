@@ -96,6 +96,9 @@ public partial class solicitudMateriales
     [StringLength(100)]
     public string rerefencia { get; set; }
 
+    [StringLength(50)]
+    public string direccionCorte { get; set; }
+
     [InverseProperty("idSolicitudNavigation")]
     public virtual ICollection<lotePliego> lotePliego { get; set; } = new List<lotePliego>();
 

@@ -1,4 +1,6 @@
-﻿namespace Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnicaCliente
+﻿using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnicaCliente.DetalleFichaClientes;
+
+namespace Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnicaCliente
 {
     public class FichaTecnicaClienteDto
     {
@@ -21,5 +23,17 @@
         public DateOnly? fechaVencimiento { get; set; }
 
         public DateTime? fechaCreacion { get; set; }
+
+        public int? oF { get; set; }
+
+        public string? actualizadoPor { get; set; }
+
+        public DateTime? fechaActualizacion { get; set; }
+
+        public string? cliente { get; set; }
+
+        public string? producto { get; set; }
+
+        public List<DetalleFichaClientesDto>? detallesFichaTecnicaCliente { get; set; }
     }
 }

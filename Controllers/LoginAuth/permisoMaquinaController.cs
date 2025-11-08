@@ -50,6 +50,20 @@ namespace Sistema_Produccion_3_Backend.Controllers.LoginAuth
             return Ok(permisoMaquinaDto);
         }
 
+        // GET: api/permisoMaquinaUser
+        [HttpGet("get/activas/User/{user}")]
+        public async Task<ActionResult<IEnumerable<PermisoMaquinaDto>>> GetpermisoMaquinaUserActivas(string user)
+        {
+            var permisoMaquina = await _context.permisoMaquina
+                .Include(m => m.maquinaNavigation)
+                .Where(u => u.user == user)
+                .ToListAsync();
+
+            var permisoMaquinaDto = _mapper.Map<List<PermisoMaquinaDto>>(permisoMaquina);
+
+            return Ok(permisoMaquinaDto);
+        }
+
         // GET: api/permisoMaquina/5
         [HttpGet("get/{id}")]
         public async Task<ActionResult<PermisoMaquinaDto>> GetpermisoMaquina(int id)

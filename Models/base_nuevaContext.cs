@@ -49,9 +49,9 @@ public partial class base_nuevaContext : DbContext
 
     public virtual DbSet<familliaDeMaquina> familliaDeMaquina { get; set; }
 
-    public virtual DbSet<fichaClienteOf> fichaClienteOf { get; set; }
-
     public virtual DbSet<fichaTecnicaCliente> fichaTecnicaCliente { get; set; }
+
+    public virtual DbSet<horariosOperativos> horariosOperativos { get; set; }
 
     public virtual DbSet<listaDeOperaciones> listaDeOperaciones { get; set; }
 
@@ -147,7 +147,15 @@ public partial class base_nuevaContext : DbContext
 
     public virtual DbSet<turnos> turnos { get; set; }
 
+    public virtual DbSet<turnosOperativos> turnosOperativos { get; set; }
+
+    public virtual DbSet<turnosOperativosArea> turnosOperativosArea { get; set; }
+
+    public virtual DbSet<unidadesMedida> unidadesMedida { get; set; }
+
     public virtual DbSet<usuario> usuario { get; set; }
+
+    public virtual DbSet<variableUnidadMedida> variableUnidadMedida { get; set; }
 
     public virtual DbSet<variablesTecnicas> variablesTecnicas { get; set; }
 
@@ -210,20 +218,19 @@ public partial class base_nuevaContext : DbContext
         {
             entity.HasKey(e => e.idCertificadoCalidad).HasName("PK__certific__3110B5197AEA4595");
 
+            entity.Property(e => e.actualizadoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.elaboradoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.fechaCreacion).HasDefaultValueSql("(getdate())");
 
-            entity.HasOne(d => d.elaboradoPorNavigation).WithMany(p => p.certificadoCalidad)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_ELABORA_CERTIFICADO");
+            entity.ToTable("certificadoCalidad", t => t.UseSqlOutputClause(false));
 
-            entity.HasOne(d => d.idFichaClienteNavigation).WithMany(p => p.certificadoCalidad)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_CERTIFICADO_FICHA");
+            entity.HasOne(d => d.actualizadoPorNavigation).WithMany(p => p.certificadoCalidadactualizadoPorNavigation).HasConstraintName("FK_ACTUALIZA_CERTIFICADO");
 
-            entity.HasOne(d => d.oFNavigation).WithMany(p => p.certificadoCalidad)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_CERTIFICADO_OF");
+            entity.HasOne(d => d.elaboradoPorNavigation).WithMany(p => p.certificadoCalidadelaboradoPorNavigation).HasConstraintName("FK_ELABORA_CERTIFICADO");
+
+            entity.HasOne(d => d.idFichaClienteNavigation).WithMany(p => p.certificadoCalidad).HasConstraintName("FK_CERTIFICADO_FICHA");
+
+            entity.HasOne(d => d.oFNavigation).WithMany(p => p.certificadoCalidad).HasConstraintName("FK_CERTIFICADO_OF");
         });
 
         modelBuilder.Entity<corridaCombinada>(entity =>
@@ -243,9 +250,13 @@ public partial class base_nuevaContext : DbContext
 
             entity.Property(e => e.fechaCreacion).HasDefaultValueSql("(getdate())");
 
+            entity.ToTable("detalleCertificadoCalidad", t => t.UseSqlOutputClause(false));
+
             entity.HasOne(d => d.idCertificadoCalidadNavigation).WithMany(p => p.detalleCertificadoCalidad)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_CERTIFICADO_CALIDAD");
+
+            entity.HasOne(d => d.idUnidadNavigation).WithMany(p => p.detalleCertificadoCalidad).HasConstraintName("FK_CERTIFICADO_U_MEDIDA");
 
             entity.HasOne(d => d.idVariableNavigation).WithMany(p => p.detalleCertificadoCalidad)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -277,9 +288,13 @@ public partial class base_nuevaContext : DbContext
 
             entity.Property(e => e.fechaCreacion).HasDefaultValueSql("(getdate())");
 
+            entity.ToTable("detalleFichaClientes", t => t.UseSqlOutputClause(false));
+
             entity.HasOne(d => d.idFichaClienteNavigation).WithMany(p => p.detalleFichaClientes)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_FICHA_CLIENTES");
+
+            entity.HasOne(d => d.idUnidadNavigation).WithMany(p => p.detalleFichaClientes).HasConstraintName("FK_DETALLE_FICHA_U_MEDIDA");
 
             entity.HasOne(d => d.idVariableNavigation).WithMany(p => p.detalleFichaClientes)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -371,34 +386,38 @@ public partial class base_nuevaContext : DbContext
             entity.Property(e => e.nombreFamilia).UseCollation("SQL_Latin1_General_CP1_CI_AS");
         });
 
-        modelBuilder.Entity<fichaClienteOf>(entity =>
-        {
-            entity.HasKey(e => new { e.idFichaCliente, e.oF }).HasName("PK__fichaCli__5F9654BEF26F92E0");
-
-            entity.Property(e => e.fechaVinculo).HasDefaultValueSql("(getdate())");
-            entity.Property(e => e.vigente).HasDefaultValue(true);
-
-            entity.HasOne(d => d.idFichaClienteNavigation).WithMany(p => p.fichaClienteOf)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_FICHA_CLIENTE");
-
-            entity.HasOne(d => d.oFNavigation).WithMany(p => p.fichaClienteOf)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_ORDEN_FABRICACION");
-        });
-
         modelBuilder.Entity<fichaTecnicaCliente>(entity =>
         {
             entity.HasKey(e => e.idFichaCliente).HasName("PK__fichaTec__5CB71703E14AB9A5");
 
+            entity.Property(e => e.actualizadoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.elaboradoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.fechaCreacion).HasDefaultValueSql("(getdate())");
             entity.Property(e => e.version).HasDefaultValue(1);
             entity.Property(e => e.vigente).HasDefaultValue(true);
 
-            entity.HasOne(d => d.elaboradoPorNavigation).WithMany(p => p.fichaTecnicaCliente)
+            entity.ToTable("fichaTecnicaCliente", t => t.UseSqlOutputClause(false));
+
+            entity.HasOne(d => d.actualizadoPorNavigation).WithMany(p => p.fichaTecnicaClienteactualizadoPorNavigation).HasConstraintName("FK_ACTUALIZA_FICHACLIENTE");
+
+            entity.HasOne(d => d.elaboradoPorNavigation).WithMany(p => p.fichaTecnicaClienteelaboradoPorNavigation)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_ELABORA_FICHACLIENTE");
+
+            entity.HasOne(d => d.oFNavigation).WithMany(p => p.fichaTecnicaCliente).HasConstraintName("FK_FICHA_OF");
+        });
+
+        modelBuilder.Entity<horariosOperativos>(entity =>
+        {
+            entity.HasKey(e => e.idHorario).HasName("PK__horarios__DE60F33AFA2D1D3E");
+
+            entity.Property(e => e.operador).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+
+            entity.HasOne(d => d.idAreaNavigation).WithMany(p => p.horariosOperativos).HasConstraintName("FK_AREA_HORARIO");
+
+            entity.HasOne(d => d.idMaquinaNavigation).WithMany(p => p.horariosOperativos).HasConstraintName("FK_MAQUINA_HORARIO");
+
+            entity.HasOne(d => d.operadorNavigation).WithMany(p => p.horariosOperativos).HasConstraintName("FK_HORARIO_USER");
         });
 
         modelBuilder.Entity<listaDeOperaciones>(entity =>
@@ -814,6 +833,7 @@ public partial class base_nuevaContext : DbContext
             entity.ToTable(tb =>
                 {
                     tb.HasTrigger("trg_BloquearDetallesFinalizados");
+                    tb.HasTrigger("trg_UpdateEstadoOf");
                     tb.HasTrigger("trg_UpdateTarjetaOf");
                 });
 
@@ -1125,6 +1145,27 @@ public partial class base_nuevaContext : DbContext
             entity.Property(e => e.turno).UseCollation("SQL_Latin1_General_CP1_CI_AS");
         });
 
+        modelBuilder.Entity<turnosOperativos>(entity =>
+        {
+            entity.HasKey(e => e.idTurno).HasName("PK__turnosOp__AA068B0188F0A7CC");
+        });
+
+        modelBuilder.Entity<turnosOperativosArea>(entity =>
+        {
+            entity.HasKey(e => e.idTurnoArea).HasName("PK__turnosOp__11A3B1E4E2EF661B");
+
+            entity.HasOne(d => d.idAreaNavigation).WithMany(p => p.turnosOperativosArea).HasConstraintName("FK_AREA_TURNO");
+
+            entity.HasOne(d => d.idTurnoNavigation).WithMany(p => p.turnosOperativosArea).HasConstraintName("FK_TURNO_OPE");
+        });
+
+        modelBuilder.Entity<unidadesMedida>(entity =>
+        {
+            entity.HasKey(e => e.idUnidad).HasName("PK__unidades__34C1E8D710E15920");
+
+            entity.Property(e => e.activo).HasDefaultValue(true);
+        });
+
         modelBuilder.Entity<usuario>(entity =>
         {
             entity.HasKey(e => e.user).HasName("PK_USUARIO");
@@ -1141,6 +1182,21 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.idCargoNavigation).WithMany(p => p.usuario).HasConstraintName("FK_USUARIO_CARGO");
 
             entity.HasOne(d => d.idRolNavigation).WithMany(p => p.usuario).HasConstraintName("FK_USUARIO_ROL");
+        });
+
+        modelBuilder.Entity<variableUnidadMedida>(entity =>
+        {
+            entity.HasKey(e => new { e.idVariable, e.idUnidad }).HasName("PK__variable__8C6A3E312364931C");
+
+            entity.Property(e => e.predeterminada).HasDefaultValue(false);
+
+            entity.HasOne(d => d.idUnidadNavigation).WithMany(p => p.variableUnidadMedida)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__variableU__idUni__5708E33C");
+
+            entity.HasOne(d => d.idVariableNavigation).WithMany(p => p.variableUnidadMedida)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__variableU__idVar__5614BF03");
         });
 
         modelBuilder.Entity<variablesTecnicas>(entity =>

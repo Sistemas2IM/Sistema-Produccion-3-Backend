@@ -18,6 +18,9 @@ public partial class areas
 
     public int? secuencia { get; set; }
 
+    [InverseProperty("idAreaNavigation")]
+    public virtual ICollection<horariosOperativos> horariosOperativos { get; set; } = new List<horariosOperativos>();
+
     [InverseProperty("areaAnteriorNavigation")]
     public virtual ICollection<procesoOf> procesoOfareaAnteriorNavigation { get; set; } = new List<procesoOf>();
 
@@ -35,6 +38,9 @@ public partial class areas
 
     [InverseProperty("areaOrigenNavigation")]
     public virtual ICollection<transferenciaProceso> transferenciaProcesoareaOrigenNavigation { get; set; } = new List<transferenciaProceso>();
+
+    [InverseProperty("idAreaNavigation")]
+    public virtual ICollection<turnosOperativosArea> turnosOperativosArea { get; set; } = new List<turnosOperativosArea>();
 
     [InverseProperty("idAreaNavigation")]
     public virtual ICollection<usuario> usuario { get; set; } = new List<usuario>();

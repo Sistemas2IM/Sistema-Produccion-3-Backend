@@ -27,6 +27,71 @@ public partial class material
     [StringLength(10)]
     public string _base { get; set; }
 
+    [StringLength(100)]
+    public string gramaje { get; set; }
+
+    [StringLength(100)]
+    public string marca { get; set; }
+
+    [StringLength(50)]
+    public string ancho { get; set; }
+
+    [StringLength(50)]
+    public string largo { get; set; }
+
+    [StringLength(50)]
+    public string diametro { get; set; }
+
+    [StringLength(10)]
+    public string caras { get; set; }
+
+    [StringLength(50)]
+    public string peso { get; set; }
+
+    [StringLength(100)]
+    public string color { get; set; }
+
+    [StringLength(100)]
+    public string consistencia { get; set; }
+
+    [StringLength(100)]
+    public string tipoAplicacion { get; set; }
+
+    [StringLength(100)]
+    public string tipoSecado { get; set; }
+
+    [StringLength(100)]
+    public string aplicacion { get; set; }
+
+    [StringLength(100)]
+    public string tipoColor { get; set; }
+
+    [StringLength(100)]
+    public string acabado { get; set; }
+
+    [StringLength(50)]
+    public string maquina { get; set; }
+
+    [StringLength(50)]
+    public string tipoMantilla { get; set; }
+
+    [StringLength(100)]
+    public string capitalizacion { get; set; }
+
+    public DateOnly? fechaCapitalizacion { get; set; }
+
+    [StringLength(50)]
+    [Unicode(false)]
+    public string fsc { get; set; }
+
+    [StringLength(100)]
+    public string formaEmpaque { get; set; }
+
+    public bool? certificadoCalidad { get; set; }
+
+    [StringLength(50)]
+    public string sentidoSalida { get; set; }
+
     [InverseProperty("idMaterialNavigation")]
     public virtual ICollection<detalleReporte> detalleReporte { get; set; } = new List<detalleReporte>();
 

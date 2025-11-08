@@ -88,11 +88,11 @@
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[fichaClienteOf]",
+         "Name": "[dbo].[fichaTecnicaCliente]",
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[fichaTecnicaCliente]",
+         "Name": "[dbo].[horariosOperativos]",
          "ObjectType": 0
       },
       {
@@ -284,11 +284,27 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[turnosOperativos]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[turnosOperativosArea]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[unidadesMedida]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[usuario]",
          "ObjectType": 0
       },
       {
          "Name": "[dbo].[variablesTecnicas]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[variableUnidadMedida]",
          "ObjectType": 0
       },
       {

@@ -1,4 +1,7 @@
-﻿namespace Sistema_Produccion_3_Backend.DTO.Calidad.CertificadoCalidad
+﻿using Sistema_Produccion_3_Backend.DTO.Calidad.CertificadoCalidad.DetalleCertificadoCalidad;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Sistema_Produccion_3_Backend.DTO.Calidad.CertificadoCalidad
 {
     public class CertificadoCalidadDto
     {
@@ -8,9 +11,13 @@
 
         public int? oF { get; set; }
 
+        public string? cliente { get; set; }
+
+        public string? producto { get; set; }
+
         public string? elaboradoPor { get; set; }
 
-        public DateOnly fechaElaboracion { get; set; }
+        public DateOnly? fechaElaboracion { get; set; }
 
         public int? cantidadProducida { get; set; }
 
@@ -25,5 +32,11 @@
         public string? observaciones { get; set; }
 
         public DateTime? fechaCreacion { get; set; }
+
+        public string? actualizadoPor { get; set; }
+
+        public DateTime? fechaActualizacion { get; set; }
+
+        public List<DetalleCertificadoCalidadDto>? detallesCertificadoCalidad { get; set; }
     }
 }

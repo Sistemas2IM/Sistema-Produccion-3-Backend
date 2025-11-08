@@ -32,6 +32,9 @@ public partial class lotePliego
     [StringLength(50)]
     public string idMaterialSAP { get; set; }
 
+    [StringLength(15)]
+    public string codLote { get; set; }
+
     [ForeignKey("creadoPor")]
     [InverseProperty("lotePliego")]
     public virtual usuario creadoPorNavigation { get; set; }

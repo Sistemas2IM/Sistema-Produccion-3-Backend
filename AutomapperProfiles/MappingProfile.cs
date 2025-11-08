@@ -3,11 +3,12 @@ using Sistema_Produccion_3_Backend.DTO.AnexosNEXO;
 using Sistema_Produccion_3_Backend.DTO.Calidad.CertificadoCalidad;
 using Sistema_Produccion_3_Backend.DTO.Calidad.CertificadoCalidad.DetalleCertificadoCalidad;
 using Sistema_Produccion_3_Backend.DTO.Calidad.CertificadoCalidad.DetalleCertificadoCalidad.Batch;
-using Sistema_Produccion_3_Backend.DTO.Calidad.FichaClienteOf;
 using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnicaCliente;
 using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnicaCliente.DetalleFichaClientes;
 using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnicaCliente.DetalleFichaClientes.Batch;
+using Sistema_Produccion_3_Backend.DTO.Calidad.UnidadesMedida;
 using Sistema_Produccion_3_Backend.DTO.Calidad.VariablesTecnicas;
+using Sistema_Produccion_3_Backend.DTO.Calidad.VariableUnidadMedida;
 using Sistema_Produccion_3_Backend.DTO.Catalogo.FamiliaMaquina;
 using Sistema_Produccion_3_Backend.DTO.Catalogo.Maquinas;
 using Sistema_Produccion_3_Backend.DTO.Catalogo.Turnos;
@@ -18,6 +19,10 @@ using Sistema_Produccion_3_Backend.DTO.Etiquetas.EtiquetaOf;
 using Sistema_Produccion_3_Backend.DTO.Etiquetas.EtiquetaOf.BatchEtiquetaOf;
 using Sistema_Produccion_3_Backend.DTO.Etiquetas.TarjetaEtiqueta;
 using Sistema_Produccion_3_Backend.DTO.Etiquetas.TarjetaEtiqueta.BatchTarjetaEtiqueta;
+using Sistema_Produccion_3_Backend.DTO.Horarios.HorariosOperativos;
+using Sistema_Produccion_3_Backend.DTO.Horarios.HorariosOperativos.Batch;
+using Sistema_Produccion_3_Backend.DTO.Horarios.TurnosOperativos;
+using Sistema_Produccion_3_Backend.DTO.Horarios.TurnosOperativosArea;
 using Sistema_Produccion_3_Backend.DTO.ListaDeOperaciones;
 using Sistema_Produccion_3_Backend.DTO.ListaDeOperaciones.ListaItem;
 using Sistema_Produccion_3_Backend.DTO.ListaDeOperaciones.ListaItem.Batch;
@@ -35,6 +40,7 @@ using Sistema_Produccion_3_Backend.DTO.PermisosUsuario.Diseño;
 using Sistema_Produccion_3_Backend.DTO.PermisosUsuario.Modulo;
 using Sistema_Produccion_3_Backend.DTO.PermisosUsuario.Modulo.SubModulo;
 using Sistema_Produccion_3_Backend.DTO.PermisosUsuario.Modulo.SubModulo.Permiso;
+using Sistema_Produccion_3_Backend.DTO.PermisosUsuario.Operadores;
 using Sistema_Produccion_3_Backend.DTO.PermisosUsuario.PermisoMaquina;
 using Sistema_Produccion_3_Backend.DTO.PermisosUsuario.Rol;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf;
@@ -471,6 +477,11 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
 
             CreateMap<usuario, UsuarioDisenoDto>().ReverseMap();
 
+            CreateMap<usuario, OperadoresDto>()
+                .ForMember(dest => dest.nombreArea, opt => opt.MapFrom(src => src.idAreaNavigation.nombreArea))
+                .ForMember(dest => dest.maquinasAsignadas, opt => opt.MapFrom(src => src.permisoMaquina))
+                .ReverseMap();
+
             CreateMap<rol, RolDto>()
                 .ForMember(dest => dest.permisos, opt => opt.MapFrom(src => src.permiso))
                 .ForMember(dest => dest.permisoEspecificoDto, opt => opt.MapFrom(src => src.permisoEspecifico))
@@ -499,11 +510,17 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForMember(dest => dest.permisoTipoDto, opt => opt.MapFrom(src => src.permisoTipo))
                 .ReverseMap();
 
-            CreateMap<permisoMaquina, PermisoMaquinaDto>().ReverseMap();
+            CreateMap<permisoMaquina, PermisoMaquinaDto>()
+                .ForMember(dest => dest.nombreMaquina, opt => opt.MapFrom(src => src.maquinaNavigation.nombreMaquina))
+                .ReverseMap();
             CreateMap<permisoMaquina, AddPermisoMaquinaDto>().ReverseMap();
             CreateMap<UpdatePermisoMaquinaDto, permisoMaquina>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             CreateMap<UpdateBatchPermisoMaquina, permisoMaquina>().ReverseMap();
+
+            CreateMap<permisoMaquina, PermisoMaquinaAsignadaDto>()
+                .ForMember(dest => dest.nombreMaquina, opt => opt.MapFrom(src => src.maquinaNavigation.nombreMaquina))
+                .ReverseMap();
 
             CreateMap<modulo, ModuloDto>()
                 //.ForMember(dest => dest.menu, opt => opt.MapFrom(src => src.idMenuNavigation))
@@ -526,12 +543,23 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             //CALIDAD ================================================================================================
 
             // CERTIFICADO DE CALIDAD =================================================================================
-            CreateMap<certificadoCalidad, CertificadoCalidadDto>().ReverseMap();
+            CreateMap<certificadoCalidad, CertificadoCalidadDto>()
+                .ForMember(dest => dest.detallesCertificadoCalidad, opt => opt.MapFrom(src => src.detalleCertificadoCalidad))
+                .ForMember(dest => dest.cliente, opt => opt.MapFrom(src => src.oFNavigation.clienteOf))
+                .ForMember(dest => dest.producto, opt => opt.MapFrom(src => src.oFNavigation.productoOf))
+                .ReverseMap();
             CreateMap<certificadoCalidad, AddCertificadoCalidadDto>().ReverseMap();
             CreateMap<UpdateCertificadoCalidadDto, certificadoCalidad>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             {
-                CreateMap<detalleCertificadoCalidad, DetalleCertificadoCalidadDto>().ReverseMap();
+                CreateMap<detalleCertificadoCalidad, DetalleCertificadoCalidadDto>()
+                    .ForMember(d => d.nombre, opt => opt.MapFrom(s => s.idVariableNavigation.nombre))
+                    .ForMember(d => d.etiqueta, opt => opt.MapFrom(s => s.idVariableNavigation.etiqueta))
+                    .ForMember(d => d.tipoDato, opt => opt.MapFrom(s => s.idVariableNavigation.tipoDato))
+                    .ForMember(d => d.tolerancia, opt => opt.MapFrom(s => s.idVariableNavigation.tolerancia))
+                    .ForMember(d => d.simbolo, opt => opt.MapFrom(s => s.idUnidadNavigation.simbolo))
+                    .ForMember(d => d.nombreUnidad, opt => opt.MapFrom(s => s.idUnidadNavigation.nombre))
+                    .ReverseMap();
                 CreateMap<detalleCertificadoCalidad, AddDetalleCertificadoCalidadDto>().ReverseMap();
                 CreateMap<UpdateDetalleCertificadoCalidadDto, detalleCertificadoCalidad>()
                     .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
@@ -543,13 +571,24 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
 
             // FICHA TECNICA DE CALIDAD ==============================================================================
             CreateMap<fichaTecnicaCliente, FichaTecnicaClienteDto>()
+                .ForMember(dest => dest.detallesFichaTecnicaCliente, opt => opt.MapFrom(src => src.detalleFichaClientes))
+                .ForMember(dest => dest.cliente, opt => opt.MapFrom(src => src.oFNavigation.clienteOf))
+                .ForMember(dest => dest.producto, opt => opt.MapFrom(src => src.oFNavigation.productoOf))
                 .ReverseMap();
             CreateMap<fichaTecnicaCliente, AddFichaTecnicaClienteDto>().ReverseMap();
             CreateMap<UpdateFichaTecnicaClienteDto, fichaTecnicaCliente>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             {
-                CreateMap<detalleFichaClientes, DetalleFichaClientesDto>().ReverseMap();
+                CreateMap<detalleFichaClientes, DetalleFichaClientesDto>()
+                    .ForMember(d => d.nombre, opt => opt.MapFrom(s => s.idVariableNavigation.nombre))
+                    .ForMember(d => d.etiqueta, opt => opt.MapFrom(s => s.idVariableNavigation.etiqueta))
+                    .ForMember(d => d.tipoDato, opt => opt.MapFrom(s => s.idVariableNavigation.tipoDato))
+                    .ForMember(d => d.tolerancia, opt => opt.MapFrom(s => s.idVariableNavigation.tolerancia))
+                    .ForMember(d => d.simbolo, opt => opt.MapFrom(s => s.idUnidadNavigation.simbolo))
+                    .ForMember(d => d.nombreUnidad, opt => opt.MapFrom(s => s.idUnidadNavigation.nombre))
+                    .ReverseMap();
+
                 CreateMap<detalleFichaClientes, AddDetalleFichaClientesDto>().ReverseMap();
                 CreateMap<UpdateDetalleFichaClientesDto, detalleFichaClientes>()
                     .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
@@ -559,15 +598,30 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                     .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             }
 
-            CreateMap<variablesTecnicas, VariablesTecnicasDto>().ReverseMap();
+            CreateMap<variablesTecnicas, VariablesTecnicasDto>()
+                .ForMember(dest => dest.variableUnidadMedidaDto, opt => opt.MapFrom(src => src.variableUnidadMedida))
+                .ReverseMap();
+            CreateMap<variablesTecnicas, VariablesTecnicasUMedidaDto>()
+                .ForMember(dest => dest.variableUnidadMedidas, opt => opt.MapFrom(src => src.variableUnidadMedida))
+                .ReverseMap();
+
             CreateMap<variablesTecnicas, AddVariablesTecnicasDto>().ReverseMap();
             CreateMap<UpdateVariablesTecnicasDto, variablesTecnicas>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
-            // Ficha cliente of
-            CreateMap<fichaClienteOf, FichaClienteOfDto>().ReverseMap();
-            CreateMap<fichaClienteOf, AddFichaClienteOfDto>().ReverseMap();
-            CreateMap<UpdateFichaClienteOfDto, fichaClienteOf>()
+            // Variable de medidas / unidades medida
+            CreateMap<unidadesMedida, UnidadesMedidaDto>().ReverseMap();
+            CreateMap<unidadesMedida, AddUnidadesMedidaDto>().ReverseMap();
+            CreateMap<UpdateUnidadesMedidaDto, unidadesMedida>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            CreateMap<variableUnidadMedida, VariableUnidadMedidaDto>()
+                .ForMember(dest => dest.nombreUnidad, opt => opt.MapFrom(src => src.idUnidadNavigation.nombre))
+                .ForMember(dest => dest.simbolo, opt => opt.MapFrom(src => src.idUnidadNavigation.simbolo))
+                .ReverseMap();
+
+            CreateMap<variableUnidadMedida, AddVariableUnidadMedidaDto>().ReverseMap();
+            CreateMap<UpdateVariableUnidadMedidaDto, variableUnidadMedida>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             // ========================================================================================================
@@ -728,6 +782,37 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             CreateMap<transferenciaProceso, transferenciaProcesoDto>().ReverseMap();
             CreateMap<transferenciaProceso, AddTransferenciaProcesoDto>().ReverseMap();
             CreateMap<UpdateTransferenciaProcesoDto, transferenciaProceso>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            // HORARIOS OPERATIVOS ====================================================================================
+
+            CreateMap<horariosOperativos, HorariosOperativosDto>()
+                .ForMember(dest => dest.nombreArea, opt => opt.MapFrom(src => src.idAreaNavigation.nombreArea))
+                .ForMember(dest => dest.nombreMaquina, opt => opt.MapFrom(src => src.idMaquinaNavigation.nombreMaquina))
+                .ForMember(dest => dest.nombreOperador, opt => opt.MapFrom(src => src.operadorNavigation.nombres + " " + src.operadorNavigation.apellidos))
+                .ReverseMap();
+            CreateMap<horariosOperativos, AddHorariosOperativosDto>().ReverseMap();
+            CreateMap<UpdateHorariosOperativosDto, horariosOperativos>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            CreateMap<horariosOperativos, AddBatchHorariosOperativosDto>().ReverseMap();
+            CreateMap<UpdateBatchHorariosOperativosDto, horariosOperativos>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            // Turnos Operativos Area
+            CreateMap<turnosOperativos, TurnosOperativosDto>().ReverseMap();
+            CreateMap<turnosOperativos, AddTurnosOperativosDto>().ReverseMap();
+            CreateMap<UpdateTurnosOperativosDto, turnosOperativos>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            CreateMap<turnosOperativosArea, TurnosOperativosAreaDto>()
+                .ForMember(dest => dest.nombreTurno, opt => opt.MapFrom(src => src.idTurnoNavigation.turno))
+                .ForMember(dest => dest.horaInicio, opt => opt.MapFrom(src => src.idTurnoNavigation.horaInicio))
+                .ForMember(dest => dest.horaFin, opt => opt.MapFrom(src => src.idTurnoNavigation.horaFin))
+                .ReverseMap();
+
+            CreateMap<turnosOperativosArea, AddTurnosOperativosAreaDto>().ReverseMap();
+            CreateMap<UpdateTurnosOperativosAreaDto, turnosOperativosArea>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
         }
     }

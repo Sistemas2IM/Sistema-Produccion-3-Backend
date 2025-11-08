@@ -26,6 +26,9 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.CertificadoCalidad
         public async Task<ActionResult<IEnumerable<CertificadoCalidadDto>>> GetCertificado()
         {
             var certificado = await _context.certificadoCalidad
+                .Include(c => c.detalleCertificadoCalidad)
+                .ThenInclude(d => d.idVariableNavigation)
+                .Include(c => c.oFNavigation)
                 .ToListAsync();
 
             var certificadoDto = _mapper.Map<List<CertificadoCalidadDto>>(certificado);
@@ -39,6 +42,9 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.CertificadoCalidad
         public async Task<ActionResult<CertificadoCalidadDto>> Get(int id)
         {
             var certificado = await _context.certificadoCalidad
+                .Include(c => c.detalleCertificadoCalidad)
+                .ThenInclude(d => d.idVariableNavigation)
+                .Include(c => c.oFNavigation)
                 .FirstOrDefaultAsync(u => u.idCertificadoCalidad == id);
             if (certificado == null)
             {
@@ -46,6 +52,23 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.CertificadoCalidad
             }
             var certificadoDto = _mapper.Map<CertificadoCalidadDto>(certificado);
             return Ok(certificadoDto);
+        }
+
+        // GET: api/<certificadoCalidadController>
+        [HttpGet("get/of/{of}")]
+        public async Task<ActionResult<IEnumerable<CertificadoCalidadDto>>> GetCertificadoOf(int of)
+        {
+            var certificado = await _context.certificadoCalidad              
+                .Include(c => c.detalleCertificadoCalidad)
+                .ThenInclude(d => d.idVariableNavigation)
+                .Include(c => c.oFNavigation)
+                .Where(c => c.oF == of)
+                .ToListAsync();
+
+            var certificadoDto = _mapper.Map<List<CertificadoCalidadDto>>(certificado);
+
+            return Ok(certificadoDto);
+
         }
 
         // POST api/<certificadoCalidadController>

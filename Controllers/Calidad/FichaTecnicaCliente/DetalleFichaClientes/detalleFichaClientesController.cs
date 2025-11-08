@@ -27,6 +27,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.FichaTecnicaCliente.D
         public async Task<ActionResult<IEnumerable<DetalleFichaClientesDto>>> GetDetalleFichaClientes()
         {
             var detalleFichaClientes = await _context.detalleFichaClientes
+                .Include(v => v.idVariableNavigation)
+                .Include(u => u.idUnidadNavigation)
                 .ToListAsync();
 
             var detalleFichaClientesDto = _mapper.Map<List<DetalleFichaClientesDto>>(detalleFichaClientes);
@@ -39,6 +41,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.FichaTecnicaCliente.D
         public async Task<ActionResult<DetalleFichaClientesDto>> GetDetalleFichaClientes(int id)
         {
             var detalleFichaClientes = await _context.detalleFichaClientes
+                .Include(v => v.idVariableNavigation)
+                .Include(u => u.idUnidadNavigation)
                 .FirstOrDefaultAsync(u => u.idDetalle == id);
 
             if (detalleFichaClientes == null)

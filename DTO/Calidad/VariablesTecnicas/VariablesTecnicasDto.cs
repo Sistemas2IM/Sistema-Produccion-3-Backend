@@ -1,4 +1,6 @@
-﻿namespace Sistema_Produccion_3_Backend.DTO.Calidad.VariablesTecnicas
+﻿using Sistema_Produccion_3_Backend.DTO.Calidad.VariableUnidadMedida;
+
+namespace Sistema_Produccion_3_Backend.DTO.Calidad.VariablesTecnicas
 {
     public class VariablesTecnicasDto
     {
@@ -35,5 +37,7 @@
         public bool? certificadoCalidad { get; set; }
 
         public DateTime? fechaCreacion { get; set; }
+
+        public List<VariableUnidadMedidaDto>? variableUnidadMedidaDto { get; set; }
     }
 }

@@ -23,5 +23,9 @@
         public string? observaciones { get; set; }
 
         public DateTime? fechaCreacion { get; set; }
+
+        public string? actualizadoPor { get; set; }
+
+        public DateTime? fechaActualizacion { get; set; }
     }
 }

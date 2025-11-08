@@ -31,6 +31,10 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Webhook
+builder.Services.AddHttpClient();
+builder.Services.AddMemoryCache();
+
 // Configuración de HttpClient para llamadas HTTP
 builder.Services.AddHttpClient();
 

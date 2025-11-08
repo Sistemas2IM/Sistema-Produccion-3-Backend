@@ -61,4 +61,7 @@ public partial class variablesTecnicas
     [ForeignKey("idSeccion")]
     [InverseProperty("variablesTecnicas")]
     public virtual seccionDocumento idSeccionNavigation { get; set; }
+
+    [InverseProperty("idVariableNavigation")]
+    public virtual ICollection<variableUnidadMedida> variableUnidadMedida { get; set; } = new List<variableUnidadMedida>();
 }

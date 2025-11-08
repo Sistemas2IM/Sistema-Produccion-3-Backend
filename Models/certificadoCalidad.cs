@@ -14,15 +14,14 @@ public partial class certificadoCalidad
     [Key]
     public int idCertificadoCalidad { get; set; }
 
-    public int idFichaCliente { get; set; }
+    public int? idFichaCliente { get; set; }
 
-    public int oF { get; set; }
+    public int? oF { get; set; }
 
-    [Required]
     [StringLength(50)]
     public string elaboradoPor { get; set; }
 
-    public DateOnly fechaElaboracion { get; set; }
+    public DateOnly? fechaElaboracion { get; set; }
 
     public int? cantidadProducida { get; set; }
 
@@ -40,11 +39,21 @@ public partial class certificadoCalidad
     [Column(TypeName = "datetime")]
     public DateTime? fechaCreacion { get; set; }
 
+    [StringLength(50)]
+    public string actualizadoPor { get; set; }
+
+    [Column(TypeName = "datetime")]
+    public DateTime? fechaActualizacion { get; set; }
+
+    [ForeignKey("actualizadoPor")]
+    [InverseProperty("certificadoCalidadactualizadoPorNavigation")]
+    public virtual usuario actualizadoPorNavigation { get; set; }
+
     [InverseProperty("idCertificadoCalidadNavigation")]
     public virtual ICollection<detalleCertificadoCalidad> detalleCertificadoCalidad { get; set; } = new List<detalleCertificadoCalidad>();
 
     [ForeignKey("elaboradoPor")]
-    [InverseProperty("certificadoCalidad")]
+    [InverseProperty("certificadoCalidadelaboradoPorNavigation")]
     public virtual usuario elaboradoPorNavigation { get; set; }
 
     [ForeignKey("idFichaCliente")]

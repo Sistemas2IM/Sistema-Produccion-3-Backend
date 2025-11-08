@@ -41,6 +41,9 @@ public partial class maquinas
     [InverseProperty("idMaquinaNavigation")]
     public virtual ICollection<entregasProductoTerminado> entregasProductoTerminado { get; set; } = new List<entregasProductoTerminado>();
 
+    [InverseProperty("idMaquinaNavigation")]
+    public virtual ICollection<horariosOperativos> horariosOperativos { get; set; } = new List<horariosOperativos>();
+
     [ForeignKey("idFamilia")]
     [InverseProperty("maquinas")]
     public virtual familliaDeMaquina idFamiliaNavigation { get; set; }

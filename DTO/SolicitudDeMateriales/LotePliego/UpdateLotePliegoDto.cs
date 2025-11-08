@@ -15,5 +15,7 @@
         public string? creadoPor { get; set; }
 
         public string? idMaterialSAP { get; set; }
+
+        public string? codLote { get; set; }
     }
 }

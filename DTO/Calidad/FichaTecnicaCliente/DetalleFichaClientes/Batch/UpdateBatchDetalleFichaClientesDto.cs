@@ -11,5 +11,15 @@
         public string? valor { get; set; }
 
         public DateTime? fechaCreacion { get; set; }
+
+        public int? idUnidad { get; set; }
+
+        public string? toleranciaPromedio { get; set; }
+
+        public string? toleranciaMinima { get; set; }
+
+        public string? toleranciaMaxima { get; set; }
+
+        public string? toleranciaMedida { get; set; }
     }
 }

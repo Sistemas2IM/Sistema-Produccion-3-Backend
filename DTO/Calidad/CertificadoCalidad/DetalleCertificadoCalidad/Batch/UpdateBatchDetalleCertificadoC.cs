@@ -13,5 +13,9 @@
         public string? resultado { get; set; }
 
         public DateTime? fechaCreacion { get; set; }
+
+        public int? idUnidad { get; set; }
+
+        public string? toleranciaMedida { get; set; }
     }
 }

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.Extensions.Caching.Memory;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.BusquedaProcesos;
 using Sistema_Produccion_3_Backend.DTO.TarjetasOF;
 using Sistema_Produccion_3_Backend.DTO.TarjetasOF.BusquedaTarjetas;
@@ -17,11 +18,18 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
     {
         private readonly base_nuevaContext _context;
         private readonly IMapper _mapper;
+        private readonly IHttpClientFactory _httpClientFactory;
+        private readonly ILogger<tarjetaOfController> _logger;
+        private readonly IMemoryCache _memoryCache;
 
-        public tarjetaOfController(base_nuevaContext context, IMapper mapper)
+        // Replace the constructor signature to fix CS1552
+        public tarjetaOfController(base_nuevaContext context, IMapper mapper, IHttpClientFactory httpClientFactory, IMemoryCache memoryCache, ILogger<tarjetaOfController> logger)
         {
             _context = context;
             _mapper = mapper;
+            _httpClientFactory=httpClientFactory;
+            _logger=logger;
+            _memoryCache = memoryCache;
         }
 
         // GET: api/tarjetaOf
@@ -275,25 +283,75 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
 
         // PUT: api/tarjetaOf/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        //[HttpPut("put/{id}")]
+        //public async Task<IActionResult> PuttarjetaOf(int id, UpdateTarjetaOfDto updateTarjetaOf)
+        //{
+        //    var tarjetaOf = await _context.tarjetaOf.FindAsync(id);
+
+        //    if (tarjetaOf == null)
+        //    {
+        //        return NotFound("No se encontro la tarjeta con el id: " + id);
+        //    }
+
+        //    _mapper.Map(updateTarjetaOf, tarjetaOf);
+        //    _context.Entry(tarjetaOf).State = EntityState.Modified;
+
+        //    try
+        //    {
+        //        await _context.SaveChangesAsync();
+        //    }
+        //    catch (DbUpdateConcurrencyException)
+        //    {
+        //        if (!tarjetaOfExists(id))
+        //        {
+        //            return NotFound("No se encontro la tarjeta con el id: " + id);
+        //        }
+        //        else
+        //        {
+        //            throw;
+        //        }
+        //    }
+
+        //    return Ok(updateTarjetaOf);
+        //}
+
         [HttpPut("put/{id}")]
         public async Task<IActionResult> PuttarjetaOf(int id, UpdateTarjetaOfDto updateTarjetaOf)
         {
-            var tarjetaOf = await _context.tarjetaOf.FindAsync(id);
+            var tarjetaOf = await _context.tarjetaOf.FirstOrDefaultAsync(t => t.oF == id);
 
             if (tarjetaOf == null)
             {
                 return NotFound("No se encontro la tarjeta con el id: " + id);
             }
 
+            // 1. Capturamos el estado ANTES de cualquier modificación
+            int idEstadoAnterior = (int)tarjetaOf.idEstadoOf;
+
+            // 2. Verificamos si el DTO realmente trae un nuevo estado
+            //    (Asumiendo que '0' no es un ID de estado válido y significa "no proporcionado")
+            bool idEstadoVinoEnDto = updateTarjetaOf.idEstadoOf != 0;
+
+            // 3. Mapeamos los nuevos valores del DTO a la entidad
             _mapper.Map(updateTarjetaOf, tarjetaOf);
+
+            // 4. ¡CORRECCIÓN CRÍTICA!
+            // Si el estado no venía en el DTO (es 0), revertimos el cambio
+            if (!idEstadoVinoEnDto)
+            {
+                tarjetaOf.idEstadoOf = idEstadoAnterior;
+            }
+
             _context.Entry(tarjetaOf).State = EntityState.Modified;
 
+            // 5. Guardamos los cambios en la Base de Datos
             try
             {
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
+                // ... tu lógica de concurrencia ...
                 if (!tarjetaOfExists(id))
                 {
                     return NotFound("No se encontro la tarjeta con el id: " + id);
@@ -303,6 +361,118 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                     throw;
                 }
             }
+
+            // === INICIO DE LA INTEGRACIÓN CONDICIONAL (MODIFICADO) ===
+
+            // 6. Verificamos si el estado se proporcionó Y si es diferente al anterior
+            if (idEstadoVinoEnDto && idEstadoAnterior != updateTarjetaOf.idEstadoOf)
+            {
+                _logger.LogInformation($"El estado de la OF {id} cambió de {idEstadoAnterior} a {updateTarjetaOf.idEstadoOf}. Enviando notificación.");
+
+                try
+                {
+                    // 7. Cargamos la información del NUEVO estado
+                    await _context.Entry(tarjetaOf).Reference(t => t.idEstadoOfNavigation).LoadAsync();
+
+                    // 8. Obtenemos el nombre del estado (¡Ajusta 'nombreEstado'!)
+                    string nombreEstado = tarjetaOf.idEstadoOfNavigation?.nombreEstado ?? $"ID: {updateTarjetaOf.idEstadoOf}";
+
+                    // 9. (MODIFICADO) BUSCAR EL ID DEL HILO EN CACHÉ
+                    string cacheKey = $"GoogleChatThread_OF_{id}";
+                    _memoryCache.TryGetValue(cacheKey, out string? currentThreadId);
+
+                    // 10. (NUEVA LÓGICA) CONSTRUIR EL PAYLOAD ADECUADO
+                    object finalPayload;
+
+                    if (string.IsNullOrEmpty(currentThreadId))
+                    {
+                        // 10a. CASO 1: HILO NUEVO -> ENVIAR TARJETA
+                        // (Construimos la tarjeta que ya tenías)
+                        finalPayload = new
+                        {
+                            cardsV2 = new[] {
+                        new {
+                            cardId = "estadoOfCard",
+                            card = new {
+                                header = new {
+                                    title = "🔄 Cambio de Estado",
+                                    subtitle = $"Tarjeta/OF ID: {id}",
+                                    imageUrl = "https://i.imgur.com/v8R2yK4.png"
+                                },
+                                sections = new object[] { // <-- Usando object[]
+                                    new { // Sección de texto
+                                        widgets = new object[] {
+                                            new {
+                                                decoratedText = new {
+                                                    topLabel = "Nuevo Estado",
+                                                    text = nombreEstado,
+                                                    startIcon = new { knownIcon = "BOOKMARK" }
+                                                }
+                                            }
+                                        }
+                                    },
+                                    new { // Sección de botón
+                                        widgets = new object[] {
+                                            new {
+                                                buttonList = new {
+                                                    buttons = new[] {
+                                                        new {
+                                                            text = "Ir al Tablero de OF",
+                                                            onClick = new {
+                                                                openLink = new {
+                                                                    url = "http://nexo.it:8080/main/inicio"
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                        };
+                    }
+                    else
+                    {
+                        // 10b. CASO 2: HILO EXISTENTE -> ENVIAR TEXTO
+
+                        // Construimos el mensaje de texto simple
+                        var messageBuilder = new System.Text.StringBuilder();
+                        messageBuilder.AppendLine($"🔄 *Actualización de Estado*");
+                        messageBuilder.AppendLine($"La Tarjeta/OF *ID: {id}* cambió al estado: *{nombreEstado}*.");
+
+                        // Construimos el payload de texto CON el hilo
+                        finalPayload = new
+                        {
+                            text = messageBuilder.ToString(),
+                            thread = new { name = currentThreadId }
+                        };
+                    }
+
+                    // 11. ENVIAR AL WEBHOOK
+                    // (La función SendToGoogleChat no cambia, felizmente acepta cualquier 'object')
+                    string? newThreadId = await SendToGoogleChat(
+                        finalPayload,
+                        currentThreadId // Lo pasamos para saber si debemos capturar la respuesta
+                    );
+
+                    // 12. GUARDAR EL NUEVO ID DE HILO EN CACHÉ
+                    if (!string.IsNullOrEmpty(newThreadId))
+                    {
+                        var cacheEntryOptions = new MemoryCacheEntryOptions()
+                            .SetSlidingExpiration(TimeSpan.FromDays(7));
+                        _memoryCache.Set(cacheKey, newThreadId, cacheEntryOptions);
+                    }
+                }
+                catch (Exception chatEx)
+                {
+                    _logger.LogError(chatEx, "Error al preparar o enviar la notificación de CAMBIO DE ESTADO a Google Chat.");
+                }
+            }
+            // === FIN DE LA INTEGRACIÓN ===
 
             return Ok(updateTarjetaOf);
         }
@@ -448,6 +618,88 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         private bool tarjetaOfExists(int id)
         {
             return _context.tarjetaOf.Any(e => e.oF == id);
+        }
+
+        /// <summary>
+        /// Envía un payload (Tarjeta o Texto) a Google Chat, manejando hilos.
+        /// </summary>
+        /// <param name="messagePayload">El objeto completo a serializar (ej. { text: "..." } o { cardsV2: [...] }).</param>
+        /// <param name="currentThreadId">El ID del hilo actual (si existe). Se usa para saber si capturar la respuesta.</param>
+        /// <returns>El ID del hilo si se creó uno nuevo; null si solo se respondió.</returns>
+        private async Task<string?> SendToGoogleChat(object messagePayload, string? currentThreadId)
+        {
+            // ❗️ IMPORTANTE: Mueve esta URL a tu appsettings.json
+            var baseUrl = "https://chat.googleapis.com/v1/spaces/AAQAWq4gutM/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=OWw9jgq6-DXEFzMCkl3HI4tZxjN1clp9_p-6xPfdRjM";
+
+            var client = _httpClientFactory.CreateClient();
+            string postUrl = baseUrl;
+
+            // Si ya estamos en un hilo, añadimos el parámetro de respuesta
+            if (!string.IsNullOrEmpty(currentThreadId))
+            {
+                postUrl = $"{baseUrl}&messageReplyOption=REPLY_MESSAGE_FALLBACK_TO_NEW_THREAD";
+            }
+
+            try
+            {
+                // Serializamos el payload que nos pasó el controlador
+                var jsonPayload = System.Text.Json.JsonSerializer.Serialize(messagePayload);
+                var content = new StringContent(jsonPayload, System.Text.Encoding.UTF8, "application/json");
+
+                // Enviar la petición
+                var response = await client.PostAsync(postUrl, content);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    var errorBody = await response.Content.ReadAsStringAsync();
+                    _logger.LogError($"Error de Google Chat API: {response.StatusCode} - {errorBody}");
+                    return null;
+                }
+
+                // 3. SI CREAMOS UN HILO NUEVO (porque currentThreadId era null), 
+                //    CAPTURAMOS Y DEVOLVEMOS EL ID
+                if (string.IsNullOrEmpty(currentThreadId))
+                {
+                    var responseBody = await response.Content.ReadAsStringAsync();
+                    // Usamos las clases auxiliares para leer la respuesta
+                    var chatResponse = System.Text.Json.JsonSerializer.Deserialize<GoogleChatResponse>(responseBody);
+
+                    var newThreadId = chatResponse?.Thread?.Name;
+
+                    if (newThreadId != null)
+                    {
+                        _logger.LogInformation($"Nuevo hilo de Google Chat creado: {newThreadId}");
+                        return newThreadId; // 👈 Devolvemos el ID
+                    }
+                }
+
+                // Si estábamos en un hilo, no devolvemos nada.
+                _logger.LogInformation($"Respuesta enviada al hilo: {currentThreadId}");
+                return null;
+            }
+            catch (Exception ex)
+            {
+                // Solo registrar el error, no fallar la solicitud principal
+                _logger.LogError(ex, "Error al enviar notificación a Google Chat.");
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Clase auxiliar para deserializar la respuesta de Google Chat
+        /// </summary>
+        private class GoogleChatResponse
+        {
+            // Mapea la propiedad "thread" del JSON
+            [System.Text.Json.Serialization.JsonPropertyName("thread")]
+            public GoogleChatThread? Thread { get; set; }
+        }
+
+        private class GoogleChatThread
+        {
+            // Mapea la propiedad "name" del JSON
+            [System.Text.Json.Serialization.JsonPropertyName("name")]
+            public string? Name { get; set; }
         }
     }
 }

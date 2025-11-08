@@ -26,6 +26,21 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.VariablesTecnicas
         public async Task<ActionResult<IEnumerable<VariablesTecnicasDto>>> GetVariablesTecnicas()
         {
             var variablesTecnicas = await _context.variablesTecnicas
+                .Include(v => v.variableUnidadMedida)
+                .ThenInclude(vu => vu.idUnidadNavigation)
+                .ToListAsync();
+
+            var variablesTecnicasDto = _mapper.Map<List<VariablesTecnicasDto>>(variablesTecnicas);
+
+            return Ok(variablesTecnicasDto);
+        }
+
+        [HttpGet("get/unidadMedida")]
+        public async Task<ActionResult<IEnumerable<VariablesTecnicasDto>>> GetVariablesTecnicasUnidadMedida()
+        {
+            var variablesTecnicas = await _context.variablesTecnicas
+                .Include(v => v.variableUnidadMedida)
+                .ThenInclude(vu => vu.idUnidadNavigation)
                 .ToListAsync();
 
             var variablesTecnicasDto = _mapper.Map<List<VariablesTecnicasDto>>(variablesTecnicas);
@@ -38,6 +53,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.VariablesTecnicas
         public async Task<ActionResult<VariablesTecnicasDto>> GetVariablesTecnicas(int id)
         {
             var variablesTecnicas = await _context.variablesTecnicas
+                .Include(v => v.variableUnidadMedida)
+                .ThenInclude(vu => vu.idUnidadNavigation)
                 .FirstOrDefaultAsync(u => u.idVariable == id);
 
             if (variablesTecnicas == null)
