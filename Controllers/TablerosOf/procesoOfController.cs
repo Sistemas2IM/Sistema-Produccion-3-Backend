@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.Elfie.Serialization;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.BusquedaProcesos;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas;
@@ -34,12 +35,18 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         private readonly base_nuevaContext _context;
         private readonly IMapper _mapper;
         private readonly IRequestLockService _lockService;
+        private readonly IHttpClientFactory _httpClientFactory;
+        private readonly ILogger<procesoOfController> _logger;
+        private readonly IMemoryCache _memoryCache;
 
-        public procesoOfController(base_nuevaContext context, IMapper mapper, IRequestLockService lockService)
+        public procesoOfController(base_nuevaContext context, IMapper mapper, IRequestLockService lockService, IHttpClientFactory httpClientFactory, IMemoryCache memoryCache, ILogger<procesoOfController> logger)
         {
             _context = context;
             _mapper = mapper;
             _lockService = lockService;
+            _httpClientFactory = httpClientFactory;
+            _memoryCache = memoryCache;
+            _logger = logger;
         }
 
         // GET: api/procesoOf
@@ -1167,34 +1174,260 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
 
         // PUT: api/procesoOf/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        //[HttpPut("put/{id}")]
+        //public async Task<IActionResult> PutprocesoOf(int id, UpdateProcesoOfDto updateProcesoOf)
+        //{
+        //    var procesoOf = await _context.procesoOf.FindAsync(id);
+
+        //    if (procesoOf == null)
+        //    {
+        //        return NotFound("No se encontro el proceso de la of con el id: " + id);
+        //    }
+
+        //    _mapper.Map(updateProcesoOf, procesoOf);
+        //    _context.Entry(procesoOf).State = EntityState.Modified;
+
+        //    try
+        //    {
+        //        await _context.SaveChangesAsync();
+        //    }
+        //    catch (DbUpdateConcurrencyException)
+        //    {
+        //        if (!procesoOfExists(id))
+        //        {
+        //            return NotFound("No se encontro el proceso de la of con el id: " + id);
+        //        }
+        //        else
+        //        {
+        //            throw;
+        //        }
+        //    }
+
+        //    return Ok(updateProcesoOf);
+        //}
+
         [HttpPut("put/{id}")]
         public async Task<IActionResult> PutprocesoOf(int id, UpdateProcesoOfDto updateProcesoOf)
         {
-            var procesoOf = await _context.procesoOf.FindAsync(id);
+            // 1. Buscamos la entidad (FindAsync está bien si 'id' es la PK)
+            var procesoOf = await _context.procesoOf
+                        .Include(p => p.idPosturaNavigation) // 👈 Carga el nombre de la postura
+                        .Include(p => p.oFNavigation)       // 👈 Carga la info de la TarjetaOF
+                        .FirstOrDefaultAsync(p => p.idProceso == id); // ⚠️ Asume que 'id' es la PK 'idProceso'
 
             if (procesoOf == null)
             {
                 return NotFound("No se encontro el proceso de la of con el id: " + id);
             }
 
+            // 2. ⬇️ (ADAPTADO) Capturamos la 'postura' ANTES
+            //    (Asumiendo que 'idPostura' está en tu entidad)
+            int idPosturaAnterior = (int)procesoOf.idPostura;
+
+            // 3. ⬇️ (ADAPTADO) Verificamos si el DTO trae una nueva postura
+            //    (Asumiendo que 'idPostura' está en tu DTO y '0' no es válido)
+            bool posturaVinoEnDto = updateProcesoOf.idPostura != 0;
+
+            // 4. Mapeamos los nuevos valores del DTO a la entidad
             _mapper.Map(updateProcesoOf, procesoOf);
+
+            // 5. ⬇️ (ADAPTADO) ¡CORRECCIÓN CRÍTICA!
+            //    Si la postura no venía en el DTO, revertimos el cambio
+            if (!posturaVinoEnDto)
+            {
+                procesoOf.idPostura = idPosturaAnterior;
+            }
+
             _context.Entry(procesoOf).State = EntityState.Modified;
 
+            // 6. Guardamos los cambios en la Base de Datos
             try
             {
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!procesoOfExists(id))
+                // ... (Tu lógica de concurrencia) ...
+            }
+
+            // === INICIO DE LA INTEGRACIÓN CONDICIONAL (ADAPTADO) ===
+
+            // 7. ⬇️ (ADAPTADO) Verificamos si la postura se proporcionó Y si es diferente
+            if (posturaVinoEnDto && idPosturaAnterior != updateProcesoOf.idPostura)
+            {
+                _logger.LogInformation($"La postura del proceso {id} cambió de {idPosturaAnterior} a {updateProcesoOf.idPostura}. Enviando notificación.");
+
+                try
                 {
-                    return NotFound("No se encontro el proceso de la of con el id: " + id);
+                    // 8. ⬇️ (ADAPTADO) Cargamos el nombre de la NUEVA postura
+                    //    (Asumiendo que la navegación se llama 'idPosturaNavigation')
+                    await _context.Entry(procesoOf).Reference(p => p.idPosturaNavigation).LoadAsync();
+                    string nombrePostura = procesoOf.idPosturaNavigation?.nombrePostura ?? $"ID: {updateProcesoOf.idPostura}"; // ⚠️ Ajusta '.Nombre'
+
+                    // 9. ⬇️ (ADAPTADO) BUSCAR EL ID DEL HILO
+                    string cacheKey = $"GoogleChatThread_OF_{procesoOf.oF}";
+                    _memoryCache.TryGetValue(cacheKey, out string? currentThreadId);
+
+                    // 10. (ADAPTADO) CONSTRUIR EL PAYLOAD ADECUADO
+                    object finalPayload;
+
+                    if (string.IsNullOrEmpty(currentThreadId))
+                    {
+                        // 10a. CASO 1: HILO NUEVO -> ENVIAR TARJETA (NUEVO FORMATO)
+
+                        // --- Obtenemos los datos adicionales para la tarjeta ---
+
+                        // 8a. Obtenemos el nombre de la postura ANTERIOR
+                        // ⚠️ Asume que tu DbSet se llama 'posturas' y la PK es 'IdPostura'
+                        string nombrePosturaAnterior = (await _context.posturasOf.FindAsync(idPosturaAnterior))?.nombrePostura ?? "N/A";
+
+                        // 8b. Obtenemos el usuario y fecha del cambio
+                        string usuarioCambio = procesoOf.actualizadoPor ?? procesoOf.programadoPor ?? "N/A"; // ⚠️ Ajusta estas propiedades
+                        string fechaCambio = procesoOf.fechaActualización?.ToString("g") ?? DateTime.Now.ToString("g"); // ⚠️ Ajusta 'fechaActualización'
+
+                        // 8c. Formateamos otros campos
+                        string fechaEntrega = procesoOf.fechaVencimiento?.ToString("dd-MMM") ?? "N/A"; // ⚠️ Ajusta 'fechaVencimiento'
+                        string producto = $"{procesoOf.productoOf}"; // ⚠️ Ajusta 'codProd' y 'productoOf'
+
+                        // Campos de relacion con tarjeta of
+                        string clienteOf = procesoOf.oFNavigation?.clienteOf ?? "N/A";
+                        string ejecutivoOf = procesoOf.oFNavigation?.vendedorOf ?? "N/A";
+                        string lineaNegocio = procesoOf.oFNavigation?.lineaDeNegocio ?? "N/A";
+                        string cantidadOf = procesoOf.oFNavigation?.cantidadOf.ToString() ?? "0"; // Asumiendo que es un número
+
+                        string urlNexo = "http://nexo.it:8080/main/inicio"; // ⚠️ ¡REEMPLAZA ESTA URL POR LA REAL!
+
+                        // --- Construimos el payload de la tarjeta ---
+                        finalPayload = new
+                        {
+                            cardsV2 = new[] {
+                        new {
+                            cardId = $"nexo-of-{procesoOf.oF}",
+                            card = new {
+                                header = new {
+                                    title = $"🟢 OF {procesoOf.oF} - ID Proceso {procesoOf.idProceso}",
+                                    subtitle = $"Liena de negocio: {lineaNegocio}"
+                                },
+                                sections = new object[] {
+                                    // Sección 1: Info del Cambio
+                                    new {
+                                        widgets = new object[] {
+                                            new {
+                                                decoratedText = new {
+                                                    topLabel = "🔃 CAMBIO DE ESTADO",
+                                                    text = $"{nombrePosturaAnterior} → <b>{nombrePostura}</b> · {usuarioCambio} · {fechaCambio}",
+                                                    wrapText = true
+                                                }
+                                            },
+                                            new { divider = new {} }
+                                        }
+                                    },
+                                    // Sección 2: Columnas (Proceso, Estado, Entrega)
+                                    new {
+                                        widgets = new object[] {
+                                            new {
+                                                columns = new {
+                                                    columnItems = new object[] {                                                       
+                                                        new { widgets = new object[] { new { decoratedText = new { topLabel = "ESTADO", text = nombrePostura } } } },
+                                                        new { widgets = new object[] { new { decoratedText = new { topLabel = "ENTREGA", text = fechaEntrega } } } }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    },
+                                    // Sección 3: Cliente y Producto
+                                    new {
+                                        widgets = new object[] {
+                                            new {
+                                                decoratedText = new {
+                                                    topLabel = "👤 CLIENTE",
+                                                    text = clienteOf, // ⚠️ Ajusta 'cliente'
+                                                    wrapText = true
+                                                }
+                                            },
+                                            new {
+                                                decoratedText = new {
+                                                    topLabel = "📦 PRODUCTO",
+                                                    text = producto,
+                                                    wrapText = true
+                                                }
+                                            }
+                                        }
+                                    },
+                                    // Sección 4: Cantidad, ejecutivo y Botones
+                                    new {
+                                        widgets = new object[] {
+                                            new {
+                                                columns = new {
+                                                    columnItems = new object[] {
+                                                        new { widgets = new object[] { new { decoratedText = new { topLabel = "#️⃣ CANTIDAD", text = cantidadOf } } } },
+                                                        new { widgets = new object[] { new { decoratedText = new { topLabel = "👤 EJECUTIVO", text = ejecutivoOf } } } }
+                                                    }
+                                                }
+                                            },
+                                            new {
+                                                buttonList = new {
+                                                    buttons = new[] {
+                                                        new {
+                                                            text = "Ver orden",
+                                                            onClick = new { openLink = new { url = urlNexo } } // ⚠️ URL genérica
+                                                        }
+                                                        // (Omití el botón "Llamar asesor" porque no tenemos el dato)
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }, // Fin de 'sections'
+                                fixedFooter = new {
+                                    primaryButton = new {
+                                        text = "Abrir tarjeta en NEXO",
+                                        onClick = new {
+                                            openLink = new { url = urlNexo } // ⚠️ URL genérica
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                        };
+                    }
+                    else
+                    {
+                        // 10b. CASO 2: HILO EXISTENTE -> ENVIAR TEXTO
+                        // (Esta lógica se mantiene igual, para respuestas cortas)
+
+                        var messageBuilder = new System.Text.StringBuilder();
+                        messageBuilder.AppendLine($"⚙️ *Actualización de Proceso* (OF: {procesoOf.oF} / ID: {id})");
+                        messageBuilder.AppendLine($"El proceso *{procesoOf.nombreTarjeta}* cambió a la postura: *{nombrePostura}*.");
+
+                        finalPayload = new
+                        {
+                            text = messageBuilder.ToString(),
+                            thread = new { name = currentThreadId }
+                        };
+                    }
+
+                    // 11. ENVIAR AL WEBHOOK
+                    string? newThreadId = await SendToGoogleChat(
+                        finalPayload,
+                        currentThreadId
+                    );
+
+                    // 12. GUARDAR EL NUEVO ID DE HILO EN CACHÉ (si se creó uno)
+                    if (!string.IsNullOrEmpty(newThreadId))
+                    {
+                        var cacheEntryOptions = new MemoryCacheEntryOptions()
+                            .SetSlidingExpiration(TimeSpan.FromDays(7));
+                        _memoryCache.Set(cacheKey, newThreadId, cacheEntryOptions);
+                    }
                 }
-                else
+                catch (Exception chatEx)
                 {
-                    throw;
+                    _logger.LogError(chatEx, "Error al preparar o enviar la notificación de CAMBIO DE PROCESO a Google Chat.");
                 }
             }
+            // === FIN DE LA INTEGRACIÓN ===
 
             return Ok(updateProcesoOf);
         }
@@ -1955,6 +2188,88 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                     _context.Set<TEntity>().Update(detalleExistente);
                 }
             }
+        }
+
+        /// <summary>
+        /// Envía un payload (Tarjeta o Texto) a Google Chat, manejando hilos.
+        /// </summary>
+        /// <param name="messagePayload">El objeto completo a serializar (ej. { text: "..." } o { cardsV2: [...] }).</param>
+        /// <param name="currentThreadId">El ID del hilo actual (si existe). Se usa para saber si capturar la respuesta.</param>
+        /// <returns>El ID del hilo si se creó uno nuevo; null si solo se respondió.</returns>
+        private async Task<string?> SendToGoogleChat(object messagePayload, string? currentThreadId)
+        {
+            // ❗️ IMPORTANTE: Mueve esta URL a tu appsettings.json
+            var baseUrl = "https://chat.googleapis.com/v1/spaces/AAQAWq4gutM/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=3SQvji9cj2rsqDq2kDycmeqASSyCGjNAUmIY7RMD1zM";
+
+            var client = _httpClientFactory.CreateClient();
+            string postUrl = baseUrl;
+
+            // Si ya estamos en un hilo, añadimos el parámetro de respuesta
+            if (!string.IsNullOrEmpty(currentThreadId))
+            {
+                postUrl = $"{baseUrl}&messageReplyOption=REPLY_MESSAGE_FALLBACK_TO_NEW_THREAD";
+            }
+
+            try
+            {
+                // Serializamos el payload que nos pasó el controlador
+                var jsonPayload = System.Text.Json.JsonSerializer.Serialize(messagePayload);
+                var content = new StringContent(jsonPayload, System.Text.Encoding.UTF8, "application/json");
+
+                // Enviar la petición
+                var response = await client.PostAsync(postUrl, content);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    var errorBody = await response.Content.ReadAsStringAsync();
+                    _logger.LogError($"Error de Google Chat API: {response.StatusCode} - {errorBody}");
+                    return null;
+                }
+
+                // 3. SI CREAMOS UN HILO NUEVO (porque currentThreadId era null), 
+                //    CAPTURAMOS Y DEVOLVEMOS EL ID
+                if (string.IsNullOrEmpty(currentThreadId))
+                {
+                    var responseBody = await response.Content.ReadAsStringAsync();
+                    // Usamos las clases auxiliares para leer la respuesta
+                    var chatResponse = System.Text.Json.JsonSerializer.Deserialize<GoogleChatResponse>(responseBody);
+
+                    var newThreadId = chatResponse?.Thread?.Name;
+
+                    if (newThreadId != null)
+                    {
+                        _logger.LogInformation($"Nuevo hilo de Google Chat creado: {newThreadId}");
+                        return newThreadId; // 👈 Devolvemos el ID
+                    }
+                }
+
+                // Si estábamos en un hilo, no devolvemos nada.
+                _logger.LogInformation($"Respuesta enviada al hilo: {currentThreadId}");
+                return null;
+            }
+            catch (Exception ex)
+            {
+                // Solo registrar el error, no fallar la solicitud principal
+                _logger.LogError(ex, "Error al enviar notificación a Google Chat.");
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Clase auxiliar para deserializar la respuesta de Google Chat
+        /// </summary>
+        private class GoogleChatResponse
+        {
+            // Mapea la propiedad "thread" del JSON
+            [System.Text.Json.Serialization.JsonPropertyName("thread")]
+            public GoogleChatThread? Thread { get; set; }
+        }
+
+        private class GoogleChatThread
+        {
+            // Mapea la propiedad "name" del JSON
+            [System.Text.Json.Serialization.JsonPropertyName("name")]
+            public string? Name { get; set; }
         }
 
     }

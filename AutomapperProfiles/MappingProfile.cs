@@ -594,8 +594,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                     .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
                 CreateMap<detalleFichaClientes, AddBatchDetalleFichaClientesDto>().ReverseMap();
-                CreateMap<UpdateBatchDetalleFichaClientesDto, detalleFichaClientes>()
-                    .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+                CreateMap<UpdateBatchDetalleFichaClientesDto, detalleFichaClientes>();
             }
 
             CreateMap<variablesTecnicas, VariablesTecnicasDto>()

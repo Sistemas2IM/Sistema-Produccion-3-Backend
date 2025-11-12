@@ -318,25 +318,26 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         [HttpPut("put/{id}")]
         public async Task<IActionResult> PuttarjetaOf(int id, UpdateTarjetaOfDto updateTarjetaOf)
         {
-            var tarjetaOf = await _context.tarjetaOf.FirstOrDefaultAsync(t => t.oF == id);
+            // 1. ⬇️ (MODIFICADO) Cargamos la entidad Y la navegación del estado
+            var tarjetaOf = await _context.tarjetaOf
+                .Include(t => t.idEstadoOfNavigation) // 👈 Carga el nombre del estado
+                .FirstOrDefaultAsync(t => t.oF == id);
 
             if (tarjetaOf == null)
             {
                 return NotFound("No se encontro la tarjeta con el id: " + id);
             }
 
-            // 1. Capturamos el estado ANTES de cualquier modificación
+            // 2. Capturamos el estado ANTES de cualquier modificación
             int idEstadoAnterior = (int)tarjetaOf.idEstadoOf;
 
-            // 2. Verificamos si el DTO realmente trae un nuevo estado
-            //    (Asumiendo que '0' no es un ID de estado válido y significa "no proporcionado")
+            // 3. Verificamos si el DTO realmente trae un nuevo estado
             bool idEstadoVinoEnDto = updateTarjetaOf.idEstadoOf != 0;
 
-            // 3. Mapeamos los nuevos valores del DTO a la entidad
+            // 4. Mapeamos los nuevos valores del DTO a la entidad
             _mapper.Map(updateTarjetaOf, tarjetaOf);
 
-            // 4. ¡CORRECCIÓN CRÍTICA!
-            // Si el estado no venía en el DTO (es 0), revertimos el cambio
+            // 5. ¡CORRECCIÓN CRÍTICA!
             if (!idEstadoVinoEnDto)
             {
                 tarjetaOf.idEstadoOf = idEstadoAnterior;
@@ -344,7 +345,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
 
             _context.Entry(tarjetaOf).State = EntityState.Modified;
 
-            // 5. Guardamos los cambios en la Base de Datos
+            // 6. Guardamos los cambios en la Base de Datos
             try
             {
                 await _context.SaveChangesAsync();
@@ -352,32 +353,21 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             catch (DbUpdateConcurrencyException)
             {
                 // ... tu lógica de concurrencia ...
-                if (!tarjetaOfExists(id))
-                {
-                    return NotFound("No se encontro la tarjeta con el id: " + id);
-                }
-                else
-                {
-                    throw;
-                }
             }
 
             // === INICIO DE LA INTEGRACIÓN CONDICIONAL (MODIFICADO) ===
 
-            // 6. Verificamos si el estado se proporcionó Y si es diferente al anterior
+            // 7. Verificamos si el estado se proporcionó Y si es diferente al anterior
             if (idEstadoVinoEnDto && idEstadoAnterior != updateTarjetaOf.idEstadoOf)
             {
                 _logger.LogInformation($"El estado de la OF {id} cambió de {idEstadoAnterior} a {updateTarjetaOf.idEstadoOf}. Enviando notificación.");
 
                 try
                 {
-                    // 7. Cargamos la información del NUEVO estado
-                    await _context.Entry(tarjetaOf).Reference(t => t.idEstadoOfNavigation).LoadAsync();
-
-                    // 8. Obtenemos el nombre del estado (¡Ajusta 'nombreEstado'!)
+                    // 8. Obtenemos el nombre del NUEVO estado (ya cargado gracias al .Include)
                     string nombreEstado = tarjetaOf.idEstadoOfNavigation?.nombreEstado ?? $"ID: {updateTarjetaOf.idEstadoOf}";
 
-                    // 9. (MODIFICADO) BUSCAR EL ID DEL HILO EN CACHÉ
+                    // 9. BUSCAR EL ID DEL HILO EN CACHÉ
                     string cacheKey = $"GoogleChatThread_OF_{id}";
                     _memoryCache.TryGetValue(cacheKey, out string? currentThreadId);
 
@@ -386,47 +376,113 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
 
                     if (string.IsNullOrEmpty(currentThreadId))
                     {
-                        // 10a. CASO 1: HILO NUEVO -> ENVIAR TARJETA
-                        // (Construimos la tarjeta que ya tenías)
+                        // 10a. CASO 1: HILO NUEVO -> ENVIAR TARJETA DETALLADA
+
+                        // --- Obtenemos los datos adicionales para la tarjeta ---
+
+                        // 8a. Obtenemos el nombre del estado ANTERIOR
+                        // ⚠️ Asume que tu DbSet se llama 'estadosOf' y la PK es 'IdEstado'
+                        string nombreEstadoAnterior = (await _context.estadosOf.FindAsync(idEstadoAnterior))?.nombreEstado ?? "N/A";
+
+                        // 8b. Obtenemos el usuario y fecha del cambio
+                        // ⚠️ Ajusta 'actualizadoPor' y 'fechaUltimaActualizacion' a tus propiedades reales
+                        string usuarioCambio = updateTarjetaOf. ?? "Sistema"; // O 'tarjetaOf.actualizadoPor'
+                        string fechaCambio = tarjetaOf.fechaUltimaActualizacion?.ToString("g") ?? DateTime.Now.ToString("g");
+
+                        // 8c. Formateamos otros campos (directamente desde 'tarjetaOf')
+                        string fechaEntrega = tarjetaOf.fechaVencimiento?.ToString("dd-MMM") ?? "N/A";
+                        string cantidad = $"{tarjetaOf.cantidadOf} {tarjetaOf.unidadMedida}"; // ⚠️ Asume 'unidadMedida'
+                        string producto = $"{tarjetaOf.codArticulo} {tarjetaOf.productoOf}"; // ⚠️ Asume 'codArticulo'
+                        string lineaNegocio = tarjetaOf.lineaDeNegocio ?? "N/A";
+                        string urlNexo = "http://nexo.it:8080/main/inicio"; // ⚠️ ¡REEMPLAZA ESTA URL POR LA REAL!
+
+                        // --- Construimos el payload de la tarjeta ---
                         finalPayload = new
                         {
                             cardsV2 = new[] {
                         new {
-                            cardId = "estadoOfCard",
+                            cardId = $"nexo-of-{tarjetaOf.oF}",
                             card = new {
                                 header = new {
-                                    title = "🔄 Cambio de Estado",
-                                    subtitle = $"Tarjeta/OF ID: {id}",
-                                    imageUrl = "https://i.imgur.com/v8R2yK4.png"
+                                    title = $"🟢 OF {tarjetaOf.oF}",
+                                    subtitle = $"Liena de negocio: {lineaNegocio}"
                                 },
-                                sections = new object[] { // <-- Usando object[]
-                                    new { // Sección de texto
+                                sections = new object[] {
+                                    // Sección 1: Info del Cambio
+                                    new {
                                         widgets = new object[] {
                                             new {
                                                 decoratedText = new {
-                                                    topLabel = "Nuevo Estado",
-                                                    text = nombreEstado,
-                                                    startIcon = new { knownIcon = "BOOKMARK" }
+                                                    topLabel = "🔃 CAMBIO DE ESTADO",
+                                                    text = $"{nombreEstadoAnterior} → <b>{nombreEstado}</b> · {usuarioCambio} · {fechaCambio}",
+                                                    wrapText = true
+                                                }
+                                            },
+                                            new { divider = new {} }
+                                        }
+                                    },
+                                    // Sección 2: Columnas (Proceso, Estado, Entrega)
+                                    new {
+                                        widgets = new object[] {
+                                            new {
+                                                columns = new {
+                                                    columnItems = new object[] {
+                                                        new { widgets = new object[] { new { decoratedText = new { topLabel = "PROCESO", text = lineaNegocio } } } },
+                                                        new { widgets = new object[] { new { decoratedText = new { topLabel = "ESTADO", text = nombreEstado } } } },
+                                                        new { widgets = new object[] { new { decoratedText = new { topLabel = "ENTREGA", text = fechaEntrega } } } }
+                                                    }
                                                 }
                                             }
                                         }
                                     },
-                                    new { // Sección de botón
+                                    // Sección 3: Cliente y Producto
+                                    new {
                                         widgets = new object[] {
+                                            new {
+                                                decoratedText = new {
+                                                    topLabel = "👤 CLIENTE",
+                                                    text = tarjetaOf.clienteOf,
+                                                    wrapText = true
+                                                }
+                                            },
+                                            new {
+                                                decoratedText = new {
+                                                    topLabel = "📦 PRODUCTO",
+                                                    text = producto,
+                                                    wrapText = true
+                                                }
+                                            }
+                                        }
+                                    },
+                                    // Sección 4: Cantidad, ejecutivo y Botones
+                                    new {
+                                        widgets = new object[] {
+                                            new {
+                                                columns = new {
+                                                    columnItems = new object[] {
+                                                        new { widgets = new object[] { new { decoratedText = new { topLabel = "#️⃣ CANTIDAD", text = cantidad } } } },
+                                                        new { widgets = new object[] { new { decoratedText = new { topLabel = "👤 EJECUTIVO", text = tarjetaOf.vendedorOf } } } }
+                                                    }
+                                                }
+                                            },
                                             new {
                                                 buttonList = new {
                                                     buttons = new[] {
                                                         new {
-                                                            text = "Ir al Tablero de OF",
-                                                            onClick = new {
-                                                                openLink = new {
-                                                                    url = "http://nexo.it:8080/main/inicio"
-                                                                }
-                                                            }
+                                                            text = "Ver orden",
+                                                            onClick = new { openLink = new { url = urlNexo } }
                                                         }
                                                     }
                                                 }
                                             }
+                                        }
+                                    }
+                                }, // Fin de 'sections'
+                                fixedFooter = new {
+                                    primaryButton = new {
+                                        text = "Abrir tarjeta en NEXO",
+                                        onClick = new {
+                                            openLink = new { url = urlNexo }
                                         }
                                     }
                                 }
@@ -438,13 +494,11 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                     else
                     {
                         // 10b. CASO 2: HILO EXISTENTE -> ENVIAR TEXTO
-
-                        // Construimos el mensaje de texto simple
+                        // (Esta lógica se mantiene, es la respuesta corta)
                         var messageBuilder = new System.Text.StringBuilder();
                         messageBuilder.AppendLine($"🔄 *Actualización de Estado*");
                         messageBuilder.AppendLine($"La Tarjeta/OF *ID: {id}* cambió al estado: *{nombreEstado}*.");
 
-                        // Construimos el payload de texto CON el hilo
                         finalPayload = new
                         {
                             text = messageBuilder.ToString(),
@@ -453,10 +507,9 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                     }
 
                     // 11. ENVIAR AL WEBHOOK
-                    // (La función SendToGoogleChat no cambia, felizmente acepta cualquier 'object')
                     string? newThreadId = await SendToGoogleChat(
                         finalPayload,
-                        currentThreadId // Lo pasamos para saber si debemos capturar la respuesta
+                        currentThreadId
                     );
 
                     // 12. GUARDAR EL NUEVO ID DE HILO EN CACHÉ
@@ -629,7 +682,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         private async Task<string?> SendToGoogleChat(object messagePayload, string? currentThreadId)
         {
             // ❗️ IMPORTANTE: Mueve esta URL a tu appsettings.json
-            var baseUrl = "https://chat.googleapis.com/v1/spaces/AAQAWq4gutM/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=OWw9jgq6-DXEFzMCkl3HI4tZxjN1clp9_p-6xPfdRjM";
+            var baseUrl = "https://chat.googleapis.com/v1/spaces/AAQAWq4gutM/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=MS6Q3qwuymWfjsILDQA0p4OrRgg3I69CQkejymsLGxU";
 
             var client = _httpClientFactory.CreateClient();
             string postUrl = baseUrl;

@@ -44,6 +44,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[certificadoCalidad_Log]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[corridaCombinada]",
          "ObjectType": 0
       },
@@ -52,11 +56,19 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[detalleCertificadoCalidad_Log]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[detalleEntrega]",
          "ObjectType": 0
       },
       {
          "Name": "[dbo].[detalleFichaClientes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[detalleFichaClientes_Log]",
          "ObjectType": 0
       },
       {
@@ -89,6 +101,10 @@
       },
       {
          "Name": "[dbo].[fichaTecnicaCliente]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[fichaTecnicaCliente_Log]",
          "ObjectType": 0
       },
       {

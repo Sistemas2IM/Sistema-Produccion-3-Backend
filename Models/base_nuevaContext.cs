@@ -27,13 +27,19 @@ public partial class base_nuevaContext : DbContext
 
     public virtual DbSet<certificadoCalidad> certificadoCalidad { get; set; }
 
+    public virtual DbSet<certificadoCalidad_Log> certificadoCalidad_Log { get; set; }
+
     public virtual DbSet<corridaCombinada> corridaCombinada { get; set; }
 
     public virtual DbSet<detalleCertificadoCalidad> detalleCertificadoCalidad { get; set; }
 
+    public virtual DbSet<detalleCertificadoCalidad_Log> detalleCertificadoCalidad_Log { get; set; }
+
     public virtual DbSet<detalleEntrega> detalleEntrega { get; set; }
 
     public virtual DbSet<detalleFichaClientes> detalleFichaClientes { get; set; }
+
+    public virtual DbSet<detalleFichaClientes_Log> detalleFichaClientes_Log { get; set; }
 
     public virtual DbSet<detalleReporte> detalleReporte { get; set; }
 
@@ -50,6 +56,8 @@ public partial class base_nuevaContext : DbContext
     public virtual DbSet<familliaDeMaquina> familliaDeMaquina { get; set; }
 
     public virtual DbSet<fichaTecnicaCliente> fichaTecnicaCliente { get; set; }
+
+    public virtual DbSet<fichaTecnicaCliente_Log> fichaTecnicaCliente_Log { get; set; }
 
     public virtual DbSet<horariosOperativos> horariosOperativos { get; set; }
 
@@ -218,11 +226,11 @@ public partial class base_nuevaContext : DbContext
         {
             entity.HasKey(e => e.idCertificadoCalidad).HasName("PK__certific__3110B5197AEA4595");
 
+            entity.ToTable(tb => tb.HasTrigger("tr_certificadoCalidad_UPDATE_Log"));
+
             entity.Property(e => e.actualizadoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.elaboradoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.fechaCreacion).HasDefaultValueSql("(getdate())");
-
-            entity.ToTable("certificadoCalidad", t => t.UseSqlOutputClause(false));
 
             entity.HasOne(d => d.actualizadoPorNavigation).WithMany(p => p.certificadoCalidadactualizadoPorNavigation).HasConstraintName("FK_ACTUALIZA_CERTIFICADO");
 
@@ -231,6 +239,14 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.idFichaClienteNavigation).WithMany(p => p.certificadoCalidad).HasConstraintName("FK_CERTIFICADO_FICHA");
 
             entity.HasOne(d => d.oFNavigation).WithMany(p => p.certificadoCalidad).HasConstraintName("FK_CERTIFICADO_OF");
+        });
+
+        modelBuilder.Entity<certificadoCalidad_Log>(entity =>
+        {
+            entity.Property(e => e.actualizadoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.elaboradoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.fechaLog).HasDefaultValueSql("(getdate())");
+            entity.Property(e => e.tipoAccion).HasDefaultValue("UPDATE");
         });
 
         modelBuilder.Entity<corridaCombinada>(entity =>
@@ -248,9 +264,9 @@ public partial class base_nuevaContext : DbContext
         {
             entity.HasKey(e => e.idDetalle).HasName("PK__detalleC__6E19D6FA3406FD39");
 
-            entity.Property(e => e.fechaCreacion).HasDefaultValueSql("(getdate())");
+            entity.ToTable(tb => tb.HasTrigger("tr_detalleCertificadoCalidad_UPDATE_Log"));
 
-            entity.ToTable("detalleCertificadoCalidad", t => t.UseSqlOutputClause(false));
+            entity.Property(e => e.fechaCreacion).HasDefaultValueSql("(getdate())");
 
             entity.HasOne(d => d.idCertificadoCalidadNavigation).WithMany(p => p.detalleCertificadoCalidad)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -261,6 +277,12 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.idVariableNavigation).WithMany(p => p.detalleCertificadoCalidad)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_CERTIFICADO_VARIABLE");
+        });
+
+        modelBuilder.Entity<detalleCertificadoCalidad_Log>(entity =>
+        {
+            entity.Property(e => e.fechaLog).HasDefaultValueSql("(getdate())");
+            entity.Property(e => e.tipoAccion).HasDefaultValue("UPDATE");
         });
 
         modelBuilder.Entity<detalleEntrega>(entity =>
@@ -286,9 +308,9 @@ public partial class base_nuevaContext : DbContext
         {
             entity.HasKey(e => e.idDetalle).HasName("PK__detalleF__6E19D6FAE127E0BD");
 
-            entity.Property(e => e.fechaCreacion).HasDefaultValueSql("(getdate())");
+            entity.ToTable(tb => tb.HasTrigger("tr_detalleFichaClientes_UPDATE_Log"));
 
-            entity.ToTable("detalleFichaClientes", t => t.UseSqlOutputClause(false));
+            entity.Property(e => e.fechaCreacion).HasDefaultValueSql("(getdate())");
 
             entity.HasOne(d => d.idFichaClienteNavigation).WithMany(p => p.detalleFichaClientes)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -299,6 +321,12 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.idVariableNavigation).WithMany(p => p.detalleFichaClientes)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_VARIABLE_FICHACLIENTE");
+        });
+
+        modelBuilder.Entity<detalleFichaClientes_Log>(entity =>
+        {
+            entity.Property(e => e.fechaLog).HasDefaultValueSql("(getdate())");
+            entity.Property(e => e.tipoAccion).HasDefaultValue("UPDATE");
         });
 
         modelBuilder.Entity<detalleReporte>(entity =>
@@ -390,13 +418,13 @@ public partial class base_nuevaContext : DbContext
         {
             entity.HasKey(e => e.idFichaCliente).HasName("PK__fichaTec__5CB71703E14AB9A5");
 
+            entity.ToTable(tb => tb.HasTrigger("tr_fichaTecnicaCliente_UPDATE_Log"));
+
             entity.Property(e => e.actualizadoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.elaboradoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.fechaCreacion).HasDefaultValueSql("(getdate())");
             entity.Property(e => e.version).HasDefaultValue(1);
             entity.Property(e => e.vigente).HasDefaultValue(true);
-
-            entity.ToTable("fichaTecnicaCliente", t => t.UseSqlOutputClause(false));
 
             entity.HasOne(d => d.actualizadoPorNavigation).WithMany(p => p.fichaTecnicaClienteactualizadoPorNavigation).HasConstraintName("FK_ACTUALIZA_FICHACLIENTE");
 
@@ -405,6 +433,14 @@ public partial class base_nuevaContext : DbContext
                 .HasConstraintName("FK_ELABORA_FICHACLIENTE");
 
             entity.HasOne(d => d.oFNavigation).WithMany(p => p.fichaTecnicaCliente).HasConstraintName("FK_FICHA_OF");
+        });
+
+        modelBuilder.Entity<fichaTecnicaCliente_Log>(entity =>
+        {
+            entity.Property(e => e.actualizadoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.elaboradoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.fechaLog).HasDefaultValueSql("(getdate())");
+            entity.Property(e => e.tipoAccion).HasDefaultValue("UPDATE");
         });
 
         modelBuilder.Entity<horariosOperativos>(entity =>

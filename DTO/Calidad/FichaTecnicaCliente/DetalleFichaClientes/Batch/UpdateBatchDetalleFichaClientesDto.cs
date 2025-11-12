@@ -10,8 +10,6 @@
 
         public string? valor { get; set; }
 
-        public DateTime? fechaCreacion { get; set; }
-
         public int? idUnidad { get; set; }
 
         public string? toleranciaPromedio { get; set; }
