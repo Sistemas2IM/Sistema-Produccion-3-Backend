@@ -49,6 +49,9 @@ public partial class maquinas
     public virtual familliaDeMaquina idFamiliaNavigation { get; set; }
 
     [InverseProperty("idMaquinaNavigation")]
+    public virtual ICollection<indisponibilidadMaquinas> indisponibilidadMaquinas { get; set; } = new List<indisponibilidadMaquinas>();
+
+    [InverseProperty("idMaquinaNavigation")]
     public virtual ICollection<listaMaquina> listaMaquina { get; set; } = new List<listaMaquina>();
 
     [InverseProperty("maquinaNavigation")]

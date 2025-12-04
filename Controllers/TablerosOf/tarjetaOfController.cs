@@ -318,9 +318,15 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         [HttpPut("put/{id}")]
         public async Task<IActionResult> PuttarjetaOf(int id, UpdateTarjetaOfDto updateTarjetaOf)
         {
-            // 1. ⬇️ (MODIFICADO) Cargamos la entidad Y la navegación del estado
+            const string urlWebhookClaudia = "https://chat.googleapis.com/v1/spaces/sYGT9CAAAAE/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=J66jBKxAB0SxqKV7igGtV5g3qLAhQhuPZBzXuY-tK1M";
+            const string urlWebhookJavier = "https://chat.googleapis.com/v1/spaces/9dQbXUAAAAE/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=NErWICVNwIEyHaWSbK8ffpFu0-5f03sTV87Yus9jdoA";
+            const string urlGeneral = "https://chat.googleapis.com/v1/spaces/AAQAWq4gutM/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=MS6Q3qwuymWfjsILDQA0p4OrRgg3I69CQkejymsLGxU";
+
+            // 1. Cargamos la entidad...
             var tarjetaOf = await _context.tarjetaOf
-                .Include(t => t.idEstadoOfNavigation) // 👈 Carga el nombre del estado
+                .Include(t => t.idEstadoOfNavigation)
+                .Include(l => l.logCambiosOf)
+                    .ThenInclude(lc => lc.usuario)
                 .FirstOrDefaultAsync(t => t.oF == id);
 
             if (tarjetaOf == null)
@@ -328,13 +334,13 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 return NotFound("No se encontro la tarjeta con el id: " + id);
             }
 
-            // 2. Capturamos el estado ANTES de cualquier modificación
+            // 2. Capturamos el estado ANTES
             int idEstadoAnterior = (int)tarjetaOf.idEstadoOf;
 
-            // 3. Verificamos si el DTO realmente trae un nuevo estado
-            bool idEstadoVinoEnDto = updateTarjetaOf.idEstadoOf != 0;
+            // 3. Verificamos si el DTO trae un nuevo estado
+            bool idEstadoVinoEnDto = updateTarjetaOf.idEstadoOf.HasValue;
 
-            // 4. Mapeamos los nuevos valores del DTO a la entidad
+            // 4. Mapeamos
             _mapper.Map(updateTarjetaOf, tarjetaOf);
 
             // 5. ¡CORRECCIÓN CRÍTICA!
@@ -355,27 +361,53 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 // ... tu lógica de concurrencia ...
             }
 
-            // === INICIO DE LA INTEGRACIÓN CONDICIONAL (MODIFICADO) ===
+            // === INICIO DE LA INTEGRACIÓN CONDICIONAL ===
 
-            // 7. Verificamos si el estado se proporcionó Y si es diferente al anterior
-            if (idEstadoVinoEnDto && idEstadoAnterior != updateTarjetaOf.idEstadoOf)
+            // 7. Verificamos el cambio de estado Y el vendedor
+            bool estadoCambio = idEstadoVinoEnDto && idEstadoAnterior != updateTarjetaOf.idEstadoOf.Value;
+
+            string? urlWebhookSeleccionada = null;
+            if (tarjetaOf.vendedorOf?.Equals("Claudia Ruano", StringComparison.OrdinalIgnoreCase) == true)
             {
-                _logger.LogInformation($"El estado de la OF {id} cambió de {idEstadoAnterior} a {updateTarjetaOf.idEstadoOf}. Enviando notificación.");
+                urlWebhookSeleccionada = urlWebhookClaudia;
+            }
+            else if (tarjetaOf.vendedorOf?.Equals("Javier Toledo", StringComparison.OrdinalIgnoreCase) == true)
+            {
+                urlWebhookSeleccionada = urlWebhookJavier;
+            }
+
+            // El IF ahora comprueba si el estado cambió Y si encontramos una URL (para el ejecutivo)
+            if (estadoCambio && !string.IsNullOrEmpty(urlWebhookSeleccionada))
+            {
+                _logger.LogInformation($"El estado de la OF {id} cambió para {tarjetaOf.vendedorOf}. Enviando notificación a ejecutivo y general.");
 
                 try
                 {
-                    // 8. Obtenemos el nombre del NUEVO estado (ya cargado gracias al .Include)
-                    string nombreEstado = tarjetaOf.idEstadoOfNavigation?.nombreEstado ?? $"ID: {updateTarjetaOf.idEstadoOf}";
+                    // 8. Obtenemos el nombre del NUEVO estado
+                    await _context.Entry(tarjetaOf).Reference(t => t.idEstadoOfNavigation).LoadAsync();
+                    string nombreEstado = tarjetaOf.idEstadoOfNavigation?.nombreEstado ?? $"ID: {updateTarjetaOf.idEstadoOf.Value}";
 
-                    // 9. BUSCAR EL ID DEL HILO EN CACHÉ
-                    string cacheKey = $"GoogleChatThread_OF_{id}";
-                    _memoryCache.TryGetValue(cacheKey, out string? currentThreadId);
+                    // 9. (MODIFICADO) GENERAR CLAVES DE CACHÉ BASADAS EN LA 'OV'
+                    //    Esto agrupará todas las OFs de la misma venta en un solo hilo.
 
-                    // 10. (NUEVA LÓGICA) CONSTRUIR EL PAYLOAD ADECUADO
+                    // Usamos tarjetaOf.oV (convirtiéndolo a string)
+                    string idAgrupador = tarjetaOf.oV.ToString();
+
+                    // Clave para el ejecutivo (única por OV y Vendedor)
+                    string cacheKeyExec = $"GoogleChatThread_OV_{idAgrupador}_{tarjetaOf.vendedorOf}";
+
+                    // Clave para el general (única por OV)
+                    string cacheKeyGeneral = $"GoogleChatThread_OV_{idAgrupador}_General";
+
+                    // Buscamos los hilos existentes
+                    _memoryCache.TryGetValue(cacheKeyExec, out string? currentThreadIdExec);
+                    _memoryCache.TryGetValue(cacheKeyGeneral, out string? currentThreadIdGeneral);
+
                     object finalPayload;
 
-                    if (string.IsNullOrEmpty(currentThreadId))
-                    {
+                    // ⬇️ (CORREGIDO) Usamos la variable 'currentThreadIdExec' ⬇️
+                    if (string.IsNullOrEmpty(currentThreadIdExec))
+                     {
                         // 10a. CASO 1: HILO NUEVO -> ENVIAR TARJETA DETALLADA
 
                         // --- Obtenemos los datos adicionales para la tarjeta ---
@@ -384,28 +416,46 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                         // ⚠️ Asume que tu DbSet se llama 'estadosOf' y la PK es 'IdEstado'
                         string nombreEstadoAnterior = (await _context.estadosOf.FindAsync(idEstadoAnterior))?.nombreEstado ?? "N/A";
 
-                        // 8b. Obtenemos el usuario y fecha del cambio
-                        // ⚠️ Ajusta 'actualizadoPor' y 'fechaUltimaActualizacion' a tus propiedades reales
-                        string usuarioCambio = updateTarjetaOf. ?? "Sistema"; // O 'tarjetaOf.actualizadoPor'
-                        string fechaCambio = tarjetaOf.fechaUltimaActualizacion?.ToString("g") ?? DateTime.Now.ToString("g");
+                        var ultimoLog = tarjetaOf.logCambiosOf
+                                         .OrderByDescending(log => log.fecha_hora) // ⚠️ Asume que 'fecha' es el campo
+                                         .FirstOrDefault();
+
+                        string usuarioCambio = ultimoLog?.usuario?.nombres + " " + ultimoLog?.usuario?.apellidos ?? "Sistema";
+                        // Código corregido
+                        string fechaCambio = ultimoLog?.fecha_hora?.ToString("g") ?? DateTime.Now.ToString("g");
 
                         // 8c. Formateamos otros campos (directamente desde 'tarjetaOf')
                         string fechaEntrega = tarjetaOf.fechaVencimiento?.ToString("dd-MMM") ?? "N/A";
                         string cantidad = $"{tarjetaOf.cantidadOf} {tarjetaOf.unidadMedida}"; // ⚠️ Asume 'unidadMedida'
-                        string producto = $"{tarjetaOf.codArticulo} {tarjetaOf.productoOf}"; // ⚠️ Asume 'codArticulo'
+                        string producto = $"{tarjetaOf.codArticulo} - {tarjetaOf.productoOf}"; // ⚠️ Asume 'codArticulo'
                         string lineaNegocio = tarjetaOf.lineaDeNegocio ?? "N/A";
+                        string fecheActualizacion = DateTime.Now.ToString("g");
+                        string serieOf = tarjetaOf.seriesOf ?? "N/A";
                         string urlNexo = "http://nexo.it:8080/main/inicio"; // ⚠️ ¡REEMPLAZA ESTA URL POR LA REAL!
+
+                        // ⬇️ PASO NUEVO (8d) ⬇️
+                        // Creamos el texto simple que SÍ será indexado por la búsqueda.
+                        // Incluimos todos los datos clave que alguien podría buscar.
+                        // ⬇️ (PASO 8d - MODIFICADO) ⬇️
+                        // Creamos el texto simple que SÍ será indexado por la búsqueda.
+                        var sb = new System.Text.StringBuilder();
+                        sb.AppendLine($"*OV:* {tarjetaOf.oV}");
+                        sb.AppendLine($"*OF:* {tarjetaOf.oF}");
+                        sb.AppendLine($"*Cliente:* {tarjetaOf.clienteOf}");
+                        sb.AppendLine($"*Producto:* {producto}");
+                        string textoDeBusqueda = sb.ToString();
 
                         // --- Construimos el payload de la tarjeta ---
                         finalPayload = new
                         {
+                            text = textoDeBusqueda,
                             cardsV2 = new[] {
                         new {
                             cardId = $"nexo-of-{tarjetaOf.oF}",
                             card = new {
                                 header = new {
-                                    title = $"🟢 OF {tarjetaOf.oF}",
-                                    subtitle = $"Liena de negocio: {lineaNegocio}"
+                                    title = $"🟢 {serieOf} {tarjetaOf.oF} - OV: {tarjetaOf.oV})",
+                                    subtitle = $"Linea de negocio: {lineaNegocio}"
                                 },
                                 sections = new object[] {
                                     // Sección 1: Info del Cambio
@@ -413,8 +463,9 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                                         widgets = new object[] {
                                             new {
                                                 decoratedText = new {
-                                                    topLabel = "🔃 CAMBIO DE ESTADO",
-                                                    text = $"{nombreEstadoAnterior} → <b>{nombreEstado}</b> · {usuarioCambio} · {fechaCambio}",
+                                                    topLabel = "🔃 CAMBIO DE ESTADO EN CONTROL PEDIDOS",
+                                                    // ⬇️ (MODIFICADO) Añadimos el usuario del log
+                                                    text = $"{nombreEstadoAnterior} → <b>{nombreEstado}</b> · {usuarioCambio} · {fecheActualizacion}",
                                                     wrapText = true
                                                 }
                                             },
@@ -427,7 +478,6 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                                             new {
                                                 columns = new {
                                                     columnItems = new object[] {
-                                                        new { widgets = new object[] { new { decoratedText = new { topLabel = "PROCESO", text = lineaNegocio } } } },
                                                         new { widgets = new object[] { new { decoratedText = new { topLabel = "ESTADO", text = nombreEstado } } } },
                                                         new { widgets = new object[] { new { decoratedText = new { topLabel = "ENTREGA", text = fechaEntrega } } } }
                                                     }
@@ -494,30 +544,51 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                     else
                     {
                         // 10b. CASO 2: HILO EXISTENTE -> ENVIAR TEXTO
-                        // (Esta lógica se mantiene, es la respuesta corta)
                         var messageBuilder = new System.Text.StringBuilder();
-                        messageBuilder.AppendLine($"🔄 *Actualización de Estado*");
+                        messageBuilder.AppendLine($"🔄 *CAMBIO DE ESTADO EN CONTROL PEDIDOS*");
                         messageBuilder.AppendLine($"La Tarjeta/OF *ID: {id}* cambió al estado: *{nombreEstado}*.");
 
                         finalPayload = new
                         {
-                            text = messageBuilder.ToString(),
-                            thread = new { name = currentThreadId }
+                            text = messageBuilder.ToString(),                         
                         };
                     }
 
-                    // 11. ENVIAR AL WEBHOOK
-                    string? newThreadId = await SendToGoogleChat(
-                        finalPayload,
-                        currentThreadId
+                    // 11. ⬇️ (MODIFICADO) ENVIAR A AMBOS WEBHOOKS EN PARALELO
+
+                    // --- Tarea 1: Enviar al ejecutivo ---
+                    //Task<string?> execTask = SendToGoogleChat(
+                    //    finalPayload,
+                    //    currentThreadIdExec,
+                    //    urlWebhookSeleccionada // 👈 URL de Claudia o Javier
+                    //);
+
+                    // --- Tarea 2: Enviar al general ---
+                    Task<string?> generalTask = SendToGoogleChat(
+                        finalPayload, // 👈 Usamos el mismo payload
+                        currentThreadIdGeneral,
+                        urlGeneral // 👈 URL General
                     );
 
-                    // 12. GUARDAR EL NUEVO ID DE HILO EN CACHÉ
-                    if (!string.IsNullOrEmpty(newThreadId))
+                    // --- Ejecutar ambas tareas en paralelo ---
+                    await Task.WhenAll(/*execTask,*/ generalTask);
+
+                    // 12. GUARDAR LOS IDs DE HILO DE AMBAS TAREAS (Con expiración larga para OVs)
+
+                    // Aumentamos a 30 días porque las OVs duran más
+                    var cacheEntryOptions = new MemoryCacheEntryOptions()
+                        .SetSlidingExpiration(TimeSpan.FromDays(30));
+
+                    //string? newThreadIdExec = execTask.Result;
+                    //if (!string.IsNullOrEmpty(newThreadIdExec))
+                    //{
+                    //    _memoryCache.Set(cacheKeyExec, newThreadIdExec, cacheEntryOptions);
+                    //}
+
+                    string? newThreadIdGeneral = generalTask.Result;
+                    if (!string.IsNullOrEmpty(newThreadIdGeneral))
                     {
-                        var cacheEntryOptions = new MemoryCacheEntryOptions()
-                            .SetSlidingExpiration(TimeSpan.FromDays(7));
-                        _memoryCache.Set(cacheKey, newThreadId, cacheEntryOptions);
+                        _memoryCache.Set(cacheKeyGeneral, newThreadIdGeneral, cacheEntryOptions);
                     }
                 }
                 catch (Exception chatEx)
@@ -674,23 +745,25 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         }
 
         /// <summary>
-        /// Envía un payload (Tarjeta o Texto) a Google Chat, manejando hilos.
+        /// Envía un payload (Tarjeta o Texto) a una URL de Webhook específica.
         /// </summary>
         /// <param name="messagePayload">El objeto completo a serializar (ej. { text: "..." } o { cardsV2: [...] }).</param>
-        /// <param name="currentThreadId">El ID del hilo actual (si existe). Se usa para saber si capturar la respuesta.</param>
+        /// <param name="currentThreadId">El ID del hilo actual (si existe).</param>
+        /// <param name="webhookUrl">La URL específica del webhook al que se debe enviar.</param>
         /// <returns>El ID del hilo si se creó uno nuevo; null si solo se respondió.</returns>
-        private async Task<string?> SendToGoogleChat(object messagePayload, string? currentThreadId)
+        private async Task<string?> SendToGoogleChat(object messagePayload, string? currentThreadId, string webhookUrl)
         {
-            // ❗️ IMPORTANTE: Mueve esta URL a tu appsettings.json
-            var baseUrl = "https://chat.googleapis.com/v1/spaces/AAQAWq4gutM/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=MS6Q3qwuymWfjsILDQA0p4OrRgg3I69CQkejymsLGxU";
+            // ⚠️ ¡Importante! 'webhookUrl' AHORA VIENE COMO PARÁMETRO.
+            // Ya no se definen URLs aquí adentro.
 
             var client = _httpClientFactory.CreateClient();
-            string postUrl = baseUrl;
+            string postUrl = webhookUrl; // 👈 Usamos la URL del parámetro
 
             // Si ya estamos en un hilo, añadimos el parámetro de respuesta
             if (!string.IsNullOrEmpty(currentThreadId))
             {
-                postUrl = $"{baseUrl}&messageReplyOption=REPLY_MESSAGE_FALLBACK_TO_NEW_THREAD";
+                // 👈 Usamos la URL del parámetro
+                postUrl = $"{webhookUrl}&messageReplyOption=REPLY_MESSAGE_FALLBACK_TO_NEW_THREAD";
             }
 
             try
@@ -709,12 +782,10 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                     return null;
                 }
 
-                // 3. SI CREAMOS UN HILO NUEVO (porque currentThreadId era null), 
-                //    CAPTURAMOS Y DEVOLVEMOS EL ID
+                // 3. SI CREAMOS UN HILO NUEVO...
                 if (string.IsNullOrEmpty(currentThreadId))
                 {
                     var responseBody = await response.Content.ReadAsStringAsync();
-                    // Usamos las clases auxiliares para leer la respuesta
                     var chatResponse = System.Text.Json.JsonSerializer.Deserialize<GoogleChatResponse>(responseBody);
 
                     var newThreadId = chatResponse?.Thread?.Name;
@@ -732,7 +803,6 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             }
             catch (Exception ex)
             {
-                // Solo registrar el error, no fallar la solicitud principal
                 _logger.LogError(ex, "Error al enviar notificación a Google Chat.");
                 return null;
             }

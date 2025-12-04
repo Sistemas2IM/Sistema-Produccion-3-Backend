@@ -10,6 +10,7 @@ using Sistema_Produccion_3_Backend.ApiKey;
 using Sistema_Produccion_3_Backend.AutomapperProfiles;
 using Sistema_Produccion_3_Backend.Models;
 using Sistema_Produccion_3_Backend.Services;
+using Sistema_Produccion_3_Backend.Services.Automatizacion;
 using Sistema_Produccion_3_Backend.Services.RequestLock;
 using Sistema_Produccion_3_Backend.Validators.Auth;
 using Sistema_Produccion_3_Backend.Validators.ProductoTerminado;
@@ -37,6 +38,7 @@ builder.Services.AddMemoryCache();
 
 // Configuración de HttpClient para llamadas HTTP
 builder.Services.AddHttpClient();
+builder.Services.AddHostedService<VigilanteVencimientosService>();
 
 // AUTOMAPPER
 builder.Services.AddAutoMapper(cfg => cfg.AddProfile<MappingProfile>());

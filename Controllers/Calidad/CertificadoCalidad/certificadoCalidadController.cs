@@ -28,7 +28,10 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.CertificadoCalidad
             var certificado = await _context.certificadoCalidad
                 .Include(c => c.detalleCertificadoCalidad)
                 .ThenInclude(d => d.idVariableNavigation)
+                .Include(c => c.detalleCertificadoCalidad)
+                .ThenInclude(d => d.idUnidadNavigation)
                 .Include(c => c.oFNavigation)
+                .Where(c => c.archivado == false)
                 .ToListAsync();
 
             var certificadoDto = _mapper.Map<List<CertificadoCalidadDto>>(certificado);
@@ -44,7 +47,10 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.CertificadoCalidad
             var certificado = await _context.certificadoCalidad
                 .Include(c => c.detalleCertificadoCalidad)
                 .ThenInclude(d => d.idVariableNavigation)
+                .Include(c => c.detalleCertificadoCalidad)
+                .ThenInclude(d => d.idUnidadNavigation)
                 .Include(c => c.oFNavigation)
+                .Where(c => c.archivado == false)
                 .FirstOrDefaultAsync(u => u.idCertificadoCalidad == id);
             if (certificado == null)
             {
@@ -61,14 +67,51 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.CertificadoCalidad
             var certificado = await _context.certificadoCalidad              
                 .Include(c => c.detalleCertificadoCalidad)
                 .ThenInclude(d => d.idVariableNavigation)
+                .Include(c => c.detalleCertificadoCalidad)
+                .ThenInclude(d => d.idUnidadNavigation)
                 .Include(c => c.oFNavigation)
-                .Where(c => c.oF == of)
+                .Where(c => c.oF == of || c.archivado == false)
                 .ToListAsync();
 
             var certificadoDto = _mapper.Map<List<CertificadoCalidadDto>>(certificado);
 
             return Ok(certificadoDto);
 
+        }
+
+        // GET: api/<certificadoCalidadController>
+        [HttpGet("get/lineaNegocio/{linea}")]
+        public async Task<ActionResult<IEnumerable<CertificadoCalidadDto>>> GetCertificadoLinea(bool linea)
+        {
+            // 1. Construimos la consulta base (Query)
+            var query = _context.certificadoCalidad
+                .Include(c => c.detalleCertificadoCalidad)
+                .ThenInclude(d => d.idVariableNavigation)
+                .Include(c => c.detalleCertificadoCalidad)
+                .ThenInclude(d => d.idUnidadNavigation)
+                .Include(c => c.oFNavigation)
+                .Where(c => c.archivado == false);
+
+            // 2. Aplicamos el filtro condicional sobre la relación oFNavigation
+            // RECUERDA: Cambia 'NombreLineaNegocio' por el nombre real de tu columna en la BD
+            if (linea)
+            {
+                // Si es true: Solo FLEXO
+                query = query.Where(c => c.oFNavigation.lineaDeNegocio == "FLEXO");
+            }
+            else
+            {
+                // Si es false: Todo lo que NO sea FLEXO
+                query = query.Where(c => c.oFNavigation.lineaDeNegocio != "FLEXO");
+            }
+
+            // 3. Ejecutamos la consulta (Ahora sí vamos a la BD)
+            var certificado = await query.ToListAsync();
+
+            // 4. Mapeamos y retornamos
+            var certificadoDto = _mapper.Map<List<CertificadoCalidadDto>>(certificado);
+
+            return Ok(certificadoDto);
         }
 
         // POST api/<certificadoCalidadController>

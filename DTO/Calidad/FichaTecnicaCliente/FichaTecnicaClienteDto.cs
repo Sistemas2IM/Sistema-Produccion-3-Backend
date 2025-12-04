@@ -34,6 +34,10 @@ namespace Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnicaCliente
 
         public string? producto { get; set; }
 
+        public bool? archivado { get; set; }
+
+        public bool? cancelado { get; set; }
+
         public List<DetalleFichaClientesDto>? detallesFichaTecnicaCliente { get; set; }
     }
 }

@@ -17,5 +17,7 @@
         public string? idMaterialSAP { get; set; }
 
         public string? codLote { get; set; }
+
+        public string? estado { get; set; }
     }
 }

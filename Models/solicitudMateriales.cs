@@ -102,6 +102,9 @@ public partial class solicitudMateriales
     [InverseProperty("idSolicitudNavigation")]
     public virtual ICollection<lotePliego> lotePliego { get; set; } = new List<lotePliego>();
 
+    [InverseProperty("idSolicitudMaterialesNavigation")]
+    public virtual ICollection<procesoOf> procesoOf { get; set; } = new List<procesoOf>();
+
     [InverseProperty("idSolicitudNavigation")]
     public virtual ICollection<solicitudMaterialesOf> solicitudMaterialesOf { get; set; } = new List<solicitudMaterialesOf>();
 }

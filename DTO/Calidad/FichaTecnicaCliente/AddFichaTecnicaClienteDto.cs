@@ -25,5 +25,9 @@
         public string? actualizadoPor { get; set; }
 
         public DateTime? fechaActualizacion { get; set; }
+
+        public bool? archivado { get; set; }
+
+        public bool? cancelado { get; set; }
     }
 }

@@ -47,6 +47,10 @@ public partial class fichaTecnicaCliente
     [Column(TypeName = "datetime")]
     public DateTime? fechaActualizacion { get; set; }
 
+    public bool? archivado { get; set; }
+
+    public bool? cancelado { get; set; }
+
     [ForeignKey("actualizadoPor")]
     [InverseProperty("fichaTecnicaClienteactualizadoPorNavigation")]
     public virtual usuario actualizadoPorNavigation { get; set; }

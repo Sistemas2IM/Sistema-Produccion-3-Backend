@@ -2,6 +2,7 @@
 using Sistema_Produccion_3_Backend.DTO.Etiquetas.EtiquetaOf;
 using Sistema_Produccion_3_Backend.Models;
 using Sistema_Produccion_3_Backend.Services;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
@@ -75,6 +76,10 @@ namespace Sistema_Produccion_3_Backend.DTO.TarjetasOF
         public bool? cancelada { get; set; }
 
         public string? estadoOfSap { get; set; }
+
+        public string? modoSecuencia { get; set; }
+
+        public string? razonSocial { get; set; }
 
         //public EstadoOfDto? estadoOfDto { get; set; }
 

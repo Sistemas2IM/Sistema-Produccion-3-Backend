@@ -61,6 +61,8 @@ public partial class base_nuevaContext : DbContext
 
     public virtual DbSet<horariosOperativos> horariosOperativos { get; set; }
 
+    public virtual DbSet<indisponibilidadMaquinas> indisponibilidadMaquinas { get; set; }
+
     public virtual DbSet<listaDeOperaciones> listaDeOperaciones { get; set; }
 
     public virtual DbSet<listaItem> listaItem { get; set; }
@@ -229,6 +231,8 @@ public partial class base_nuevaContext : DbContext
             entity.ToTable(tb => tb.HasTrigger("tr_certificadoCalidad_UPDATE_Log"));
 
             entity.Property(e => e.actualizadoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.archivado).HasDefaultValue(false);
+            entity.Property(e => e.cancelado).HasDefaultValue(false);
             entity.Property(e => e.elaboradoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.fechaCreacion).HasDefaultValueSql("(getdate())");
 
@@ -421,6 +425,8 @@ public partial class base_nuevaContext : DbContext
             entity.ToTable(tb => tb.HasTrigger("tr_fichaTecnicaCliente_UPDATE_Log"));
 
             entity.Property(e => e.actualizadoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.archivado).HasDefaultValue(false);
+            entity.Property(e => e.cancelado).HasDefaultValue(false);
             entity.Property(e => e.elaboradoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.fechaCreacion).HasDefaultValueSql("(getdate())");
             entity.Property(e => e.version).HasDefaultValue(1);
@@ -454,6 +460,15 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.idMaquinaNavigation).WithMany(p => p.horariosOperativos).HasConstraintName("FK_MAQUINA_HORARIO");
 
             entity.HasOne(d => d.operadorNavigation).WithMany(p => p.horariosOperativos).HasConstraintName("FK_HORARIO_USER");
+        });
+
+        modelBuilder.Entity<indisponibilidadMaquinas>(entity =>
+        {
+            entity.HasKey(e => e.id).HasName("PK__indispon__3213E83F1C937E79");
+
+            entity.Property(e => e.createdAt).HasDefaultValueSql("(getdate())");
+
+            entity.HasOne(d => d.idMaquinaNavigation).WithMany(p => p.indisponibilidadMaquinas).HasConstraintName("FK__indisponi__idMaq__7A521F79");
         });
 
         modelBuilder.Entity<listaDeOperaciones>(entity =>
@@ -895,6 +910,8 @@ public partial class base_nuevaContext : DbContext
 
             entity.HasOne(d => d.idPosturaNavigation).WithMany(p => p.procesoOf).HasConstraintName("FK_PROCESO_POSTURA_");
 
+            entity.HasOne(d => d.idSolicitudMaterialesNavigation).WithMany(p => p.procesoOf).HasConstraintName("FK_SOLICITUD_MATERIALES_PROCESO");
+
             entity.HasOne(d => d.idTableroNavigation).WithMany(p => p.procesoOf).HasConstraintName("FK_PROCESO_TABLERO");
 
             entity.HasOne(d => d.oFNavigation).WithMany(p => p.procesoOf).HasConstraintName("FK_PROCESO_OF");
@@ -1170,6 +1187,8 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.idOrigenNavigation).WithMany(p => p.transferenciaProcesoidOrigenNavigation).HasConstraintName("FK_TRANSFER_ID_ORIGEN_OF");
 
             entity.HasOne(d => d.idProduccionNavigation).WithMany(p => p.transferenciaProceso).HasConstraintName("FK_PRODUCCION_ORIGEN");
+
+            entity.HasOne(d => d.oFDestinoNavigation).WithMany(p => p.transferenciaProceso).HasConstraintName("FK_OF_DESTINO");
 
             entity.HasOne(d => d.recibidoPorNavigation).WithMany(p => p.transferenciaProcesorecibidoPorNavigation).HasConstraintName("FK_RECIBIDO_POR");
         });

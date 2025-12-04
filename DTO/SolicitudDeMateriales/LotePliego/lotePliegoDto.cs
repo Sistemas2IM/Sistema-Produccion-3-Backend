@@ -22,5 +22,7 @@ namespace Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.LotePliego
         public string? idMaterialSAP { get; set; }
 
         public string? codLote { get; set; }
+
+        public string? estado { get; set; }
     }
 }

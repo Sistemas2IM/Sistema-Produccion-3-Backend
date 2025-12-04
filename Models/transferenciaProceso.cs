@@ -14,6 +14,7 @@ namespace Sistema_Produccion_3_Backend.Models;
 [Index("idOrigen", Name = "ID_ORIGEN_FK")]
 [Index("idProduccion", Name = "ID_PRODUCCION_ORIGEN_FK")]
 [Index("idLote", Name = "LOTEPLIEGO_TRANSFERENCIAPROCESO_FK")]
+[Index("oFDestino", Name = "OF_DESTINO_FK")]
 [Index("enviadoPor", Name = "TRANSFERECIA_ENVIADA_POR_FK")]
 [Index("recibidoPor", Name = "TRANSFERECIA_RECIBIDA_POR_FK")]
 public partial class transferenciaProceso
@@ -61,6 +62,8 @@ public partial class transferenciaProceso
 
     public int? areaDestino { get; set; }
 
+    public int? oFDestino { get; set; }
+
     [ForeignKey("areaDestino")]
     [InverseProperty("transferenciaProcesoareaDestinoNavigation")]
     public virtual areas areaDestinoNavigation { get; set; }
@@ -91,6 +94,10 @@ public partial class transferenciaProceso
     [ForeignKey("idProduccion")]
     [InverseProperty("transferenciaProceso")]
     public virtual detalleReporte idProduccionNavigation { get; set; }
+
+    [ForeignKey("oFDestino")]
+    [InverseProperty("transferenciaProceso")]
+    public virtual tarjetaOf oFDestinoNavigation { get; set; }
 
     [ForeignKey("recibidoPor")]
     [InverseProperty("transferenciaProcesorecibidoPorNavigation")]

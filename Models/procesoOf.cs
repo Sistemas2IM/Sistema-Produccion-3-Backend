@@ -139,6 +139,8 @@ public partial class procesoOf
 
     public int? areaSiguiente { get; set; }
 
+    public int? idSolicitudMateriales { get; set; }
+
     [InverseProperty("procesoAnteriorNavigation")]
     public virtual ICollection<procesoOf> InverseprocesoAnteriorNavigation { get; set; } = new List<procesoOf>();
 
@@ -172,6 +174,10 @@ public partial class procesoOf
     [ForeignKey("idPostura")]
     [InverseProperty("procesoOf")]
     public virtual posturasOf idPosturaNavigation { get; set; }
+
+    [ForeignKey("idSolicitudMateriales")]
+    [InverseProperty("procesoOf")]
+    public virtual solicitudMateriales idSolicitudMaterialesNavigation { get; set; }
 
     [ForeignKey("idTablero")]
     [InverseProperty("procesoOf")]

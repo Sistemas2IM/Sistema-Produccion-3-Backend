@@ -28,7 +28,10 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.FichaTecnicaCliente
             var fichaTecnicaCliente = await _context.fichaTecnicaCliente
                 .Include(f => f.detalleFichaClientes)
                 .ThenInclude(d => d.idVariableNavigation)
+                .Include(f => f.detalleFichaClientes)
+                .ThenInclude(d => d.idUnidadNavigation)
                 .Include(f => f.oFNavigation)
+                .Where(f => f.archivado == false)
                 .ToListAsync();
 
             var fichaTecnicaClienteDto = _mapper.Map<List<FichaTecnicaClienteDto>>(fichaTecnicaCliente);
@@ -43,7 +46,10 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.FichaTecnicaCliente
             var fichaTecnicaCliente = await _context.fichaTecnicaCliente
                 .Include(c => c.detalleFichaClientes)
                 .ThenInclude(d => d.idVariableNavigation)
+                .Include(f => f.detalleFichaClientes)
+                .ThenInclude(d => d.idUnidadNavigation)
                 .Include(f => f.oFNavigation)
+                .Where(f => f.archivado == false)
                 .FirstOrDefaultAsync(u => u.idFichaCliente == id);
 
             if (fichaTecnicaCliente == null)
@@ -63,9 +69,43 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.FichaTecnicaCliente
                 .Include(f => f.detalleFichaClientes)
                 .ThenInclude(d => d.idVariableNavigation)
                 .Include(f => f.oFNavigation)
-                .Where(f => f.oF == of)
+                .Where(f => f.oF == of || f.archivado == false)
                 .ToListAsync();
 
+            var fichaTecnicaClienteDto = _mapper.Map<List<FichaTecnicaClienteDto>>(fichaTecnicaCliente);
+
+            return Ok(fichaTecnicaClienteDto);
+        }
+
+        [HttpGet("get/lineaNegocio/{linea}")]
+        public async Task<ActionResult<IEnumerable<FichaTecnicaClienteDto>>> GetFichaClienteLineaNegocio(bool linea)
+        {
+            // 1. Preparamos la consulta base (sin el ToListAsync todavía)
+            var query = _context.fichaTecnicaCliente
+                .Include(f => f.detalleFichaClientes)
+                .ThenInclude(d => d.idVariableNavigation)
+                .Include(f => f.detalleFichaClientes)
+                .ThenInclude(d => d.idUnidadNavigation)
+                .Include(f => f.oFNavigation)
+                .Where(f => f.archivado == false);
+
+            // 2. Aplicamos la lógica del booleano sobre la query
+            // NOTA: Reemplaza 'NombreLineaNegocio' por el nombre real de la propiedad en tu tabla OF
+            if (linea)
+            {
+                // Si es TRUE: Trae SOLO las que son FLEXO
+                query = query.Where(f => f.oFNavigation.lineaDeNegocio == "FLEXO");
+            }
+            else
+            {
+                // Si es FALSE: Trae todas MENOS las que son FLEXO
+                query = query.Where(f => f.oFNavigation.lineaDeNegocio != "FLEXO");
+            }
+
+            // 3. Ejecutamos la consulta en la Base de Datos
+            var fichaTecnicaCliente = await query.ToListAsync();
+
+            // 4. Mapeo y retorno
             var fichaTecnicaClienteDto = _mapper.Map<List<FichaTecnicaClienteDto>>(fichaTecnicaCliente);
 
             return Ok(fichaTecnicaClienteDto);

@@ -13,6 +13,8 @@ namespace Sistema_Produccion_3_Backend.DTO.CorridaCombinada
 
         public string? oF { get; set; } // de subordinado / proceso of
 
+        public string? clienteOf { get; set; } // de subordinado / proceso of
+
         public string? productoOf { get; set; } // de subordinado / proceso of
 
         public string? cantOf { get; set; } // de subordinado / proceso of

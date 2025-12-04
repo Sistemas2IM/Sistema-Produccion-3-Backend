@@ -45,6 +45,12 @@ public partial class certificadoCalidad
     [Column(TypeName = "datetime")]
     public DateTime? fechaActualizacion { get; set; }
 
+    public string remarks { get; set; }
+
+    public bool? archivado { get; set; }
+
+    public bool? cancelado { get; set; }
+
     [ForeignKey("actualizadoPor")]
     [InverseProperty("certificadoCalidadactualizadoPorNavigation")]
     public virtual usuario actualizadoPorNavigation { get; set; }

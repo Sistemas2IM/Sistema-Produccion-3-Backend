@@ -6,6 +6,14 @@ namespace Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.SolicitudMateri
     {
         public int oF { get; set; }
 
+        public string? cliente { get; set; }
+
+        public string? descripcionOf { get; set; }
+
+        public string? cantidadOf { get; set; }
+
+        public DateTime? fechaEntrega { get; set; }
+
         public int idSolicitud { get; set; }
 
         public int? cantidadAsignada { get; set; }

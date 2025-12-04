@@ -91,6 +91,9 @@ public partial class tarjetaOf
     [StringLength(25)]
     public string modoSecuencia { get; set; }
 
+    [StringLength(500)]
+    public string razonSocial { get; set; }
+
     [InverseProperty("oFNavigation")]
     public virtual ICollection<certificadoCalidad> certificadoCalidad { get; set; } = new List<certificadoCalidad>();
 
@@ -121,4 +124,7 @@ public partial class tarjetaOf
 
     [InverseProperty("oFNavigation")]
     public virtual ICollection<solicitudMaterialesOf> solicitudMaterialesOf { get; set; } = new List<solicitudMaterialesOf>();
+
+    [InverseProperty("oFDestinoNavigation")]
+    public virtual ICollection<transferenciaProceso> transferenciaProceso { get; set; } = new List<transferenciaProceso>();
 }

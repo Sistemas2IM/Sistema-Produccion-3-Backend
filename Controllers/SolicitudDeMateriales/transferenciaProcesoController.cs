@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.DotNet.Scaffolding.Shared.Messaging;
 using Microsoft.EntityFrameworkCore;
 using Sistema_Produccion_3_Backend.DTO.Etiquetas.EtiquetaOf;
 using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.TransferenciaProceso;
+using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.TransferenciaProceso.Batch;
 using Sistema_Produccion_3_Backend.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -132,13 +134,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales
         {
             // Incluimos la cadena completa de navegación para evitar Lazy Loading
             var transferenciasProcesos = await _context.transferenciaProceso
-                .Include(t => t.idLoteNavigation)
-                    .ThenInclude(l => l.idSolicitudNavigation)
-                        .ThenInclude(s => s.solicitudMaterialesOf)
-                            .ThenInclude(smof => smof.oFNavigation)
-                .Where(t => t.estado == "Pendiente" &&
-                            t.idLoteNavigation.idSolicitudNavigation.solicitudMaterialesOf
-                                .Any(smof => smof.oFNavigation.oF == of)) // Filtro usando Any
+                .Where(o => o.oFDestino == of)
                 .ToListAsync();
 
             var transferenciasProcesosDto = _mapper.Map<List<transferenciaProcesoDto>>(transferenciasProcesos);
@@ -181,6 +177,34 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetetiquetaOf", new { id = transferenciaProceso.idTransferencia }, transferenciaProceso);
+        }
+
+        [HttpPost("post/batch")]
+        public async Task<IActionResult> BatchAddTransferencia([FromBody] BatchAddTransferenciaProcesoDto batchAddDto)
+        {
+            if (batchAddDto.transferenciasProcesos == null || !batchAddDto.transferenciasProcesos.Any())
+            {
+                return BadRequest("La lista de transferencias de procesos está vacía.");
+            }
+
+            var transferenciaProcesos = batchAddDto.transferenciasProcesos.Select(dto => _mapper.Map<transferenciaProceso>(dto)).ToList();
+
+            await _context.transferenciaProceso.AddRangeAsync(transferenciaProcesos);
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error al guardar las transferencias de procesos: {ex.Message}");
+            }
+
+            return Ok(new
+            {
+                Message = "Transferencias de procesos agregadas exitosamente.",
+                TransferenciasAgregadas = transferenciaProcesos
+            });
         }
 
         // PUT api/<transferenciaProcesoController>/5

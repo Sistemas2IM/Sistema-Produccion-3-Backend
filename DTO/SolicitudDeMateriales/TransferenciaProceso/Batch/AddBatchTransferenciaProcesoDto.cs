@@ -1,6 +1,6 @@
-﻿namespace Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.TransferenciaProceso
+﻿namespace Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.TransferenciaProceso.Batch
 {
-    public class UpdateTransferenciaProcesoDto
+    public class AddBatchTransferenciaProcesoDto
     {
         public int? idLote { get; set; }
 

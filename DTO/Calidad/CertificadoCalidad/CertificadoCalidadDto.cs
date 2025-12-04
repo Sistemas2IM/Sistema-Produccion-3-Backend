@@ -37,6 +37,12 @@ namespace Sistema_Produccion_3_Backend.DTO.Calidad.CertificadoCalidad
 
         public DateTime? fechaActualizacion { get; set; }
 
+        public string? remarks { get; set; }
+
+        public bool? archivado { get; set; }
+
+        public bool? cancelado { get; set; }
+
         public List<DetalleCertificadoCalidadDto>? detallesCertificadoCalidad { get; set; }
     }
 }

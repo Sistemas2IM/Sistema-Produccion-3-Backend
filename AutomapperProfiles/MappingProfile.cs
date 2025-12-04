@@ -21,6 +21,7 @@ using Sistema_Produccion_3_Backend.DTO.Etiquetas.TarjetaEtiqueta;
 using Sistema_Produccion_3_Backend.DTO.Etiquetas.TarjetaEtiqueta.BatchTarjetaEtiqueta;
 using Sistema_Produccion_3_Backend.DTO.Horarios.HorariosOperativos;
 using Sistema_Produccion_3_Backend.DTO.Horarios.HorariosOperativos.Batch;
+using Sistema_Produccion_3_Backend.DTO.Horarios.IndisponibilidadMaquinas;
 using Sistema_Produccion_3_Backend.DTO.Horarios.TurnosOperativos;
 using Sistema_Produccion_3_Backend.DTO.Horarios.TurnosOperativosArea;
 using Sistema_Produccion_3_Backend.DTO.ListaDeOperaciones;
@@ -707,6 +708,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             // CORRIDAS COMBINADAS =====================================================================================
             CreateMap<corridaCombinada, CorridaCombinadaDto>()
                 .ForMember(dest => dest.oF, opt => opt.MapFrom(src => src.subordinadoNavigation.oF))
+                .ForMember(dest => dest.clienteOf, opt => opt.MapFrom(src => src.subordinadoNavigation.oFNavigation.clienteOf))
                 .ForMember(dest => dest.productoOf, opt => opt.MapFrom(src => src.subordinadoNavigation.productoOf))
                 .ForMember(dest => dest.cantOf, opt => opt.MapFrom(src => src.subordinadoNavigation.oFNavigation.cantidadOf))
                 .ForMember(dest => dest.fechaVencmiento, opt => opt.MapFrom(src => src.subordinadoNavigation.fechaVencimiento))
@@ -768,7 +770,12 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             CreateMap<UpdateSolicitudMaterialesDto, solicitudMateriales>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
-            CreateMap<solicitudMaterialesOf, solicitudMaterialesOfDto>().ReverseMap();
+            CreateMap<solicitudMaterialesOf, solicitudMaterialesOfDto>()
+                .ForMember(dest => dest.cliente, opt => opt.MapFrom(src => src.oFNavigation.clienteOf))
+                .ForMember(dest => dest.descripcionOf, opt => opt.MapFrom(src => src.oFNavigation.productoOf))
+                .ForMember(dest => dest.cantidadOf, opt => opt.MapFrom(src => src.oFNavigation.cantidadOf))
+                .ForMember(dest => dest.fechaEntrega, opt => opt.MapFrom(src => src.oFNavigation.fechaVencimiento))
+                .ReverseMap();
             CreateMap<solicitudMaterialesOf, AddSolicitudMaterialesOfDto>().ReverseMap();
             CreateMap<UpdateSolicitudMaterialesOfDto, solicitudMaterialesOf>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
@@ -812,6 +819,17 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
 
             CreateMap<turnosOperativosArea, AddTurnosOperativosAreaDto>().ReverseMap();
             CreateMap<UpdateTurnosOperativosAreaDto, turnosOperativosArea>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            // INDISPONIBILIDAD MAQUINAS ============================================================================
+
+            CreateMap<indisponibilidadMaquinas, IndisponibilidadMaquinasDto>()
+                .ForMember(dest => dest.nombreMaquina, opt => opt.MapFrom(src => src.idMaquinaNavigation.nombreMaquina))
+                .ReverseMap();
+
+            CreateMap<indisponibilidadMaquinas, AddIndisponibilidadMaquinasDto>().ReverseMap();
+
+            CreateMap<UpdateIndisponibilidadMaquinasDto, indisponibilidadMaquinas>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
         }
     }

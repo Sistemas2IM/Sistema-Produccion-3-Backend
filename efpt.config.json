@@ -112,6 +112,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[indisponibilidadMaquinas]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[listaDeOperaciones]",
          "ObjectType": 0
       },
