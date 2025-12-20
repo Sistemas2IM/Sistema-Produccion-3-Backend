@@ -54,14 +54,22 @@ namespace Sistema_Produccion_3_Backend.Controllers.Horarios.TurnosOperativosArea
         [HttpGet("get/area/{idArea}")]
         public async Task<ActionResult<TurnosOperativosAreaDto>> GetTurnosOperativosArea(int idArea)
         {
-            var turnosOperativosArea = await _context.turnosOperativosArea
-                .Where(t => t.idArea == idArea)
+            // 1. Preparamos la consulta base (sin filtros de área todavía)
+            var query = _context.turnosOperativosArea
                 .Include(t => t.idTurnoNavigation)
-                .ToListAsync();
+                .AsQueryable();
 
-            var turnosOperativosAreaAreaDto = _mapper.Map<List<TurnosOperativosAreaDto>>(turnosOperativosArea);
+            // 2. Aplicamos el filtro SOLO si NO es admin (17)
+            if (idArea != 17)
+            {
+                query = query.Where(t => t.idArea == idArea);
+            }
 
-            return Ok(turnosOperativosAreaAreaDto);
+            // 3. Ejecutamos
+            var lista = await query.ToListAsync();
+            var dtos = _mapper.Map<List<TurnosOperativosAreaDto>>(lista);
+
+            return Ok(dtos);
         }
 
         // POST api/<turnosOperativosAreaController>

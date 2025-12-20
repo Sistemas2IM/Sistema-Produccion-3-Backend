@@ -46,6 +46,8 @@ public partial class usuario
     [StringLength(50)]
     public string actualizadoPor { get; set; }
 
+    public int? codEmpleado { get; set; }
+
     [InverseProperty("userNavigation")]
     public virtual ICollection<asignacion> asignacion { get; set; } = new List<asignacion>();
 

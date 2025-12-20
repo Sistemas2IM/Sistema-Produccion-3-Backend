@@ -17,6 +17,7 @@ using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.Preprensa;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.procesosFlexo;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.Serigrafia;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.Troquelado;
+using Sistema_Produccion_3_Backend.DTO.ProcesoOf.SolicitudMateriales;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.UpdateMaquina;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.UpdateSAP;
 using Sistema_Produccion_3_Backend.DTO.ReporteOperador.DetalleReporte;
@@ -1170,6 +1171,51 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             }
 
             return Ok(dto);
+        }
+
+        [HttpGet("get/solicitudMaterial/tablero/{id}")]
+        public async Task<ActionResult<IEnumerable<ProcesoOfSolicitudMaterialDto>>> GetprocesoOfSolicitudTablero(int id)
+        {
+            var procesos = await _context.procesoOf
+                .OrderBy(p => p.posicion)
+                .Where(t => t.idTablero == id /*&& t.archivada == false*/ /*&& t.idSolicitudMateriales != 0 && t.idSolicitudMateriales != null*/)
+                .Include(po => po.idPosturaNavigation)
+                .Include(s => s.idSolicitudMaterialesNavigation)
+                 .ThenInclude(so => so.solicitudMaterialesOf)
+                    .ThenInclude(of => of.oFNavigation)
+                .Include(u => u.detalleReporte)
+                    .ThenInclude(o => o.idOperacionNavigation)
+                .Include(u => u.detalleReporte)
+                    .ThenInclude(m => m.maquinaNavigation)
+                .ToListAsync();
+
+            var dtos = _mapper.Map<List<ProcesoOfSolicitudMaterialDto>>(procesos);
+
+            return Ok(dtos);
+        }
+
+        [HttpGet("get/lista/solicitudMateriales/{id}")]
+        public async Task<ActionResult<ProcesoOfDto>> GetprocesoOfsolicitudMaterialesLista(int id)
+        {
+            // Procesos normales ligados a una OF
+            var procesosNormales = await _context.procesoOf
+                .Where(o => o.idSolicitudMateriales == id)
+                .Include(u => u.idTableroNavigation)
+                .ThenInclude(a => a.idAreaNavigation)
+                .Include(d => d.idPosturaNavigation)
+                .Include(c => c.idTableroNavigation)
+                    .ThenInclude(v => v.idAreaNavigation)
+                .Include(c => c.idTableroNavigation)
+                    .ThenInclude(m => m.idMaquinaNavigation)
+                .Include(f => f.oFNavigation)
+                .Include(e => e.tarjetaEtiqueta)
+                .Include(a => a.asignacion)
+                    .ThenInclude(u => u.userNavigation)
+                .ToListAsync();         
+
+            var dtos = _mapper.Map<List<ProcesoOfDto>>(procesosNormales);           
+
+            return Ok(dtos);
         }
 
         // PUT: api/procesoOf/5

@@ -31,6 +31,8 @@ namespace Sistema_Produccion_3_Backend.DTO.PermisosUsuario
 
         public string? actualizadoPor { get; set; }
 
+        public int? codEmpleado { get; set; }
+
         public RolDto? rol { get; set; }
 
         public string? cargo { get; set; }

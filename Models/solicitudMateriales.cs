@@ -99,6 +99,23 @@ public partial class solicitudMateriales
     [StringLength(50)]
     public string direccionCorte { get; set; }
 
+    public bool? archivado { get; set; }
+
+    public bool? cancelado { get; set; }
+
+    [StringLength(50)]
+    public string granoHoja { get; set; }
+
+    [StringLength(50)]
+    public string subFamiliaSap { get; set; }
+
+    [StringLength(50)]
+    public string tipoOperacion { get; set; }
+
+    public bool? incluyeProceso { get; set; }
+
+    public string descripcion { get; set; }
+
     [InverseProperty("idSolicitudNavigation")]
     public virtual ICollection<lotePliego> lotePliego { get; set; } = new List<lotePliego>();
 
@@ -107,4 +124,7 @@ public partial class solicitudMateriales
 
     [InverseProperty("idSolicitudNavigation")]
     public virtual ICollection<solicitudMaterialesOf> solicitudMaterialesOf { get; set; } = new List<solicitudMaterialesOf>();
+
+    [InverseProperty("idSolicitudOrigenNavigation")]
+    public virtual ICollection<transferenciaProceso> transferenciaProceso { get; set; } = new List<transferenciaProceso>();
 }

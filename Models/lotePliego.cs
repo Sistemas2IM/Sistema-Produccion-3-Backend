@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Sistema_Produccion_3_Backend.Models;
 
 [Index("creadoPor", Name = "LOTE_CREADO_POR_FK")]
+[Index("procesoOrigen", Name = "LOTE_PROCESO_ORIGEN_FK")]
 [Index("idSolicitud", Name = "SOLICITUDMATERIALES_LOTEPLIEGOS_FK")]
 public partial class lotePliego
 {
@@ -32,11 +33,23 @@ public partial class lotePliego
     [StringLength(50)]
     public string idMaterialSAP { get; set; }
 
-    [StringLength(15)]
+    [StringLength(50)]
     public string codLote { get; set; }
 
     [StringLength(20)]
     public string estado { get; set; }
+
+    public int? procesoOrigen { get; set; }
+
+    [Column(TypeName = "decimal(18, 0)")]
+    public decimal? peso { get; set; }
+
+    [StringLength(30)]
+    public string codigoBobinaSAP { get; set; }
+
+    public bool? tira { get; set; }
+
+    public int? cantidadPendiente { get; set; }
 
     [ForeignKey("creadoPor")]
     [InverseProperty("lotePliego")]
@@ -45,6 +58,10 @@ public partial class lotePliego
     [ForeignKey("idSolicitud")]
     [InverseProperty("lotePliego")]
     public virtual solicitudMateriales idSolicitudNavigation { get; set; }
+
+    [ForeignKey("procesoOrigen")]
+    [InverseProperty("lotePliego")]
+    public virtual procesoOf procesoOrigenNavigation { get; set; }
 
     [InverseProperty("idLoteNavigation")]
     public virtual ICollection<transferenciaProceso> transferenciaProceso { get; set; } = new List<transferenciaProceso>();

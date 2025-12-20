@@ -69,7 +69,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.FichaTecnicaCliente
                 .Include(f => f.detalleFichaClientes)
                 .ThenInclude(d => d.idVariableNavigation)
                 .Include(f => f.oFNavigation)
-                .Where(f => f.oF == of || f.archivado == false)
+                .Where(f => f.oF == of && f.archivado == false)
                 .ToListAsync();
 
             var fichaTecnicaClienteDto = _mapper.Map<List<FichaTecnicaClienteDto>>(fichaTecnicaCliente);

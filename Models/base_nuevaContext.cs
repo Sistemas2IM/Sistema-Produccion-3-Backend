@@ -43,6 +43,8 @@ public partial class base_nuevaContext : DbContext
 
     public virtual DbSet<detalleReporte> detalleReporte { get; set; }
 
+    public virtual DbSet<empleadoCatalogo> empleadoCatalogo { get; set; }
+
     public virtual DbSet<entregasProductoTerminado> entregasProductoTerminado { get; set; }
 
     public virtual DbSet<estadosOf> estadosOf { get; set; }
@@ -164,6 +166,8 @@ public partial class base_nuevaContext : DbContext
     public virtual DbSet<unidadesMedida> unidadesMedida { get; set; }
 
     public virtual DbSet<usuario> usuario { get; set; }
+
+    public virtual DbSet<valeBobina> valeBobina { get; set; }
 
     public virtual DbSet<variableUnidadMedida> variableUnidadMedida { get; set; }
 
@@ -360,6 +364,13 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.oFNavigation).WithMany(p => p.detalleReporte).HasConstraintName("FK_DETALLE_OF");
         });
 
+        modelBuilder.Entity<empleadoCatalogo>(entity =>
+        {
+            entity.HasKey(e => e.idEmpleado).HasName("PK__empleado__5295297C2218DF95");
+
+            entity.Property(e => e.idEmpleado).ValueGeneratedNever();
+        });
+
         modelBuilder.Entity<entregasProductoTerminado>(entity =>
         {
             entity.HasKey(e => e.idEntregaPt).HasName("PK_ENTREGASPRODUCTOTERMINADO");
@@ -545,11 +556,15 @@ public partial class base_nuevaContext : DbContext
         {
             entity.HasKey(e => e.idLote).HasName("PK_LOTEPLIEGO");
 
+            entity.Property(e => e.codigoBobinaSAP).UseCollation("Albanian_100_BIN");
             entity.Property(e => e.creadoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.tira).HasDefaultValue(false);
 
             entity.HasOne(d => d.creadoPorNavigation).WithMany(p => p.lotePliego).HasConstraintName("FK_CREADO_POR");
 
             entity.HasOne(d => d.idSolicitudNavigation).WithMany(p => p.lotePliego).HasConstraintName("FK_LOTEPLIEGO_SOLICITUD");
+
+            entity.HasOne(d => d.procesoOrigenNavigation).WithMany(p => p.lotePliego).HasConstraintName("FK_LOTE_PROCESO_ORIGEN");
         });
 
         modelBuilder.Entity<maquinas>(entity =>
@@ -1086,6 +1101,9 @@ public partial class base_nuevaContext : DbContext
             entity.HasKey(e => e.idSolicitud).HasName("PK_SOLICITUDMATERIALES");
 
             entity.Property(e => e.idSolicitud).ValueGeneratedNever();
+            entity.Property(e => e.archivado).HasDefaultValue(false);
+            entity.Property(e => e.cancelado).HasDefaultValue(false);
+            entity.Property(e => e.idMaterialSAP).UseCollation("SQL_Latin1_General_CP1_CI_AS");
         });
 
         modelBuilder.Entity<solicitudMaterialesOf>(entity =>
@@ -1188,6 +1206,8 @@ public partial class base_nuevaContext : DbContext
 
             entity.HasOne(d => d.idProduccionNavigation).WithMany(p => p.transferenciaProceso).HasConstraintName("FK_PRODUCCION_ORIGEN");
 
+            entity.HasOne(d => d.idSolicitudOrigenNavigation).WithMany(p => p.transferenciaProceso).HasConstraintName("FK_SOLICITUD_ORIGEN");
+
             entity.HasOne(d => d.oFDestinoNavigation).WithMany(p => p.transferenciaProceso).HasConstraintName("FK_OF_DESTINO");
 
             entity.HasOne(d => d.recibidoPorNavigation).WithMany(p => p.transferenciaProcesorecibidoPorNavigation).HasConstraintName("FK_RECIBIDO_POR");
@@ -1237,6 +1257,17 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.idCargoNavigation).WithMany(p => p.usuario).HasConstraintName("FK_USUARIO_CARGO");
 
             entity.HasOne(d => d.idRolNavigation).WithMany(p => p.usuario).HasConstraintName("FK_USUARIO_ROL");
+        });
+
+        modelBuilder.Entity<valeBobina>(entity =>
+        {
+            entity.HasKey(e => e.idVale).HasName("PK__valeBobi__6738A580B7C04D00");
+
+            entity.Property(e => e.idVale).ValueGeneratedNever();
+            entity.Property(e => e.fechaCreacion).HasDefaultValueSql("(getdate())");
+            entity.Property(e => e.idMaterial).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+
+            entity.HasOne(d => d.idMaterialNavigation).WithMany(p => p.valeBobina).HasConstraintName("FK_VALE_MATERIAL");
         });
 
         modelBuilder.Entity<variableUnidadMedida>(entity =>

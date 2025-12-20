@@ -61,6 +61,7 @@ using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.Preprensa;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.procesosFlexo;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.Serigrafia;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.Troquelado;
+using Sistema_Produccion_3_Backend.DTO.ProcesoOf.SolicitudMateriales;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.UpdateMaquina;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.UpdateSAP;
 using Sistema_Produccion_3_Backend.DTO.ProductoTerminado;
@@ -75,8 +76,10 @@ using Sistema_Produccion_3_Backend.DTO.ReporteOperador.EstadoReporte;
 using Sistema_Produccion_3_Backend.DTO.ReporteOperador.PausaMaquina;
 using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.LotePliego;
 using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.SolicitudMateriales;
+using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.SolicitudMateriales.ProcesosOf;
 using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.SolicitudMaterialOF;
 using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.TransferenciaProceso;
+using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.ValeBobina;
 using Sistema_Produccion_3_Backend.DTO.Tableros;
 using Sistema_Produccion_3_Backend.DTO.Tableros.Areas;
 using Sistema_Produccion_3_Backend.DTO.Tableros.Posturas;
@@ -349,6 +352,13 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             CreateMap<material, AddMaterialOfDto>().ReverseMap();
             CreateMap<UpdateMaterialOfDto, material>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            // solicitud material y proceso of
+            CreateMap<procesoOf, ProcesoOfSolicitudMaterialDto>()
+                .ForMember(dest => dest.nombrePostura, opt => opt.MapFrom(src => src.idPosturaNavigation.nombrePostura))
+                .ForMember(dest => dest.solicitudMateriales, opt => opt.MapFrom(src => src.idSolicitudMaterialesNavigation))
+                .ForMember(dest => dest.detalleProcesoOf, opt => opt.MapFrom(src => src.detalleReporte))
+                .ReverseMap();
 
             // OV - DTO =============================================================================================
             CreateMap<oV, OVDto>()
@@ -765,10 +775,16 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             }
 
             // SOLICITUD DE MATERIALES ================================================================================
-            CreateMap<solicitudMateriales, solicitudMaterialesDto>().ReverseMap();
+            CreateMap<solicitudMateriales, solicitudMaterialesDto>()
+                .ForMember(dest => dest.solicitudMaterialOf, opt => opt.MapFrom(src => src.solicitudMaterialesOf))
+                .ReverseMap();
             CreateMap<solicitudMateriales, AddSolicitudMaterialesDto>().ReverseMap();
             CreateMap<UpdateSolicitudMaterialesDto, solicitudMateriales>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            CreateMap<solicitudMateriales, solicitudMaterialesProcesoOfDto>()
+                .ForMember(dest => dest.solicitudMaterialOf, opt => opt.MapFrom(src => src.solicitudMaterialesOf))
+                .ReverseMap();
 
             CreateMap<solicitudMaterialesOf, solicitudMaterialesOfDto>()
                 .ForMember(dest => dest.cliente, opt => opt.MapFrom(src => src.oFNavigation.clienteOf))
@@ -788,6 +804,11 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             CreateMap<transferenciaProceso, transferenciaProcesoDto>().ReverseMap();
             CreateMap<transferenciaProceso, AddTransferenciaProcesoDto>().ReverseMap();
             CreateMap<UpdateTransferenciaProcesoDto, transferenciaProceso>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            CreateMap<valeBobina, ValeBobinaDto>().ReverseMap();
+            CreateMap<valeBobina, AddValeBobinaDto>().ReverseMap();
+            CreateMap<UpdateValeBobinaDto, valeBobina>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             // HORARIOS OPERATIVOS ====================================================================================

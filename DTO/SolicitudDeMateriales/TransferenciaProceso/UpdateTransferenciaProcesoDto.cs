@@ -35,5 +35,9 @@
         public int? areaDestino { get; set; }
 
         public int? oFDestino { get; set; }
+
+        public int? idSolicitudOrigen { get; set; }
+
+        public string? idMaterialSAP { get; set; }
     }
 }

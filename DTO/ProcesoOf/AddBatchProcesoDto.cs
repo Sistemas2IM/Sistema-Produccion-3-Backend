@@ -93,5 +93,7 @@
         public int? areaSiguiente { get; set; }
 
         public string? modoSecuenciacion { get; set; }
+
+        public int? idSolicitudMateriales { get; set; }
     }
 }

@@ -76,6 +76,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[empleadoCatalogo]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[entregasProductoTerminado]",
          "ObjectType": 0
       },
@@ -317,6 +321,10 @@
       },
       {
          "Name": "[dbo].[usuario]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[valeBobina]",
          "ObjectType": 0
       },
       {

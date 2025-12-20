@@ -26,7 +26,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales
 
         // GET: api/<transferenciaProcesoController>
         [HttpGet("get")]
-        public async Task<ActionResult<IEnumerable<transferenciaProcesoDto>>> GetetiquetaOf()
+        public async Task<ActionResult<IEnumerable<transferenciaProcesoDto>>> GettransferenciaaOf()
         {
             var transferenciaProceso = await _context.transferenciaProceso.ToListAsync();
             var transferenciaProcesoDto = _mapper.Map<List<transferenciaProcesoDto>>(transferenciaProceso);
@@ -36,7 +36,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales
 
         // GET api/<transferenciaProcesoController>/5
         [HttpGet("get/{id}")]
-        public async Task<ActionResult<transferenciaProcesoDto>> GetetiquetaOf(int id)
+        public async Task<ActionResult<transferenciaProcesoDto>> GettransferenciaaOf(int id)
         {
             var transferenciaProceso = await _context.transferenciaProceso.FindAsync(id);
             var transferenciaProcesoDto = _mapper.Map<transferenciaProcesoDto>(transferenciaProceso);
@@ -168,6 +168,18 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales
             return Ok(transferenciasProcesosDto);
         }
 
+        [HttpGet("get/idSolicitudOrigen/{idSolicitudOrigen}")]
+        public async Task<ActionResult<IEnumerable<transferenciaProcesoDto>>> GetetiquetaOfIdSolicitudOrigen(int idSolicitudOrigen)
+        {
+            var transferenciaProceso = await _context.transferenciaProceso
+                .Where(t => t.idSolicitudOrigen == idSolicitudOrigen)
+                .ToListAsync();
+
+            var transferenciaProcesoDto = _mapper.Map<List<transferenciaProcesoDto>>(transferenciaProceso);
+
+            return (transferenciaProcesoDto);
+        }
+
         // POST api/<transferenciaProcesoController>
         [HttpPost("post")]
         public async Task<ActionResult<transferenciaProceso>> PostetiquetaOf(AddTransferenciaProcesoDto addTransferenciaProcesoDto)
@@ -176,7 +188,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales
             _context.transferenciaProceso.Add(transferenciaProceso);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetetiquetaOf", new { id = transferenciaProceso.idTransferencia }, transferenciaProceso);
+            return CreatedAtAction("GettransferenciaaOf", new { id = transferenciaProceso.idTransferencia }, transferenciaProceso);
         }
 
         [HttpPost("post/batch")]

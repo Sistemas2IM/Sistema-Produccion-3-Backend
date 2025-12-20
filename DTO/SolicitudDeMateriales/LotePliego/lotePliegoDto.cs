@@ -1,7 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.LotePliego
+﻿namespace Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.LotePliego
 {
     public class lotePliegoDto
     {
@@ -24,5 +21,15 @@ namespace Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.LotePliego
         public string? codLote { get; set; }
 
         public string? estado { get; set; }
+
+        public int? procesoOrigen { get; set; }
+
+        public decimal? peso { get; set; }
+
+        public string? codigoBobinaSAP { get; set; }
+
+        public bool? tira { get; set; }
+
+        public int? cantidadPendiente { get; set; }
     }
 }

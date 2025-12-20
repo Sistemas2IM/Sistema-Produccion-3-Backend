@@ -62,7 +62,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.LoginAuth
         {
             var usuarios = await _context.usuario
                 // 🔹 Filtra SOLO usuarios del área solicitada
-                .Where(u => u.idArea == idArea && u.idCargo == 1)
+                .Where(u => u.idCargo == 1 && (idArea == 17 || u.idArea == idArea))
                 .OrderByDescending(f => f.fechaDeCreacion)
                 .Include(a => a.idAreaNavigation)
                 // 🔹 Incluye solo las máquinas asignadas

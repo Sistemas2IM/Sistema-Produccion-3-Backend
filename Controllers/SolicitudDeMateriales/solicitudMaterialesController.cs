@@ -27,7 +27,11 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales
         [HttpGet("get")]
         public async Task<ActionResult<IEnumerable<solicitudMaterialesDto>>> GetSolicitud()
         {
-            var solicitudMateriales = await _context.solicitudMateriales.ToListAsync();
+            var solicitudMateriales = await _context.solicitudMateriales
+                .Include(s => s.solicitudMaterialesOf)
+                    .ThenInclude(so => so.oFNavigation)
+                .ToListAsync();
+
             var solicitudMaterialesDto = _mapper.Map<List<solicitudMaterialesDto>>(solicitudMateriales);
 
             return Ok(solicitudMaterialesDto);
@@ -37,7 +41,11 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales
         [HttpGet("get/{id}")]
         public async Task<ActionResult<IEnumerable<solicitudMaterialesDto>>> GetSolicitudId(int id)
         {
-            var solicitudMateriales = await _context.solicitudMateriales.FindAsync(id);
+            var solicitudMateriales = await _context.solicitudMateriales
+                .Include(s => s.solicitudMaterialesOf)
+                    .ThenInclude(so => so.oFNavigation)
+                .FirstOrDefaultAsync(s => s.idSolicitud == id);
+
             var solicitudMaterialesDto = _mapper.Map<solicitudMaterialesDto>(solicitudMateriales);
 
             if(solicitudMaterialesDto == null)
@@ -54,7 +62,10 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales
         {
             var solicitudMateriales = await _context.solicitudMateriales
                 .Where(s => s.idSap == idSap)
+                .Include(s => s.solicitudMaterialesOf)
+                    .ThenInclude(so => so.oFNavigation)
                 .FirstOrDefaultAsync();
+
             var solicitudMaterialesDto = _mapper.Map<solicitudMaterialesDto>(solicitudMateriales);
 
             if (solicitudMaterialesDto == null)

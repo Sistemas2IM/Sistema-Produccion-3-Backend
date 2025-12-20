@@ -1,7 +1,11 @@
-﻿namespace Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.SolicitudMateriales
+﻿using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.SolicitudMaterialOF;
+using System.Text.Json.Serialization;
+
+namespace Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.SolicitudMateriales.ProcesosOf
 {
-    public class AddSolicitudMaterialesDto
+    public class solicitudMaterialesProcesoOfDto
     {
+        [JsonIgnore]
         public int idSolicitud { get; set; }
 
         public string? trabajo { get; set; }
@@ -70,14 +74,6 @@
 
         public bool? cancelado { get; set; }
 
-        public string? granoHoja { get; set; }
-
-        public string? subFamiliaSap { get; set; }
-
-        public string? tipoOperacion { get; set; }
-
-        public bool? IncluyeProceso { get; set; }
-
-        public string? descripcion { get; set; }
+        public List<solicitudMaterialesOfDto>? solicitudMaterialOf { get; set; }
     }
 }

@@ -70,7 +70,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.CertificadoCalidad
                 .Include(c => c.detalleCertificadoCalidad)
                 .ThenInclude(d => d.idUnidadNavigation)
                 .Include(c => c.oFNavigation)
-                .Where(c => c.oF == of || c.archivado == false)
+                .Where(c => c.oF == of && c.archivado == false)
                 .ToListAsync();
 
             var certificadoDto = _mapper.Map<List<CertificadoCalidadDto>>(certificado);

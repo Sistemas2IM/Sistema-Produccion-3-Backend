@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.SolicitudMaterialOF
 {
@@ -14,6 +15,7 @@ namespace Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.SolicitudMateri
 
         public DateTime? fechaEntrega { get; set; }
 
+        [JsonIgnore]
         public int idSolicitud { get; set; }
 
         public int? cantidadAsignada { get; set; }

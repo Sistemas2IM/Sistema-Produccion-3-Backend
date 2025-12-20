@@ -97,4 +97,7 @@ public partial class material
 
     [InverseProperty("idMaterialNavigation")]
     public virtual ICollection<procesoOf> procesoOf { get; set; } = new List<procesoOf>();
+
+    [InverseProperty("idMaterialNavigation")]
+    public virtual ICollection<valeBobina> valeBobina { get; set; } = new List<valeBobina>();
 }

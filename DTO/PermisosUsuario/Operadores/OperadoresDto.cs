@@ -10,6 +10,8 @@ namespace Sistema_Produccion_3_Backend.DTO.PermisosUsuario.Operadores
 
         public string? apellidos { get; set; }
 
+        public int? codEmpleado { get; set; }
+
         public int? idArea { get; set; }
 
         public string? nombreArea { get; set; }

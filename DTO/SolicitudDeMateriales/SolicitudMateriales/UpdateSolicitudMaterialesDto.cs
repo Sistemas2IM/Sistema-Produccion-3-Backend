@@ -61,5 +61,21 @@
         public string? programada { get; set; }
 
         public string? rerefencia { get; set; }
+
+        public string? direccionCorte { get; set; }
+
+        public bool? archivado { get; set; }
+
+        public bool? cancelado { get; set; }
+
+        public string? granoHoja { get; set; }
+
+        public string? subFamiliaSap { get; set; }
+
+        public string? tipoOperacion { get; set; }
+
+        public bool? IncluyeProceso { get; set; }
+
+        public string? descripcion { get; set; }
     }
 }
