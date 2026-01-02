@@ -26,6 +26,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales
         public async Task<ActionResult<IEnumerable<ValeBobinaDto>>> GetValeBobina()
         {
             var valeBobinas = await _context.valeBobina
+                .Include(vb => vb.idMaterialNavigation)
                 .ToListAsync();
 
             var valeBobinasDto = _mapper.Map<List<ValeBobinaDto>>(valeBobinas);
@@ -39,6 +40,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales
         public async Task<ActionResult<ValeBobinaDto>> GetValeBobina(int id)
         { 
             var valeBobina = await _context.valeBobina
+                .Include(vb => vb.idMaterialNavigation)
                 .FirstOrDefaultAsync(vb => vb.idVale == id);
 
             var valeBobinaDto = _mapper.Map<ValeBobinaDto>(valeBobina);

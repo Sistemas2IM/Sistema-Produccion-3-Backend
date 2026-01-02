@@ -777,6 +777,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             // SOLICITUD DE MATERIALES ================================================================================
             CreateMap<solicitudMateriales, solicitudMaterialesDto>()
                 .ForMember(dest => dest.solicitudMaterialOf, opt => opt.MapFrom(src => src.solicitudMaterialesOf))
+                .ForMember(dest => dest.materialDescripcion, opt => opt.MapFrom(src => src.MaterialNavigation.nombreMaterial))
                 .ReverseMap();
             CreateMap<solicitudMateriales, AddSolicitudMaterialesDto>().ReverseMap();
             CreateMap<UpdateSolicitudMaterialesDto, solicitudMateriales>()
@@ -806,7 +807,14 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             CreateMap<UpdateTransferenciaProcesoDto, transferenciaProceso>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
-            CreateMap<valeBobina, ValeBobinaDto>().ReverseMap();
+            CreateMap<valeBobina, ValeBobinaDto>()
+                .ForMember(dest => dest.descripcionMaterial, opt => opt.MapFrom(src => src.idMaterialNavigation.nombreMaterial))
+                .ForMember(dest => dest.proveedorMaterial, opt => opt.MapFrom(src => src.idMaterialNavigation.marca))
+                .ForMember(dest => dest.anchoMaterial, opt => opt.MapFrom(src => src.idMaterialNavigation.ancho))
+                .ForMember(dest => dest.calibreMaterial, opt => opt.MapFrom(src => src.idMaterialNavigation.calibre))
+                .ForMember(dest => dest.gramajeMaterial, opt => opt.MapFrom(src => src.idMaterialNavigation.gramaje))
+                .ReverseMap();
+
             CreateMap<valeBobina, AddValeBobinaDto>().ReverseMap();
             CreateMap<UpdateValeBobinaDto, valeBobina>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));

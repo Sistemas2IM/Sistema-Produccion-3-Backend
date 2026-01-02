@@ -30,6 +30,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales
             var solicitudMateriales = await _context.solicitudMateriales
                 .Include(s => s.solicitudMaterialesOf)
                     .ThenInclude(so => so.oFNavigation)
+                .Include(m => m.MaterialNavigation)
                 .ToListAsync();
 
             var solicitudMaterialesDto = _mapper.Map<List<solicitudMaterialesDto>>(solicitudMateriales);
@@ -44,6 +45,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales
             var solicitudMateriales = await _context.solicitudMateriales
                 .Include(s => s.solicitudMaterialesOf)
                     .ThenInclude(so => so.oFNavigation)
+                .Include(m => m.MaterialNavigation)
                 .FirstOrDefaultAsync(s => s.idSolicitud == id);
 
             var solicitudMaterialesDto = _mapper.Map<solicitudMaterialesDto>(solicitudMateriales);
@@ -64,6 +66,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales
                 .Where(s => s.idSap == idSap)
                 .Include(s => s.solicitudMaterialesOf)
                     .ThenInclude(so => so.oFNavigation)
+                .Include(m => m.MaterialNavigation)
                 .FirstOrDefaultAsync();
 
             var solicitudMaterialesDto = _mapper.Map<solicitudMaterialesDto>(solicitudMateriales);

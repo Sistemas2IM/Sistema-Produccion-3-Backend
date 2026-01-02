@@ -8,6 +8,16 @@ namespace Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.ValeBobina
 
         public string? idMaterial { get; set; }
 
+        public string? descripcionMaterial { get; set; }
+
+        public string? proveedorMaterial { get; set; }
+
+        public string? anchoMaterial { get; set; }
+
+        public string? calibreMaterial { get; set; }
+
+        public string? gramajeMaterial { get; set; }
+
         public decimal? pesoInicial { get; set; }
 
         public decimal? pesoFinal { get; set; }

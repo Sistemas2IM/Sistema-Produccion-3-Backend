@@ -1104,6 +1104,12 @@ public partial class base_nuevaContext : DbContext
             entity.Property(e => e.archivado).HasDefaultValue(false);
             entity.Property(e => e.cancelado).HasDefaultValue(false);
             entity.Property(e => e.idMaterialSAP).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+
+            // Configuración de la relación manual
+            entity.HasOne(d => d.MaterialNavigation) // Tu nueva propiedad
+                  .WithMany() // Asumimos que Material no tiene una lista de solicitudes, o no la necesitas
+                  .HasForeignKey(d => d.idMaterialSAP) // El campo en solicitudMateriales
+                  .HasPrincipalKey(p => p.idMaterial); // El campo match en la tabla Material
         });
 
         modelBuilder.Entity<solicitudMaterialesOf>(entity =>

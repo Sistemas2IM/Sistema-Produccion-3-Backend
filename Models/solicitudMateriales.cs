@@ -115,6 +115,12 @@ public partial class solicitudMateriales
     public bool? incluyeProceso { get; set; }
 
     public string descripcion { get; set; }
+    
+    // Asegúrate de que acepte null si no siempre hay material
+
+    // Agrega esta propiedad de navegación
+    // El "?" indica que puede ser nulo (Left Join)
+    public virtual material? MaterialNavigation { get; set; }
 
     [InverseProperty("idSolicitudNavigation")]
     public virtual ICollection<lotePliego> lotePliego { get; set; } = new List<lotePliego>();
