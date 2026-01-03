@@ -12,11 +12,11 @@ namespace Sistema_Produccion_3_Backend.Services.SAP.HANA
         {
             // Conexion a HANA -------------------------------------
             OCompany = new SAPbobsCOM.Company();
-            OCompany.Server = "NDB@192.168.2.246:30013";
+            OCompany.Server = "TN1@192.168.2.246:30013";
             OCompany.UserName = "manager";
             OCompany.Password = "Consap1.";
             OCompany.LicenseServer = "192.168.2.246";
-            OCompany.DbUserName = "USERSAP";
+            OCompany.DbUserName = "SAPDBA";
             OCompany.DbPassword = "IMultiple$1992.";
             OCompany.CompanyDB = "SBO_IMPRESOSMULTIPLES";
             OCompany.DbServerType = BoDataServerTypes.dst_HANADB;
