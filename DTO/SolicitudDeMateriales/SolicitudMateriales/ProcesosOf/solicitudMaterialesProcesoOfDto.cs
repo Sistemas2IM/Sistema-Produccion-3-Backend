@@ -74,6 +74,16 @@ namespace Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.SolicitudMateri
 
         public bool? cancelado { get; set; }
 
+        public string? granoHoja { get; set; }
+
+        public string? subFamiliaSap { get; set; }
+
+        public string? tipoOperacion { get; set; }
+
+        public bool? IncluyeProceso { get; set; }
+
+        public string? descripcion { get; set; }
+
         public List<solicitudMaterialesOfDto>? solicitudMaterialOf { get; set; }
     }
 }
