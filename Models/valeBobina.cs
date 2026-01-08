@@ -28,6 +28,21 @@ public partial class valeBobina
     [StringLength(30)]
     public string loteBobinaSAP { get; set; }
 
+    [StringLength(1)]
+    public string proveedorBobina { get; set; }
+
+    [Column(TypeName = "numeric(1, 0)")]
+    public decimal? anchoBobina { get; set; }
+
+    [StringLength(1)]
+    public string descripcionBobina { get; set; }
+
+    [StringLength(1)]
+    public string calibreBobina { get; set; }
+
+    [StringLength(1)]
+    public string gramajeBobina { get; set; }
+
     [ForeignKey("idMaterial")]
     [InverseProperty("valeBobina")]
     public virtual material idMaterialNavigation { get; set; }

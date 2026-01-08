@@ -225,6 +225,7 @@ public partial class base_nuevaContext : DbContext
         modelBuilder.Entity<bobinasAsignadas>(entity =>
         {
             entity.HasOne(d => d.idProcesoNavigation).WithMany().HasConstraintName("PROCESO_BOBINA_FK");
+            entity.HasKey(b => new { b.idProceso, b.codigoBobina });
         });
 
         modelBuilder.Entity<cargo>(entity =>
@@ -472,8 +473,7 @@ public partial class base_nuevaContext : DbContext
             entity.HasKey(e => e.idHorario).HasName("PK__horarios__DE60F33AFA2D1D3E");
 
             entity.Property(e => e.operador).UseCollation("SQL_Latin1_General_CP1_CI_AS");
-            entity.Property(e => e.operador2).UseCollation("SQL_Latin1_General_CP1_CI_AS");
-            entity.Property(e => e.operador3).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.operadoresAdicionales).UseCollation("SQL_Latin1_General_CP1_CI_AS");
 
             entity.HasOne(d => d.idAreaNavigation).WithMany(p => p.horariosOperativos).HasConstraintName("FK_AREA_HORARIO");
 

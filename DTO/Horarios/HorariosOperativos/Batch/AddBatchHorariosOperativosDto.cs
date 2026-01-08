@@ -16,8 +16,6 @@
 
         public string? estado { get; set; }
 
-        public string? operador2 { get; set; }
-
-        public string? operador3 { get; set; }
+        public string? operadoresAdicionales { get; set; }
     }
 }

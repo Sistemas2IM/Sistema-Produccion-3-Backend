@@ -9,5 +9,7 @@
         public decimal? pesoInicial { get; set; }
 
         public string? codAlmacen { get; set; }
+
+        public string? codMaterial { get; set; }
     }
 }

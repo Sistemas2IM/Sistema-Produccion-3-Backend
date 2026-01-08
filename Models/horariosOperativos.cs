@@ -29,11 +29,8 @@ public partial class horariosOperativos
     [StringLength(50)]
     public string estado { get; set; }
 
-    [StringLength(50)]
-    public string operador2 { get; set; }
-
-    [StringLength(50)]
-    public string operador3 { get; set; }
+    [StringLength(999)]
+    public string operadoresAdicionales { get; set; }
 
     [ForeignKey("idArea")]
     [InverseProperty("horariosOperativos")]

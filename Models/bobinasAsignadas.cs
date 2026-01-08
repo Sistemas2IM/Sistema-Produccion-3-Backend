@@ -26,6 +26,12 @@ public partial class bobinasAsignadas
     [StringLength(50)]
     public string codMaterial { get; set; }
 
+    [Column(TypeName = "numeric(10, 2)")]
+    public decimal? desperdicio { get; set; }
+
+    [Column(TypeName = "numeric(10, 2)")]
+    public decimal? pesoFinal { get; set; }
+
     [ForeignKey("idProceso")]
     public virtual procesoOf idProcesoNavigation { get; set; }
 }
