@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Sistema_Produccion_3_Backend.DTO.Etiquetas.EtiquetaOf;
 using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.SolicitudMateriales;
 using Sistema_Produccion_3_Backend.Models;
 
@@ -28,6 +27,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales
         public async Task<ActionResult<IEnumerable<solicitudMaterialesDto>>> GetSolicitud()
         {
             var solicitudMateriales = await _context.solicitudMateriales
+                .OrderBy(p => p.posicion)
                 .Include(s => s.solicitudMaterialesOf)
                     .ThenInclude(so => so.oFNavigation)
                 .Include(m => m.MaterialNavigation)
@@ -43,6 +43,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales
         public async Task<ActionResult<IEnumerable<solicitudMaterialesDto>>> GetSolicitudId(int id)
         {
             var solicitudMateriales = await _context.solicitudMateriales
+                .OrderBy(p => p.posicion)
                 .Include(s => s.solicitudMaterialesOf)
                     .ThenInclude(so => so.oFNavigation)
                 .Include(m => m.MaterialNavigation)
@@ -64,6 +65,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales
         {
             var solicitudMateriales = await _context.solicitudMateriales
                 .Where(s => s.idSap == idSap)
+                .OrderBy(p => p.posicion)
                 .Include(s => s.solicitudMaterialesOf)
                     .ThenInclude(so => so.oFNavigation)
                 .Include(m => m.MaterialNavigation)

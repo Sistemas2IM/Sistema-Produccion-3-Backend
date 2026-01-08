@@ -74,6 +74,7 @@ using Sistema_Produccion_3_Backend.DTO.ReporteOperador.DetalleReporte.Impresoras
 using Sistema_Produccion_3_Backend.DTO.ReporteOperador.DetalleReporte.Operaciones;
 using Sistema_Produccion_3_Backend.DTO.ReporteOperador.EstadoReporte;
 using Sistema_Produccion_3_Backend.DTO.ReporteOperador.PausaMaquina;
+using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.BobinasAsignadas;
 using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.LotePliego;
 using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.SolicitudMateriales;
 using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.SolicitudMateriales.ProcesosOf;
@@ -817,6 +818,12 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
 
             CreateMap<valeBobina, AddValeBobinaDto>().ReverseMap();
             CreateMap<UpdateValeBobinaDto, valeBobina>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            CreateMap<bobinasAsignadas, BobinasAsignadasDto>()
+                .ReverseMap();
+            CreateMap<bobinasAsignadas, AddBobinasAsignadasDto>().ReverseMap();
+            CreateMap<UpdateBobinasAsignadasDto, bobinasAsignadas>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             // HORARIOS OPERATIVOS ====================================================================================

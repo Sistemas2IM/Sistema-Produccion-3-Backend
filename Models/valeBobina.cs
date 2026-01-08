@@ -13,14 +13,14 @@ public partial class valeBobina
     [Key]
     public int idVale { get; set; }
 
-    [StringLength(25)]
-    public string idMaterial { get; set; }
-
     [Column(TypeName = "numeric(18, 0)")]
     public decimal? pesoInicial { get; set; }
 
     [Column(TypeName = "numeric(18, 0)")]
     public decimal? pesoFinal { get; set; }
+
+    [StringLength(25)]
+    public string idMaterial { get; set; }
 
     [Column(TypeName = "datetime")]
     public DateTime? fechaCreacion { get; set; }

@@ -36,6 +36,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[bobinasAsignadas]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[cargo]",
          "ObjectType": 0
       },

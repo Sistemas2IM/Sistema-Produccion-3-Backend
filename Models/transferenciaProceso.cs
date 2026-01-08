@@ -68,7 +68,6 @@ public partial class transferenciaProceso
     public int? idSolicitudOrigen { get; set; }
 
     [StringLength(255)]
-    [Unicode(false)]
     public string idMaterialSAP { get; set; }
 
     [ForeignKey("areaDestino")]

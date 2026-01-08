@@ -32,6 +32,19 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales
             return Ok(lotePliegoDto);
         }
 
+        // GET: api/<lotePliegoController>
+        [HttpGet("get/codBobina/{codBobina}")]
+        public async Task<ActionResult<IEnumerable<lotePliegoDto>>> GetSolicitudCodBobina(string codBobina)
+        {
+            var lotePliego = await _context.lotePliego
+                .Where(b => b.codigoBobinaSAP == codBobina)
+                .ToListAsync();
+
+            var lotePliegoDto = _mapper.Map<List<lotePliegoDto>>(lotePliego);
+
+            return Ok(lotePliegoDto);
+        }
+
         // GET api/<lotePliegoController>/5
         [HttpGet("get/{id}")]
         public async Task<ActionResult<IEnumerable<lotePliegoDto>>> GetSolicitudId(int id)

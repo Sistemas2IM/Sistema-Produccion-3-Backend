@@ -79,5 +79,7 @@
         public bool? IncluyeProceso { get; set; }
 
         public string? descripcion { get; set; }
+
+        public int? posicion { get; set; }
     }
 }

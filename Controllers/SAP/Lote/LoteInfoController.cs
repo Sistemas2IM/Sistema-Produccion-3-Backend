@@ -113,6 +113,84 @@ namespace TuNamespace.Controllers // Asegúrate de ajustar el namespace
             }
         }
 
+        [HttpGet("get/lotes-almacen/{itemCode}")]
+        public IActionResult GetLotesPorAlmacen(string itemCode)
+        {
+            try
+            {
+                HANAConnection.sapConn();
+                int retVal = HANAConnection.RetVal;
+                SAPbobsCOM.Company oCompany = HANAConnection.OCompany;
+
+                if (retVal != 0) return StatusCode(500, "Error SAP");
+
+                string safeItemCode = itemCode.Replace("'", "''");
+
+                string query = $@"
+        SELECT 
+            T0.""DistNumber"" AS ""codLote"", 
+            T1.""WhsCode"" AS ""codAlmacen"",
+            T3.""ItemCode"" AS ""codMaterial"",
+            T3.""ItemName"" AS ""descMaterial"",
+            T3.""U_Gramaje"" AS ""gramaje"",
+            T2.""Quantity"" AS ""pesoInicial"",
+            T1.""Quantity"" AS ""pesoActualLote"",
+            T4.""OnHand""   AS ""stockTotalItem""
+        FROM OBTN T0
+        INNER JOIN OBTQ T1 ON T0.""ItemCode"" = T1.""ItemCode"" AND T0.""SysNumber"" = T1.""SysNumber""
+        INNER JOIN ITL1 T2 ON T0.""ItemCode"" = T2.""ItemCode"" AND T0.""SysNumber"" = T2.""SysNumber""
+        INNER JOIN OITM T3 ON T0.""ItemCode"" = T3.""ItemCode""
+        INNER JOIN OITW T4 ON T0.""ItemCode"" = T4.""ItemCode"" AND T1.""WhsCode"" = T4.""WhsCode""
+        WHERE T1.""WhsCode"" = 'IM01' 
+          AND T0.""ItemCode"" = '{safeItemCode}' 
+          AND T1.""Quantity"" > 0
+          AND T2.""LogEntry"" = (
+              SELECT MIN(X.""LogEntry"") 
+              FROM ITL1 X 
+              WHERE X.""ItemCode"" = T0.""ItemCode"" 
+                AND X.""SysNumber"" = T0.""SysNumber""
+         )";
+
+                var recordSet = (Recordset)oCompany.GetBusinessObject(BoObjectTypes.BoRecordset);
+                recordSet.DoQuery(query);
+
+                if (recordSet.RecordCount == 0) return NotFound($"Sin datos para: {itemCode}");
+
+                var listaResultados = new List<LoteAlmacenResponse>();
+
+                while (!recordSet.EoF)
+                {
+                    // Función auxiliar local para formatear números
+                    string Fmt(object val) => Convert.ToDouble(val).ToString("0.##");
+
+                    listaResultados.Add(new LoteAlmacenResponse
+                    {
+                        CodLote = recordSet.Fields.Item("codLote").Value.ToString(),
+                        CodAlmacen = recordSet.Fields.Item("codAlmacen").Value.ToString(),
+                        CodMaterial = recordSet.Fields.Item("codMaterial").Value.ToString(),
+                        DescMaterial = recordSet.Fields.Item("descMaterial").Value.ToString(),
+                        Gramaje = recordSet.Fields.Item("gramaje").Value?.ToString() ?? "",
+
+                        PesoInicial = Fmt(recordSet.Fields.Item("pesoInicial").Value),
+                        PesoActualLote = Fmt(recordSet.Fields.Item("pesoActualLote").Value),
+                        StockTotalItem = Fmt(recordSet.Fields.Item("stockTotalItem").Value)
+                    });
+
+                    recordSet.MoveNext();
+                }
+
+                System.Runtime.InteropServices.Marshal.ReleaseComObject(recordSet);
+                return Ok(listaResultados);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error interno: {ex.Message}");
+            }
+        }
+
+
+        // Clases de respuesta
+
         public class LoteInfoResponse
         {
             public string? DistNumber { get; set; }
@@ -123,6 +201,18 @@ namespace TuNamespace.Controllers // Asegúrate de ajustar el namespace
             public string? Ancho { get; set; }
             public string? Calibre { get; set; }
             public string? Gramaje { get; set; }
+        }
+
+        public class LoteAlmacenResponse
+        {
+            public string CodLote { get; set; }
+            public string CodAlmacen { get; set; }
+            public string CodMaterial { get; set; }
+            public string DescMaterial { get; set; }
+            public string Gramaje { get; set; }
+            public string PesoInicial { get; set; }
+            public string PesoActualLote { get; set; } // Nuevo
+            public string StockTotalItem { get; set; } // Nuevo
         }
     }
 }

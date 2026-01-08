@@ -84,6 +84,8 @@ namespace Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.SolicitudMateri
 
         public string? descripcion { get; set; }
 
+        public int? posicion { get; set; }
+
         public List<solicitudMaterialesOfDto>? solicitudMaterialOf { get; set; }
     }
 }

@@ -29,6 +29,12 @@ public partial class horariosOperativos
     [StringLength(50)]
     public string estado { get; set; }
 
+    [StringLength(50)]
+    public string operador2 { get; set; }
+
+    [StringLength(50)]
+    public string operador3 { get; set; }
+
     [ForeignKey("idArea")]
     [InverseProperty("horariosOperativos")]
     public virtual areas idAreaNavigation { get; set; }
