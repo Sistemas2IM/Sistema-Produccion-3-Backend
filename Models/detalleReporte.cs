@@ -119,6 +119,9 @@ public partial class detalleReporte
 
     public int? idTransferencia { get; set; }
 
+    [StringLength(50)]
+    public string codBobina { get; set; }
+
     [ForeignKey("idMaterial")]
     [InverseProperty("detalleReporte")]
     public virtual material idMaterialNavigation { get; set; }

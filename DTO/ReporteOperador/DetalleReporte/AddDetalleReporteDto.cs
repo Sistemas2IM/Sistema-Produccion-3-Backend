@@ -91,5 +91,9 @@ namespace Sistema_Produccion_3_Backend.DTO.ReporteOperador.DetalleReporte
         public string? actualizadoPor { get; set; }
 
         public bool? bloqueada { get; set; }
+
+        public int? idTransferencia { get; set; }
+
+        public string? codBobina { get; set; }
     }
 }
