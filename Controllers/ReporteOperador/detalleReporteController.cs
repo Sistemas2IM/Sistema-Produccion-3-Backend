@@ -207,6 +207,9 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
                         detalle.maquina = dto.maquina;
                         detalle.fecha = dto.fecha;
                         detalle.actualizadoPor = dto.actualizadoPor;
+                        detalle.bloqueada = dto.bloqueada;
+                        detalle.idTransferencia = dto.idTransferencia;
+                        detalle.codBobina = dto.codBobina;
                     }
 
                     _context.Entry(detalle).State = EntityState.Modified;
