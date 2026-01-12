@@ -69,7 +69,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales
         }
 
         [HttpGet("InfoConvercionBobina/{codBobina}")]
-        public async Task<ActionResult<List<infoConvercionBobinaResult>>> GetInfoConvercionBobina(string codBobina)
+        public async Task<ActionResult<List<infoConversionBobinaResult>>> GetInfoConvercionBobina(string codBobina)
         {
             // Validación básica para evitar llamadas vacías
             if (string.IsNullOrWhiteSpace(codBobina))
@@ -80,7 +80,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales
             try
             {
                 // 1. Llamar al servicio que ejecuta el SP
-                var resultados = await _contextSP.infoConvercionBobinaAsync(codBobina);
+                var resultados = await _contextSP.infoConversionBobinaAsync(codBobina);
 
                 // 2. Validar si retornó datos
                 if (resultados == null || resultados.Count == 0)

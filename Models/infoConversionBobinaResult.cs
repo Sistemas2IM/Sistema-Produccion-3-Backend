@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Sistema_Produccion_3_Backend.Models
 {
-    public partial class infoConvercionBobinaResult
+    public partial class infoConversionBobinaResult
     {
         [StringLength(50)]
         public string codigoBobina { get; set; }
