@@ -74,9 +74,6 @@ namespace Sistema_Produccion_3_Backend.Controllers.Indicadores
                 return NotFound("No se encontraron datos para el proceso con el id: " + idProceso);
             }
 
-            // Aquí puedes agregar lógica adicional si necesitas procesar los resultados
-            // Por ejemplo, mapear los resultados a un DTO o realizar alguna validación
-
             return Ok(resultados);
         }
 

@@ -18,11 +18,13 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales
     {
         private readonly base_nuevaContext _context;
         private readonly IMapper _mapper;
+        private readonly base_nuevaContextProcedures _contextSP;
 
-        public bobinasAsignadasController(base_nuevaContext context, IMapper mapper)
+        public bobinasAsignadasController(base_nuevaContext context, IMapper mapper, base_nuevaContextProcedures contextSP)
         {
             _context = context;
             _mapper = mapper;
+            _contextSP = contextSP;
         }
 
         // GET: api/<bobinasAsignadasController>
@@ -64,6 +66,36 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales
             var bobinasAsignadasDto = _mapper.Map<List<BobinasAsignadasDto>>(bobinasAsignadas);
 
             return Ok(bobinasAsignadasDto);
+        }
+
+        [HttpGet("InfoConvercionBobina/{codBobina}")]
+        public async Task<ActionResult<List<infoConvercionBobinaResult>>> GetInfoConvercionBobina(string codBobina)
+        {
+            // Validación básica para evitar llamadas vacías
+            if (string.IsNullOrWhiteSpace(codBobina))
+            {
+                return BadRequest("El código de la bobina no puede estar vacío.");
+            }
+
+            try
+            {
+                // 1. Llamar al servicio que ejecuta el SP
+                var resultados = await _contextSP.infoConvercionBobinaAsync(codBobina);
+
+                // 2. Validar si retornó datos
+                if (resultados == null || resultados.Count == 0)
+                {
+                    return NotFound($"No se encontraron datos para la bobina con código: {codBobina}");
+                }
+
+                // 3. Retornar los datos con código 200 OK
+                return Ok(resultados);
+            }
+            catch (Exception ex)
+            {
+                // Manejo de error genérico (opcional, pero recomendado)
+                return StatusCode(500, "Ocurrió un error interno al procesar la bobina: " + ex.Message);
+            }
         }
 
         // POST api/<bobinasAsignadasController>

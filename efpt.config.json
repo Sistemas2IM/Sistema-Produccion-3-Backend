@@ -344,6 +344,10 @@
          "ObjectType": 1
       },
       {
+         "Name": "[dbo].[infoConvercionBobina]",
+         "ObjectType": 1
+      },
+      {
          "Name": "[dbo].[ResumenOf]",
          "ObjectType": 1
       },

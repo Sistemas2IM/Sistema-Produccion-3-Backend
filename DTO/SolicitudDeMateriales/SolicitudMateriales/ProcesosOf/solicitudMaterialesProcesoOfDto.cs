@@ -16,6 +16,8 @@ namespace Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.SolicitudMateri
 
         public string? idMaterialSAP { get; set; }
 
+        public string? materialDescripcion { get; set; }
+
         public decimal? anchoHoja { get; set; }
 
         public decimal? largoHoja { get; set; }

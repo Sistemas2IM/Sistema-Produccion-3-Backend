@@ -70,6 +70,33 @@ namespace Sistema_Produccion_3_Backend.Models
             return _;
         }
 
+        public virtual async Task<List<infoConvercionBobinaResult>> infoConvercionBobinaAsync(string codBobina, OutputParameter<int> returnValue = null, CancellationToken cancellationToken = default)
+        {
+            var parameterreturnValue = new SqlParameter
+            {
+                ParameterName = "returnValue",
+                Direction = System.Data.ParameterDirection.Output,
+                SqlDbType = System.Data.SqlDbType.Int,
+            };
+
+            var sqlParameters = new []
+            {
+                new SqlParameter
+                {
+                    ParameterName = "codBobina",
+                    Size = 100,
+                    Value = codBobina ?? Convert.DBNull,
+                    SqlDbType = System.Data.SqlDbType.NVarChar,
+                },
+                parameterreturnValue,
+            };
+            var _ = await _context.SqlQueryAsync<infoConvercionBobinaResult>("EXEC @returnValue = [dbo].[infoConvercionBobina] @codBobina = @codBobina", sqlParameters, cancellationToken);
+
+            returnValue?.SetValue(parameterreturnValue.Value);
+
+            return _;
+        }
+
         public virtual async Task<List<ResumenOfResult>> ResumenOfAsync(int? numOf, OutputParameter<int> returnValue = null, CancellationToken cancellationToken = default)
         {
             var parameterreturnValue = new SqlParameter
