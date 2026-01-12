@@ -15,11 +15,13 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales
     {
         private readonly base_nuevaContext _context;
         private readonly IMapper _mapper;
+        private readonly base_nuevaContextProcedures _contextSP;
 
-        public solicitudMaterialesController(base_nuevaContext context, IMapper mapper)
+        public solicitudMaterialesController(base_nuevaContext context, IMapper mapper, base_nuevaContextProcedures contextSP)
         {
             _context = context;
             _mapper = mapper;
+            _contextSP=contextSP;
         }
 
 
@@ -136,6 +138,28 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales
             var resultDto = _mapper.Map<List<solicitudMaterialesDto>>(solicitudes);
 
             return Ok(resultDto);
+        }
+
+        [HttpGet("ResumenSolicitud/{idSolicitud}")]
+        public async Task<ActionResult<List<ResumenSolicitudResult>>> GetResumenSolicitud(string idSolicitud)
+        {
+            // Validación de entrada
+            if (string.IsNullOrWhiteSpace(idSolicitud))
+            {
+                return BadRequest("El id de la solicitud es obligatorio.");
+            }
+
+            // Llamada al contexto
+            var resultados = await _contextSP.ResumenSolicitudAsync(idSolicitud);
+
+            // Validación de resultados vacíos
+            if (resultados == null || resultados.Count == 0)
+            {
+                return NotFound($"No se encontraron datos para la solicitud: {idSolicitud}");
+            }
+
+            // Retorno exitoso
+            return Ok(resultados);
         }
 
         // POST api/<solicitudMaterialesController>

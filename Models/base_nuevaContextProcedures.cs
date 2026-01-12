@@ -123,6 +123,33 @@ namespace Sistema_Produccion_3_Backend.Models
             return _;
         }
 
+        public virtual async Task<List<ResumenSolicitudResult>> ResumenSolicitudAsync(string idSolicitud, OutputParameter<int> returnValue = null, CancellationToken cancellationToken = default)
+        {
+            var parameterreturnValue = new SqlParameter
+            {
+                ParameterName = "returnValue",
+                Direction = System.Data.ParameterDirection.Output,
+                SqlDbType = System.Data.SqlDbType.Int,
+            };
+
+            var sqlParameters = new []
+            {
+                new SqlParameter
+                {
+                    ParameterName = "idSolicitud",
+                    Size = 100,
+                    Value = idSolicitud ?? Convert.DBNull,
+                    SqlDbType = System.Data.SqlDbType.NVarChar,
+                },
+                parameterreturnValue,
+            };
+            var _ = await _context.SqlQueryAsync<ResumenSolicitudResult>("EXEC @returnValue = [dbo].[ResumenSolicitud] @idSolicitud = @idSolicitud", sqlParameters, cancellationToken);
+
+            returnValue?.SetValue(parameterreturnValue.Value);
+
+            return _;
+        }
+
         public virtual async Task<List<TimeInListResult>> TimeInListAsync(int? idProceso, OutputParameter<int> returnValue = null, CancellationToken cancellationToken = default)
         {
             var parameterreturnValue = new SqlParameter

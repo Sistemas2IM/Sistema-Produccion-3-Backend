@@ -352,6 +352,10 @@
          "ObjectType": 1
       },
       {
+         "Name": "[dbo].[ResumenSolicitud]",
+         "ObjectType": 1
+      },
+      {
          "Name": "[dbo].[TimeInList]",
          "ObjectType": 1
       }
