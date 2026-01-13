@@ -31,7 +31,7 @@ public partial class valeBobina
     [StringLength(1)]
     public string proveedorBobina { get; set; }
 
-    [Column(TypeName = "numeric(1, 0)")]
+    [Column(TypeName = "numeric(38, 0)")]
     public decimal? anchoBobina { get; set; }
 
     [StringLength(1)]

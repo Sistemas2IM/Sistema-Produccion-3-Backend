@@ -88,6 +88,10 @@ namespace Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.SolicitudMateri
 
         public int? posicion { get; set; }
 
+        public string? unidadSolicitud { get; set; }
+
+        public string? cantidadSolicitud { get; set; }
+
         public List<solicitudMaterialesOfDto>? solicitudMaterialOf { get; set; }
     }
 }

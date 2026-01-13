@@ -11,5 +11,15 @@
         public DateTime? fechaCreacion { get; set; }
 
         public string? loteBobinaSAP { get; set; }
+
+        public string? proveedorBobina { get; set; }
+
+        public decimal? anchoBobina { get; set; }
+
+        public string? descripcionBobina { get; set; }
+
+        public string? calibreBobina { get; set; }
+
+        public string? gramajeBobina { get; set; }
     }
 }

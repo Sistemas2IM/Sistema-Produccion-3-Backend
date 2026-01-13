@@ -81,5 +81,9 @@
         public string? descripcion { get; set; }
 
         public int? posicion { get; set; }
+
+        public string? unidadSolicitud { get; set; }
+
+        public string? cantidadSolicitud { get; set; }
     }
 }

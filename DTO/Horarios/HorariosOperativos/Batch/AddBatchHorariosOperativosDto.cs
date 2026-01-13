@@ -17,5 +17,7 @@
         public string? estado { get; set; }
 
         public string? operadoresAdicionales { get; set; }
+
+        public string? colaboradores { get; set; }
     }
 }
