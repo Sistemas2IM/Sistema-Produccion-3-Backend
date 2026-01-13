@@ -34,32 +34,37 @@ namespace TuNamespace.Controllers // Asegúrate de ajustar el namespace
                 // 3. Consulta SQL adaptada para C#
                 // Nota: Las comillas dobles de las columnas se escapan poniéndolas dobles ("")
                 string query = $@"
-               SELECT DISTINCT
-                    T1.""DistNumber"",
-                    T1.""ItemCode"",
-
-                    COALESCE(T3.""CardName"", T2.""U_Marca"") AS ""Proveedor"",
-                    T2.""U_Marca"",
-                    T2.""ItemName"",
-                    T2.""U_Ancho"",
-                    CASE 
-                            WHEN T2.""U_SubFamilia"" IN ('02003', '02005', '02006', '02007', '09003') 
-                                THEN 'C' || TO_VARCHAR(TO_INT(T2.""U_Calibre""))
-                            WHEN T2.""U_SubFamilia"" IN ('02001', '09002', '09005') 
-                                THEN 'B' || TO_VARCHAR(TO_INT(T2.""U_Calibre""))
-                            ELSE TO_VARCHAR(TO_INT(T2.""U_Calibre""))
-                    END AS ""Calibre"",
-                    T2.""U_Gramaje""
-
-                FROM OBTN T1
-                INNER JOIN OITM T2 ON T1.""ItemCode"" = T2.""ItemCode""
-
-                LEFT JOIN IBT1 T_LINK ON T1.""ItemCode"" = T_LINK.""ItemCode"" 
-                                      AND T1.""DistNumber"" = T_LINK.""BatchNum"" 
-                                      AND T_LINK.""BaseType"" = 20
-
-                LEFT JOIN OPDN T3 ON T_LINK.""BaseEntry"" = T3.""DocEntry""
-                WHERE T1.""DistNumber"" = '{safeDistNumber}'";
+                            SELECT DISTINCT
+                                 T1.""DistNumber"",
+                                 T1.""ItemCode"",
+                                 COALESCE(T3.""CardName"", T2.""U_Marca"") AS ""Proveedor"",
+                                 T2.""U_Marca"",
+                                 T2.""ItemName"",
+                                 T2.""U_Ancho"",
+                                 T4.""Quantity"",
+                                 CASE 
+                                         WHEN T2.""U_SubFamilia"" IN ('02003', '02005', '02006', '02007', '09003') 
+                                             THEN 'C' || TO_VARCHAR(TO_INT(T2.""U_Calibre""))
+                                         WHEN T2.""U_SubFamilia"" IN ('02001', '09002', '09005') 
+                                             THEN 'B' || TO_VARCHAR(TO_INT(T2.""U_Calibre""))
+                                         ELSE TO_VARCHAR(TO_INT(T2.""U_Calibre""))
+                                 END AS ""Calibre"",
+                                 T2.""U_Gramaje""
+                            FROM OBTN T1
+                            INNER JOIN OITM T2 ON T1.""ItemCode"" = T2.""ItemCode""
+                            LEFT JOIN IBT1 T_LINK ON T1.""ItemCode"" = T_LINK.""ItemCode"" 
+                                                  AND T1.""DistNumber"" = T_LINK.""BatchNum"" 
+                                                  AND T_LINK.""BaseType"" = 20
+                            LEFT JOIN OPDN T3 ON T_LINK.""BaseEntry"" = T3.""DocEntry""
+                            INNER JOIN ITL1 T4 ON T1.""ItemCode"" = T4.""ItemCode"" AND T1.""SysNumber"" = T4.""SysNumber""
+                            WHERE T1.""DistNumber"" = '{safeDistNumber}' 
+                              AND T4.""Quantity"" > 0
+                              AND T4.""LogEntry"" = (
+                                  SELECT MIN(X.""LogEntry"") 
+                                  FROM ITL1 X 
+                                  WHERE X.""ItemCode"" = T1.""ItemCode"" 
+                                    AND X.""SysNumber"" = T1.""SysNumber""
+                              )";
 
                 // 4. Ejecutar la consulta
                 Recordset recordSet = null;
@@ -94,7 +99,8 @@ namespace TuNamespace.Controllers // Asegúrate de ajustar el namespace
                         ItemName = recordSet.Fields.Item("ItemName").Value?.ToString() ?? "",
                         Ancho = recordSet.Fields.Item("U_Ancho").Value?.ToString() ?? "0",
                         Calibre = recordSet.Fields.Item("Calibre").Value?.ToString() ?? "",
-                        Gramaje = recordSet.Fields.Item("U_Gramaje").Value?.ToString() ?? "0"
+                        Gramaje = recordSet.Fields.Item("U_Gramaje").Value?.ToString() ?? "0",
+                        PesoInicial = recordSet.Fields.Item("Quantity").Value?.ToString() ?? "0"
                     };
 
                     listaResultados.Add(item);
@@ -201,6 +207,7 @@ namespace TuNamespace.Controllers // Asegúrate de ajustar el namespace
             public string? Ancho { get; set; }
             public string? Calibre { get; set; }
             public string? Gramaje { get; set; }
+            public string? PesoInicial { get; set; }
         }
 
         public class LoteAlmacenResponse

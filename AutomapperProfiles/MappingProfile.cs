@@ -445,6 +445,10 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                     .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
                 CreateMap<detalleReporte, AddDetalleReporteDto>().ReverseMap();
 
+                CreateMap<detalleReporte, AddBatchDetalleImpresora>().ReverseMap();
+                CreateMap<UpdateBatchDetalleImpresora, detalleReporte>()
+                    .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
                 {
                     CreateMap<operaciones, OperacionesDto>().ReverseMap();
                     CreateMap<operaciones, AddOperacionesDto>().ReverseMap();

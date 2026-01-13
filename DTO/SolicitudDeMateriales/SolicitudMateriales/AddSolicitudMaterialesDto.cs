@@ -74,7 +74,7 @@
 
         public string? subFamiliaSap { get; set; }
 
-        public string? tipoOperacion { get; set; }
+        public int? tipoOperacion { get; set; }
 
         public bool? IncluyeProceso { get; set; }
 

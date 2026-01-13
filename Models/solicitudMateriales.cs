@@ -109,8 +109,7 @@ public partial class solicitudMateriales
     [StringLength(50)]
     public string subFamiliaSap { get; set; }
 
-    [StringLength(50)]
-    public string tipoOperacion { get; set; }
+    public int? tipoOperacion { get; set; }
 
     public bool? incluyeProceso { get; set; }
 
