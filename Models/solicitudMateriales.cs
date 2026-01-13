@@ -117,6 +117,9 @@ public partial class solicitudMateriales
 
     public int? posicion { get; set; }
 
+    [StringLength(50)]
+    public string unidadSolicitud { get; set; }
+
     public virtual material? MaterialNavigation { get; set; }
 
     [InverseProperty("idSolicitudNavigation")]
