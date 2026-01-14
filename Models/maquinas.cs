@@ -67,5 +67,8 @@ public partial class maquinas
     public virtual ICollection<sesionOperador> sesionOperador { get; set; } = new List<sesionOperador>();
 
     [InverseProperty("idMaquinaNavigation")]
+    public virtual ICollection<solicitudMateriales> solicitudMateriales { get; set; } = new List<solicitudMateriales>();
+
+    [InverseProperty("idMaquinaNavigation")]
     public virtual ICollection<tablerosOf> tablerosOf { get; set; } = new List<tablerosOf>();
 }

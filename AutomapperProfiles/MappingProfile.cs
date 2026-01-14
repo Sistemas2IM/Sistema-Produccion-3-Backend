@@ -78,6 +78,7 @@ using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.BobinasAsignadas;
 using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.BobinasAsignadas.Batch;
 using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.LotePliego;
 using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.SolicitudMateriales;
+using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.SolicitudMateriales.Batch;
 using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.SolicitudMateriales.ProcesosOf;
 using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.SolicitudMaterialOF;
 using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.TransferenciaProceso;
@@ -784,15 +785,19 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             CreateMap<solicitudMateriales, solicitudMaterialesDto>()
                 .ForMember(dest => dest.solicitudMaterialOf, opt => opt.MapFrom(src => src.solicitudMaterialesOf))
                 .ForMember(dest => dest.materialDescripcion, opt => opt.MapFrom(src => src.MaterialNavigation.nombreMaterial))
-                //.ForMember(dest => dest.nombreMaquina, opt => opt.MapFrom(src => src.idMaquina.))
+                .ForMember(dest => dest.nombreMaquina, opt => opt.MapFrom(src => src.idMaquinaNavigation.nombreMaquina))
                 .ReverseMap();
             CreateMap<solicitudMateriales, AddSolicitudMaterialesDto>().ReverseMap();
             CreateMap<UpdateSolicitudMaterialesDto, solicitudMateriales>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
+            CreateMap<solicitudMateriales, UpdateBatchPosicionSMDto>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
             CreateMap<solicitudMateriales, solicitudMaterialesProcesoOfDto>()
                 .ForMember(dest => dest.solicitudMaterialOf, opt => opt.MapFrom(src => src.solicitudMaterialesOf))
                 .ForMember(dest => dest.materialDescripcion, opt => opt.MapFrom(src => src.MaterialNavigation.nombreMaterial))
+                .ForMember(dest => dest.nombreMaquina, opt => opt.MapFrom(src => src.idMaquinaNavigation.nombreMaquina))
                 .ReverseMap();
 
             CreateMap<solicitudMaterialesOf, solicitudMaterialesOfDto>()

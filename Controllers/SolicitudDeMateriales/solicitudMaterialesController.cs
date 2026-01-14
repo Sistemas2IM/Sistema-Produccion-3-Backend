@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.SolicitudMateriales;
+using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.SolicitudMateriales.Batch;
 using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.SolicitudMaterialOF;
 using Sistema_Produccion_3_Backend.Models;
 
@@ -34,6 +35,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales
                 .Include(s => s.solicitudMaterialesOf)
                     .ThenInclude(so => so.oFNavigation)
                 .Include(m => m.MaterialNavigation)
+                .Include(ma => ma.idMaquinaNavigation)
                 .ToListAsync();
 
             var solicitudMaterialesDto = _mapper.Map<List<solicitudMaterialesDto>>(solicitudMateriales);
@@ -50,6 +52,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales
                 .Include(s => s.solicitudMaterialesOf)
                     .ThenInclude(so => so.oFNavigation)
                 .Include(m => m.MaterialNavigation)
+                .Include(ma => ma.idMaquinaNavigation)
                 .FirstOrDefaultAsync(s => s.idSolicitud == id);
 
             var solicitudMaterialesDto = _mapper.Map<solicitudMaterialesDto>(solicitudMateriales);
@@ -72,6 +75,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales
                 .Include(s => s.solicitudMaterialesOf)
                     .ThenInclude(so => so.oFNavigation)
                 .Include(m => m.MaterialNavigation)
+                .Include(ma => ma.idMaquinaNavigation)
                 .FirstOrDefaultAsync();
 
             var solicitudMaterialesDto = _mapper.Map<solicitudMaterialesDto>(solicitudMateriales);
@@ -203,6 +207,49 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales
             }
 
             return Ok(solicitudMaterialesDto);
+        }
+
+        [HttpDelete("put/batch/posiciones")]
+        public async Task<IActionResult> BatchUpdateSM([FromBody] BatchUpdatePosicionSMDto batchUpdateDto)
+        {
+            if (batchUpdateDto.SolicitudesMateriales == null || !batchUpdateDto.SolicitudesMateriales.Any())
+            {
+                return BadRequest("La lista de solicitudes de materiales está vacía.");
+            }
+
+            var ids = batchUpdateDto.SolicitudesMateriales.Select(s => s.idSolicitud).ToList();
+
+            var solicitudes = await _context.solicitudMateriales.Where(s => ids.Contains(s.idSolicitud)).ToListAsync();
+
+            if (!solicitudes.Any())
+            {
+                return NotFound("No se encontraron las SM con los id proporcionados :V");
+            }
+
+            foreach (var solicitudDto in batchUpdateDto.SolicitudesMateriales)
+            {
+                var solicitud = solicitudes.FirstOrDefault(s => s.idSolicitud == solicitudDto.idSolicitud);
+                if (solicitud != null)
+                {
+                    if(solicitudDto.idSolicitud > 0)
+                    {
+                        solicitud.posicion = solicitudDto.posicion;
+                    }
+
+                    _context.Entry(solicitud).State = EntityState.Modified;
+                }
+            }
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error al actualizar las SM");
+            }
+
+            return Ok("Posiciones actualizadas correctamente.");
         }
 
         private bool solicitudMaterialesExist(int id) 

@@ -125,6 +125,10 @@ public partial class solicitudMateriales
 
     public virtual material? MaterialNavigation { get; set; }
 
+    [ForeignKey("idMaquina")]
+    [InverseProperty("solicitudMateriales")]
+    public virtual maquinas idMaquinaNavigation { get; set; }
+
     [InverseProperty("idSolicitudNavigation")]
     public virtual ICollection<lotePliego> lotePliego { get; set; } = new List<lotePliego>();
 
