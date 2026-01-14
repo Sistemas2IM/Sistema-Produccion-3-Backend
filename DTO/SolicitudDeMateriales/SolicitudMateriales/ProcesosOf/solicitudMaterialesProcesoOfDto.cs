@@ -30,6 +30,8 @@ namespace Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.SolicitudMateri
 
         public int? idMaquina { get; set; }
 
+        public string? nombreMaquina { get; set; }
+
         public decimal? anchoPliego { get; set; }
 
         public decimal? largoPliego { get; set; }
