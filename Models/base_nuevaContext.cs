@@ -1117,11 +1117,6 @@ public partial class base_nuevaContext : DbContext
 
             entity.HasOne(d => d.idMaquinaNavigation).WithMany(p => p.solicitudMateriales).HasConstraintName("FK_SOLICITUD_MAQUINA");
 
-            // Configuración de la relación manual
-            entity.HasOne(d => d.MaterialNavigation) // Tu nueva propiedad
-                  .WithMany() // Asumimos que Material no tiene una lista de solicitudes, o no la necesitas
-                  .HasForeignKey(d => d.idMaterialSAP) // El campo en solicitudMateriales
-                  .HasPrincipalKey(p => p.idMaterial); // El campo match en la tabla Material
         });
 
         modelBuilder.Entity<solicitudMaterialesOf>(entity =>

@@ -34,7 +34,6 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales
                 .OrderBy(p => p.posicion)
                 .Include(s => s.solicitudMaterialesOf)
                     .ThenInclude(so => so.oFNavigation)
-                .Include(m => m.MaterialNavigation)
                 .Include(ma => ma.idMaquinaNavigation)
                 .ToListAsync();
 
@@ -51,7 +50,6 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales
                 .OrderBy(p => p.posicion)
                 .Include(s => s.solicitudMaterialesOf)
                     .ThenInclude(so => so.oFNavigation)
-                .Include(m => m.MaterialNavigation)
                 .Include(ma => ma.idMaquinaNavigation)
                 .FirstOrDefaultAsync(s => s.idSolicitud == id);
 
@@ -74,7 +72,6 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales
                 .OrderBy(p => p.posicion)
                 .Include(s => s.solicitudMaterialesOf)
                     .ThenInclude(so => so.oFNavigation)
-                .Include(m => m.MaterialNavigation)
                 .Include(ma => ma.idMaquinaNavigation)
                 .FirstOrDefaultAsync();
 

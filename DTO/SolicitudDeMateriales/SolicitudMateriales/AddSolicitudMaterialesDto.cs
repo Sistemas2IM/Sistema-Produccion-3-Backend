@@ -87,5 +87,7 @@
         public string? cantidadSolicitud { get; set; }
 
         public string? materialDescripcion { get; set; }
+
+        public string? serie { get; set; }
     }
 }

@@ -1184,8 +1184,6 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                  .ThenInclude(so => so.solicitudMaterialesOf)
                     .ThenInclude(of => of.oFNavigation)
                 .Include(s => s.idSolicitudMaterialesNavigation)
-                    .ThenInclude(u => u.MaterialNavigation)
-                .Include(s => s.idSolicitudMaterialesNavigation)
                     .ThenInclude(sm => sm.idMaquinaNavigation)
                 .Include(u => u.detalleReporte)
                     .ThenInclude(o => o.idOperacionNavigation)

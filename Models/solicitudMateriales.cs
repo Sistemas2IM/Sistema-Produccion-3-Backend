@@ -126,7 +126,8 @@ public partial class solicitudMateriales
     [StringLength(300)]
     public string materialDescripcion { get; set; }
 
-    public virtual material? MaterialNavigation { get; set; }
+    [StringLength(5)]
+    public string serie { get; set; }
 
     [ForeignKey("idMaquina")]
     [InverseProperty("solicitudMateriales")]
