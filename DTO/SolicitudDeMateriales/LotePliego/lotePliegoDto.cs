@@ -6,9 +6,9 @@
 
         public int? idSolicitud { get; set; }
 
-        public int? largo { get; set; }
+        public decimal? largo { get; set; }
 
-        public int? ancho { get; set; }
+        public decimal? ancho { get; set; }
 
         public int? cantidadPliegos { get; set; }
 

@@ -18,9 +18,11 @@ public partial class lotePliego
 
     public int? idSolicitud { get; set; }
 
-    public int? largo { get; set; }
+    [Column(TypeName = "decimal(10, 2)")]
+    public decimal? largo { get; set; }
 
-    public int? ancho { get; set; }
+    [Column(TypeName = "decimal(10, 2)")]
+    public decimal? ancho { get; set; }
 
     public int? cantidadPliegos { get; set; }
 

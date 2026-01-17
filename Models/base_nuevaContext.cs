@@ -1116,7 +1116,6 @@ public partial class base_nuevaContext : DbContext
             entity.Property(e => e.idMaterialSAP).UseCollation("SQL_Latin1_General_CP1_CI_AS");
 
             entity.HasOne(d => d.idMaquinaNavigation).WithMany(p => p.solicitudMateriales).HasConstraintName("FK_SOLICITUD_MAQUINA");
-
         });
 
         modelBuilder.Entity<solicitudMaterialesOf>(entity =>
