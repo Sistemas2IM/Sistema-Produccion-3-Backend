@@ -123,6 +123,9 @@ public partial class solicitudMateriales
     [StringLength(50)]
     public string cantidadSolicitud { get; set; }
 
+    [StringLength(300)]
+    public string materialDescripcion { get; set; }
+
     public virtual material? MaterialNavigation { get; set; }
 
     [ForeignKey("idMaquina")]

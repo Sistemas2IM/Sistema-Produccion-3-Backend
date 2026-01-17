@@ -83,5 +83,7 @@
         public string? unidadSolicitud { get; set; }
 
         public string? cantidadSolicitud { get; set; }
+
+        public string? materialDescripcion { get; set; }
     }
 }

@@ -784,7 +784,6 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             // SOLICITUD DE MATERIALES ================================================================================
             CreateMap<solicitudMateriales, solicitudMaterialesDto>()
                 .ForMember(dest => dest.solicitudMaterialOf, opt => opt.MapFrom(src => src.solicitudMaterialesOf))
-                .ForMember(dest => dest.materialDescripcion, opt => opt.MapFrom(src => src.MaterialNavigation.nombreMaterial))
                 .ForMember(dest => dest.nombreMaquina, opt => opt.MapFrom(src => src.idMaquinaNavigation.nombreMaquina))
                 .ReverseMap();
             CreateMap<solicitudMateriales, AddSolicitudMaterialesDto>().ReverseMap();
@@ -796,7 +795,6 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
 
             CreateMap<solicitudMateriales, solicitudMaterialesProcesoOfDto>()
                 .ForMember(dest => dest.solicitudMaterialOf, opt => opt.MapFrom(src => src.solicitudMaterialesOf))
-                .ForMember(dest => dest.materialDescripcion, opt => opt.MapFrom(src => src.MaterialNavigation.nombreMaterial))
                 .ForMember(dest => dest.nombreMaquina, opt => opt.MapFrom(src => src.idMaquinaNavigation.nombreMaquina))
                 .ReverseMap();
 

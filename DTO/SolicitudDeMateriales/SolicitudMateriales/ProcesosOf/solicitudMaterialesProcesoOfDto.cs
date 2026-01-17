@@ -94,6 +94,8 @@ namespace Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.SolicitudMateri
 
         public string? cantidadSolicitud { get; set; }
 
+        public string? nombreMaterialSAP { get; set; }
+
         public List<solicitudMaterialesOfDto>? solicitudMaterialOf { get; set; }
     }
 }
