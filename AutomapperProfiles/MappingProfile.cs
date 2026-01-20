@@ -182,6 +182,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                     .Concat(src.corridaCombinadasubordinadoNavigation != null
                         ? new List<corridaCombinada> { src.corridaCombinadasubordinadoNavigation }
                         : new List<corridaCombinada>())))
+                .ForMember(dest => dest.descripcionOf, opt => opt.MapFrom(src => src.oFNavigation.descipcionOf))
                 .ReverseMap();
             CreateMap<procesoOf, ProcesoOfVistaTableroDto>()
                 .ForMember(dest => dest.idArea, opt => opt.MapFrom(src => src.idTableroNavigation.idArea))
@@ -208,6 +209,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                     .Concat(src.corridaCombinadasubordinadoNavigation != null
                         ? new List<corridaCombinada> { src.corridaCombinadasubordinadoNavigation }
                         : new List<corridaCombinada>())))
+                .ForMember(dest => dest.descripcionOf, opt => opt.MapFrom(src => src.oFNavigation.descipcionOf))
                 .ReverseMap();
             CreateMap<procesoOf, ListaProcesoOfDto>()
                 .ForMember(dest => dest.idArea, opt => opt.MapFrom(src => src.idTableroNavigation.idArea))
@@ -235,6 +237,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                         ? new List<corridaCombinada> { src.corridaCombinadasubordinadoNavigation }
                         : new List<corridaCombinada>()))
                 )
+                .ForMember(dest => dest.descripcionOf, opt => opt.MapFrom(src => src.oFNavigation.descipcionOf))
                 .ReverseMap();
             CreateMap<procesoOf, ProcesosBusquedaDto>()
                 .ForMember(dest => dest.cliente, opt => opt.MapFrom(src => src.oFNavigation.clienteOf))
@@ -273,6 +276,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                         .Concat(src.corridaCombinadasubordinadoNavigation != null
                             ? new List<corridaCombinada> { src.corridaCombinadasubordinadoNavigation }
                             : new List<corridaCombinada>())))
+                    .ForMember(dest => dest.descripcionOf, opt => opt.MapFrom(src => src.oFNavigation.descipcionOf))
                     .ReverseMap();
 
                 CreateMap<procesoOf, AddProcesoOfMaquinas>()
