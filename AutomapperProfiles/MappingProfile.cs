@@ -808,7 +808,11 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             CreateMap<UpdateSolicitudMaterialesOfDto, solicitudMaterialesOf>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
-            CreateMap<lotePliego, lotePliegoDto>().ReverseMap();
+            CreateMap<lotePliego, lotePliegoDto>()
+                .ForMember(dest => dest.nombreUnidad, opt => opt.MapFrom(src => src.unidadMedidaNavigation.nombre))
+                .ForMember(dest => dest.simboloUnidad, opt => opt.MapFrom(src => src.unidadMedidaNavigation.simbolo))
+                .ReverseMap();
+
             CreateMap<lotePliego, AddLotePliegoDto>().ReverseMap();
             CreateMap<UpdateLotePliegoDto, lotePliego>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));

@@ -575,6 +575,8 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.idSolicitudNavigation).WithMany(p => p.lotePliego).HasConstraintName("FK_LOTEPLIEGO_SOLICITUD");
 
             entity.HasOne(d => d.procesoOrigenNavigation).WithMany(p => p.lotePliego).HasConstraintName("FK_LOTE_PROCESO_ORIGEN");
+
+            entity.HasOne(d => d.unidadMedidaNavigation).WithMany(p => p.lotePliego).HasConstraintName("FK_U_MEDIDA_LOTE");
         });
 
         modelBuilder.Entity<maquinas>(entity =>

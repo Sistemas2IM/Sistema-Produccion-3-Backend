@@ -31,5 +31,11 @@
         public bool? tira { get; set; }
 
         public int? cantidadPendiente { get; set; }
+
+        public int? unidadMedida { get; set; }
+
+        public string? nombreUnidad { get; set; }
+
+        public string? simboloUnidad { get; set; }
     }
 }

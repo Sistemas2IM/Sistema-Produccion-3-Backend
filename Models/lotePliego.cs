@@ -11,6 +11,7 @@ namespace Sistema_Produccion_3_Backend.Models;
 [Index("creadoPor", Name = "LOTE_CREADO_POR_FK")]
 [Index("procesoOrigen", Name = "LOTE_PROCESO_ORIGEN_FK")]
 [Index("idSolicitud", Name = "SOLICITUDMATERIALES_LOTEPLIEGOS_FK")]
+[Index("unidadMedida", Name = "U_MEDIDA_LOTE_FK")]
 public partial class lotePliego
 {
     [Key]
@@ -53,6 +54,8 @@ public partial class lotePliego
 
     public int? cantidadPendiente { get; set; }
 
+    public int? unidadMedida { get; set; }
+
     [ForeignKey("creadoPor")]
     [InverseProperty("lotePliego")]
     public virtual usuario creadoPorNavigation { get; set; }
@@ -67,4 +70,8 @@ public partial class lotePliego
 
     [InverseProperty("idLoteNavigation")]
     public virtual ICollection<transferenciaProceso> transferenciaProceso { get; set; } = new List<transferenciaProceso>();
+
+    [ForeignKey("unidadMedida")]
+    [InverseProperty("lotePliego")]
+    public virtual unidadesMedida unidadMedidaNavigation { get; set; }
 }
