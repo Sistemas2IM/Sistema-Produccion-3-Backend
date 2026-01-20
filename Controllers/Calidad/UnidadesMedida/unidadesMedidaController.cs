@@ -50,6 +50,19 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.UnidadesMedida
             return Ok(unidadesMedidaDto);
         }
 
+        // POR CAMPO "TIPO
+        [HttpGet("get/tipo/{tipo}")]
+        public async Task<ActionResult<IEnumerable<UnidadesMedidaDto>>> GetUnidadesMedidaTipo(string tipo)
+        {
+            var unidadesMedida = await _context.unidadesMedida
+                .Where(t => t.tipo == tipo)
+                .ToListAsync();
+
+            var unidadesMedidaDto = _mapper.Map<List<UnidadesMedidaDto>>(unidadesMedida);
+
+            return Ok(unidadesMedidaDto);
+        }
+
         // POST api/<unidadesMedidaController>
         [HttpPost("post")]
         public async Task<ActionResult<unidadesMedida>> PostUnidadMedida(AddUnidadesMedidaDto addUnidadesMedidaDto)
