@@ -26,7 +26,9 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales
         [HttpGet("get")]
         public async Task<ActionResult<IEnumerable<lotePliegoDto>>> GetSolicitud()
         {
-            var lotePliego = await _context.lotePliego.ToListAsync();
+            var lotePliego = await _context.lotePliego
+                .Include(um => um.unidadMedidaNavigation)
+                .ToListAsync();
             var lotePliegoDto = _mapper.Map<List<lotePliegoDto>>(lotePliego);
 
             return Ok(lotePliegoDto);
@@ -38,6 +40,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales
         {
             var lotePliego = await _context.lotePliego
                 .Where(b => b.codigoBobinaSAP == codBobina)
+                .Include(um => um.unidadMedidaNavigation)
                 .ToListAsync();
 
             var lotePliegoDto = _mapper.Map<List<lotePliegoDto>>(lotePliego);
@@ -49,7 +52,9 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales
         [HttpGet("get/{id}")]
         public async Task<ActionResult<IEnumerable<lotePliegoDto>>> GetSolicitudId(int id)
         {
-            var lotePliego = await _context.lotePliego.FindAsync(id);
+            var lotePliego = await _context.lotePliego
+                .Include(um => um.unidadMedidaNavigation)
+                .FirstOrDefaultAsync(lp => lp.idLote == id);
             var lotePliegoDto = _mapper.Map<lotePliegoDto>(lotePliego);
 
             if (lotePliegoDto == null)
@@ -65,6 +70,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales
         {
             var lotePliego = await _context.lotePliego
                 .Where (lp => lp.procesoOrigen == id)
+                .Include(um => um.unidadMedidaNavigation)
                 .ToListAsync();
 
             var lotePliegoDto = _mapper.Map<List<lotePliegoDto>>(lotePliego);
@@ -77,6 +83,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales
         {
             var lotePliego = await _context.lotePliego
                 .Where(lp => lp.idSolicitud == id)
+                .Include(um => um.unidadMedidaNavigation)
                 .ToListAsync();
 
             var lotePliegoDto = _mapper.Map<List<lotePliegoDto>>(lotePliego);

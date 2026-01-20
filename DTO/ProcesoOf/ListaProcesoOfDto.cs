@@ -32,6 +32,8 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
 
         public string? productoOf { get; set; }
 
+        public string? descripcionOf { get; set; }
+
         public int? secuencia { get; set; }
 
         public bool? completada { get; set; }
