@@ -8,7 +8,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Sistema_Produccion_3_Backend.Models;
 
-[Index("tipoReporte", Name = "TIPO_REPORTE_FK")]
 public partial class estadosReporte
 {
     [Key]

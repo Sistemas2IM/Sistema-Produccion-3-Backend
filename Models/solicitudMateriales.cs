@@ -99,6 +99,8 @@ public partial class solicitudMateriales
     [StringLength(50)]
     public string direccionCorte { get; set; }
 
+    public int? posicion { get; set; }
+
     public bool? archivado { get; set; }
 
     public bool? cancelado { get; set; }
@@ -114,8 +116,6 @@ public partial class solicitudMateriales
     public bool? incluyeProceso { get; set; }
 
     public string descripcion { get; set; }
-
-    public int? posicion { get; set; }
 
     [StringLength(50)]
     public string unidadSolicitud { get; set; }

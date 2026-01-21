@@ -12,7 +12,6 @@ namespace Sistema_Produccion_3_Backend.Models;
 [Index("idEstadoReporte", Name = "ESTADO_REPORTE_FK")]
 [Index("idMaquina", Name = "MAQUINA_REPORTE_FK")]
 [Index("operador", Name = "OPERADOR_REPORTE_FK")]
-[Index("idTipoReporte", Name = "TIPO_REPORTE_FK")]
 public partial class reportesDeOperadores
 {
     [Key]
