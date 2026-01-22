@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Sistema_Produccion_3_Backend.Models;
 
+[Index("idFamilia", Name = "FAMILIA_MAQUINA_FK")]
 public partial class maquinas
 {
     [Key]
