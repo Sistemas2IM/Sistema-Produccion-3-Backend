@@ -132,30 +132,29 @@ namespace TuNamespace.Controllers // Asegúrate de ajustar el namespace
 
                 string safeItemCode = itemCode.Replace("'", "''");
 
-                string query = $@"
-        SELECT 
-            T0.""DistNumber"" AS ""codLote"", 
-            T1.""WhsCode"" AS ""codAlmacen"",
-            T3.""ItemCode"" AS ""codMaterial"",
-            T3.""ItemName"" AS ""descMaterial"",
-            T3.""U_Gramaje"" AS ""gramaje"",
-            T2.""Quantity"" AS ""pesoInicial"",
-            T1.""Quantity"" AS ""pesoActualLote"",
-            T4.""OnHand""   AS ""stockTotalItem""
-        FROM OBTN T0
-        INNER JOIN OBTQ T1 ON T0.""ItemCode"" = T1.""ItemCode"" AND T0.""SysNumber"" = T1.""SysNumber""
-        INNER JOIN ITL1 T2 ON T0.""ItemCode"" = T2.""ItemCode"" AND T0.""SysNumber"" = T2.""SysNumber""
-        INNER JOIN OITM T3 ON T0.""ItemCode"" = T3.""ItemCode""
-        INNER JOIN OITW T4 ON T0.""ItemCode"" = T4.""ItemCode"" AND T1.""WhsCode"" = T4.""WhsCode""
-        WHERE T1.""WhsCode"" = 'IM01' 
-          AND T0.""ItemCode"" = '{safeItemCode}' 
-          AND T1.""Quantity"" > 0
-          AND T2.""LogEntry"" = (
-              SELECT MIN(X.""LogEntry"") 
-              FROM ITL1 X 
-              WHERE X.""ItemCode"" = T0.""ItemCode"" 
-                AND X.""SysNumber"" = T0.""SysNumber""
-         )";
+                string query = $@"SELECT 
+                                T0.""DistNumber"" AS ""codLote"", 
+                                T1.""WhsCode"" AS ""codAlmacen"",
+                                T3.""ItemCode"" AS ""codMaterial"",
+                                T3.""ItemName"" AS ""descMaterial"",
+                                T3.""U_Gramaje"" AS ""gramaje"",
+                                T2.""Quantity"" AS ""pesoInicial"",
+                                T1.""Quantity"" AS ""pesoActualLote"",
+                                T4.""OnHand""   AS ""stockTotalItem""
+                            FROM OBTN T0
+                            INNER JOIN OBTQ T1 ON T0.""ItemCode"" = T1.""ItemCode"" AND T0.""SysNumber"" = T1.""SysNumber""
+                            INNER JOIN ITL1 T2 ON T0.""ItemCode"" = T2.""ItemCode"" AND T0.""SysNumber"" = T2.""SysNumber""
+                            INNER JOIN OITM T3 ON T0.""ItemCode"" = T3.""ItemCode""
+                            INNER JOIN OITW T4 ON T0.""ItemCode"" = T4.""ItemCode"" AND T1.""WhsCode"" = T4.""WhsCode""
+                            WHERE T1.""WhsCode"" = 'IM01' 
+                              AND T0.""ItemCode"" = '{safeItemCode}' 
+                              AND T1.""Quantity"" > 0
+                              AND T2.""LogEntry"" = (
+                                  SELECT MIN(X.""LogEntry"") 
+                                  FROM ITL1 X 
+                                  WHERE X.""ItemCode"" = T0.""ItemCode"" 
+                                    AND X.""SysNumber"" = T0.""SysNumber""
+                             )";
 
                 var recordSet = (Recordset)oCompany.GetBusinessObject(BoObjectTypes.BoRecordset);
                 recordSet.DoQuery(query);
