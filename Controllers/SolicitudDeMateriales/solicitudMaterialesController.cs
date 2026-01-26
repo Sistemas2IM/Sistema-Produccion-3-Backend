@@ -206,7 +206,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales
             return Ok(solicitudMaterialesDto);
         }
 
-        [HttpDelete("put/batch/posiciones")]
+        [HttpPut("put/batch/posiciones")]
         public async Task<IActionResult> BatchUpdateSM([FromBody] BatchUpdatePosicionSMDto batchUpdateDto)
         {
             if (batchUpdateDto.SolicitudesMateriales == null || !batchUpdateDto.SolicitudesMateriales.Any())

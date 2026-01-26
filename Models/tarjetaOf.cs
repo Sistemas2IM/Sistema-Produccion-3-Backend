@@ -94,6 +94,9 @@ public partial class tarjetaOf
     [StringLength(500)]
     public string razonSocial { get; set; }
 
+    [StringLength(50)]
+    public string actualizadoPor { get; set; }
+
     [InverseProperty("oFNavigation")]
     public virtual ICollection<certificadoCalidad> certificadoCalidad { get; set; } = new List<certificadoCalidad>();
 

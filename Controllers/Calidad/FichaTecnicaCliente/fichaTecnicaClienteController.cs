@@ -26,6 +26,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.FichaTecnicaCliente
         public async Task<ActionResult<IEnumerable<FichaTecnicaClienteDto>>> GetFichaCliente()
         {
             var fichaTecnicaCliente = await _context.fichaTecnicaCliente
+                .OrderByDescending(f => f.idFichaCliente)
                 .Include(f => f.detalleFichaClientes)
                 .ThenInclude(d => d.idVariableNavigation)
                 .Include(f => f.detalleFichaClientes)
@@ -44,6 +45,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.FichaTecnicaCliente
         public async Task<ActionResult<FichaTecnicaClienteDto>> GetFichaCliente(int id)
         {
             var fichaTecnicaCliente = await _context.fichaTecnicaCliente
+                .OrderByDescending(f => f.idFichaCliente)
                 .Include(c => c.detalleFichaClientes)
                 .ThenInclude(d => d.idVariableNavigation)
                 .Include(f => f.detalleFichaClientes)
@@ -65,7 +67,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.FichaTecnicaCliente
         [HttpGet("get/of/{of}")]
         public async Task<ActionResult<IEnumerable<FichaTecnicaClienteDto>>> GetFichaClienteOf(int of)
         {
-            var fichaTecnicaCliente = await _context.fichaTecnicaCliente            
+            var fichaTecnicaCliente = await _context.fichaTecnicaCliente
+                .OrderByDescending(f => f.idFichaCliente)
                 .Include(f => f.detalleFichaClientes)
                 .ThenInclude(d => d.idVariableNavigation)
                 .Include(f => f.oFNavigation)
@@ -82,6 +85,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.FichaTecnicaCliente
         {
             // 1. Preparamos la consulta base (sin el ToListAsync todavía)
             var query = _context.fichaTecnicaCliente
+                .OrderByDescending(f => f.idFichaCliente)
                 .Include(f => f.detalleFichaClientes)
                 .ThenInclude(d => d.idVariableNavigation)
                 .Include(f => f.detalleFichaClientes)

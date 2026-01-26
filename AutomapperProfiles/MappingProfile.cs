@@ -830,7 +830,9 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             CreateMap<UpdateLotePliegoDto, lotePliego>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
-            CreateMap<transferenciaProceso, transferenciaProcesoDto>().ReverseMap();
+            CreateMap<transferenciaProceso, transferenciaProcesoDto>()
+                .ForMember(dest => dest.nombreTablero, opt => opt.MapFrom(src => src.idOrigenNavigation.idTableroNavigation.nombreTablero))
+                .ReverseMap();
             CreateMap<transferenciaProceso, AddTransferenciaProcesoDto>().ReverseMap();
             CreateMap<UpdateTransferenciaProcesoDto, transferenciaProceso>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));

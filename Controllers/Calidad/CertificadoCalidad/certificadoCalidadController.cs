@@ -26,6 +26,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.CertificadoCalidad
         public async Task<ActionResult<IEnumerable<CertificadoCalidadDto>>> GetCertificado()
         {
             var certificado = await _context.certificadoCalidad
+                .OrderByDescending(c => c.idCertificadoCalidad)
                 .Include(c => c.detalleCertificadoCalidad)
                 .ThenInclude(d => d.idVariableNavigation)
                 .Include(c => c.detalleCertificadoCalidad)
@@ -45,6 +46,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.CertificadoCalidad
         public async Task<ActionResult<CertificadoCalidadDto>> Get(int id)
         {
             var certificado = await _context.certificadoCalidad
+                .OrderByDescending(c => c.idCertificadoCalidad)
                 .Include(c => c.detalleCertificadoCalidad)
                 .ThenInclude(d => d.idVariableNavigation)
                 .Include(c => c.detalleCertificadoCalidad)
@@ -64,7 +66,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.CertificadoCalidad
         [HttpGet("get/of/{of}")]
         public async Task<ActionResult<IEnumerable<CertificadoCalidadDto>>> GetCertificadoOf(int of)
         {
-            var certificado = await _context.certificadoCalidad              
+            var certificado = await _context.certificadoCalidad
+                .OrderByDescending(c => c.idCertificadoCalidad)
                 .Include(c => c.detalleCertificadoCalidad)
                 .ThenInclude(d => d.idVariableNavigation)
                 .Include(c => c.detalleCertificadoCalidad)
@@ -85,6 +88,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.CertificadoCalidad
         {
             // 1. Construimos la consulta base (Query)
             var query = _context.certificadoCalidad
+                .OrderByDescending(c => c.idCertificadoCalidad)
                 .Include(c => c.detalleCertificadoCalidad)
                 .ThenInclude(d => d.idVariableNavigation)
                 .Include(c => c.detalleCertificadoCalidad)
