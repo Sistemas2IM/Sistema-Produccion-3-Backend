@@ -9,6 +9,7 @@ using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnicaCliente.DetalleFichaC
 using Sistema_Produccion_3_Backend.DTO.Calidad.UnidadesMedida;
 using Sistema_Produccion_3_Backend.DTO.Calidad.VariablesTecnicas;
 using Sistema_Produccion_3_Backend.DTO.Calidad.VariableUnidadMedida;
+using Sistema_Produccion_3_Backend.DTO.Catalogo.Empleados;
 using Sistema_Produccion_3_Backend.DTO.Catalogo.FamiliaMaquina;
 using Sistema_Produccion_3_Backend.DTO.Catalogo.Maquinas;
 using Sistema_Produccion_3_Backend.DTO.Catalogo.Turnos;
@@ -497,6 +498,11 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             CreateMap<familliaDeMaquina, ListaFamilliaDeMaquinaDto>()
                 .ForMember(dest => dest.maquinas, opt => opt.MapFrom(src => src.maquinas))
                 .ReverseMap();
+
+            CreateMap<empleadoCatalogo, EmpleadoCatalogoDto>().ReverseMap();
+            CreateMap<empleadoCatalogo, AddEmpleadoCatalogoDto>().ReverseMap();
+            CreateMap<UpdateEmpleadoCatalogoDto, empleadoCatalogo>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
 
             // PERMISOS / USUARIO ====================================================================================
