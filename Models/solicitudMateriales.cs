@@ -57,28 +57,28 @@ public partial class solicitudMateriales
 
     public int? idSap { get; set; }
 
-    [Column(TypeName = "numeric(20, 0)")]
+    [Column(TypeName = "numeric(20, 2)")]
     public decimal? anchoHojaPulg { get; set; }
 
-    [Column(TypeName = "numeric(20, 0)")]
+    [Column(TypeName = "numeric(20, 2)")]
     public decimal? anchoPliegoPulg { get; set; }
 
-    [Column(TypeName = "numeric(20, 0)")]
+    [Column(TypeName = "numeric(20, 2)")]
     public decimal? largoPliegoPulg { get; set; }
 
-    [Column(TypeName = "numeric(20, 0)")]
+    [Column(TypeName = "numeric(20, 2)")]
     public decimal? areaApulg { get; set; }
 
-    [Column(TypeName = "numeric(20, 0)")]
+    [Column(TypeName = "numeric(20, 2)")]
     public decimal? areaA { get; set; }
 
-    [Column(TypeName = "numeric(20, 0)")]
+    [Column(TypeName = "numeric(20, 2)")]
     public decimal? areaBpulg { get; set; }
 
-    [Column(TypeName = "numeric(20, 0)")]
+    [Column(TypeName = "numeric(20, 2)")]
     public decimal? areaB { get; set; }
 
-    [Column(TypeName = "numeric(20, 0)")]
+    [Column(TypeName = "numeric(20, 2)")]
     public decimal? largoHojaPulg { get; set; }
 
     [StringLength(100)]

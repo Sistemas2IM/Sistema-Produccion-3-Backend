@@ -42,6 +42,6 @@
 
         public string? idMaterialSAP { get; set; }
 
-        public string? materiaDescripcion { get; set; }
+        public string? materialDescripcion { get; set; }
     }
 }

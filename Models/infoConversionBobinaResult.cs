@@ -14,9 +14,9 @@ namespace Sistema_Produccion_3_Backend.Models
         public string oF { get; set; }
         public int idProceso { get; set; }
         public int idSolicitud { get; set; }
-        [Column("anchoPliego", TypeName = "decimal(20,0)")]
+        [Column("anchoPliego", TypeName = "decimal(20,2)")]
         public decimal? anchoPliego { get; set; }
-        [Column("largoPliego", TypeName = "decimal(20,0)")]
+        [Column("largoPliego", TypeName = "decimal(20,2)")]
         public decimal? largoPliego { get; set; }
         public int? cantidadProducida { get; set; }
         public int? cantidadNc { get; set; }

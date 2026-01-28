@@ -71,7 +71,7 @@ public partial class transferenciaProceso
     public string idMaterialSAP { get; set; }
 
     [StringLength(500)]
-    public string materiaDescripcion { get; set; }
+    public string materialDescripcion { get; set; }
 
     [ForeignKey("areaDestino")]
     [InverseProperty("transferenciaProcesoareaDestinoNavigation")]
