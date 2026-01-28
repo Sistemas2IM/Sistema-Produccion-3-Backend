@@ -21,5 +21,7 @@
         public string? calibreBobina { get; set; }
 
         public string? gramajeBobina { get; set; }
+
+        public bool? entregaParcial { get; set; }
     }
 }

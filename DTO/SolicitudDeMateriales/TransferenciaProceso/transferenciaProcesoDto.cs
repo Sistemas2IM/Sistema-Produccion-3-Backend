@@ -46,5 +46,7 @@ namespace Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.TransferenciaPr
         public int? idSolicitudOrigen { get; set; }
 
         public string? idMaterialSAP { get; set; }
+
+        public string? materiaDescripcion { get; set; }
     }
 }

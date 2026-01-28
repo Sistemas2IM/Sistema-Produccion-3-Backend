@@ -70,6 +70,9 @@ public partial class transferenciaProceso
     [StringLength(255)]
     public string idMaterialSAP { get; set; }
 
+    [StringLength(500)]
+    public string materiaDescripcion { get; set; }
+
     [ForeignKey("areaDestino")]
     [InverseProperty("transferenciaProcesoareaDestinoNavigation")]
     public virtual areas areaDestinoNavigation { get; set; }
