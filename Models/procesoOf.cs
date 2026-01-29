@@ -140,6 +140,12 @@ public partial class procesoOf
 
     public int? idSolicitudMateriales { get; set; }
 
+    public int? tipoEntrada { get; set; }
+
+    public int? tipoSalida { get; set; }
+
+    public bool? esEnsamblaje { get; set; }
+
     [InverseProperty("procesoAnteriorNavigation")]
     public virtual ICollection<procesoOf> InverseprocesoAnteriorNavigation { get; set; } = new List<procesoOf>();
 
@@ -159,9 +165,6 @@ public partial class procesoOf
 
     [InverseProperty("idProcesoNavigation")]
     public virtual ICollection<componenteProduccion> componenteProduccion { get; set; } = new List<componenteProduccion>();
-
-    [InverseProperty("idProcesoNavigation")]
-    public virtual ICollection<configuracionProceso> configuracionProceso { get; set; } = new List<configuracionProceso>();
 
     [InverseProperty("maestroNavigation")]
     public virtual ICollection<corridaCombinada> corridaCombinadamaestroNavigation { get; set; } = new List<corridaCombinada>();
@@ -241,6 +244,14 @@ public partial class procesoOf
 
     [InverseProperty("idProcesoNavigation")]
     public virtual ICollection<tarjetaEtiqueta> tarjetaEtiqueta { get; set; } = new List<tarjetaEtiqueta>();
+
+    [ForeignKey("tipoEntrada")]
+    [InverseProperty("procesoOftipoEntradaNavigation")]
+    public virtual tipoComponente tipoEntradaNavigation { get; set; }
+
+    [ForeignKey("tipoSalida")]
+    [InverseProperty("procesoOftipoSalidaNavigation")]
+    public virtual tipoComponente tipoSalidaNavigation { get; set; }
 
     [InverseProperty("idDestinoNavigation")]
     public virtual ICollection<transferenciaProceso> transferenciaProcesoidDestinoNavigation { get; set; } = new List<transferenciaProceso>();

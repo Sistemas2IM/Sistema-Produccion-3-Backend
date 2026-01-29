@@ -122,6 +122,12 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas
 
         public int? idSolicitudMateriales { get; set; }
 
+        public int? tipoEntrada { get; set; }
+
+        public int? tipoSalida { get; set; }
+
+        public bool? esEnsamblaje { get; set; }
+
         public PosturasOfDto? posturasOfDto { get; set; }
 
         public MaterialDto? materialDto { get; set; }

@@ -30,14 +30,14 @@ public partial class tipoComponente
     [InverseProperty("tipoSalidaNavigation")]
     public virtual ICollection<componenteProduccion> componenteProducciontipoSalidaNavigation { get; set; } = new List<componenteProduccion>();
 
-    [InverseProperty("tipoComponenteNavigation")]
-    public virtual ICollection<configuracionProceso> configuracionProcesotipoComponenteNavigation { get; set; } = new List<configuracionProceso>();
-
     [InverseProperty("tipoEntradaNavigation")]
-    public virtual ICollection<configuracionProceso> configuracionProcesotipoEntradaNavigation { get; set; } = new List<configuracionProceso>();
+    public virtual ICollection<procesoOf> procesoOftipoEntradaNavigation { get; set; } = new List<procesoOf>();
 
     [InverseProperty("tipoSalidaNavigation")]
-    public virtual ICollection<configuracionProceso> configuracionProcesotipoSalidaNavigation { get; set; } = new List<configuracionProceso>();
+    public virtual ICollection<procesoOf> procesoOftipoSalidaNavigation { get; set; } = new List<procesoOf>();
+
+    [InverseProperty("tipoComponenteNavigation")]
+    public virtual ICollection<tarjetaOf> tarjetaOf { get; set; } = new List<tarjetaOf>();
 
     [InverseProperty("tipoSemielaboradoNavigation")]
     public virtual ICollection<transferenciaProceso> transferenciaProceso { get; set; } = new List<transferenciaProceso>();

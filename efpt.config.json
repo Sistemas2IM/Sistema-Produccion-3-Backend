@@ -56,10 +56,6 @@
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[configuracionProceso]",
-         "ObjectType": 0
-      },
-      {
          "Name": "[dbo].[corridaCombinada]",
          "ObjectType": 0
       },

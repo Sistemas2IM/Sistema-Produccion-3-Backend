@@ -140,6 +140,12 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
 
         public int? idSolicitudMateriales { get; set; }
 
+        public int? tipoEntrada { get; set; }
+
+        public int? tipoSalida { get; set; }
+
+        public bool? esEnsamblaje { get; set; }
+
         public List<DetalleReporteDto>? detalleProcesoOf { get; set; }
 
         public List<TarjetaCampoDto>? tarjetaCampoDto { get; set; }

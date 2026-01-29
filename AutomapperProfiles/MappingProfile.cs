@@ -78,7 +78,6 @@ using Sistema_Produccion_3_Backend.DTO.ReporteOperador.PausaMaquina;
 using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.BobinasAsignadas;
 using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.BobinasAsignadas.Batch;
 using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.ComponenteProduccion;
-using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.ConfiguracionProceso;
 using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.LotePliego;
 using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.SolicitudMateriales;
 using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.SolicitudMateriales.Batch;
@@ -868,11 +867,6 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             CreateMap<tipoComponente, TipoComponenteDto>().ReverseMap();
             CreateMap<tipoComponente, AddTipoComponenteDto>().ReverseMap();
             CreateMap<UpdateTipoComponenteDto, tipoComponente>()
-                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
-
-            CreateMap<configuracionProceso, ConfiguracionProcesoDto>().ReverseMap();
-            CreateMap<configuracionProceso, AddConfiguracionProcesoDto>().ReverseMap();
-            CreateMap<UpdateConfiguracionProcesoDto, configuracionProceso>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             CreateMap<componenteProduccion, ComponenteProduccionDto>().ReverseMap();
