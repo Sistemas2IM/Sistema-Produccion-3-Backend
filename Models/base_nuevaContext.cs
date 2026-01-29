@@ -31,6 +31,10 @@ public partial class base_nuevaContext : DbContext
 
     public virtual DbSet<certificadoCalidad_Log> certificadoCalidad_Log { get; set; }
 
+    public virtual DbSet<componenteProduccion> componenteProduccion { get; set; }
+
+    public virtual DbSet<configuracionProceso> configuracionProceso { get; set; }
+
     public virtual DbSet<corridaCombinada> corridaCombinada { get; set; }
 
     public virtual DbSet<detalleCertificadoCalidad> detalleCertificadoCalidad { get; set; }
@@ -157,6 +161,8 @@ public partial class base_nuevaContext : DbContext
 
     public virtual DbSet<tipoReporte> tipoReporte { get; set; }
 
+    public virtual DbSet<tipoSemielaborados> tipoSemielaborados { get; set; }
+
     public virtual DbSet<transferenciaProceso> transferenciaProceso { get; set; }
 
     public virtual DbSet<turnos> turnos { get; set; }
@@ -263,6 +269,30 @@ public partial class base_nuevaContext : DbContext
             entity.Property(e => e.elaboradoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.fechaLog).HasDefaultValueSql("(getdate())");
             entity.Property(e => e.tipoAccion).HasDefaultValue("UPDATE");
+        });
+
+        modelBuilder.Entity<componenteProduccion>(entity =>
+        {
+            entity.HasKey(e => e.idComponente).HasName("PK__componen__001F4C9342DED565");
+
+            entity.HasOne(d => d.idProcesoNavigation).WithMany(p => p.componenteProduccion).HasConstraintName("PROCESO_COMPONENTE_FK");
+
+            entity.HasOne(d => d.tipoComponenteNavigation).WithMany(p => p.componenteProducciontipoComponenteNavigation).HasConstraintName("TIPO_COMPONENTE_FK");
+
+            entity.HasOne(d => d.tipoSalidaNavigation).WithMany(p => p.componenteProducciontipoSalidaNavigation).HasConstraintName("TIPO_SALIDA_FK");
+        });
+
+        modelBuilder.Entity<configuracionProceso>(entity =>
+        {
+            entity.HasKey(e => e.idConfig).HasName("PK__configur__C7E5C6EFF17E6B20");
+
+            entity.HasOne(d => d.idProcesoNavigation).WithMany(p => p.configuracionProceso).HasConstraintName("FK_PROCESO_CONFIG");
+
+            entity.HasOne(d => d.tipoComponenteNavigation).WithMany(p => p.configuracionProcesotipoComponenteNavigation).HasConstraintName("FK_TIPO_COMPONENTE_PROCESO");
+
+            entity.HasOne(d => d.tipoEntradaNavigation).WithMany(p => p.configuracionProcesotipoEntradaNavigation).HasConstraintName("FK_TIPO_ENTRADA");
+
+            entity.HasOne(d => d.tipoSalidaNavigation).WithMany(p => p.configuracionProcesotipoSalidaNavigation).HasConstraintName("FK_TIPO_SALIDA");
         });
 
         modelBuilder.Entity<corridaCombinada>(entity =>
@@ -1199,6 +1229,13 @@ public partial class base_nuevaContext : DbContext
             entity.Property(e => e.nombreTipoReporte).UseCollation("SQL_Latin1_General_CP1_CI_AS");
         });
 
+        modelBuilder.Entity<tipoSemielaborados>(entity =>
+        {
+            entity.HasKey(e => e.idSemiElaborado).HasName("PK__tipoSemi__0B0DCD4FF7950C92");
+
+            entity.HasOne(d => d.unidadBaseNavigation).WithMany(p => p.tipoSemielaborados).HasConstraintName("UNIDAD_BASE_FK");
+        });
+
         modelBuilder.Entity<transferenciaProceso>(entity =>
         {
             entity.HasKey(e => e.idTransferencia).HasName("PK_TRANSFERENCIAPROCESO");
@@ -1225,6 +1262,8 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.oFDestinoNavigation).WithMany(p => p.transferenciaProceso).HasConstraintName("FK_OF_DESTINO");
 
             entity.HasOne(d => d.recibidoPorNavigation).WithMany(p => p.transferenciaProcesorecibidoPorNavigation).HasConstraintName("FK_RECIBIDO_POR");
+
+            entity.HasOne(d => d.tipoSemielaboradoNavigation).WithMany(p => p.transferenciaProceso).HasConstraintName("FK_TIPO_TRANSFERIDO");
         });
 
         modelBuilder.Entity<turnos>(entity =>

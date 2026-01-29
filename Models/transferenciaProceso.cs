@@ -73,6 +73,8 @@ public partial class transferenciaProceso
     [StringLength(500)]
     public string materialDescripcion { get; set; }
 
+    public int? tipoSemielaborado { get; set; }
+
     [ForeignKey("areaDestino")]
     [InverseProperty("transferenciaProcesoareaDestinoNavigation")]
     public virtual areas areaDestinoNavigation { get; set; }
@@ -115,4 +117,8 @@ public partial class transferenciaProceso
     [ForeignKey("recibidoPor")]
     [InverseProperty("transferenciaProcesorecibidoPorNavigation")]
     public virtual usuario recibidoPorNavigation { get; set; }
+
+    [ForeignKey("tipoSemielaborado")]
+    [InverseProperty("transferenciaProceso")]
+    public virtual tipoSemielaborados tipoSemielaboradoNavigation { get; set; }
 }

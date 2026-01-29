@@ -52,6 +52,14 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[componenteProduccion]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[configuracionProceso]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[corridaCombinada]",
          "ObjectType": 0
       },
@@ -301,6 +309,10 @@
       },
       {
          "Name": "[dbo].[tipoReporte]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[tipoSemielaborados]",
          "ObjectType": 0
       },
       {

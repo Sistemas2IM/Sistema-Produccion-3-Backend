@@ -157,6 +157,12 @@ public partial class procesoOf
     [InverseProperty("idProcesoNavigation")]
     public virtual ICollection<asignacion> asignacion { get; set; } = new List<asignacion>();
 
+    [InverseProperty("idProcesoNavigation")]
+    public virtual ICollection<componenteProduccion> componenteProduccion { get; set; } = new List<componenteProduccion>();
+
+    [InverseProperty("idProcesoNavigation")]
+    public virtual ICollection<configuracionProceso> configuracionProceso { get; set; } = new List<configuracionProceso>();
+
     [InverseProperty("maestroNavigation")]
     public virtual ICollection<corridaCombinada> corridaCombinadamaestroNavigation { get; set; } = new List<corridaCombinada>();
 

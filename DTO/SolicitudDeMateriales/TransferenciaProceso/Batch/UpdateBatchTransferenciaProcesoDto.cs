@@ -43,5 +43,7 @@
         public string? idMaterialSAP { get; set; }
 
         public string? materialDescripcion { get; set; }
+
+        public int? tipoSemielaborado { get; set; }
     }
 }

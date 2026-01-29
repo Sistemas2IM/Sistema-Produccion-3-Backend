@@ -77,11 +77,14 @@ using Sistema_Produccion_3_Backend.DTO.ReporteOperador.EstadoReporte;
 using Sistema_Produccion_3_Backend.DTO.ReporteOperador.PausaMaquina;
 using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.BobinasAsignadas;
 using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.BobinasAsignadas.Batch;
+using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.ComponenteProduccion;
+using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.ConfiguracionProceso;
 using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.LotePliego;
 using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.SolicitudMateriales;
 using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.SolicitudMateriales.Batch;
 using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.SolicitudMateriales.ProcesosOf;
 using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.SolicitudMaterialOF;
+using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.TipoSemielaborados;
 using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.TransferenciaProceso;
 using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.ValeBobina;
 using Sistema_Produccion_3_Backend.DTO.Tableros;
@@ -861,6 +864,21 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             CreateMap<UpdateBobinasAsignadasDto, bobinasAsignadas>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             CreateMap<bobinasAsignadas, AddBatchBobinasAsignadasDto>().ReverseMap();
+
+            CreateMap<tipoSemielaborados, TipoSemielaboradosDto>().ReverseMap();
+            CreateMap<tipoSemielaborados, AddTipoSemielaboradosDto>().ReverseMap();
+            CreateMap<UpdateTipoSemielaboradosDto, tipoSemielaborados>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            CreateMap<configuracionProceso, ConfiguracionProcesoDto>().ReverseMap();
+            CreateMap<configuracionProceso, AddConfiguracionProcesoDto>().ReverseMap();
+            CreateMap<UpdateConfiguracionProcesoDto, configuracionProceso>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            CreateMap<componenteProduccion, ComponenteProduccionDto>().ReverseMap();
+            CreateMap<componenteProduccion, AddComponenteProduccionDto>().ReverseMap();
+            CreateMap<UpdateComponenteProduccionDto, componenteProduccion>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             // HORARIOS OPERATIVOS ====================================================================================
 
