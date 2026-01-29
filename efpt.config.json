@@ -304,15 +304,15 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[tipoComponente]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[tipoDeObjetos]",
          "ObjectType": 0
       },
       {
          "Name": "[dbo].[tipoReporte]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[tipoSemielaborados]",
          "ObjectType": 0
       },
       {

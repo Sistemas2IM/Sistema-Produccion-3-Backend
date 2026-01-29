@@ -157,11 +157,11 @@ public partial class base_nuevaContext : DbContext
 
     public virtual DbSet<tarjetaOf> tarjetaOf { get; set; }
 
+    public virtual DbSet<tipoComponente> tipoComponente { get; set; }
+
     public virtual DbSet<tipoDeObjetos> tipoDeObjetos { get; set; }
 
     public virtual DbSet<tipoReporte> tipoReporte { get; set; }
-
-    public virtual DbSet<tipoSemielaborados> tipoSemielaborados { get; set; }
 
     public virtual DbSet<transferenciaProceso> transferenciaProceso { get; set; }
 
@@ -1215,6 +1215,13 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.idEstadoOfNavigation).WithMany(p => p.tarjetaOf).HasConstraintName("FK_TARJETA_ESTADO");
         });
 
+        modelBuilder.Entity<tipoComponente>(entity =>
+        {
+            entity.HasKey(e => e.idTipoComponente).HasName("PK__tipoSemi__0B0DCD4FF7950C92");
+
+            entity.HasOne(d => d.unidadBaseNavigation).WithMany(p => p.tipoComponente).HasConstraintName("UNIDAD_BASE_FK");
+        });
+
         modelBuilder.Entity<tipoDeObjetos>(entity =>
         {
             entity.HasKey(e => e.idTipoDeObjetos).HasName("PK_TIPODEOBJETOS");
@@ -1227,13 +1234,6 @@ public partial class base_nuevaContext : DbContext
             entity.HasKey(e => e.idTipoReporte).HasName("PK_TIPOREPORTE");
 
             entity.Property(e => e.nombreTipoReporte).UseCollation("SQL_Latin1_General_CP1_CI_AS");
-        });
-
-        modelBuilder.Entity<tipoSemielaborados>(entity =>
-        {
-            entity.HasKey(e => e.idSemiElaborado).HasName("PK__tipoSemi__0B0DCD4FF7950C92");
-
-            entity.HasOne(d => d.unidadBaseNavigation).WithMany(p => p.tipoSemielaborados).HasConstraintName("UNIDAD_BASE_FK");
         });
 
         modelBuilder.Entity<transferenciaProceso>(entity =>

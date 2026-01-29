@@ -120,5 +120,5 @@ public partial class transferenciaProceso
 
     [ForeignKey("tipoSemielaborado")]
     [InverseProperty("transferenciaProceso")]
-    public virtual tipoSemielaborados tipoSemielaboradoNavigation { get; set; }
+    public virtual tipoComponente tipoSemielaboradoNavigation { get; set; }
 }

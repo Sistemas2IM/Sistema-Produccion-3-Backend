@@ -9,18 +9,20 @@ using Microsoft.EntityFrameworkCore;
 namespace Sistema_Produccion_3_Backend.Models;
 
 [Index("unidadBase", Name = "FK_UNIDAD_BASE")]
-public partial class tipoSemielaborados
+public partial class tipoComponente
 {
     [Key]
-    public int idSemiElaborado { get; set; }
+    public int idTipoComponente { get; set; }
 
     [StringLength(80)]
     public string codigo { get; set; }
 
-    [StringLength(1)]
-    public string descripción { get; set; }
+    [StringLength(250)]
+    public string descripcion { get; set; }
 
     public int? unidadBase { get; set; }
+
+    public bool? esFinal { get; set; }
 
     [InverseProperty("tipoComponenteNavigation")]
     public virtual ICollection<componenteProduccion> componenteProducciontipoComponenteNavigation { get; set; } = new List<componenteProduccion>();
@@ -41,6 +43,6 @@ public partial class tipoSemielaborados
     public virtual ICollection<transferenciaProceso> transferenciaProceso { get; set; } = new List<transferenciaProceso>();
 
     [ForeignKey("unidadBase")]
-    [InverseProperty("tipoSemielaborados")]
+    [InverseProperty("tipoComponente")]
     public virtual unidadesMedida unidadBaseNavigation { get; set; }
 }

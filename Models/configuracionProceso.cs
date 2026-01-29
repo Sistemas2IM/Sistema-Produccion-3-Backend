@@ -22,19 +22,21 @@ public partial class configuracionProceso
 
     public int? tipoComponente { get; set; }
 
+    public bool? esEnsamblaje { get; set; }
+
     [ForeignKey("idProceso")]
     [InverseProperty("configuracionProceso")]
     public virtual procesoOf idProcesoNavigation { get; set; }
 
     [ForeignKey("tipoComponente")]
     [InverseProperty("configuracionProcesotipoComponenteNavigation")]
-    public virtual tipoSemielaborados tipoComponenteNavigation { get; set; }
+    public virtual tipoComponente tipoComponenteNavigation { get; set; }
 
     [ForeignKey("tipoEntrada")]
     [InverseProperty("configuracionProcesotipoEntradaNavigation")]
-    public virtual tipoSemielaborados tipoEntradaNavigation { get; set; }
+    public virtual tipoComponente tipoEntradaNavigation { get; set; }
 
     [ForeignKey("tipoSalida")]
     [InverseProperty("configuracionProcesotipoSalidaNavigation")]
-    public virtual tipoSemielaborados tipoSalidaNavigation { get; set; }
+    public virtual tipoComponente tipoSalidaNavigation { get; set; }
 }

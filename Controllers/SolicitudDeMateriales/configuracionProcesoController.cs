@@ -50,6 +50,18 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales
             return Ok(configuracionProcesoDto);
         }
 
+        [HttpGet("get/procesoOf/{id}")]
+        public async Task<ActionResult<IEnumerable<ConfiguracionProcesoDto>>> GetConfigProcesoOf(int id)
+        {
+            var configuracionProcesos = await _context.configuracionProceso
+                .Where(cp => cp.idProceso == id)
+                .ToListAsync();
+
+            var configuracionProcesoDtos = _mapper.Map<List<ConfiguracionProcesoDto>>(configuracionProcesos);
+
+            return Ok(configuracionProcesoDtos);
+        }
+
         // POST api/<configuracionProcesoController>
         [HttpPost("post")]
         public async Task<ActionResult<configuracionProceso>> PostConfigProceso(AddConfiguracionProcesoDto addConfiguracionProcesoDto)

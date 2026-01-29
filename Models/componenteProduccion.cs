@@ -30,9 +30,9 @@ public partial class componenteProduccion
 
     [ForeignKey("tipoComponente")]
     [InverseProperty("componenteProducciontipoComponenteNavigation")]
-    public virtual tipoSemielaborados tipoComponenteNavigation { get; set; }
+    public virtual tipoComponente tipoComponenteNavigation { get; set; }
 
     [ForeignKey("tipoSalida")]
     [InverseProperty("componenteProducciontipoSalidaNavigation")]
-    public virtual tipoSemielaborados tipoSalidaNavigation { get; set; }
+    public virtual tipoComponente tipoSalidaNavigation { get; set; }
 }

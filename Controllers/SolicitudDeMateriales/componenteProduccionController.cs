@@ -25,7 +25,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales
         [HttpGet("get")]
         public async Task<ActionResult<IEnumerable<ComponenteProduccionDto>>> etComponenteProduccion()
         {
-            var componentes = await Task.FromResult(_context.componenteProduccion.ToList());
+            var componentes = await _context.componenteProduccion.ToListAsync();
 
             var componentesDto = _mapper.Map<List<ComponenteProduccionDto>>(componentes);
 
@@ -47,6 +47,18 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales
             }
 
             return Ok(componenteDto);
+        }
+
+        [HttpGet("get/procesoOf/{id}")]
+        public async Task<ActionResult<IEnumerable<ComponenteProduccionDto>>> etComponenteProduccionProceso(int id)
+        {
+            var componentes = await _context.componenteProduccion
+                .Where(c => c.idProceso == id)
+                .ToListAsync();
+
+            var componentesDto = _mapper.Map<List<ComponenteProduccionDto>>(componentes);
+
+            return Ok(componentesDto);
         }
 
         // POST api/<componenteProduccionController>

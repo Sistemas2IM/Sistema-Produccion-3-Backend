@@ -865,9 +865,9 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             CreateMap<bobinasAsignadas, AddBatchBobinasAsignadasDto>().ReverseMap();
 
-            CreateMap<tipoSemielaborados, TipoSemielaboradosDto>().ReverseMap();
-            CreateMap<tipoSemielaborados, AddTipoSemielaboradosDto>().ReverseMap();
-            CreateMap<UpdateTipoSemielaboradosDto, tipoSemielaborados>()
+            CreateMap<tipoComponente, TipoComponenteDto>().ReverseMap();
+            CreateMap<tipoComponente, AddTipoComponenteDto>().ReverseMap();
+            CreateMap<UpdateTipoComponenteDto, tipoComponente>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             CreateMap<configuracionProceso, ConfiguracionProcesoDto>().ReverseMap();

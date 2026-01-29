@@ -9,5 +9,9 @@
         public int? tipoEntrada { get; set; }
 
         public int? tipoSalida { get; set; }
+
+        public int? tipoComponente { get; set; }
+
+        public bool? esEnsamblaje { get; set; }
     }
 }
