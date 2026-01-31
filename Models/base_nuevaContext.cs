@@ -1254,7 +1254,7 @@ public partial class base_nuevaContext : DbContext
 
             entity.HasOne(d => d.recibidoPorNavigation).WithMany(p => p.transferenciaProcesorecibidoPorNavigation).HasConstraintName("FK_RECIBIDO_POR");
 
-            entity.HasOne(d => d.tipoSemielaboradoNavigation).WithMany(p => p.transferenciaProceso).HasConstraintName("FK_TIPO_TRANSFERIDO");
+            entity.HasOne(d => d.tipoComponenteNavigation).WithMany(p => p.transferenciaProceso).HasConstraintName("FK_TIPO_TRANSFERIDO");
         });
 
         modelBuilder.Entity<turnos>(entity =>

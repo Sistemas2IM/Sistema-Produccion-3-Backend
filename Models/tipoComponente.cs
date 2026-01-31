@@ -39,7 +39,7 @@ public partial class tipoComponente
     [InverseProperty("tipoComponenteNavigation")]
     public virtual ICollection<tarjetaOf> tarjetaOf { get; set; } = new List<tarjetaOf>();
 
-    [InverseProperty("tipoSemielaboradoNavigation")]
+    [InverseProperty("tipoComponenteNavigation")]
     public virtual ICollection<transferenciaProceso> transferenciaProceso { get; set; } = new List<transferenciaProceso>();
 
     [ForeignKey("unidadBase")]
