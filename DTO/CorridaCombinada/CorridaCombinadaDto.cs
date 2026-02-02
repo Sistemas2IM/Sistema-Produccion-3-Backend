@@ -22,6 +22,8 @@ namespace Sistema_Produccion_3_Backend.DTO.CorridaCombinada
         //[JsonConverter(typeof(JsonDateConverter))]
         public DateTime? fechaVencmiento { get; set; } // de subordinado / proceso of
 
+        public DateTime? fechaCreacionOf { get; set; } // de subordinado / proceso of
+
         public string? serie { get; set; } // de subordinado / proceso of
     }
 }

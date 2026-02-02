@@ -754,6 +754,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForMember(dest => dest.productoOf, opt => opt.MapFrom(src => src.subordinadoNavigation.productoOf))
                 .ForMember(dest => dest.cantOf, opt => opt.MapFrom(src => src.subordinadoNavigation.oFNavigation.cantidadOf))
                 .ForMember(dest => dest.fechaVencmiento, opt => opt.MapFrom(src => src.subordinadoNavigation.fechaVencimiento))
+                .ForMember(dest => dest.fechaCreacionOf, opt => opt.MapFrom(src => src.subordinadoNavigation.oFNavigation.fechaCreacion))
                 .ForMember(dest => dest.serie, opt => opt.MapFrom(src => src.subordinadoNavigation.oFNavigation.seriesOf))
                 .ReverseMap();
             CreateMap<corridaCombinada, AddCorridaCombinadaDto>().ReverseMap();
