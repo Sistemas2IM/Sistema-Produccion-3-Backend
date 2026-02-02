@@ -54,6 +54,8 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas
 
         public DateTime? fechaCreacion { get; set; }
 
+        public DateTime? fechaCreacionOf { get; set; }
+
         public int? tipoObjeto { get; set; }
 
         public bool? archivada { get; set; }

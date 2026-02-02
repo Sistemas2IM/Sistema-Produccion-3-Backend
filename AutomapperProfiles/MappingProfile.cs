@@ -180,6 +180,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                         src.corridaCombinada == true
                             ? src.fechaVencimiento
                             : src.oFNavigation.fechaVencimiento))
+                .ForMember(dest => dest.fechaCreacionOf, opt => opt.MapFrom(src => src.oFNavigation.fechaCreacion))
                 .ForMember(dest => dest.subordinadas, opt => opt.MapFrom(src =>
                 src.corridaCombinadamaestroNavigation
                     .Concat(src.corridaCombinadasubordinadoNavigation != null
@@ -210,6 +211,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                         src.corridaCombinada == true
                             ? src.fechaVencimiento
                             : src.oFNavigation.fechaVencimiento))
+                .ForMember(dest => dest.fechaCreacionOf, opt => opt.MapFrom(src => src.oFNavigation.fechaCreacion))
                 .ForMember(dest => dest.subordinadas, opt => opt.MapFrom(src =>
                 src.corridaCombinadamaestroNavigation
                     .Concat(src.corridaCombinadasubordinadoNavigation != null
@@ -239,6 +241,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                         src.corridaCombinada == true
                             ? src.fechaVencimiento
                             : src.oFNavigation.fechaVencimiento))
+                .ForMember(dest => dest.fechaCreacionOf, opt => opt.MapFrom(src => src.oFNavigation.fechaCreacion))
                 .ForMember(dest => dest.secuenciaArea, opt => opt.MapFrom(src => src.idTableroNavigation.idAreaNavigation.secuencia))
                 .ForMember(dest => dest.subordinadas, opt => opt.MapFrom(src =>
                 src.corridaCombinadamaestroNavigation
@@ -283,6 +286,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                         src.corridaCombinada == true
                             ? src.fechaVencimiento
                             : src.oFNavigation.fechaVencimiento))
+                    .ForMember(dest => dest.fechaCreacionOf, opt => opt.MapFrom(src => src.oFNavigation.fechaCreacion))
                     .ForMember(dest => dest.subordinadas, opt => opt.MapFrom(src =>
                     src.corridaCombinadamaestroNavigation
                         .Concat(src.corridaCombinadasubordinadoNavigation != null
