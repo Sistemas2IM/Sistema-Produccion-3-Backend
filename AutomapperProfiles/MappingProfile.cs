@@ -9,6 +9,7 @@ using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnicaCliente.DetalleFichaC
 using Sistema_Produccion_3_Backend.DTO.Calidad.UnidadesMedida;
 using Sistema_Produccion_3_Backend.DTO.Calidad.VariablesTecnicas;
 using Sistema_Produccion_3_Backend.DTO.Calidad.VariableUnidadMedida;
+using Sistema_Produccion_3_Backend.DTO.Catalogo.Empleados;
 using Sistema_Produccion_3_Backend.DTO.Catalogo.FamiliaMaquina;
 using Sistema_Produccion_3_Backend.DTO.Catalogo.Maquinas;
 using Sistema_Produccion_3_Backend.DTO.Catalogo.Turnos;
@@ -76,11 +77,13 @@ using Sistema_Produccion_3_Backend.DTO.ReporteOperador.EstadoReporte;
 using Sistema_Produccion_3_Backend.DTO.ReporteOperador.PausaMaquina;
 using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.BobinasAsignadas;
 using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.BobinasAsignadas.Batch;
+using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.ComponenteProduccion;
 using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.LotePliego;
 using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.SolicitudMateriales;
 using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.SolicitudMateriales.Batch;
 using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.SolicitudMateriales.ProcesosOf;
 using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.SolicitudMaterialOF;
+using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.TipoSemielaborados;
 using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.TransferenciaProceso;
 using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.ValeBobina;
 using Sistema_Produccion_3_Backend.DTO.Tableros;
@@ -177,6 +180,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                         src.corridaCombinada == true
                             ? src.fechaVencimiento
                             : src.oFNavigation.fechaVencimiento))
+                .ForMember(dest => dest.fechaCreacionOf, opt => opt.MapFrom(src => src.oFNavigation.fechaCreacion))
                 .ForMember(dest => dest.subordinadas, opt => opt.MapFrom(src =>
                 src.corridaCombinadamaestroNavigation
                     .Concat(src.corridaCombinadasubordinadoNavigation != null
@@ -207,6 +211,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                         src.corridaCombinada == true
                             ? src.fechaVencimiento
                             : src.oFNavigation.fechaVencimiento))
+                .ForMember(dest => dest.fechaCreacionOf, opt => opt.MapFrom(src => src.oFNavigation.fechaCreacion))
                 .ForMember(dest => dest.subordinadas, opt => opt.MapFrom(src =>
                 src.corridaCombinadamaestroNavigation
                     .Concat(src.corridaCombinadasubordinadoNavigation != null
@@ -236,6 +241,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                         src.corridaCombinada == true
                             ? src.fechaVencimiento
                             : src.oFNavigation.fechaVencimiento))
+                .ForMember(dest => dest.fechaCreacionOf, opt => opt.MapFrom(src => src.oFNavigation.fechaCreacion))
                 .ForMember(dest => dest.secuenciaArea, opt => opt.MapFrom(src => src.idTableroNavigation.idAreaNavigation.secuencia))
                 .ForMember(dest => dest.subordinadas, opt => opt.MapFrom(src =>
                 src.corridaCombinadamaestroNavigation
@@ -280,6 +286,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                         src.corridaCombinada == true
                             ? src.fechaVencimiento
                             : src.oFNavigation.fechaVencimiento))
+                    .ForMember(dest => dest.fechaCreacionOf, opt => opt.MapFrom(src => src.oFNavigation.fechaCreacion))
                     .ForMember(dest => dest.subordinadas, opt => opt.MapFrom(src =>
                     src.corridaCombinadamaestroNavigation
                         .Concat(src.corridaCombinadasubordinadoNavigation != null
@@ -497,6 +504,11 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             CreateMap<familliaDeMaquina, ListaFamilliaDeMaquinaDto>()
                 .ForMember(dest => dest.maquinas, opt => opt.MapFrom(src => src.maquinas))
                 .ReverseMap();
+
+            CreateMap<empleadoCatalogo, EmpleadoCatalogoDto>().ReverseMap();
+            CreateMap<empleadoCatalogo, AddEmpleadoCatalogoDto>().ReverseMap();
+            CreateMap<UpdateEmpleadoCatalogoDto, empleadoCatalogo>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
 
             // PERMISOS / USUARIO ====================================================================================
@@ -830,7 +842,9 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             CreateMap<UpdateLotePliegoDto, lotePliego>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
-            CreateMap<transferenciaProceso, transferenciaProcesoDto>().ReverseMap();
+            CreateMap<transferenciaProceso, transferenciaProcesoDto>()
+                .ForMember(dest => dest.nombreTablero, opt => opt.MapFrom(src => src.idOrigenNavigation.idTableroNavigation.nombreTablero))
+                .ReverseMap();
             CreateMap<transferenciaProceso, AddTransferenciaProcesoDto>().ReverseMap();
             CreateMap<UpdateTransferenciaProcesoDto, transferenciaProceso>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
@@ -853,6 +867,16 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             CreateMap<UpdateBobinasAsignadasDto, bobinasAsignadas>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             CreateMap<bobinasAsignadas, AddBatchBobinasAsignadasDto>().ReverseMap();
+
+            CreateMap<tipoComponente, TipoComponenteDto>().ReverseMap();
+            CreateMap<tipoComponente, AddTipoComponenteDto>().ReverseMap();
+            CreateMap<UpdateTipoComponenteDto, tipoComponente>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            CreateMap<componenteProduccion, ComponenteProduccionDto>().ReverseMap();
+            CreateMap<componenteProduccion, AddComponenteProduccionDto>().ReverseMap();
+            CreateMap<UpdateComponenteProduccionDto, componenteProduccion>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             // HORARIOS OPERATIVOS ====================================================================================
 

@@ -39,6 +39,12 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf.SolicitudMateriales
 
         public int? idSolicitudMateriales { get; set; }
 
+        public int? tipoEntrada { get; set; }
+
+        public int? tipoSalida { get; set; }
+
+        public bool? esEnsamblaje { get; set; }
+
         public solicitudMaterialesProcesoOfDto? solicitudMateriales { get; set; }
 
         public List<DetalleReporteDto>? detalleProcesoOf { get; set; }

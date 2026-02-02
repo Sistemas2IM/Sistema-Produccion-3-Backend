@@ -31,6 +31,8 @@ public partial class base_nuevaContext : DbContext
 
     public virtual DbSet<certificadoCalidad_Log> certificadoCalidad_Log { get; set; }
 
+    public virtual DbSet<componenteProduccion> componenteProduccion { get; set; }
+
     public virtual DbSet<corridaCombinada> corridaCombinada { get; set; }
 
     public virtual DbSet<detalleCertificadoCalidad> detalleCertificadoCalidad { get; set; }
@@ -153,6 +155,8 @@ public partial class base_nuevaContext : DbContext
 
     public virtual DbSet<tarjetaOf> tarjetaOf { get; set; }
 
+    public virtual DbSet<tipoComponente> tipoComponente { get; set; }
+
     public virtual DbSet<tipoDeObjetos> tipoDeObjetos { get; set; }
 
     public virtual DbSet<tipoReporte> tipoReporte { get; set; }
@@ -206,7 +210,7 @@ public partial class base_nuevaContext : DbContext
 
         modelBuilder.Entity<asignacion>(entity =>
         {
-            entity.HasKey(e => e.idAsignacion).HasName("PK__asignaci__E1714478BB8AE70F");
+            entity.HasKey(e => e.idAsignacion).HasName("PK_ASIGNACION");
 
             entity.Property(e => e.user).UseCollation("SQL_Latin1_General_CP1_CI_AS");
 
@@ -263,6 +267,17 @@ public partial class base_nuevaContext : DbContext
             entity.Property(e => e.elaboradoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.fechaLog).HasDefaultValueSql("(getdate())");
             entity.Property(e => e.tipoAccion).HasDefaultValue("UPDATE");
+        });
+
+        modelBuilder.Entity<componenteProduccion>(entity =>
+        {
+            entity.HasKey(e => e.idComponente).HasName("PK__componen__001F4C9342DED565");
+
+            entity.HasOne(d => d.idProcesoNavigation).WithMany(p => p.componenteProduccion).HasConstraintName("PROCESO_COMPONENTE_FK");
+
+            entity.HasOne(d => d.tipoComponenteNavigation).WithMany(p => p.componenteProducciontipoComponenteNavigation).HasConstraintName("TIPO_COMPONENTE_FK");
+
+            entity.HasOne(d => d.tipoSalidaNavigation).WithMany(p => p.componenteProducciontipoSalidaNavigation).HasConstraintName("TIPO_SALIDA_FK");
         });
 
         modelBuilder.Entity<corridaCombinada>(entity =>
@@ -946,6 +961,10 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.procesoAnteriorNavigation).WithMany(p => p.InverseprocesoAnteriorNavigation).HasConstraintName("FK_PROCESO_ANTERIOR");
 
             entity.HasOne(d => d.procesoSiguienteNavigation).WithMany(p => p.InverseprocesoSiguienteNavigation).HasConstraintName("FK_PROCESO_SIGUIENTE");
+
+            entity.HasOne(d => d.tipoEntradaNavigation).WithMany(p => p.procesoOftipoEntradaNavigation).HasConstraintName("FK_TIPO_ENTRADA");
+
+            entity.HasOne(d => d.tipoSalidaNavigation).WithMany(p => p.procesoOftipoSalidaNavigation).HasConstraintName("FK_TIPO_SALIDA");
         });
 
         modelBuilder.Entity<procesoPegadora>(entity =>
@@ -1183,6 +1202,15 @@ public partial class base_nuevaContext : DbContext
             entity.Property(e => e.vendedorOf).UseCollation("SQL_Latin1_General_CP1_CI_AS");
 
             entity.HasOne(d => d.idEstadoOfNavigation).WithMany(p => p.tarjetaOf).HasConstraintName("FK_TARJETA_ESTADO");
+
+            entity.HasOne(d => d.tipoComponenteNavigation).WithMany(p => p.tarjetaOf).HasConstraintName("FK_TIPO_COMPONENTE");
+        });
+
+        modelBuilder.Entity<tipoComponente>(entity =>
+        {
+            entity.HasKey(e => e.idTipoComponente).HasName("PK__tipoSemi__0B0DCD4FF7950C92");
+
+            entity.HasOne(d => d.unidadBaseNavigation).WithMany(p => p.tipoComponente).HasConstraintName("UNIDAD_BASE_FK");
         });
 
         modelBuilder.Entity<tipoDeObjetos>(entity =>
@@ -1225,6 +1253,8 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.oFDestinoNavigation).WithMany(p => p.transferenciaProceso).HasConstraintName("FK_OF_DESTINO");
 
             entity.HasOne(d => d.recibidoPorNavigation).WithMany(p => p.transferenciaProcesorecibidoPorNavigation).HasConstraintName("FK_RECIBIDO_POR");
+
+            entity.HasOne(d => d.tipoComponenteNavigation).WithMany(p => p.transferenciaProceso).HasConstraintName("FK_TIPO_TRANSFERIDO");
         });
 
         modelBuilder.Entity<turnos>(entity =>

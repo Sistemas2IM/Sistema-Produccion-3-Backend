@@ -52,6 +52,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[componenteProduccion]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[corridaCombinada]",
          "ObjectType": 0
       },
@@ -293,6 +297,10 @@
       },
       {
          "Name": "[dbo].[tarjetaOf]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[tipoComponente]",
          "ObjectType": 0
       },
       {

@@ -65,5 +65,7 @@ namespace Sistema_Produccion_3_Backend.DTO.TarjetasOF
         public string? modoSecuencia { get; set; }
 
         public string? razonSocial { get; set; }
+
+        public string? actualizadoPor { get; set; }
     }
 }

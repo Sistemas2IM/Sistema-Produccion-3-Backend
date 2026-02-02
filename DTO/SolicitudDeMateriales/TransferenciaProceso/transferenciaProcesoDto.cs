@@ -17,6 +17,8 @@ namespace Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.TransferenciaPr
 
         public int? idOrigen { get; set; }
 
+        public string? nombreTablero { get; set; }
+
         public DateTime? fechaEnvio { get; set; }
 
         public string? enviadoPor { get; set; }
@@ -44,5 +46,9 @@ namespace Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.TransferenciaPr
         public int? idSolicitudOrigen { get; set; }
 
         public string? idMaterialSAP { get; set; }
+
+        public string? materialDescripcion { get; set; }
+
+        public int? tipoSemielaborado { get; set; }
     }
 }

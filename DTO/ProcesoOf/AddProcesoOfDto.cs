@@ -85,5 +85,11 @@
         public string? modoSecuenciacion { get; set; }
 
         public int? idSolicitudMateriales { get; set; }
+
+        public int? tipoEntrada { get; set; }
+
+        public int? tipoSalida { get; set; }
+
+        public bool? esEnsamblaje { get; set; }
     }
 }

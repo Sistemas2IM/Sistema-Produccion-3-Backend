@@ -81,6 +81,8 @@ namespace Sistema_Produccion_3_Backend.DTO.TarjetasOF
 
         public string? razonSocial { get; set; }
 
+        public string? actualizadoPor { get; set; }
+
         //public EstadoOfDto? estadoOfDto { get; set; }
 
     }

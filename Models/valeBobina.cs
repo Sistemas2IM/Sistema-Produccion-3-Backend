@@ -43,6 +43,8 @@ public partial class valeBobina
     [StringLength(100)]
     public string gramajeBobina { get; set; }
 
+    public bool? entregaParcial { get; set; }
+
     [ForeignKey("idMaterial")]
     [InverseProperty("valeBobina")]
     public virtual material idMaterialNavigation { get; set; }

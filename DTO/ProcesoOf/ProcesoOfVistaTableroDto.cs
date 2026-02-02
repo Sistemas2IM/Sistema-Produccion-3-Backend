@@ -66,6 +66,8 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
 
         public DateTime? fechaCreacion { get; set; }
 
+        public DateTime? fechaCreacionOf { get; set; }
+
         public int? tipoObjeto { get; set; }
 
         public bool? archivada { get; set; }
@@ -139,6 +141,12 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
         public string? modoSecuenciacion { get; set; }
 
         public int? idSolicitudMateriales { get; set; }
+
+        public int? tipoEntrada { get; set; }
+
+        public int? tipoSalida { get; set; }
+
+        public bool? esEnsamblaje { get; set; }
 
         public List<DetalleReporteDto>? detalleProcesoOf { get; set; }
 

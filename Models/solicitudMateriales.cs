@@ -25,10 +25,10 @@ public partial class solicitudMateriales
     [StringLength(50)]
     public string idMaterialSAP { get; set; }
 
-    [Column(TypeName = "numeric(20, 2)")]
+    [Column(TypeName = "numeric(20, 3)")]
     public decimal? anchoHoja { get; set; }
 
-    [Column(TypeName = "numeric(20, 2)")]
+    [Column(TypeName = "numeric(20, 3)")]
     public decimal? largoHoja { get; set; }
 
     public int? cantidadPorCortar { get; set; }
@@ -40,10 +40,10 @@ public partial class solicitudMateriales
 
     public int? idMaquina { get; set; }
 
-    [Column(TypeName = "numeric(20, 2)")]
+    [Column(TypeName = "numeric(20, 3)")]
     public decimal? anchoPliego { get; set; }
 
-    [Column(TypeName = "numeric(20, 2)")]
+    [Column(TypeName = "numeric(20, 3)")]
     public decimal? largoPliego { get; set; }
 
     public int? pliegosPorHoja { get; set; }
@@ -57,28 +57,28 @@ public partial class solicitudMateriales
 
     public int? idSap { get; set; }
 
-    [Column(TypeName = "numeric(20, 0)")]
+    [Column(TypeName = "numeric(20, 3)")]
     public decimal? anchoHojaPulg { get; set; }
 
-    [Column(TypeName = "numeric(20, 0)")]
+    [Column(TypeName = "numeric(20, 3)")]
     public decimal? anchoPliegoPulg { get; set; }
 
-    [Column(TypeName = "numeric(20, 0)")]
+    [Column(TypeName = "numeric(20, 3)")]
     public decimal? largoPliegoPulg { get; set; }
 
-    [Column(TypeName = "numeric(20, 0)")]
+    [Column(TypeName = "numeric(20, 3)")]
     public decimal? areaApulg { get; set; }
 
-    [Column(TypeName = "numeric(20, 0)")]
+    [Column(TypeName = "numeric(20, 3)")]
     public decimal? areaA { get; set; }
 
-    [Column(TypeName = "numeric(20, 0)")]
+    [Column(TypeName = "numeric(20, 3)")]
     public decimal? areaBpulg { get; set; }
 
-    [Column(TypeName = "numeric(20, 0)")]
+    [Column(TypeName = "numeric(20, 3)")]
     public decimal? areaB { get; set; }
 
-    [Column(TypeName = "numeric(20, 0)")]
+    [Column(TypeName = "numeric(20, 3)")]
     public decimal? largoHojaPulg { get; set; }
 
     [StringLength(100)]
@@ -99,6 +99,8 @@ public partial class solicitudMateriales
     [StringLength(50)]
     public string direccionCorte { get; set; }
 
+    public int? posicion { get; set; }
+
     public bool? archivado { get; set; }
 
     public bool? cancelado { get; set; }
@@ -114,8 +116,6 @@ public partial class solicitudMateriales
     public bool? incluyeProceso { get; set; }
 
     public string descripcion { get; set; }
-
-    public int? posicion { get; set; }
 
     [StringLength(50)]
     public string unidadSolicitud { get; set; }

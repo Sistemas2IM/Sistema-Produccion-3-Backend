@@ -39,7 +39,7 @@ public partial class lotePliego
     [StringLength(50)]
     public string codLote { get; set; }
 
-    [StringLength(20)]
+    [StringLength(30)]
     public string estado { get; set; }
 
     public int? procesoOrigen { get; set; }
