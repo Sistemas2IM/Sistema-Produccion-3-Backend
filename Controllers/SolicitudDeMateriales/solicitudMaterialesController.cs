@@ -90,12 +90,16 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales
         [FromQuery] int? idSolicitud = null,      // Filtro exacto por ID de solicitud
         [FromQuery] int? of = null,               // Filtro por OF (busca en la tabla relación)
         [FromQuery] DateTime? fechaInicio = null, // Rango fecha: Inicio
-        [FromQuery] DateTime? fechaFin = null)    // Rango fecha: Fin
+        [FromQuery] DateTime? fechaFin = null,    // Rango fecha: Fin
+        [FromQuery] int? tipoOperacion = null,
+        [FromQuery] string? estado = "")
         {
             // 1. Consulta base con Include
             // Es importante incluir la relación si luego el AutoMapper necesita datos de ahí
             var query = _context.solicitudMateriales
                 .Include(s => s.solicitudMaterialesOf)
+                    .ThenInclude(so => so.oFNavigation)
+                .Include(ma => ma.idMaquinaNavigation)
                 .AsQueryable();
 
             // 2. Filtro exacto para IdSolicitud
@@ -110,6 +114,16 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales
             {
                 query = query.Where(s => s.solicitudMaterialesOf
                     .Any(rel => rel.oF == of.Value));
+            }
+
+            if (tipoOperacion.HasValue)
+            {
+                query = query.Where(s => s.tipoOperacion == tipoOperacion.Value);
+            }
+
+            if (estado != "")
+            {
+                query = query.Where(s => s.estado == estado);
             }
 
             // 4. Filtro por Rango de Fechas
