@@ -1220,6 +1220,88 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             return Ok(dtos);
         }
 
+        [HttpGet("get/solicitudMateriales/filtros")]
+        public async Task<ActionResult<IEnumerable<ProcesoOfSolicitudMaterialDto>>> GetSolicitudProcesoFiltros(
+            [FromQuery] int? idSolicitud = null,      // Filtro exacto por ID de solicitud
+            [FromQuery] int? of = null,               // Filtro por OF (busca en la tabla relación)
+            [FromQuery] DateTime? fechaInicio = null, // Rango fecha: Inicio
+            [FromQuery] DateTime? fechaFin = null,    // Rango fecha: Fin
+            [FromQuery] int? tipoOperacion = null,
+            [FromQuery] string? estado = "",
+            [FromQuery] int? idProceso = null,
+            [FromQuery] int? idTablero = null,
+            [FromQuery] string? descMaterial = "")
+        {
+            var query = _context.procesoOf
+                .Include(po => po.idPosturaNavigation)
+                .Include(s => s.idSolicitudMaterialesNavigation)
+                    .ThenInclude(so => so.solicitudMaterialesOf)
+                        .ThenInclude(of => of.oFNavigation)
+                .Include(s => s.idSolicitudMaterialesNavigation)
+                    .ThenInclude(sm => sm.idMaquinaNavigation)
+                .Include(u => u.detalleReporte)
+                    .ThenInclude(o => o.idOperacionNavigation)
+                .Include(u => u.detalleReporte)
+                    .ThenInclude(m => m.maquinaNavigation)
+                .AsQueryable();
+
+            if(idProceso.HasValue)
+            {
+                query = query.Where(p => p.idProceso == idProceso.Value);
+            }
+
+            if(idTablero.HasValue)
+            {
+                query = query.Where(p => p.idTablero == idTablero.Value);
+            }
+
+            if (idSolicitud.HasValue)
+            {
+                query = query.Where(p => p.idSolicitudMateriales == idSolicitud.Value);
+            }
+
+            if (descMaterial != null && descMaterial.Trim() != "")
+            {
+                string descMaterialLower = descMaterial.Trim().ToLower();
+                query = query.Where(p => p.idSolicitudMaterialesNavigation != null &&
+                                         p.idSolicitudMaterialesNavigation.materialDescripcion != null &&
+                                         p.idSolicitudMaterialesNavigation.materialDescripcion.ToLower().Contains(descMaterialLower));
+            }
+
+            if (of.HasValue)
+            {
+                query = query.Where(p => p.idSolicitudMaterialesNavigation != null &&
+                                         p.idSolicitudMaterialesNavigation.solicitudMaterialesOf
+                                             .Any(sm => sm.oF == of.Value));
+            }
+
+            if (fechaInicio.HasValue && fechaFin.HasValue)
+            {
+                query = query.Where(p => p.idSolicitudMaterialesNavigation != null &&
+                                         p.idSolicitudMaterialesNavigation.fechaSolicitud >= fechaInicio.Value &&
+                                         p.idSolicitudMaterialesNavigation.fechaSolicitud <= fechaFin.Value);
+            }
+
+            if (tipoOperacion.HasValue)
+            {
+                query = query.Where(p => p.idSolicitudMaterialesNavigation != null &&
+                                         p.idSolicitudMaterialesNavigation.tipoOperacion == tipoOperacion.Value);
+            }
+
+            if (!string.IsNullOrEmpty(estado))
+            {
+                query = query.Where(p => p.idSolicitudMaterialesNavigation != null &&
+                                         p.idSolicitudMaterialesNavigation.estado.Equals(estado, StringComparison.OrdinalIgnoreCase));
+            }
+
+            query = query.OrderByDescending(p => p.idSolicitudMaterialesNavigation!.fechaSolicitud);
+
+            var solicitudesFiltradas = await query.ToListAsync();
+            var resultDtos = _mapper.Map<List<ProcesoOfSolicitudMaterialDto>>(solicitudesFiltradas);
+
+            return Ok(resultDtos);
+        }
+
         // PUT: api/procesoOf/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         //[HttpPut("put/{id}")]
