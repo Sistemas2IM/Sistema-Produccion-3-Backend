@@ -348,6 +348,14 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[FFE_DetalleProcesos]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[FFE_ResumenOF]",
+         "ObjectType": 1
+      },
+      {
          "Name": "[dbo].[IndicadoresReporte]",
          "ObjectType": 1
       },

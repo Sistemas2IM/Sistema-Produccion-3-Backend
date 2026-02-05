@@ -155,6 +155,22 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales
             return Ok(resultDto);
         }
 
+        [HttpGet("get/catalogo")]
+        public async Task<ActionResult<Dictionary<string, List<string>>>> GetCatalogoSolicitudes()
+        {
+            var catalogos = new Dictionary<string, List<string>>();
+
+            // Obtener estados únicos
+            var materialDesc = await _context.solicitudMateriales
+                .Select(s => s.materialDescripcion)
+                .Distinct()
+                .ToListAsync();
+
+            catalogos.Add("materialDescripcion", materialDesc);
+
+            return Ok(catalogos);
+        }
+
         [HttpGet("ResumenSolicitud/{idSolicitud}")]
         public async Task<ActionResult<List<ResumenSolicitudResult>>> GetResumenSolicitud(string idSolicitud)
         {
