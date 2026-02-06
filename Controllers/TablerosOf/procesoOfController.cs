@@ -1178,7 +1178,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         {
             var procesos = await _context.procesoOf
                 .OrderBy(p => p.posicion)
-                .Where(t => t.idTablero == id /*&& t.archivada == false*/ /*&& t.idSolicitudMateriales != 0 && t.idSolicitudMateriales != null*/)
+                .Where(t => t.idTablero == id && t.archivada == false && t.idSolicitudMateriales != null)
                 .Include(po => po.idPosturaNavigation)
                 .Include(s => s.idSolicitudMaterialesNavigation)
                  .ThenInclude(so => so.solicitudMaterialesOf)
@@ -1201,7 +1201,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         {
             // Procesos normales ligados a una OF
             var procesosNormales = await _context.procesoOf
-                .Where(o => o.idSolicitudMateriales == id)
+                .Where(o => o.idSolicitudMateriales == id && o.archivada == false && o.idSolicitudMateriales != null)
                 .Include(u => u.idTableroNavigation)
                 .ThenInclude(a => a.idAreaNavigation)
                 .Include(d => d.idPosturaNavigation)
@@ -1243,6 +1243,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                     .ThenInclude(o => o.idOperacionNavigation)
                 .Include(u => u.detalleReporte)
                     .ThenInclude(m => m.maquinaNavigation)
+                 .Where(s => s.archivada == false)
                 .AsQueryable();
 
             if(idProceso.HasValue)

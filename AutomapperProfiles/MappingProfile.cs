@@ -856,6 +856,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForMember(dest => dest.anchoMaterial, opt => opt.MapFrom(src => src.idMaterialNavigation.ancho))
                 .ForMember(dest => dest.calibreMaterial, opt => opt.MapFrom(src => src.idMaterialNavigation.calibre))
                 .ForMember(dest => dest.gramajeMaterial, opt => opt.MapFrom(src => src.idMaterialNavigation.gramaje))
+                .ForMember(dest => dest.nombreEstado, opt => opt.MapFrom(src => src.estadoNavigation.nombreEstado))
                 .ReverseMap();
 
             CreateMap<valeBobina, AddValeBobinaDto>().ReverseMap();

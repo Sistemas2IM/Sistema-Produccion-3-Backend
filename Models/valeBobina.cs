@@ -45,7 +45,19 @@ public partial class valeBobina
 
     public bool? entregaParcial { get; set; }
 
+    public int? tipoReporte { get; set; }
+
+    public int? estado { get; set; }
+
+    [ForeignKey("estado")]
+    [InverseProperty("valeBobina")]
+    public virtual estadosReporte estadoNavigation { get; set; }
+
     [ForeignKey("idMaterial")]
     [InverseProperty("valeBobina")]
     public virtual material idMaterialNavigation { get; set; }
+
+    [ForeignKey("tipoReporte")]
+    [InverseProperty("valeBobina")]
+    public virtual tipoReporte tipoReporteNavigation { get; set; }
 }

@@ -26,5 +26,9 @@ namespace Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.ValeBobina
         public string? gramajeBobina { get; set; }
 
         public bool? entregaParcial { get; set; }
+
+        public int? tipoReporte { get; set; }
+
+        public int? estado { get; set; }
     }
 }

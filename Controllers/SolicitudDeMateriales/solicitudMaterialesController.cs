@@ -35,6 +35,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales
                 .Include(s => s.solicitudMaterialesOf)
                     .ThenInclude(so => so.oFNavigation)
                 .Include(ma => ma.idMaquinaNavigation)
+                .Where(s => s.archivado == false)
                 .ToListAsync();
 
             var solicitudMaterialesDto = _mapper.Map<List<solicitudMaterialesDto>>(solicitudMateriales);
@@ -51,6 +52,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales
                 .Include(s => s.solicitudMaterialesOf)
                     .ThenInclude(so => so.oFNavigation)
                 .Include(ma => ma.idMaquinaNavigation)
+                .Where(s => s.archivado == false)
                 .FirstOrDefaultAsync(s => s.idSolicitud == id);
 
             var solicitudMaterialesDto = _mapper.Map<solicitudMaterialesDto>(solicitudMateriales);
@@ -73,6 +75,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales
                 .Include(s => s.solicitudMaterialesOf)
                     .ThenInclude(so => so.oFNavigation)
                 .Include(ma => ma.idMaquinaNavigation)
+                .Where(s => s.archivado == false)
                 .FirstOrDefaultAsync();
 
             var solicitudMaterialesDto = _mapper.Map<solicitudMaterialesDto>(solicitudMateriales);
@@ -92,7 +95,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales
         [FromQuery] DateTime? fechaInicio = null, // Rango fecha: Inicio
         [FromQuery] DateTime? fechaFin = null,    // Rango fecha: Fin
         [FromQuery] int? tipoOperacion = null,
-        [FromQuery] string? estado = "")
+        [FromQuery] string? estado = "",
+        [FromQuery] string? materialDesc = "")
         {
             // 1. Consulta base con Include
             // Es importante incluir la relación si luego el AutoMapper necesita datos de ahí
@@ -100,6 +104,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales
                 .Include(s => s.solicitudMaterialesOf)
                     .ThenInclude(so => so.oFNavigation)
                 .Include(ma => ma.idMaquinaNavigation)
+                .Where(s => s.archivado == false)
                 .AsQueryable();
 
             // 2. Filtro exacto para IdSolicitud
@@ -124,6 +129,11 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales
             if (estado != "")
             {
                 query = query.Where(s => s.estado == estado);
+            }
+
+            if (materialDesc != "")
+            {
+                query = query.Where(s => s.materialDescripcion == materialDesc);
             }
 
             // 4. Filtro por Rango de Fechas
