@@ -1308,7 +1308,11 @@ public partial class base_nuevaContext : DbContext
             entity.Property(e => e.fechaCreacion).HasDefaultValueSql("(getdate())");
             entity.Property(e => e.idMaterial).UseCollation("SQL_Latin1_General_CP1_CI_AS");
 
+            entity.HasOne(d => d.estadoNavigation).WithMany(p => p.valeBobina).HasConstraintName("FK_ESTADO_VALE");
+
             entity.HasOne(d => d.idMaterialNavigation).WithMany(p => p.valeBobina).HasConstraintName("FK_IDMATERIAL_VALE");
+
+            entity.HasOne(d => d.tipoReporteNavigation).WithMany(p => p.valeBobina).HasConstraintName("FK_TIPO_REPORTE_VALE");
         });
 
         modelBuilder.Entity<variableUnidadMedida>(entity =>
