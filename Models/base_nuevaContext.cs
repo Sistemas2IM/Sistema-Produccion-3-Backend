@@ -1203,6 +1203,8 @@ public partial class base_nuevaContext : DbContext
 
             entity.HasOne(d => d.idEstadoOfNavigation).WithMany(p => p.tarjetaOf).HasConstraintName("FK_TARJETA_ESTADO");
 
+            entity.HasOne(d => d.ofOrigenNavigation).WithMany(p => p.InverseofOrigenNavigation).HasConstraintName("FK_REPROCESA_OF");
+
             entity.HasOne(d => d.tipoComponenteNavigation).WithMany(p => p.tarjetaOf).HasConstraintName("FK_TIPO_COMPONENTE");
         });
 

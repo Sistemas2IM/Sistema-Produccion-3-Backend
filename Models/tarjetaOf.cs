@@ -99,6 +99,13 @@ public partial class tarjetaOf
 
     public int? tipoComponente { get; set; }
 
+    public int? ofOrigen { get; set; }
+
+    public bool? reproceso { get; set; }
+
+    [InverseProperty("ofOrigenNavigation")]
+    public virtual ICollection<tarjetaOf> InverseofOrigenNavigation { get; set; } = new List<tarjetaOf>();
+
     [InverseProperty("oFNavigation")]
     public virtual ICollection<certificadoCalidad> certificadoCalidad { get; set; } = new List<certificadoCalidad>();
 
@@ -123,6 +130,10 @@ public partial class tarjetaOf
 
     [InverseProperty("oFNavigation")]
     public virtual ICollection<notasOf> notasOf { get; set; } = new List<notasOf>();
+
+    [ForeignKey("ofOrigen")]
+    [InverseProperty("InverseofOrigenNavigation")]
+    public virtual tarjetaOf ofOrigenNavigation { get; set; }
 
     [InverseProperty("oFNavigation")]
     public virtual ICollection<procesoOf> procesoOf { get; set; } = new List<procesoOf>();

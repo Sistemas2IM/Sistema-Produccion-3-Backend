@@ -128,10 +128,10 @@ namespace Sistema_Produccion_3_Backend.Controllers.AnexosSAP
             // Mapear los roles a los grupos de permisos
             var gruposPermisos = new Dictionary<string, List<string>>
     {
-        { "comercial", new List<string> { "Ventas", "AsistenteVenta", "Cotizaciones", "JefeVentas", "Planificación", "Administrador" } },
-        { "producción", new List<string> { "Operador", "Planificación", "Diseñador", "Calidad", "Administrador" } },
-        { "calidad", new List<string> { "Calidad", "Administrador" } },
-        { "financiero", new List<string> { "Gerencia", "Digitador", "Administrador" } }
+        { "comercial", new List<string> { "Ventas", "AsistenteVenta", "Cotizaciones", "JefeVentas", "Planificación", "Administrador", "Gerencia operacional" } },
+        { "producción", new List<string> { "Operador", "Planificación", "Diseñador", "Calidad", "Administrador", "Gerencia operacional" } },
+        { "calidad", new List<string> { "Calidad", "Administrador", "Gerencia operacional" } },
+        { "financiero", new List<string> { "Gerencia", "Digitador", "Administrador", "Gerencia operacional" } }
     };
 
             // Verificar si el rol del usuario está en el grupo de permisos
