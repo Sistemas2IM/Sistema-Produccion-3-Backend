@@ -13,10 +13,10 @@ public partial class valeBobina
     [Key]
     public int idVale { get; set; }
 
-    [Column(TypeName = "numeric(18, 0)")]
+    [Column(TypeName = "numeric(18, 2)")]
     public decimal? pesoInicial { get; set; }
 
-    [Column(TypeName = "numeric(18, 0)")]
+    [Column(TypeName = "numeric(18, 2)")]
     public decimal? pesoFinal { get; set; }
 
     [StringLength(25)]
@@ -31,7 +31,7 @@ public partial class valeBobina
     [StringLength(150)]
     public string proveedorBobina { get; set; }
 
-    [Column(TypeName = "numeric(38, 0)")]
+    [Column(TypeName = "numeric(38, 2)")]
     public decimal? anchoBobina { get; set; }
 
     [StringLength(200)]

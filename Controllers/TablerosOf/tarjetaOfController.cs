@@ -84,7 +84,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         [FromQuery] int? ov = null,                // Parámetro opcional para el número de OV
         [FromQuery] string? lineaNegocio = null,    // Parámetro opcional para la línea de negocio
         [FromQuery] string? idsEtiquetas = null,
-        [FromQuery] bool mostrarArchivados = false)
+        [FromQuery] bool mostrarArchivados = false,
+        [FromQuery] bool reproceso = false)
         {
             // Consulta base
             var query = _context.tarjetaOf
@@ -144,6 +145,12 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             if (ov.HasValue)
             {
                 query = query.Where(p => p.oV == ov.Value);
+            }
+
+            // Campo para filtrar por reproceso true/false
+            if (reproceso)
+            {
+                query = query.Where(p => p.reproceso == true);
             }
 
             // Filtro por IDs de etiquetas

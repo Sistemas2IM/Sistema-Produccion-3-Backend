@@ -30,7 +30,7 @@ public partial class procesoOf
     [StringLength(25)]
     public string idMaterial { get; set; }
 
-    [StringLength(254)]
+    [StringLength(500)]
     public string nombreTarjeta { get; set; }
 
     public string productoOf { get; set; }

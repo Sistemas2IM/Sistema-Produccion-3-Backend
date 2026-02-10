@@ -67,5 +67,11 @@ namespace Sistema_Produccion_3_Backend.DTO.TarjetasOF
         public string? razonSocial { get; set; }
 
         public string? actualizadoPor { get; set; }
+
+        public int? tipoComponente { get; set; }
+
+        public int? ofOrigen { get; set; }
+
+        public bool? reproceso { get; set; }
     }
 }
