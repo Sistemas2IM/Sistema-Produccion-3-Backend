@@ -368,7 +368,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 // ... tu lógica de concurrencia ...
             }
 
-            // === INICIO DE LA INTEGRACIÓN CONDICIONAL ===
+            // === INICIO DE LA INTEGRACIÓN CONDICISqlException: The UPDATE statement conflicted with the FOREIGN KEY SAME TABLE constraint "FK_REPROCESA_OF". The conflict occurred in database "NEXO_DB", table "dbo.tarjetaOf", column 'oF'.ONAL ===
 
             // 7. Verificamos el cambio de estado Y el vendedor
             bool estadoCambio = idEstadoVinoEnDto && idEstadoAnterior != updateTarjetaOf.idEstadoOf.Value;
