@@ -1605,7 +1605,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 return StatusCode(StatusCodes.Status500InternalServerError, "Error al actualizar los procesos.");
             }
 
-            return Ok("Actualización realizada correctamente.");
+            return Ok(new { message = "Procesos actualizados exitosamente", procesos = procesos });
         }
 
         [HttpPut("put/BatchUpdateArchivada")]
