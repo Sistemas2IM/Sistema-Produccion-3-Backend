@@ -2,7 +2,7 @@
 {
     public class TipoComponenteDto
     {
-        public int idSemiElaborado { get; set; }
+        public int idTipoComponente { get; set; }
 
         public string? codigo { get; set; }
 

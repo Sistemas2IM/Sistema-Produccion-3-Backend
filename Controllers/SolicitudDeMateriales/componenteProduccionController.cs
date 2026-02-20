@@ -164,9 +164,9 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales
             {
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (DbUpdateConcurrencyException ex)
             {
-                return StatusCode(500, $"Error al actualizar los componentes: {ex.Message}");
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Error al actualizar los componentes");
             }
 
             return Ok(new { message = "Componentes actualizados exitosamente", componenteProduccion = componentesExistentes });

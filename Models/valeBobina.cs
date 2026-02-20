@@ -49,6 +49,9 @@ public partial class valeBobina
 
     public int? estado { get; set; }
 
+    [StringLength(500)]
+    public string observaciones { get; set; }
+
     [ForeignKey("estado")]
     [InverseProperty("valeBobina")]
     public virtual estadosReporte estadoNavigation { get; set; }
