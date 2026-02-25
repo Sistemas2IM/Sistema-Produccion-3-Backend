@@ -1,9 +1,14 @@
-﻿namespace Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.ComponenteProduccion
+﻿using System.Text.Json.Serialization;
+
+namespace Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.ComponenteProduccion
 {
     public class ComponenteProduccionDto
     {
         public int idComponente { get; set; }
 
+        public string? descripcion { get; set; }
+
+        [JsonIgnore]
         public int? idProceso { get; set; }
 
         public string? productoOf { get; set; }

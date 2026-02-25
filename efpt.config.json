@@ -115,6 +115,14 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[ffeTiemposOfGlobal]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ffeTiemposProcesosGlobal]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[fichaTecnicaCliente]",
          "ObjectType": 0
       },

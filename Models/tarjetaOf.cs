@@ -118,6 +118,9 @@ public partial class tarjetaOf
     [InverseProperty("oFNavigation")]
     public virtual ICollection<etiquetaOf> etiquetaOf { get; set; } = new List<etiquetaOf>();
 
+    [InverseProperty("idOFNavigation")]
+    public virtual ffeTiemposOfGlobal ffeTiemposOfGlobal { get; set; }
+
     [InverseProperty("oFNavigation")]
     public virtual ICollection<fichaTecnicaCliente> fichaTecnicaCliente { get; set; } = new List<fichaTecnicaCliente>();
 

@@ -130,6 +130,10 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas
 
         public bool? esEnsamblaje { get; set; }
 
+        public DateTime? inicioEstimado { get; set; }
+
+        public DateTime? finEstimado { get; set; }
+
         public PosturasOfDto? posturasOfDto { get; set; }
 
         public MaterialDto? materialDto { get; set; }

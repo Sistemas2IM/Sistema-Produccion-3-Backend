@@ -73,6 +73,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 .ThenInclude(u => u.userNavigation)
                 .Include(p => p.corridaCombinadamaestroNavigation)
                 .Include(p => p.corridaCombinadasubordinadoNavigation)
+                .Include(f => f.ffeTiemposProcesosGlobal)
                 .ToListAsync();
 
             foreach (var proceso in procesoOf)
@@ -146,6 +147,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 .Include(a => a.asignacion).ThenInclude(u => u.userNavigation)
                 .Include(p => p.corridaCombinadamaestroNavigation)
                 .Include(p => p.corridaCombinadasubordinadoNavigation)
+                .Include(f => f.ffeTiemposProcesosGlobal)
                 .Where(p => p.oF != null && (mostrarArchivados || p.archivada == false))
                 .AsQueryable();
 
@@ -313,6 +315,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 .Include(f => f.oFNavigation)
                 .Include(p => p.corridaCombinadamaestroNavigation)
                 .Include(p => p.corridaCombinadasubordinadoNavigation)
+                .Include(f => f.ffeTiemposProcesosGlobal)
                 .FirstOrDefaultAsync(u => u.idProceso == id);
 
             // Cargar subordinadoNavigation manualmente
@@ -366,6 +369,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 .Include(f => f.oFNavigation)
                 .Include(p => p.corridaCombinadamaestroNavigation)
                 .Include(p => p.corridaCombinadasubordinadoNavigation)
+                .Include(f => f.ffeTiemposProcesosGlobal)
                 .FirstOrDefaultAsync(u => u.oF == of);
 
             // Cargar subordinadoNavigation manualmente
@@ -423,6 +427,9 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                     .ThenInclude(u => u.userNavigation)
                 .Include(p => p.corridaCombinadamaestroNavigation)
                 .Include(p => p.corridaCombinadasubordinadoNavigation)
+                .Include(f => f.ffeTiemposProcesosGlobal)
+                .Include(co => co.componenteProduccion)
+                    .ThenInclude(tp => tp.tipoComponenteNavigation)
                 .ToListAsync();
 
             // Procesos maestros de corrida combinada (no ligados directamente a una OF)
@@ -598,6 +605,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                     .ThenInclude(u => u.userNavigation)
                 .Include(p => p.corridaCombinadamaestroNavigation)
                 .Include(p => p.corridaCombinadasubordinadoNavigation)
+                .Include(f => f.ffeTiemposProcesosGlobal)
                 .ToListAsync();
 
             // Procesos maestros de corrida combinada (no ligados directamente a una OF)
@@ -775,6 +783,9 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                     .ThenInclude(u => u.userNavigation)
                 .Include(p => p.corridaCombinadamaestroNavigation)
                 .Include(p => p.corridaCombinadasubordinadoNavigation)
+                .Include(f => f.ffeTiemposProcesosGlobal)
+                .Include(co => co.componenteProduccion)
+                    .ThenInclude(tp => tp.tipoComponenteNavigation)
                 .Select(p => new
                 {
                     Proceso = p,
@@ -912,6 +923,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 .ThenInclude(u => u.userNavigation)
                 .Include(p => p.corridaCombinadamaestroNavigation)
                 .Include(p => p.corridaCombinadasubordinadoNavigation)
+                .Include(f => f.ffeTiemposProcesosGlobal)
                 .ToListAsync();
 
             foreach (var proceso in procesos)
@@ -1054,6 +1066,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 .Include(f => f.oFNavigation)
                 .Include(p => p.corridaCombinadamaestroNavigation)
                 .Include(p => p.corridaCombinadasubordinadoNavigation)
+                .Include(f => f.ffeTiemposProcesosGlobal)
                 .FirstOrDefaultAsync(u => u.idProceso == id);
 
             // Cargar subordinadoNavigation manualmente
@@ -1213,6 +1226,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 .Include(e => e.tarjetaEtiqueta)
                 .Include(a => a.asignacion)
                     .ThenInclude(u => u.userNavigation)
+                .Include(f => f.ffeTiemposProcesosGlobal)
                 .ToListAsync();         
 
             var dtos = _mapper.Map<List<ProcesoOfDto>>(procesosNormales);           

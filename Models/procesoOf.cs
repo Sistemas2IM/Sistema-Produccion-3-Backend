@@ -175,6 +175,9 @@ public partial class procesoOf
     [InverseProperty("idProcesoNavigation")]
     public virtual ICollection<detalleReporte> detalleReporte { get; set; } = new List<detalleReporte>();
 
+    [InverseProperty("idProcesoNavigation")]
+    public virtual ffeTiemposProcesosGlobal ffeTiemposProcesosGlobal { get; set; }
+
     [ForeignKey("idMaterial")]
     [InverseProperty("procesoOf")]
     public virtual material idMaterialNavigation { get; set; }

@@ -96,6 +96,8 @@ using Sistema_Produccion_3_Backend.DTO.TarjetasOF.EstadoOf;
 using Sistema_Produccion_3_Backend.DTO.TarjetasOF.logCambiosOf;
 using Sistema_Produccion_3_Backend.DTO.TarjetasOF.NotasOf;
 using Sistema_Produccion_3_Backend.DTO.TarjetasOF.Reportes;
+using Sistema_Produccion_3_Backend.DTO.TiemposEstimados.TiemposOf;
+using Sistema_Produccion_3_Backend.DTO.TiemposEstimados.TiemposProceso;
 using Sistema_Produccion_3_Backend.Models;
 
 namespace Sistema_Produccion_3_Backend.AutomapperProfiles
@@ -110,6 +112,8 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             CreateMap<tarjetaOf, TarjetaOfDto>()
                 .ForMember(dest => dest.estadonombre, opt => opt.MapFrom(src => src.idEstadoOfNavigation.nombreEstado))
                 .ForMember(dest => dest.etiquetaDto, opt => opt.MapFrom(src => src.etiquetaOf))
+                .ForMember(dest => dest.inicioEstimado, opt => opt.MapFrom(src => src.ffeTiemposOfGlobal.Inicio_Estimado))
+                .ForMember(dest => dest.finEstimado, opt => opt.MapFrom(src => src.ffeTiemposOfGlobal.Fin_Proyectado))
                 .ReverseMap();
             //.ForPath(src => src.idEstadoOfNavigation, opt => opt.Ignore());
             CreateMap<tarjetaOf, TarjetaBusquedaDto>().ReverseMap();
@@ -177,6 +181,8 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForMember(dest => dest.fsc, opt => opt.MapFrom(src => src.oFNavigation.fsc))
                 .ForMember(dest => dest.asignacionDto, opt => opt.MapFrom(src => src.asignacion))
                 .ForMember(dest => dest.serie, opt => opt.MapFrom(src => src.oFNavigation.seriesOf))
+                .ForMember(dest => dest.inicioEstimado, opt => opt.MapFrom(src => src.ffeTiemposProcesosGlobal.Inicio_Estimado))
+                .ForMember(dest => dest.finEstimado, opt => opt.MapFrom(src => src.ffeTiemposProcesosGlobal.Fin_Proyectado))
                 .ForMember(dest => dest.fechaVencimiento, opt => opt.MapFrom(src =>
                         src.corridaCombinada == true
                             ? src.fechaVencimiento
@@ -208,6 +214,9 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForMember(dest => dest.fsc, opt => opt.MapFrom(src => src.oFNavigation.fsc))
                 .ForMember(dest => dest.asignacionDto, opt => opt.MapFrom(src => src.asignacion))
                 .ForMember(dest => dest.serie, opt => opt.MapFrom(src => src.oFNavigation.seriesOf))
+                .ForMember(dest => dest.inicioEstimado, opt => opt.MapFrom(src => src.ffeTiemposProcesosGlobal.Inicio_Estimado))
+                .ForMember(dest => dest.finEstimado, opt => opt.MapFrom(src => src.ffeTiemposProcesosGlobal.Fin_Proyectado))
+                .ForMember(dest => dest.componentes, opt => opt.MapFrom(src => src.componenteProduccion))
                 .ForMember(dest => dest.fechaVencimiento, opt => opt.MapFrom(src =>
                         src.corridaCombinada == true
                             ? src.fechaVencimiento
@@ -238,6 +247,9 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForMember(dest => dest.serie, opt => opt.MapFrom(src => src.oFNavigation.seriesOf))
                 .ForMember(dest => dest.tarjetaEtiquetaDto, opt => opt.MapFrom(src => src.tarjetaEtiqueta))
                 .ForMember(dest => dest.asignacionDto, opt => opt.MapFrom(src => src.asignacion))
+                .ForMember(dest => dest.inicioEstimado, opt => opt.MapFrom(src => src.ffeTiemposProcesosGlobal.Inicio_Estimado))
+                .ForMember(dest => dest.finEstimado, opt => opt.MapFrom(src => src.ffeTiemposProcesosGlobal.Fin_Proyectado))
+                .ForMember(dest => dest.componentes, opt => opt.MapFrom(src => src.componenteProduccion))
                 .ForMember(dest => dest.fechaVencimiento, opt => opt.MapFrom(src =>
                         src.corridaCombinada == true
                             ? src.fechaVencimiento
@@ -283,6 +295,8 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                     .ForMember(dest => dest.unidadMedida, opt => opt.MapFrom(src => src.oFNavigation.unidadMedida))
                     .ForMember(dest => dest.fsc, opt => opt.MapFrom(src => src.oFNavigation.fsc))
                     .ForMember(dest => dest.serie, opt => opt.MapFrom(src => src.oFNavigation.seriesOf))
+                    .ForMember(dest => dest.inicioEstimado, opt => opt.MapFrom(src => src.ffeTiemposProcesosGlobal.Inicio_Estimado))
+                    .ForMember(dest => dest.finEstimado, opt => opt.MapFrom(src => src.ffeTiemposProcesosGlobal.Fin_Proyectado))
                     .ForMember(dest => dest.fechaVencimiento, opt => opt.MapFrom(src =>
                         src.corridaCombinada == true
                             ? src.fechaVencimiento
@@ -876,7 +890,9 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             CreateMap<UpdateTipoComponenteDto, tipoComponente>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
-            CreateMap<componenteProduccion, ComponenteProduccionDto>().ReverseMap();
+            CreateMap<componenteProduccion, ComponenteProduccionDto>()
+                .ForMember(dest => dest.descripcion, opt => opt.MapFrom(src => src.tipoComponenteNavigation.descripcion))
+                .ReverseMap();
             CreateMap<componenteProduccion, AddComponenteProduccionDto>().ReverseMap();
             CreateMap<UpdateComponenteProduccionDto, componenteProduccion>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
@@ -925,6 +941,15 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
 
             CreateMap<UpdateIndisponibilidadMaquinasDto, indisponibilidadMaquinas>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            // TIEMPOS ESTIMADOS =========================================================================================
+            // OF
+            CreateMap<ffeTiemposOfGlobal, ffeTiemposOfDto>()
+                .ReverseMap();
+            
+            // PROCESOS
+            CreateMap<ffeTiemposProcesosGlobal, ffeTiemposProcesosDto>()
+                .ReverseMap();
         }
     }
 }

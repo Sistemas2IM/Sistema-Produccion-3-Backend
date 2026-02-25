@@ -61,6 +61,10 @@ public partial class base_nuevaContext : DbContext
 
     public virtual DbSet<familliaDeMaquina> familliaDeMaquina { get; set; }
 
+    public virtual DbSet<ffeTiemposOfGlobal> ffeTiemposOfGlobal { get; set; }
+
+    public virtual DbSet<ffeTiemposProcesosGlobal> ffeTiemposProcesosGlobal { get; set; }
+
     public virtual DbSet<fichaTecnicaCliente> fichaTecnicaCliente { get; set; }
 
     public virtual DbSet<fichaTecnicaCliente_Log> fichaTecnicaCliente_Log { get; set; }
@@ -450,6 +454,30 @@ public partial class base_nuevaContext : DbContext
             entity.HasKey(e => e.idFamilia).HasName("PK_FAMILLIADEMAQUINA");
 
             entity.Property(e => e.nombreFamilia).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+        });
+
+        modelBuilder.Entity<ffeTiemposOfGlobal>(entity =>
+        {
+            entity.HasKey(e => e.idOF).HasName("PK__FFE_Repo__9DB850EFEF430561");
+
+            entity.Property(e => e.idOF).ValueGeneratedNever();
+            entity.Property(e => e.Actualizado).HasDefaultValueSql("(getdate())");
+
+            entity.HasOne(d => d.idOFNavigation).WithOne(p => p.ffeTiemposOfGlobal)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_TIEMPOS_OF");
+        });
+
+        modelBuilder.Entity<ffeTiemposProcesosGlobal>(entity =>
+        {
+            entity.HasKey(e => e.idProceso).HasName("PK__FFE_Repo__DEC8292642248C3E");
+
+            entity.Property(e => e.idProceso).ValueGeneratedNever();
+            entity.Property(e => e.Actualizado).HasDefaultValueSql("(getdate())");
+
+            entity.HasOne(d => d.idProcesoNavigation).WithOne(p => p.ffeTiemposProcesosGlobal)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_TIEMPOS_PROCESOS");
         });
 
         modelBuilder.Entity<fichaTecnicaCliente>(entity =>

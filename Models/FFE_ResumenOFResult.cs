@@ -9,9 +9,11 @@ namespace Sistema_Produccion_3_Backend.Models
     public partial class FFE_ResumenOFResult
     {
         public int? idOF { get; set; }
-        public DateTime? fechaInicioCalculada { get; set; }
-        public DateTime? fechaFinEstimada_FFE { get; set; }
-        public DateTime? fechaVencimiento { get; set; }
+        public DateTime? fechaInicioEstimada_OF { get; set; }
+        public DateTime? fechaInicioReal_OF { get; set; }
+        public DateTime? fechaFinEstimada_Final { get; set; }
+        public DateTime? fechaVencimiento_SAP { get; set; }
+        public int inicioAtrasado { get; set; }
         public int estaAtrasada { get; set; }
         [StringLength(250)]
         public string causaCritica { get; set; }
