@@ -19,8 +19,14 @@ public partial class estadosReporte
 
     public int? tipoReporte { get; set; }
 
+    [InverseProperty("estadoNavigation")]
+    public virtual ICollection<auditoriaProceso> auditoriaProceso { get; set; } = new List<auditoriaProceso>();
+
     [InverseProperty("idEstadoReporteNavigation")]
     public virtual ICollection<entregasProductoTerminado> entregasProductoTerminado { get; set; } = new List<entregasProductoTerminado>();
+
+    [InverseProperty("estadoNavigation")]
+    public virtual ICollection<fichaTecnicaProcesos> fichaTecnicaProcesos { get; set; } = new List<fichaTecnicaProcesos>();
 
     [InverseProperty("idEstadoReporteNavigation")]
     public virtual ICollection<reportesDeOperadores> reportesDeOperadores { get; set; } = new List<reportesDeOperadores>();
@@ -28,6 +34,9 @@ public partial class estadosReporte
     [ForeignKey("tipoReporte")]
     [InverseProperty("estadosReporte")]
     public virtual tipoReporte tipoReporteNavigation { get; set; }
+
+    [InverseProperty("estadoNavigation")]
+    public virtual ICollection<turnoAuditoria> turnoAuditoria { get; set; } = new List<turnoAuditoria>();
 
     [InverseProperty("estadoNavigation")]
     public virtual ICollection<valeBobina> valeBobina { get; set; } = new List<valeBobina>();

@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using Sistema_Produccion_3_Backend.DTO.AnexosNEXO;
+using Sistema_Produccion_3_Backend.DTO.Calidad.AuditoriaProceso;
+using Sistema_Produccion_3_Backend.DTO.Calidad.AuditoriaProceso.DetalleAuditoriaProceso;
 using Sistema_Produccion_3_Backend.DTO.Calidad.CertificadoCalidad;
 using Sistema_Produccion_3_Backend.DTO.Calidad.CertificadoCalidad.DetalleCertificadoCalidad;
 using Sistema_Produccion_3_Backend.DTO.Calidad.CertificadoCalidad.DetalleCertificadoCalidad.Batch;
@@ -685,6 +687,17 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
 
             CreateMap<variableUnidadMedida, AddVariableUnidadMedidaDto>().ReverseMap();
             CreateMap<UpdateVariableUnidadMedidaDto, variableUnidadMedida>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            // AUDITORIA PROCESO =======================================================================================
+            CreateMap<auditoriaProceso, AuditoriaProcesoDto>().ReverseMap();
+            CreateMap<auditoriaProceso, AddAuditoriaProcesoDto>().ReverseMap();
+            CreateMap<UpdateAuditoriaProcesoDto, auditoriaProceso>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            CreateMap<detalleAuditoriaProceso, DetalleAuditoriaProcesoDto>().ReverseMap();
+            CreateMap<detalleAuditoriaProceso, AddDetalleAuditoriaProcesoDto>().ReverseMap();
+            CreateMap<UpdateDetalleAuditoriaProcesoDto, detalleAuditoriaProceso>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             // ========================================================================================================
