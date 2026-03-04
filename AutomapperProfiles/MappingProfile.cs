@@ -20,6 +20,7 @@ using Sistema_Produccion_3_Backend.DTO.Etiquetas.EtiquetaOf;
 using Sistema_Produccion_3_Backend.DTO.Etiquetas.EtiquetaOf.BatchEtiquetaOf;
 using Sistema_Produccion_3_Backend.DTO.Etiquetas.TarjetaEtiqueta;
 using Sistema_Produccion_3_Backend.DTO.Etiquetas.TarjetaEtiqueta.BatchTarjetaEtiqueta;
+using Sistema_Produccion_3_Backend.DTO.GoogleChat.SoporteNexo;
 using Sistema_Produccion_3_Backend.DTO.Horarios.HorariosOperativos;
 using Sistema_Produccion_3_Backend.DTO.Horarios.HorariosOperativos.Batch;
 using Sistema_Produccion_3_Backend.DTO.Horarios.IndisponibilidadMaquinas;
@@ -540,6 +541,11 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForMember(dest => dest.maquinasAsignadas, opt => opt.MapFrom(src => src.permisoMaquina))
                 .ReverseMap();
 
+            CreateMap<usuario, UsuarioCortoDto>()
+                .ForMember(dest => dest.nombreArea, opt => opt.MapFrom(src => src.idAreaNavigation.nombreArea))
+                .ForMember(dest => dest.nombreRol, opt => opt.MapFrom(src => src.idRolNavigation.nombreRol))
+                .ReverseMap();
+
             CreateMap<rol, RolDto>()
                 .ForMember(dest => dest.permisos, opt => opt.MapFrom(src => src.permiso))
                 .ForMember(dest => dest.permisoEspecificoDto, opt => opt.MapFrom(src => src.permisoEspecifico))
@@ -892,6 +898,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
 
             CreateMap<componenteProduccion, ComponenteProduccionDto>()
                 .ForMember(dest => dest.descripcion, opt => opt.MapFrom(src => src.tipoComponenteNavigation.descripcion))
+                .ForMember(dest => dest.codigo, opt => opt.MapFrom(src => src.tipoComponenteNavigation.codigo))
                 .ReverseMap();
             CreateMap<componenteProduccion, AddComponenteProduccionDto>().ReverseMap();
             CreateMap<UpdateComponenteProduccionDto, componenteProduccion>()
@@ -950,6 +957,9 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             // PROCESOS
             CreateMap<ffeTiemposProcesosGlobal, ffeTiemposProcesosDto>()
                 .ReverseMap();
+
+            // SOPORTE NEXO =========================================================================================
+            CreateMap<logSoporteNexo, LogSoporteNexoDto>().ReverseMap();
         }
     }
 }

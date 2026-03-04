@@ -163,6 +163,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[logSoporteNexo]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[lotePliego]",
          "ObjectType": 0
       },

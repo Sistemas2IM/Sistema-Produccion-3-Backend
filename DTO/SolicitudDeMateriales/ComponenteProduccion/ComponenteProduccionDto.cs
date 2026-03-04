@@ -6,6 +6,8 @@ namespace Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.ComponenteProdu
     {
         public int idComponente { get; set; }
 
+        public string? codigo { get; set; }
+
         public string? descripcion { get; set; }
 
         [JsonIgnore]

@@ -85,6 +85,8 @@ public partial class base_nuevaContext : DbContext
 
     public virtual DbSet<logCambiosProceso> logCambiosProceso { get; set; }
 
+    public virtual DbSet<logSoporteNexo> logSoporteNexo { get; set; }
+
     public virtual DbSet<lotePliego> lotePliego { get; set; }
 
     public virtual DbSet<maquinas> maquinas { get; set; }
@@ -603,6 +605,11 @@ public partial class base_nuevaContext : DbContext
                 .HasConstraintName("FK_PROCESO");
 
             entity.HasOne(d => d.usuario).WithMany(p => p.logCambiosProceso).HasConstraintName("FK_USUARIO");
+        });
+
+        modelBuilder.Entity<logSoporteNexo>(entity =>
+        {
+            entity.HasKey(e => e.idLogSoporte).HasName("PK__soporteN__9F6864CB3A873920");
         });
 
         modelBuilder.Entity<lotePliego>(entity =>
