@@ -43,7 +43,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.CertificadoCalidad
 
         // GET api/<certificadoCalidadController>/5
         [HttpGet("get/{id}")]
-        public async Task<ActionResult<CertificadoCalidadDto>> Get(int id)
+        public async Task<ActionResult<CertificadoCalidadDto>> GetCertificado(int id)
         {
             var certificado = await _context.certificadoCalidad
                 .OrderByDescending(c => c.idCertificadoCalidad)
@@ -127,7 +127,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.CertificadoCalidad
             _context.certificadoCalidad.Add(certificado);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("get", new { id = certificado.idCertificadoCalidad }, certificado);
+            return CreatedAtAction("GetCertificado", new { id = certificado.idCertificadoCalidad }, certificado);
         }
 
         // PUT api/<certificadoCalidadController>/5
