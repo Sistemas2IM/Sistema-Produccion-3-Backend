@@ -2,6 +2,7 @@
 using Sistema_Produccion_3_Backend.DTO.AnexosNEXO;
 using Sistema_Produccion_3_Backend.DTO.Calidad.AuditoriaProceso;
 using Sistema_Produccion_3_Backend.DTO.Calidad.AuditoriaProceso.DetalleAuditoriaProceso;
+using Sistema_Produccion_3_Backend.DTO.Calidad.AuditoriaProceso.DetalleAuditoriaProceso.Batch;
 using Sistema_Produccion_3_Backend.DTO.Calidad.CertificadoCalidad;
 using Sistema_Produccion_3_Backend.DTO.Calidad.CertificadoCalidad.DetalleCertificadoCalidad;
 using Sistema_Produccion_3_Backend.DTO.Calidad.CertificadoCalidad.DetalleCertificadoCalidad.Batch;
@@ -10,10 +11,13 @@ using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnicaCliente.DetalleFichaC
 using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnicaCliente.DetalleFichaClientes.Batch;
 using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnicaProcesos;
 using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnicaProcesos.DetalleFichaProcesos;
+using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnicaProcesos.DetalleFichaProcesos.Batch;
 using Sistema_Produccion_3_Backend.DTO.Calidad.FormulacionTinta;
 using Sistema_Produccion_3_Backend.DTO.Calidad.FormulacionTinta.EspecificacionTintas;
 using Sistema_Produccion_3_Backend.DTO.Calidad.RegistroLamparas;
+using Sistema_Produccion_3_Backend.DTO.Calidad.RegistroLamparas.Batch;
 using Sistema_Produccion_3_Backend.DTO.Calidad.SecuenciaColor;
+using Sistema_Produccion_3_Backend.DTO.Calidad.SecuenciaColor.Batch;
 using Sistema_Produccion_3_Backend.DTO.Calidad.UnidadesMedida;
 using Sistema_Produccion_3_Backend.DTO.Calidad.VariablesTecnicas;
 using Sistema_Produccion_3_Backend.DTO.Calidad.VariableUnidadMedida;
@@ -670,7 +674,17 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             }
 
             // FICHA TECNICA DE PROCESO ==================================================================================
-            CreateMap<fichaTecnicaProcesos, FichaTecnicaProcesosDto>().ReverseMap();
+            CreateMap<fichaTecnicaProcesos, FichaTecnicaProcesosDto>()
+                .ForMember(dest => dest.detalleFichaProcesos, opt => opt.MapFrom(src => src.detalleFichaProcesos))
+                .ForMember(dest => dest.formulacionTinta, opt => opt.MapFrom(src => src.formulacionTinta))
+                .ForMember(dest => dest.nombreCliente, opt => opt.MapFrom(src => src.oFNavigation.clienteOf))
+                .ForMember(dest => dest.codArticulo, opt => opt.MapFrom(src => src.oFNavigation.codArticulo))
+                .ForMember(dest => dest.nombreProducto, opt => opt.MapFrom(src => src.oFNavigation.productoOf))
+                .ForMember(dest => dest.nombreOperador, opt => opt.MapFrom(src => src.operadorNavigation.nombres + " " + src.operadorNavigation.apellidos))
+                .ForMember(dest => dest.nombreFormuladorTinta, opt => opt.MapFrom(src => src.formuladorTintaNavigation.nombres + " " + src.formuladorTintaNavigation.apellidos))
+                .ForMember(dest => dest.secuenciaColor, opt => opt.MapFrom(src => src.secuenciaColor))
+                .ForMember(dest => dest.registroLamparas, opt => opt.MapFrom(src => src.registroLamparas))
+                .ReverseMap();
             CreateMap<fichaTecnicaProcesos, AddFichaTecnicaProcesosDto>().ReverseMap();
             CreateMap<UpdateFichaTecnicaProcesosDto, fichaTecnicaProcesos>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
@@ -679,8 +693,11 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             CreateMap<detalleFichaProcesos, AddDetalleFichaProcesosDto>().ReverseMap();
             CreateMap<UpdateDetalleFichaProcesosDto, detalleFichaProcesos>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<detalleFichaProcesos, AddBatchDetalleFichaProcesos>().ReverseMap();
+            CreateMap<UpdateBatchDetalleFichaProcesos, detalleFichaProcesos>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
-           // =============================================================================================================
+            // =============================================================================================================
 
             CreateMap<variablesTecnicas, VariablesTecnicasDto>()
                 .ForMember(dest => dest.variableUnidadMedidaDto, opt => opt.MapFrom(src => src.variableUnidadMedida))
@@ -709,7 +726,9 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             // AUDITORIA PROCESO =======================================================================================
-            CreateMap<auditoriaProceso, AuditoriaProcesoDto>().ReverseMap();
+            CreateMap<auditoriaProceso, AuditoriaProcesoDto>()
+                .ForMember(dest => dest.detalleAuditoriaProceso, opt => opt.MapFrom(src => src.detalleAuditoriaProceso))
+                .ReverseMap();
             CreateMap<auditoriaProceso, AddAuditoriaProcesoDto>().ReverseMap();
             CreateMap<UpdateAuditoriaProcesoDto, auditoriaProceso>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
@@ -718,24 +737,40 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             CreateMap<detalleAuditoriaProceso, AddDetalleAuditoriaProcesoDto>().ReverseMap();
             CreateMap<UpdateDetalleAuditoriaProcesoDto, detalleAuditoriaProceso>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<detalleAuditoriaProceso, AddBatchDetalleAuditoriaProceso>().ReverseMap();
+            CreateMap<UpdateBatchDetalleAuditoriaProceso, detalleAuditoriaProceso>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             // Secuencia de color
             CreateMap<secuenciaColor, SecuenciaColorDto>().ReverseMap();
             CreateMap<secuenciaColor, AddSecuenciaColorDto>().ReverseMap();
             CreateMap<UpdateSecuenciaColorDto, secuenciaColor>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<secuenciaColor, AddBatchSecuenciaColor>().ReverseMap();
+            CreateMap<UpdateBatchSecuenciaColor, secuenciaColor>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             // Registro de lámparas
-            CreateMap<registroLamparas, RegistroLamparasDto>().ReverseMap();
+            CreateMap<registroLamparas, RegistroLamparasDto>()
+                .ForMember(dest => dest.nombreVariable, opt => opt.MapFrom(src => src.idVariableNavigation.nombre))
+                .ReverseMap();
             CreateMap<registroLamparas, AddRegistroLamparasDto>().ReverseMap();
             CreateMap<UpdateRegistroLamparasDto, registroLamparas>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<registroLamparas, AddBatchRegistroLamparas>().ReverseMap();
+            CreateMap<UpdateBatchRegistroLamparas, registroLamparas>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             // TINTAS ================================================================================================
             // formulacion de tintas
-            CreateMap<formulacionTinta, FormulacionTintaDto>().ReverseMap();
-            CreateMap<formulacionTinta, AddFormulacionTintaDto>().ReverseMap();
+            CreateMap<formulacionTinta, FormulacionTintaDto>()
+                .ForMember(dest => dest.especificacionTintas, opt => opt.MapFrom(src => src.especificacionTintas))
+                .ReverseMap();
+            CreateMap<formulacionTinta, AddFormulacionTintaDto>()
+                .ForMember(dest => dest.especificacionTintas, opt => opt.MapFrom(src => src.especificacionTintas))
+                .ReverseMap();
             CreateMap<UpdateFormulacionTintaDto, formulacionTinta>()
+                .ForMember(dest => dest.especificacionTintas, opt => opt.Ignore())
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             // especificacion de tintas

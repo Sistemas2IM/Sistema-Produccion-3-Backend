@@ -1,4 +1,6 @@
-﻿namespace Sistema_Produccion_3_Backend.DTO.Calidad.AuditoriaProceso
+﻿using Sistema_Produccion_3_Backend.DTO.Calidad.AuditoriaProceso.DetalleAuditoriaProceso;
+
+namespace Sistema_Produccion_3_Backend.DTO.Calidad.AuditoriaProceso
 {
     public class AuditoriaProcesoDto
     {
@@ -39,5 +41,7 @@
         public bool? cancelado { get; set; }
 
         public int? tipoReporte { get; set; }
+
+        public List<DetalleAuditoriaProcesoDto>? detalleAuditoriaProceso { get; set; }
     }
 }

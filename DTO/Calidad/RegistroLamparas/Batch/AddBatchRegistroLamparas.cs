@@ -1,12 +1,8 @@
-﻿namespace Sistema_Produccion_3_Backend.DTO.Calidad.RegistroLamparas
+﻿namespace Sistema_Produccion_3_Backend.DTO.Calidad.RegistroLamparas.Batch
 {
-    public class RegistroLamparasDto
+    public class AddBatchRegistroLamparas
     {
-        public int idRegistroLampara { get; set; }
-
         public int? idFichaProceso { get; set; }
-
-        public string? nombreVariable { get; set; }
 
         public string? seccionMaquina { get; set; }
 

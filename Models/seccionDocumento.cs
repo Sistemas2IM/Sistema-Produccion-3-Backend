@@ -37,7 +37,7 @@ public partial class seccionDocumento
 
     [ForeignKey("tipoDocumento")]
     [InverseProperty("seccionDocumento")]
-    public virtual tipoDeObjetos tipoDocumentoNavigation { get; set; }
+    public virtual tipoReporte tipoDocumentoNavigation { get; set; }
 
     [InverseProperty("idSeccionNavigation")]
     public virtual ICollection<variablesTecnicas> variablesTecnicas { get; set; } = new List<variablesTecnicas>();

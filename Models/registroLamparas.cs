@@ -15,6 +15,8 @@ public partial class registroLamparas
 
     public int? idFichaProceso { get; set; }
 
+    public int? idVariable { get; set; }
+
     [StringLength(50)]
     public string seccionMaquina { get; set; }
 
@@ -26,4 +28,8 @@ public partial class registroLamparas
     [ForeignKey("idFichaProceso")]
     [InverseProperty("registroLamparas")]
     public virtual fichaTecnicaProcesos idFichaProcesoNavigation { get; set; }
+
+    [ForeignKey("idVariable")]
+    [InverseProperty("registroLamparas")]
+    public virtual variablesTecnicas idVariableNavigation { get; set; }
 }

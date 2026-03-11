@@ -179,8 +179,6 @@ public partial class base_nuevaContext : DbContext
 
     public virtual DbSet<tipoComponente> tipoComponente { get; set; }
 
-    public virtual DbSet<tipoDeObjetos> tipoDeObjetos { get; set; }
-
     public virtual DbSet<tipoReporte> tipoReporte { get; set; }
 
     public virtual DbSet<transferenciaProceso> transferenciaProceso { get; set; }
@@ -434,7 +432,7 @@ public partial class base_nuevaContext : DbContext
 
         modelBuilder.Entity<detalleFichaProcesos>(entity =>
         {
-            entity.HasKey(e => e.idDetalle).HasName("PK__detalleF__49CAE2FB8E2E6FC0");
+            entity.HasKey(e => e.idDetalle).HasName("PK_DETALLE_FICHA_TECNICA");
 
             entity.Property(e => e.fechaCracion).HasDefaultValueSql("(getdate())");
 
@@ -499,7 +497,7 @@ public partial class base_nuevaContext : DbContext
 
         modelBuilder.Entity<especificacionTintas>(entity =>
         {
-            entity.HasKey(e => e.idEspecificacion).HasName("PK__especifi__3A251E93429F69B5");
+            entity.HasKey(e => e.idEspecificacion).HasName("PK_ESPECIFICACION_TINTAS");
 
             entity.HasOne(d => d.idFormulacionNavigation).WithMany(p => p.especificacionTintas).HasConstraintName("FK_FORMULACION_TINTA");
         });
@@ -603,7 +601,6 @@ public partial class base_nuevaContext : DbContext
         {
             entity.HasKey(e => e.idFichaProceso).HasName("PK_FICHA_TECNICA_PROCESO");
 
-            entity.Property(e => e.idFichaProceso).ValueGeneratedNever();
             entity.Property(e => e.actualizadoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.archivado).HasDefaultValue(false);
             entity.Property(e => e.cancelado).HasDefaultValue(false);
@@ -616,6 +613,8 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.creadoPorNavigation).WithMany(p => p.fichaTecnicaProcesoscreadoPorNavigation).HasConstraintName("FK_CREADOR_FICHA");
 
             entity.HasOne(d => d.estadoNavigation).WithMany(p => p.fichaTecnicaProcesos).HasConstraintName("FK_ESTADO_FICHA");
+
+            entity.HasOne(d => d.formuladorTintaNavigation).WithMany(p => p.fichaTecnicaProcesosformuladorTintaNavigation).HasConstraintName("FK_FORMULADOR_TINTAS");
 
             entity.HasOne(d => d.idProcesoNavigation).WithMany(p => p.fichaTecnicaProcesos).HasConstraintName("FK_PROCESO_FICHA");
 
@@ -632,9 +631,7 @@ public partial class base_nuevaContext : DbContext
 
         modelBuilder.Entity<formulacionTinta>(entity =>
         {
-            entity.HasKey(e => e.idFormulacion).HasName("PK__formulac__E6140250770E1348");
-
-            entity.Property(e => e.idFormulacion).ValueGeneratedNever();
+            entity.HasKey(e => e.idFormulacion).HasName("PK_FORMULACION_TINTAS");
 
             entity.HasOne(d => d.idFichaProcesoNavigation).WithMany(p => p.formulacionTinta).HasConstraintName("FK_FICHA_FORMULACION_TINTA");
         });
@@ -1223,9 +1220,11 @@ public partial class base_nuevaContext : DbContext
 
         modelBuilder.Entity<registroLamparas>(entity =>
         {
-            entity.HasKey(e => e.idRegistroLampara).HasName("PK__registro__751EB78444A3DAEF");
+            entity.HasKey(e => e.idRegistroLampara).HasName("PK_REGISTRO_LAMPARAS");
 
             entity.HasOne(d => d.idFichaProcesoNavigation).WithMany(p => p.registroLamparas).HasConstraintName("FK_FICHA_REGISTRO_LAMPARAS");
+
+            entity.HasOne(d => d.idVariableNavigation).WithMany(p => p.registroLamparas).HasConstraintName("FK_VARIABLE_LAMPARA");
         });
 
         modelBuilder.Entity<reportesDeOperadores>(entity =>
@@ -1276,7 +1275,7 @@ public partial class base_nuevaContext : DbContext
 
         modelBuilder.Entity<secuenciaColor>(entity =>
         {
-            entity.HasKey(e => e.idSecuenciaColor).HasName("PK__secuenci__AEB9E136902CEB81");
+            entity.HasKey(e => e.idSecuenciaColor).HasName("PK_SECUENCIA_COLOR");
 
             entity.HasOne(d => d.idFichaProcesoNavigation).WithMany(p => p.secuenciaColor).HasConstraintName("FK_FICHA_SECUENCIA_COLOR");
         });
@@ -1388,13 +1387,6 @@ public partial class base_nuevaContext : DbContext
             entity.HasKey(e => e.idTipoComponente).HasName("PK__tipoSemi__0B0DCD4FF7950C92");
 
             entity.HasOne(d => d.unidadBaseNavigation).WithMany(p => p.tipoComponente).HasConstraintName("UNIDAD_BASE_FK");
-        });
-
-        modelBuilder.Entity<tipoDeObjetos>(entity =>
-        {
-            entity.HasKey(e => e.idTipoDeObjetos).HasName("PK_TIPODEOBJETOS");
-
-            entity.Property(e => e.nombreTipoDeObjeto).UseCollation("SQL_Latin1_General_CP1_CI_AS");
         });
 
         modelBuilder.Entity<tipoReporte>(entity =>

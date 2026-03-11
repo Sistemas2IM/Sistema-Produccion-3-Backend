@@ -2,6 +2,8 @@
 {
     public class UpdateEspecificacionTintasDto
     {
+        public int idEspecificacion { get; set; }
+
         public int? idFormulacion { get; set; }
 
         public string? descripcion { get; set; }

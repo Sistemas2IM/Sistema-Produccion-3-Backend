@@ -84,6 +84,9 @@ public partial class usuario
     [InverseProperty("creadoPorNavigation")]
     public virtual ICollection<fichaTecnicaProcesos> fichaTecnicaProcesoscreadoPorNavigation { get; set; } = new List<fichaTecnicaProcesos>();
 
+    [InverseProperty("formuladorTintaNavigation")]
+    public virtual ICollection<fichaTecnicaProcesos> fichaTecnicaProcesosformuladorTintaNavigation { get; set; } = new List<fichaTecnicaProcesos>();
+
     [InverseProperty("operadorNavigation")]
     public virtual ICollection<fichaTecnicaProcesos> fichaTecnicaProcesosoperadorNavigation { get; set; } = new List<fichaTecnicaProcesos>();
 

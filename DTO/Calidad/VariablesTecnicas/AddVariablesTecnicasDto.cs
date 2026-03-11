@@ -33,5 +33,9 @@
         public bool? certificadoCalidad { get; set; }
 
         public DateTime? fechaCreacion { get; set; }
+
+        public int? tipoProceso { get; set; }
+
+        public string? tooltip { get; set; }
     }
 }

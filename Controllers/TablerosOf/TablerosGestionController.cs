@@ -500,17 +500,17 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                     case "Eliseo Menjívar":
                     case "Fátima García":
                     case "Oscar Chavez":
-                        query = query.Where(t => t.vendedorOf != "Oficina" && t.vendedorOf != "freelance");
+                        query = query.Where(t => t.vendedorOf != "Oficina");
                         break;
 
                     case "Floridalma Alfaro":
-                        query = query.Where(t => t.lineaDeNegocio == "FLEXO" && t.vendedorOf != "Oficina" && t.vendedorOf != "freelance");
+                        query = query.Where(t => t.lineaDeNegocio == "FLEXO" && t.vendedorOf != "Oficina");
                         break;
 
                     case "Ingrid Guevara":
                     case "Katya":
                     case "Elba Deleon":
-                        query = query.Where(t => t.vendedorOf == "Oficina" || t.vendedorOf == "freelance");
+                        query = query.Where(t => t.vendedorOf == "Oficina");
                         break;
 
                     case "Diana Munguia":

@@ -25,7 +25,9 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.AuditoriaProceso
         [HttpGet("get")]
         public async Task<ActionResult<IEnumerable<AuditoriaProcesoDto>>> GetAuditoriaProceso()
         {
-            var auditoriaProceso = await _context.auditoriaProceso.ToListAsync();
+            var auditoriaProceso = await _context.auditoriaProceso
+                .Include(a => a.detalleAuditoriaProceso)
+                .ToListAsync();
 
             var auditoriaProcesoDto = _mapper.Map<List<AuditoriaProcesoDto>>(auditoriaProceso);
 
@@ -36,7 +38,9 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.AuditoriaProceso
         [HttpGet("get/{id}")]
         public async Task<ActionResult<AuditoriaProcesoDto>> GetAuditoriaProceso(int id)
         {
-            var auditoriaProceso = await _context.auditoriaProceso.FirstOrDefaultAsync(u => u.idAuditoria == id);
+            var auditoriaProceso = await _context.auditoriaProceso
+                .Include(a => a.detalleAuditoriaProceso)
+                .FirstOrDefaultAsync(u => u.idAuditoria == id);
 
             if (auditoriaProceso == null)
             {

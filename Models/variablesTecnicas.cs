@@ -52,10 +52,9 @@ public partial class variablesTecnicas
     [Column(TypeName = "datetime")]
     public DateTime? fechaCreacion { get; set; }
 
-    [StringLength(25)]
-    public string tipoVariable { get; set; }
-
     public int? tipoProceso { get; set; }
+
+    public string tooltip { get; set; }
 
     [InverseProperty("idVariableNavigation")]
     public virtual ICollection<detalleAuditoriaProceso> detalleAuditoriaProceso { get; set; } = new List<detalleAuditoriaProceso>();
@@ -72,6 +71,9 @@ public partial class variablesTecnicas
     [ForeignKey("idSeccion")]
     [InverseProperty("variablesTecnicas")]
     public virtual seccionDocumento idSeccionNavigation { get; set; }
+
+    [InverseProperty("idVariableNavigation")]
+    public virtual ICollection<registroLamparas> registroLamparas { get; set; } = new List<registroLamparas>();
 
     [ForeignKey("tipoProceso")]
     [InverseProperty("variablesTecnicas")]

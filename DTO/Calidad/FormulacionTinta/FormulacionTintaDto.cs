@@ -1,4 +1,6 @@
-﻿namespace Sistema_Produccion_3_Backend.DTO.Calidad.FormulacionTinta
+﻿using Sistema_Produccion_3_Backend.DTO.Calidad.FormulacionTinta.EspecificacionTintas;
+
+namespace Sistema_Produccion_3_Backend.DTO.Calidad.FormulacionTinta
 {
     public class FormulacionTintaDto
     {
@@ -15,5 +17,7 @@
         public decimal? cie_a { get; set; }
 
         public decimal? cie_b { get; set; }
+
+        public List<EspecificacionTintasDto>? especificacionTintas { get; set; }
     }
 }

@@ -351,10 +351,6 @@
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[tipoDeObjetos]",
-         "ObjectType": 0
-      },
-      {
          "Name": "[dbo].[tipoReporte]",
          "ObjectType": 0
       },

@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.DotNet.Scaffolding.Shared.Messaging;
 using Microsoft.EntityFrameworkCore;
 using Sistema_Produccion_3_Backend.DTO.Calidad.AuditoriaProceso.DetalleAuditoriaProceso;
+using Sistema_Produccion_3_Backend.DTO.Calidad.AuditoriaProceso.DetalleAuditoriaProceso.Batch;
 using Sistema_Produccion_3_Backend.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -59,6 +61,33 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.AuditoriaProceso.Deta
             return CreatedAtAction("GetDetalleAuditoriaProceso", new { id = detalleAuditoriaProceso.idDetalle }, detalleAuditoriaProceso);
         }
 
+        [HttpPost("post/Batch")]
+        public async Task<IActionResult> BatchAddDetalleAuditoria([FromBody] BatchAddDetalleAuditoriaProceso batchAddDto)
+        {
+            if (batchAddDto == null || batchAddDto.detalleAuditoriaProcesos == null || !batchAddDto.detalleAuditoriaProcesos.Any())
+            {
+                return BadRequest();
+            }
+
+            var detalleAuditoriaProcesos = batchAddDto.detalleAuditoriaProcesos.Select(dto => _mapper.Map<detalleAuditoriaProceso>(dto)).ToList();
+
+            await _context.detalleAuditoriaProceso.AddRangeAsync(detalleAuditoriaProcesos);
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Ocurrió un error al guardar: {ex.Message}");
+            }
+
+            return Ok(new { 
+            Message = "Detalles de auditoría agregados exitosamente",
+            DetallesAgregados = detalleAuditoriaProcesos
+            });
+        }
+
         // PUT api/<detalleAuditoriaProcesoController>/5
         [HttpPut("put/{id}")]
         public async Task<IActionResult> PutDetalleAuditoriaProceso(int id, UpdateDetalleAuditoriaProcesoDto updateDetalleAuditoriaProcesoDto)
@@ -89,11 +118,43 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.AuditoriaProceso.Deta
                 }
             }
 
-            return Ok(updateDetalleAuditoriaProcesoDto)
+            return Ok(updateDetalleAuditoriaProcesoDto);
+        }
+
+        [HttpPut("put/Batch")]
+        public async Task<IActionResult> BatchUpdateDetalleAuditoria([FromBody] BatchUpdateDetalleAuditoriaProceso batchUpdateDto)
+        {
+            if (batchUpdateDto == null || !batchUpdateDto.detalleAuditoriaProcesos.Any())
+            {
+                return BadRequest();
+            }
+            foreach (var updateDto in batchUpdateDto.detalleAuditoriaProcesos)
+            {
+                var detalleAuditoriaProceso = await _context.detalleAuditoriaProceso.FindAsync(updateDto.idDetalle);
+                if (detalleAuditoriaProceso == null)
+                {
+                    return NotFound($"No se encontró el detalle de auditoría con ID {updateDto.idDetalle}");
+                }
+                _mapper.Map(updateDto, detalleAuditoriaProceso);
+                _context.Entry(detalleAuditoriaProceso).State = EntityState.Modified;
+            }
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Ocurrió un error al actualizar: {ex.Message}");
+            }
+            return Ok(new { 
+                Message = "Detalles de auditoría actualizados exitosamente",
+                DetallesActualizados = batchUpdateDto.detalleAuditoriaProcesos
+            });
         }
 
         private bool detalleAuditoriaProcesoExists(int id)
         {
             return _context.detalleAuditoriaProceso.Any(e => e.idDetalle == id);
         }
+    }
 }

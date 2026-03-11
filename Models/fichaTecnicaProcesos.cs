@@ -76,6 +76,10 @@ public partial class fichaTecnicaProcesos
     [InverseProperty("idFichaProcesoNavigation")]
     public virtual ICollection<formulacionTinta> formulacionTinta { get; set; } = new List<formulacionTinta>();
 
+    [ForeignKey("formuladorTinta")]
+    [InverseProperty("fichaTecnicaProcesosformuladorTintaNavigation")]
+    public virtual usuario formuladorTintaNavigation { get; set; }
+
     [ForeignKey("idProceso")]
     [InverseProperty("fichaTecnicaProcesos")]
     public virtual procesoOf idProcesoNavigation { get; set; }
