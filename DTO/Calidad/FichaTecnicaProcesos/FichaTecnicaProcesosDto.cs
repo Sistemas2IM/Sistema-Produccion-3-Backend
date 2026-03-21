@@ -17,6 +17,9 @@ namespace Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnicaProcesos
 
         public int? estado { get; set; }
 
+        // campo relacion
+        public string? nombreEstado { get; set; }
+
         public int? tipoProceso { get; set; }
 
         public string? operador { get; set; }

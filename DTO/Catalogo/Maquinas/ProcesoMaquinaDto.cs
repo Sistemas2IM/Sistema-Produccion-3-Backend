@@ -9,5 +9,13 @@
         public string? familiaNombre { get; set; }
 
         public string? nombreAlterno { get; set; }
+
+        public string? descripcion { get; set; }
+
+        public string? textoAyuda { get; set; }
+
+        public int? velocidadObjetivo { get; set; }
+
+        public int? velocidadMaxima { get; set; }
     }
 }

@@ -35,6 +35,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.FichaTecnicaProcesos
                 .Include(s => s.secuenciaColor)
                 .Include(r => r.registroLamparas)
                 .ThenInclude(v => v.idVariableNavigation)
+                .Include(e => e.estadoNavigation)
                 .ToListAsync();
 
             var fichaTecnicaProcesoDto = _mapper.Map<List<FichaTecnicaProcesosDto>>(fichaTecnicaProceso);
@@ -53,6 +54,10 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.FichaTecnicaProcesos
                 .Include(o => o.oFNavigation)
                 .Include(u => u.operadorNavigation)
                 .Include(t => t.formuladorTintaNavigation)
+                .Include(s => s.secuenciaColor)
+                .Include(r => r.registroLamparas)
+                .ThenInclude(v => v.idVariableNavigation)
+                .Include(e => e.estadoNavigation)
                 .FirstOrDefaultAsync(f => f.idFichaProceso == id);
 
             if (fichaTecnicaProceso == null)

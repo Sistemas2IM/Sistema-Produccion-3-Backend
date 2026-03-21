@@ -540,6 +540,8 @@ public partial class base_nuevaContext : DbContext
             entity.HasKey(e => e.idFamilia).HasName("PK_FAMILLIADEMAQUINA");
 
             entity.Property(e => e.nombreFamilia).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+
+            entity.HasOne(d => d.idAreaNavigation).WithMany(p => p.familliaDeMaquina).HasConstraintName("FK_AREA_MAQUINA");
         });
 
         modelBuilder.Entity<ffeTiemposOfGlobal>(entity =>

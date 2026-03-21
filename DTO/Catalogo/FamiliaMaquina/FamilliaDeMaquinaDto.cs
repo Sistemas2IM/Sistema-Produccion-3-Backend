@@ -4,7 +4,9 @@
     {
         public int idFamilia { get; set; }
 
-        public string nombreFamilia { get; set; }
+        public string? nombreFamilia { get; set; }
+
+        public int? idArea { get; set; }
 
     }
 }

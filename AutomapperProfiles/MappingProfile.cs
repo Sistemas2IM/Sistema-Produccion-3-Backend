@@ -519,6 +519,8 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             CreateMap<maquinas, MaquinaDto>()
                 .ForMember(dest => dest.familiaNombre, opt => opt.MapFrom(src => src.idFamiliaNavigation.nombreFamilia))
                 .ForMember(dest => dest.listaMaquinaCatalogoDto, opt => opt.MapFrom(src => src.listaMaquina))
+                .ForMember(dest => dest.idArea, opt => opt.MapFrom(src => src.idFamiliaNavigation.idAreaNavigation.idArea))
+                .ForMember(dest => dest.areaNombre, opt => opt.MapFrom(src => src.idFamiliaNavigation.idAreaNavigation.nombreArea))
                 .ReverseMap();
             CreateMap<maquinas, ProcesoMaquinaDto>()
                 .ForMember(dest => dest.familiaNombre, opt => opt.MapFrom(src => src.idFamiliaNavigation.nombreFamilia))
@@ -623,6 +625,8 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForMember(dest => dest.detallesCertificadoCalidad, opt => opt.MapFrom(src => src.detalleCertificadoCalidad))
                 .ForMember(dest => dest.cliente, opt => opt.MapFrom(src => src.oFNavigation.clienteOf))
                 .ForMember(dest => dest.producto, opt => opt.MapFrom(src => src.oFNavigation.productoOf))
+                .ForMember(dest => dest.codArticulo, opt => opt.MapFrom(src => src.oFNavigation.codArticulo))
+                .ForMember(dest => dest.nombreElabora, opt => opt.MapFrom(src => src.elaboradoPorNavigation.nombres + " " + src.elaboradoPorNavigation.apellidos))
                 .ReverseMap();
             CreateMap<certificadoCalidad, AddCertificadoCalidadDto>().ReverseMap();
             CreateMap<UpdateCertificadoCalidadDto, certificadoCalidad>()
@@ -650,6 +654,8 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForMember(dest => dest.detallesFichaTecnicaCliente, opt => opt.MapFrom(src => src.detalleFichaClientes))
                 .ForMember(dest => dest.cliente, opt => opt.MapFrom(src => src.oFNavigation.clienteOf))
                 .ForMember(dest => dest.producto, opt => opt.MapFrom(src => src.oFNavigation.productoOf))
+                .ForMember(dest => dest.codArticulo, opt => opt.MapFrom(src => src.oFNavigation.codArticulo))
+                .ForMember(dest => dest.nombreElabora, opt => opt.MapFrom(src => src.elaboradoPorNavigation.nombres + " " + src.elaboradoPorNavigation.apellidos))
                 .ReverseMap();
             CreateMap<fichaTecnicaCliente, AddFichaTecnicaClienteDto>().ReverseMap();
             CreateMap<UpdateFichaTecnicaClienteDto, fichaTecnicaCliente>()
@@ -684,6 +690,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForMember(dest => dest.nombreFormuladorTinta, opt => opt.MapFrom(src => src.formuladorTintaNavigation.nombres + " " + src.formuladorTintaNavigation.apellidos))
                 .ForMember(dest => dest.secuenciaColor, opt => opt.MapFrom(src => src.secuenciaColor))
                 .ForMember(dest => dest.registroLamparas, opt => opt.MapFrom(src => src.registroLamparas))
+                .ForMember(dest => dest.nombreEstado, opt => opt.MapFrom(src => src.estadoNavigation.nombreEstado))
                 .ReverseMap();
             CreateMap<fichaTecnicaProcesos, AddFichaTecnicaProcesosDto>().ReverseMap();
             CreateMap<UpdateFichaTecnicaProcesosDto, fichaTecnicaProcesos>()

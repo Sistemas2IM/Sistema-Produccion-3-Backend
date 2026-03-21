@@ -32,6 +32,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Catalogo
                 .Include(m => m.idFamiliaNavigation)
                 .Include(li => li.listaMaquina)
                 .ThenInclude(lo => lo.idListaNavigation)
+                .Include(a => a.idFamiliaNavigation.idAreaNavigation)
                 .ToListAsync();
             var maquinaDto = _mapper.Map<List<MaquinaDto>>(maquina);
 
@@ -46,6 +47,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Catalogo
                 .Include(m => m.idFamiliaNavigation)
                 .Include(li => li.listaMaquina)
                 .ThenInclude(lo => lo.idListaNavigation)
+                .Include(a => a.idFamiliaNavigation.idAreaNavigation)
                 .FirstOrDefaultAsync(u => u.idMaquina == id);
 
             var maquinaDto = _mapper.Map<MaquinaDto>(maquinas);

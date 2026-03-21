@@ -6,6 +6,8 @@
 
         public int? idFichaProceso { get; set; }
 
+        public int? idVariable { get; set; }
+
         public string? nombreVariable { get; set; }
 
         public string? seccionMaquina { get; set; }
