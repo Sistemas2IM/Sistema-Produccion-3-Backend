@@ -529,6 +529,12 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             CreateMap<UpdateMaquinaDto, maquinas>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
+            CreateMap<maquinas, MaquinaOfDto>()
+                .ForMember(dest => dest.familiaNombre, opt => opt.MapFrom(src => src.idFamiliaNavigation.nombreFamilia))
+                .ForMember(dest => dest.idArea, opt => opt.MapFrom(src => src.idFamiliaNavigation.idAreaNavigation.idArea))
+                .ForMember(dest => dest.areaNombre, opt => opt.MapFrom(src => src.idFamiliaNavigation.idAreaNavigation.nombreArea))
+                .ReverseMap();
+
             CreateMap<familliaDeMaquina, FamilliaDeMaquinaDto>().ReverseMap();
 
             CreateMap<familliaDeMaquina, ListaFamilliaDeMaquinaDto>()
