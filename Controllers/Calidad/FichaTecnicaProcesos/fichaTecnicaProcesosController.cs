@@ -69,6 +69,32 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.FichaTecnicaProcesos
             return Ok(fichaTecnicaProcesoDto);
         }
 
+        // GET api/<FichaTecnicaProcesosController>/5
+        [HttpGet("get/of/{of}/articulo/{codArticulo}")]
+        public async Task<ActionResult<FichaTecnicaProcesosDto>> GetFichaTecnicaProcesoOfArticulo(int of, string codArticulo)
+        {
+            var fichaTecnicaProceso = await _context.fichaTecnicaProcesos
+                .Include(f => f.detalleFichaProcesos)
+                .Include(f => f.formulacionTinta)
+                .ThenInclude(ft => ft.especificacionTintas)
+                .Include(o => o.oFNavigation)
+                .Include(u => u.operadorNavigation)
+                .Include(t => t.formuladorTintaNavigation)
+                .Include(s => s.secuenciaColor)
+                .Include(r => r.registroLamparas)
+                .ThenInclude(v => v.idVariableNavigation)
+                .Include(e => e.estadoNavigation)
+                .FirstOrDefaultAsync(f => f.oFNavigation.oF == of && f.oFNavigation.codArticulo == codArticulo);
+
+            if (fichaTecnicaProceso == null)
+            {
+                return NotFound();
+            }
+            var fichaTecnicaProcesoDto = _mapper.Map<FichaTecnicaProcesosDto>(fichaTecnicaProceso);
+
+            return Ok(fichaTecnicaProcesoDto);
+        }
+
         // POST api/<FichaTecnicaProcesosController>
         [HttpPost("post")]
         public async Task<ActionResult<fichaTecnicaProcesos>> PostFichaTecnicaProcesos(AddFichaTecnicaProcesosDto addFichaTecnicaProcesosDto)

@@ -20,5 +20,6 @@ namespace Sistema_Produccion_3_Backend.Models
         public decimal? largoPliego { get; set; }
         public int? cantidadProducida { get; set; }
         public int? cantidadNc { get; set; }
+        public DateOnly? fecha { get; set; }
     }
 }
