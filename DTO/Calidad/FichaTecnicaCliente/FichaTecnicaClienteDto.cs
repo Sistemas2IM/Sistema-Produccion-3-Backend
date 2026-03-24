@@ -12,6 +12,8 @@ namespace Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnicaCliente
 
         public string? elaboradoPor { get; set; }
 
+        public string? nombreElabora { get; set; }
+
         public DateOnly? fechaElaboracion { get; set; }
 
         public string? observaciones { get; set; }
@@ -31,6 +33,8 @@ namespace Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnicaCliente
         public DateTime? fechaActualizacion { get; set; }
 
         public string? cliente { get; set; }
+
+        public string? codArticulo { get; set; }
 
         public string? producto { get; set; }
 

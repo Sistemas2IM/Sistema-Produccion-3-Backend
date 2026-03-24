@@ -21,6 +21,8 @@ public partial class base_nuevaContext : DbContext
 
     public virtual DbSet<asignacion> asignacion { get; set; }
 
+    public virtual DbSet<auditoriaProceso> auditoriaProceso { get; set; }
+
     public virtual DbSet<auxiliares> auxiliares { get; set; }
 
     public virtual DbSet<bobinasAsignadas> bobinasAsignadas { get; set; }
@@ -35,6 +37,8 @@ public partial class base_nuevaContext : DbContext
 
     public virtual DbSet<corridaCombinada> corridaCombinada { get; set; }
 
+    public virtual DbSet<detalleAuditoriaProceso> detalleAuditoriaProceso { get; set; }
+
     public virtual DbSet<detalleCertificadoCalidad> detalleCertificadoCalidad { get; set; }
 
     public virtual DbSet<detalleCertificadoCalidad_Log> detalleCertificadoCalidad_Log { get; set; }
@@ -45,11 +49,15 @@ public partial class base_nuevaContext : DbContext
 
     public virtual DbSet<detalleFichaClientes_Log> detalleFichaClientes_Log { get; set; }
 
+    public virtual DbSet<detalleFichaProcesos> detalleFichaProcesos { get; set; }
+
     public virtual DbSet<detalleReporte> detalleReporte { get; set; }
 
     public virtual DbSet<empleadoCatalogo> empleadoCatalogo { get; set; }
 
     public virtual DbSet<entregasProductoTerminado> entregasProductoTerminado { get; set; }
+
+    public virtual DbSet<especificacionTintas> especificacionTintas { get; set; }
 
     public virtual DbSet<estadosOf> estadosOf { get; set; }
 
@@ -61,9 +69,17 @@ public partial class base_nuevaContext : DbContext
 
     public virtual DbSet<familliaDeMaquina> familliaDeMaquina { get; set; }
 
+    public virtual DbSet<ffeTiemposOfGlobal> ffeTiemposOfGlobal { get; set; }
+
+    public virtual DbSet<ffeTiemposProcesosGlobal> ffeTiemposProcesosGlobal { get; set; }
+
     public virtual DbSet<fichaTecnicaCliente> fichaTecnicaCliente { get; set; }
 
     public virtual DbSet<fichaTecnicaCliente_Log> fichaTecnicaCliente_Log { get; set; }
+
+    public virtual DbSet<fichaTecnicaProcesos> fichaTecnicaProcesos { get; set; }
+
+    public virtual DbSet<formulacionTinta> formulacionTinta { get; set; }
 
     public virtual DbSet<horariosOperativos> horariosOperativos { get; set; }
 
@@ -80,6 +96,8 @@ public partial class base_nuevaContext : DbContext
     public virtual DbSet<logCambiosOf> logCambiosOf { get; set; }
 
     public virtual DbSet<logCambiosProceso> logCambiosProceso { get; set; }
+
+    public virtual DbSet<logSoporteNexo> logSoporteNexo { get; set; }
 
     public virtual DbSet<lotePliego> lotePliego { get; set; }
 
@@ -135,11 +153,15 @@ public partial class base_nuevaContext : DbContext
 
     public virtual DbSet<refreshToken> refreshToken { get; set; }
 
+    public virtual DbSet<registroLamparas> registroLamparas { get; set; }
+
     public virtual DbSet<reportesDeOperadores> reportesDeOperadores { get; set; }
 
     public virtual DbSet<rol> rol { get; set; }
 
     public virtual DbSet<seccionDocumento> seccionDocumento { get; set; }
+
+    public virtual DbSet<secuenciaColor> secuenciaColor { get; set; }
 
     public virtual DbSet<sesionOperador> sesionOperador { get; set; }
 
@@ -157,11 +179,11 @@ public partial class base_nuevaContext : DbContext
 
     public virtual DbSet<tipoComponente> tipoComponente { get; set; }
 
-    public virtual DbSet<tipoDeObjetos> tipoDeObjetos { get; set; }
-
     public virtual DbSet<tipoReporte> tipoReporte { get; set; }
 
     public virtual DbSet<transferenciaProceso> transferenciaProceso { get; set; }
+
+    public virtual DbSet<turnoAuditoria> turnoAuditoria { get; set; }
 
     public virtual DbSet<turnos> turnos { get; set; }
 
@@ -217,6 +239,41 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.idProcesoNavigation).WithMany(p => p.asignacion).HasConstraintName("FK_ASIGN_PROCESOO");
 
             entity.HasOne(d => d.userNavigation).WithMany(p => p.asignacion).HasConstraintName("FK_ASIGN_DISENADOR");
+        });
+
+        modelBuilder.Entity<auditoriaProceso>(entity =>
+        {
+            entity.HasKey(e => e.idAuditoria).HasName("PK_AUDITORIA_PROCESOS");
+
+            entity.Property(e => e.actualizadoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.archivado).HasDefaultValue(false);
+            entity.Property(e => e.auditor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.cancelado).HasDefaultValue(false);
+            entity.Property(e => e.creadoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.operador).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.supervisor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+
+            entity.HasOne(d => d.actualizadoPorNavigation).WithMany(p => p.auditoriaProcesoactualizadoPorNavigation).HasConstraintName("FK_ACTUALIZADOR_AUDITORIA");
+
+            entity.HasOne(d => d.auditorNavigation).WithMany(p => p.auditoriaProcesoauditorNavigation).HasConstraintName("FK_AUDITOR");
+
+            entity.HasOne(d => d.creadoPorNavigation).WithMany(p => p.auditoriaProcesocreadoPorNavigation).HasConstraintName("FK_CREADOR_AUDITORIA");
+
+            entity.HasOne(d => d.estadoNavigation).WithMany(p => p.auditoriaProceso).HasConstraintName("FK_ESTADO_AUDITORIA");
+
+            entity.HasOne(d => d.idProcesoNavigation).WithMany(p => p.auditoriaProceso).HasConstraintName("FK_PROCESO_AUDITORIA");
+
+            entity.HasOne(d => d.maquinaNavigation).WithMany(p => p.auditoriaProceso).HasConstraintName("FK_MAQUINA_AUDITORIA");
+
+            entity.HasOne(d => d.oFNavigation).WithMany(p => p.auditoriaProceso).HasConstraintName("FK_OF_AUDITORIA");
+
+            entity.HasOne(d => d.operadorNavigation).WithMany(p => p.auditoriaProcesooperadorNavigation).HasConstraintName("FK_OPERADOR_AUDITORIA");
+
+            entity.HasOne(d => d.supervisorNavigation).WithMany(p => p.auditoriaProcesosupervisorNavigation).HasConstraintName("FK_SUPERVISOR_AUDITORIA");
+
+            entity.HasOne(d => d.tipoProcesoNavigation).WithMany(p => p.auditoriaProceso).HasConstraintName("FK_TIPO_PROCESO_AUDITORIA");
+
+            entity.HasOne(d => d.tipoReporteNavigation).WithMany(p => p.auditoriaProceso).HasConstraintName("FK_TIPO_AUDITORIA");
         });
 
         modelBuilder.Entity<auxiliares>(entity =>
@@ -291,6 +348,19 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.subordinadoNavigation).WithOne(p => p.corridaCombinadasubordinadoNavigation).HasConstraintName("FK_SUBORDINADO");
         });
 
+        modelBuilder.Entity<detalleAuditoriaProceso>(entity =>
+        {
+            entity.HasKey(e => e.idDetalle).HasName("PK_DETALLE_AUDITORIA");
+
+            entity.Property(e => e.fechaCreacion).HasDefaultValueSql("(getdate())");
+
+            entity.HasOne(d => d.idAuditoriaNavigation).WithMany(p => p.detalleAuditoriaProceso)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK_AUDITORIA");
+
+            entity.HasOne(d => d.idVariableNavigation).WithMany(p => p.detalleAuditoriaProceso).HasConstraintName("FK_VARIABLE_AUDITORIA");
+        });
+
         modelBuilder.Entity<detalleCertificadoCalidad>(entity =>
         {
             entity.HasKey(e => e.idDetalle).HasName("PK__detalleC__6E19D6FA3406FD39");
@@ -360,6 +430,19 @@ public partial class base_nuevaContext : DbContext
             entity.Property(e => e.tipoAccion).HasDefaultValue("UPDATE");
         });
 
+        modelBuilder.Entity<detalleFichaProcesos>(entity =>
+        {
+            entity.HasKey(e => e.idDetalle).HasName("PK_DETALLE_FICHA_TECNICA");
+
+            entity.Property(e => e.fechaCracion).HasDefaultValueSql("(getdate())");
+
+            entity.HasOne(d => d.idFichaProcesoNavigation).WithMany(p => p.detalleFichaProcesos).HasConstraintName("FK_FICHA_PROCESO");
+
+            entity.HasOne(d => d.idUnidadNavigation).WithMany(p => p.detalleFichaProcesos).HasConstraintName("FK_FICHA_U_MEDIDA");
+
+            entity.HasOne(d => d.idVariableNavigation).WithMany(p => p.detalleFichaProcesos).HasConstraintName("FK_VARIABLE_FICHAPROCESO");
+        });
+
         modelBuilder.Entity<detalleReporte>(entity =>
         {
             entity.HasKey(e => e.idDetalleReporte).HasName("PK_DETALLEREPORTE");
@@ -412,6 +495,13 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.ofNavigation).WithMany(p => p.entregasProductoTerminado).HasConstraintName("FK_ENTREGAS_OF");
         });
 
+        modelBuilder.Entity<especificacionTintas>(entity =>
+        {
+            entity.HasKey(e => e.idEspecificacion).HasName("PK_ESPECIFICACION_TINTAS");
+
+            entity.HasOne(d => d.idFormulacionNavigation).WithMany(p => p.especificacionTintas).HasConstraintName("FK_FORMULACION_TINTA");
+        });
+
         modelBuilder.Entity<estadosOf>(entity =>
         {
             entity.HasKey(e => e.idEstadoOf).HasName("PK_ESTADOSOF");
@@ -450,6 +540,32 @@ public partial class base_nuevaContext : DbContext
             entity.HasKey(e => e.idFamilia).HasName("PK_FAMILLIADEMAQUINA");
 
             entity.Property(e => e.nombreFamilia).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+
+            entity.HasOne(d => d.idAreaNavigation).WithMany(p => p.familliaDeMaquina).HasConstraintName("FK_AREA_MAQUINA");
+        });
+
+        modelBuilder.Entity<ffeTiemposOfGlobal>(entity =>
+        {
+            entity.HasKey(e => e.idOF).HasName("PK__FFE_Repo__9DB850EFEF430561");
+
+            entity.Property(e => e.idOF).ValueGeneratedNever();
+            entity.Property(e => e.Actualizado).HasDefaultValueSql("(getdate())");
+
+            entity.HasOne(d => d.idOFNavigation).WithOne(p => p.ffeTiemposOfGlobal)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_TIEMPOS_OF");
+        });
+
+        modelBuilder.Entity<ffeTiemposProcesosGlobal>(entity =>
+        {
+            entity.HasKey(e => e.idProceso).HasName("PK__FFE_Repo__DEC8292642248C3E");
+
+            entity.Property(e => e.idProceso).ValueGeneratedNever();
+            entity.Property(e => e.Actualizado).HasDefaultValueSql("(getdate())");
+
+            entity.HasOne(d => d.idProcesoNavigation).WithOne(p => p.ffeTiemposProcesosGlobal)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_TIEMPOS_PROCESOS");
         });
 
         modelBuilder.Entity<fichaTecnicaCliente>(entity =>
@@ -481,6 +597,45 @@ public partial class base_nuevaContext : DbContext
             entity.Property(e => e.elaboradoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.fechaLog).HasDefaultValueSql("(getdate())");
             entity.Property(e => e.tipoAccion).HasDefaultValue("UPDATE");
+        });
+
+        modelBuilder.Entity<fichaTecnicaProcesos>(entity =>
+        {
+            entity.HasKey(e => e.idFichaProceso).HasName("PK_FICHA_TECNICA_PROCESO");
+
+            entity.Property(e => e.actualizadoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.archivado).HasDefaultValue(false);
+            entity.Property(e => e.cancelado).HasDefaultValue(false);
+            entity.Property(e => e.creadoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.formuladorTinta).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.operador).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+
+            entity.HasOne(d => d.actualizadoPorNavigation).WithMany(p => p.fichaTecnicaProcesosactualizadoPorNavigation).HasConstraintName("FK_ACTUALIZADOR_FICHA");
+
+            entity.HasOne(d => d.creadoPorNavigation).WithMany(p => p.fichaTecnicaProcesoscreadoPorNavigation).HasConstraintName("FK_CREADOR_FICHA");
+
+            entity.HasOne(d => d.estadoNavigation).WithMany(p => p.fichaTecnicaProcesos).HasConstraintName("FK_ESTADO_FICHA");
+
+            entity.HasOne(d => d.formuladorTintaNavigation).WithMany(p => p.fichaTecnicaProcesosformuladorTintaNavigation).HasConstraintName("FK_FORMULADOR_TINTAS");
+
+            entity.HasOne(d => d.idProcesoNavigation).WithMany(p => p.fichaTecnicaProcesos).HasConstraintName("FK_PROCESO_FICHA");
+
+            entity.HasOne(d => d.maquinaNavigation).WithMany(p => p.fichaTecnicaProcesos).HasConstraintName("FK_MAQUINA_FICHA");
+
+            entity.HasOne(d => d.oFNavigation).WithMany(p => p.fichaTecnicaProcesos).HasConstraintName("FK_OF_FICHA");
+
+            entity.HasOne(d => d.operadorNavigation).WithMany(p => p.fichaTecnicaProcesosoperadorNavigation).HasConstraintName("FK_OPERADOR_FICHA");
+
+            entity.HasOne(d => d.tipoProcesoNavigation).WithMany(p => p.fichaTecnicaProcesos).HasConstraintName("FK_TIPO_PROCESO_FICHA");
+
+            entity.HasOne(d => d.tipoReporteNavigation).WithMany(p => p.fichaTecnicaProcesos).HasConstraintName("FK_TIPO_REPORTE_FICHA");
+        });
+
+        modelBuilder.Entity<formulacionTinta>(entity =>
+        {
+            entity.HasKey(e => e.idFormulacion).HasName("PK_FORMULACION_TINTAS");
+
+            entity.HasOne(d => d.idFichaProcesoNavigation).WithMany(p => p.formulacionTinta).HasConstraintName("FK_FICHA_FORMULACION_TINTA");
         });
 
         modelBuilder.Entity<horariosOperativos>(entity =>
@@ -575,6 +730,11 @@ public partial class base_nuevaContext : DbContext
                 .HasConstraintName("FK_PROCESO");
 
             entity.HasOne(d => d.usuario).WithMany(p => p.logCambiosProceso).HasConstraintName("FK_USUARIO");
+        });
+
+        modelBuilder.Entity<logSoporteNexo>(entity =>
+        {
+            entity.HasKey(e => e.idLogSoporte).HasName("PK__soporteN__9F6864CB3A873920");
         });
 
         modelBuilder.Entity<lotePliego>(entity =>
@@ -1060,6 +1220,15 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.userNavigation).WithMany(p => p.refreshToken).HasConstraintName("FK_REFRESHT_USUARIO");
         });
 
+        modelBuilder.Entity<registroLamparas>(entity =>
+        {
+            entity.HasKey(e => e.idRegistroLampara).HasName("PK_REGISTRO_LAMPARAS");
+
+            entity.HasOne(d => d.idFichaProcesoNavigation).WithMany(p => p.registroLamparas).HasConstraintName("FK_FICHA_REGISTRO_LAMPARAS");
+
+            entity.HasOne(d => d.idVariableNavigation).WithMany(p => p.registroLamparas).HasConstraintName("FK_VARIABLE_LAMPARA");
+        });
+
         modelBuilder.Entity<reportesDeOperadores>(entity =>
         {
             entity.HasKey(e => e.idReporte).HasName("PK_REPORTESDEOPERADORES");
@@ -1104,6 +1273,13 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.idAreaNavigation).WithMany(p => p.seccionDocumento).HasConstraintName("FK_SECCION_AREA");
 
             entity.HasOne(d => d.tipoDocumentoNavigation).WithMany(p => p.seccionDocumento).HasConstraintName("FK_SECCION_DOCUMENTO");
+        });
+
+        modelBuilder.Entity<secuenciaColor>(entity =>
+        {
+            entity.HasKey(e => e.idSecuenciaColor).HasName("PK_SECUENCIA_COLOR");
+
+            entity.HasOne(d => d.idFichaProcesoNavigation).WithMany(p => p.secuenciaColor).HasConstraintName("FK_FICHA_SECUENCIA_COLOR");
         });
 
         modelBuilder.Entity<sesionOperador>(entity =>
@@ -1215,13 +1391,6 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.unidadBaseNavigation).WithMany(p => p.tipoComponente).HasConstraintName("UNIDAD_BASE_FK");
         });
 
-        modelBuilder.Entity<tipoDeObjetos>(entity =>
-        {
-            entity.HasKey(e => e.idTipoDeObjetos).HasName("PK_TIPODEOBJETOS");
-
-            entity.Property(e => e.nombreTipoDeObjeto).UseCollation("SQL_Latin1_General_CP1_CI_AS");
-        });
-
         modelBuilder.Entity<tipoReporte>(entity =>
         {
             entity.HasKey(e => e.idTipoReporte).HasName("PK_TIPOREPORTE");
@@ -1257,6 +1426,24 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.recibidoPorNavigation).WithMany(p => p.transferenciaProcesorecibidoPorNavigation).HasConstraintName("FK_RECIBIDO_POR");
 
             entity.HasOne(d => d.tipoComponenteNavigation).WithMany(p => p.transferenciaProceso).HasConstraintName("FK_TIPO_TRANSFERIDO");
+        });
+
+        modelBuilder.Entity<turnoAuditoria>(entity =>
+        {
+            entity.HasKey(e => e.idTurnoAuditor).HasName("PK_TURNO_AUDITORIA");
+
+            entity.Property(e => e.aprobadoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.auditor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+
+            entity.HasOne(d => d.aprobadoPorNavigation).WithMany(p => p.turnoAuditoriaaprobadoPorNavigation).HasConstraintName("FK_APROBADO_POR");
+
+            entity.HasOne(d => d.auditorNavigation).WithMany(p => p.turnoAuditoriaauditorNavigation).HasConstraintName("FK_AUDITOR_TURNO");
+
+            entity.HasOne(d => d.estadoNavigation).WithMany(p => p.turnoAuditoria).HasConstraintName("FK_ESTADO_ADITORIA");
+
+            entity.HasOne(d => d.tipoReporteNavigation).WithMany(p => p.turnoAuditoria).HasConstraintName("FK_TIPO_DOCUMENTO");
+
+            entity.HasOne(d => d.turnoNavigation).WithMany(p => p.turnoAuditoria).HasConstraintName("FK_TURNO_AUDITORIA");
         });
 
         modelBuilder.Entity<turnos>(entity =>
@@ -1346,6 +1533,8 @@ public partial class base_nuevaContext : DbContext
             entity.Property(e => e.ordenVisual).HasDefaultValue(1);
 
             entity.HasOne(d => d.idSeccionNavigation).WithMany(p => p.variablesTecnicas).HasConstraintName("FK_VARIABLE_SECCION");
+
+            entity.HasOne(d => d.tipoProcesoNavigation).WithMany(p => p.variablesTecnicas).HasConstraintName("FK_VARAIBLE_PROCESO");
         });
 
         OnModelCreatingPartial(modelBuilder);

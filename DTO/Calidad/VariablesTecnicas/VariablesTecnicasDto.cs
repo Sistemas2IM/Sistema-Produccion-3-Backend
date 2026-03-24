@@ -38,6 +38,10 @@ namespace Sistema_Produccion_3_Backend.DTO.Calidad.VariablesTecnicas
 
         public DateTime? fechaCreacion { get; set; }
 
+        public int? tipoProceso { get; set; }
+
+        public string? tooltip { get; set; }
+
         public List<VariableUnidadMedidaDto>? variableUnidadMedidaDto { get; set; }
     }
 }

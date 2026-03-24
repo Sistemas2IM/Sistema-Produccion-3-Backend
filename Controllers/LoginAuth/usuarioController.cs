@@ -76,6 +76,23 @@ namespace Sistema_Produccion_3_Backend.Controllers.LoginAuth
             return Ok(usuariosDto);
         }
 
+        // GET: api/usuario
+        [HttpGet("get/area/{idArea}")]
+        public async Task<ActionResult<IEnumerable<UsuarioCortoDto>>> GetusuarioArea(int idArea)
+        {
+            var usuarios = await _context.usuario
+                // 🔹 Filtra SOLO usuarios del área solicitada
+                .Where(u => idArea == 17 || u.idArea == idArea)
+                .OrderByDescending(f => f.fechaDeCreacion)
+                .Include(a => a.idAreaNavigation)
+                .Include(r => r.idRolNavigation)
+                .ToListAsync();
+
+            var usuariosDto = _mapper.Map<List<UsuarioCortoDto>>(usuarios);
+
+            return Ok(usuariosDto);
+        }
+
 
 
         // GET: api/usuario/get/{user}

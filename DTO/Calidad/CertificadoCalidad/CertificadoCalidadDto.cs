@@ -13,9 +13,13 @@ namespace Sistema_Produccion_3_Backend.DTO.Calidad.CertificadoCalidad
 
         public string? cliente { get; set; }
 
+        public string? codArticulo { get; set; }
+
         public string? producto { get; set; }
 
         public string? elaboradoPor { get; set; }
+
+        public string? nombreElabora { get; set; }
 
         public DateOnly? fechaElaboracion { get; set; }
 

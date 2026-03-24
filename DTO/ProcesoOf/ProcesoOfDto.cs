@@ -145,6 +145,10 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
 
         public bool? esEnsamblaje { get; set; }
 
+        public DateTime? inicioEstimado { get; set; }
+
+        public DateTime? finEstimado { get; set; }
+
         public List<DetalleReporteDto>? detalleProcesoOf { get; set; }
 
         public List<TarjetaCampoDto>? tarjetaCampoDto { get; set; }

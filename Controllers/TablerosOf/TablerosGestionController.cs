@@ -103,6 +103,36 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 .Include(a => a.asignacion)
                 .ThenInclude(u => u.userNavigation)
                 .ToListAsync();
+
+            foreach (var proceso in procesoOf)
+            {
+                // Cargar subordinados de corridaCombinadamaestroNavigation (lista 1:N)
+                if (proceso.corridaCombinadamaestroNavigation != null)
+                {
+                    foreach (var corrida in proceso.corridaCombinadamaestroNavigation)
+                    {
+                        if (corrida.subordinado != null)
+                        {
+                            var subordinado = await _context.procesoOf
+                                .Include(p => p.oFNavigation)
+                                .FirstOrDefaultAsync(p => p.idProceso == corrida.subordinado);
+
+                            corrida.subordinadoNavigation = subordinado;
+                        }
+                    }
+                }
+
+                // Cargar subordinado de corridaCombinadasubordinadoNavigation (1:1)
+                if (proceso.corridaCombinadasubordinadoNavigation?.subordinado != null)
+                {
+                    var subordinado = await _context.procesoOf
+                        .Include(p => p.oFNavigation)
+                        .FirstOrDefaultAsync(p => p.idProceso == proceso.corridaCombinadasubordinadoNavigation.subordinado);
+
+                    proceso.corridaCombinadasubordinadoNavigation.subordinadoNavigation = subordinado;
+                }
+            }
+
             var procesoOfDto = _mapper.Map<List<ProcesoOfVistaTableroDto>>(procesoOf);
             return Ok(procesoOfDto);
         }
@@ -149,6 +179,36 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 .Include(a => a.asignacion)
                 .ThenInclude(u => u.userNavigation)
                 .ToListAsync();
+
+            foreach (var proceso in procesoOf)
+            {
+                // Cargar subordinados de corridaCombinadamaestroNavigation (lista 1:N)
+                if (proceso.corridaCombinadamaestroNavigation != null)
+                {
+                    foreach (var corrida in proceso.corridaCombinadamaestroNavigation)
+                    {
+                        if (corrida.subordinado != null)
+                        {
+                            var subordinado = await _context.procesoOf
+                                .Include(p => p.oFNavigation)
+                                .FirstOrDefaultAsync(p => p.idProceso == corrida.subordinado);
+
+                            corrida.subordinadoNavigation = subordinado;
+                        }
+                    }
+                }
+
+                // Cargar subordinado de corridaCombinadasubordinadoNavigation (1:1)
+                if (proceso.corridaCombinadasubordinadoNavigation?.subordinado != null)
+                {
+                    var subordinado = await _context.procesoOf
+                        .Include(p => p.oFNavigation)
+                        .FirstOrDefaultAsync(p => p.idProceso == proceso.corridaCombinadasubordinadoNavigation.subordinado);
+
+                    proceso.corridaCombinadasubordinadoNavigation.subordinadoNavigation = subordinado;
+                }
+            }
+
             var procesoOfDto = _mapper.Map<List<ProcesoOfVistaTableroDto>>(procesoOf);
             return Ok(procesoOfDto);
         }
@@ -500,17 +560,17 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                     case "Eliseo Menjívar":
                     case "Fátima García":
                     case "Oscar Chavez":
-                        query = query.Where(t => t.vendedorOf != "Oficina" && t.vendedorOf != "freelance");
+                        query = query.Where(t => t.vendedorOf != "Oficina");
                         break;
 
                     case "Floridalma Alfaro":
-                        query = query.Where(t => t.lineaDeNegocio == "FLEXO" && t.vendedorOf != "Oficina" && t.vendedorOf != "freelance");
+                        query = query.Where(t => t.lineaDeNegocio == "FLEXO" && t.vendedorOf != "Oficina");
                         break;
 
                     case "Ingrid Guevara":
                     case "Katya":
                     case "Elba Deleon":
-                        query = query.Where(t => t.vendedorOf == "Oficina" || t.vendedorOf == "freelance");
+                        query = query.Where(t => t.vendedorOf == "Oficina");
                         break;
 
                     case "Diana Munguia":

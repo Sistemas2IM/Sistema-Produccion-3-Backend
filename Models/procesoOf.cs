@@ -164,6 +164,9 @@ public partial class procesoOf
     public virtual ICollection<asignacion> asignacion { get; set; } = new List<asignacion>();
 
     [InverseProperty("idProcesoNavigation")]
+    public virtual ICollection<auditoriaProceso> auditoriaProceso { get; set; } = new List<auditoriaProceso>();
+
+    [InverseProperty("idProcesoNavigation")]
     public virtual ICollection<componenteProduccion> componenteProduccion { get; set; } = new List<componenteProduccion>();
 
     [InverseProperty("maestroNavigation")]
@@ -174,6 +177,12 @@ public partial class procesoOf
 
     [InverseProperty("idProcesoNavigation")]
     public virtual ICollection<detalleReporte> detalleReporte { get; set; } = new List<detalleReporte>();
+
+    [InverseProperty("idProcesoNavigation")]
+    public virtual ffeTiemposProcesosGlobal ffeTiemposProcesosGlobal { get; set; }
+
+    [InverseProperty("idProcesoNavigation")]
+    public virtual ICollection<fichaTecnicaProcesos> fichaTecnicaProcesos { get; set; } = new List<fichaTecnicaProcesos>();
 
     [ForeignKey("idMaterial")]
     [InverseProperty("procesoOf")]

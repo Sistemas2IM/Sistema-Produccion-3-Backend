@@ -32,6 +32,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Catalogo
                 .Include(m => m.idFamiliaNavigation)
                 .Include(li => li.listaMaquina)
                 .ThenInclude(lo => lo.idListaNavigation)
+                .Include(a => a.idFamiliaNavigation.idAreaNavigation)
                 .ToListAsync();
             var maquinaDto = _mapper.Map<List<MaquinaDto>>(maquina);
 
@@ -46,6 +47,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Catalogo
                 .Include(m => m.idFamiliaNavigation)
                 .Include(li => li.listaMaquina)
                 .ThenInclude(lo => lo.idListaNavigation)
+                .Include(a => a.idFamiliaNavigation.idAreaNavigation)
                 .FirstOrDefaultAsync(u => u.idMaquina == id);
 
             var maquinaDto = _mapper.Map<MaquinaDto>(maquinas);
@@ -56,6 +58,48 @@ namespace Sistema_Produccion_3_Backend.Controllers.Catalogo
             }
 
             return Ok(maquinaDto);
+        }
+
+        // GET: api/maquinas/get/of/5
+        [HttpGet("get/of/{numeroOf}")]
+        public async Task<ActionResult<List<MaquinaOfDto>>> GetMaquinasPorOf(int numeroOf)
+        {
+            try
+            {
+                // 1. Buscamos los IDs de las máquinas únicas asignadas a los procesos de esta OF.
+                // Asumiendo que en procesoOf tienes un campo que guarda el número de OF (ej. numeroOf)
+                // y una propiedad de navegación hacia tablero (ej. tableroNavigation).
+                var idsMaquinas = await _context.procesoOf
+                    .Where(p => p.oF == numeroOf) // Ojo: Ajusta 'numeroOF' al nombre real de tu campo
+                    .Select(p => p.idTableroNavigation.idMaquina) // Navegamos del proceso al tablero y sacamos el idMaquina
+                    .Distinct() // ¡Magia! Esto asegura que no se repita ninguna máquina en la lista
+                    .ToListAsync();
+
+                // Si la orden no existe o no tiene máquinas, devolvemos 404
+                if (idsMaquinas == null || !idsMaquinas.Any())
+                {
+                    return NotFound($"No se encontraron máquinas asignadas a los procesos de la OF: {numeroOf}");
+                }
+
+                // 2. Traemos la información completa de las máquinas usando los IDs únicos que encontramos
+                var maquinas = await _context.maquinas
+                    .Include(m => m.idFamiliaNavigation)
+                        .ThenInclude(f => f.idAreaNavigation) // Sintaxis correcta para incluir "hijos de los hijos"
+                    .Include(m => m.listaMaquina)
+                        .ThenInclude(l => l.idListaNavigation)
+                    .Where(m => idsMaquinas.Contains(m.idMaquina)) // Filtramos solo por las máquinas de la OF
+                    .ToListAsync(); // Usamos ToListAsync para traer toda la colección
+
+                // 3. Mapeamos la lista de Entidades a una Lista de DTOs
+                var maquinasDto = _mapper.Map<List<MaquinaOfDto>>(maquinas);
+
+                return Ok(maquinasDto);
+            }
+            catch (Exception ex)
+            {
+                // Siempre es bueno atrapar errores inesperados
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error al consultar las máquinas: " + ex.Message);
+            }
         }
 
         // PUT: api/maquinas/5

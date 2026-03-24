@@ -52,6 +52,21 @@ public partial class usuario
     public virtual ICollection<asignacion> asignacion { get; set; } = new List<asignacion>();
 
     [InverseProperty("actualizadoPorNavigation")]
+    public virtual ICollection<auditoriaProceso> auditoriaProcesoactualizadoPorNavigation { get; set; } = new List<auditoriaProceso>();
+
+    [InverseProperty("auditorNavigation")]
+    public virtual ICollection<auditoriaProceso> auditoriaProcesoauditorNavigation { get; set; } = new List<auditoriaProceso>();
+
+    [InverseProperty("creadoPorNavigation")]
+    public virtual ICollection<auditoriaProceso> auditoriaProcesocreadoPorNavigation { get; set; } = new List<auditoriaProceso>();
+
+    [InverseProperty("operadorNavigation")]
+    public virtual ICollection<auditoriaProceso> auditoriaProcesooperadorNavigation { get; set; } = new List<auditoriaProceso>();
+
+    [InverseProperty("supervisorNavigation")]
+    public virtual ICollection<auditoriaProceso> auditoriaProcesosupervisorNavigation { get; set; } = new List<auditoriaProceso>();
+
+    [InverseProperty("actualizadoPorNavigation")]
     public virtual ICollection<certificadoCalidad> certificadoCalidadactualizadoPorNavigation { get; set; } = new List<certificadoCalidad>();
 
     [InverseProperty("elaboradoPorNavigation")]
@@ -62,6 +77,18 @@ public partial class usuario
 
     [InverseProperty("elaboradoPorNavigation")]
     public virtual ICollection<fichaTecnicaCliente> fichaTecnicaClienteelaboradoPorNavigation { get; set; } = new List<fichaTecnicaCliente>();
+
+    [InverseProperty("actualizadoPorNavigation")]
+    public virtual ICollection<fichaTecnicaProcesos> fichaTecnicaProcesosactualizadoPorNavigation { get; set; } = new List<fichaTecnicaProcesos>();
+
+    [InverseProperty("creadoPorNavigation")]
+    public virtual ICollection<fichaTecnicaProcesos> fichaTecnicaProcesoscreadoPorNavigation { get; set; } = new List<fichaTecnicaProcesos>();
+
+    [InverseProperty("formuladorTintaNavigation")]
+    public virtual ICollection<fichaTecnicaProcesos> fichaTecnicaProcesosformuladorTintaNavigation { get; set; } = new List<fichaTecnicaProcesos>();
+
+    [InverseProperty("operadorNavigation")]
+    public virtual ICollection<fichaTecnicaProcesos> fichaTecnicaProcesosoperadorNavigation { get; set; } = new List<fichaTecnicaProcesos>();
 
     [InverseProperty("operadorNavigation")]
     public virtual ICollection<horariosOperativos> horariosOperativos { get; set; } = new List<horariosOperativos>();
@@ -107,4 +134,10 @@ public partial class usuario
 
     [InverseProperty("recibidoPorNavigation")]
     public virtual ICollection<transferenciaProceso> transferenciaProcesorecibidoPorNavigation { get; set; } = new List<transferenciaProceso>();
+
+    [InverseProperty("aprobadoPorNavigation")]
+    public virtual ICollection<turnoAuditoria> turnoAuditoriaaprobadoPorNavigation { get; set; } = new List<turnoAuditoria>();
+
+    [InverseProperty("auditorNavigation")]
+    public virtual ICollection<turnoAuditoria> turnoAuditoriaauditorNavigation { get; set; } = new List<turnoAuditoria>();
 }

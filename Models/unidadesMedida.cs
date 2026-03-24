@@ -35,6 +35,9 @@ public partial class unidadesMedida
     [InverseProperty("idUnidadNavigation")]
     public virtual ICollection<detalleFichaClientes> detalleFichaClientes { get; set; } = new List<detalleFichaClientes>();
 
+    [InverseProperty("idUnidadNavigation")]
+    public virtual ICollection<detalleFichaProcesos> detalleFichaProcesos { get; set; } = new List<detalleFichaProcesos>();
+
     [InverseProperty("unidadMedidaNavigation")]
     public virtual ICollection<lotePliego> lotePliego { get; set; } = new List<lotePliego>();
 

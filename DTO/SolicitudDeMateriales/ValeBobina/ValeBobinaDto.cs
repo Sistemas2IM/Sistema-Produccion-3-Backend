@@ -42,6 +42,8 @@ namespace Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.ValeBobina
 
         public int? estado { get; set; }
 
+        public string? observaciones { get; set; }
+
         public string? nombreEstado { get; set; }
     }
 }

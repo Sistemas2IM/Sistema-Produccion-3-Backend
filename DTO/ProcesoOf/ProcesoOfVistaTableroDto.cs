@@ -1,12 +1,13 @@
-﻿using Sistema_Produccion_3_Backend.DTO.ProcesoOf.CamposPersonalizados;
-using Sistema_Produccion_3_Backend.DTO.ProcesoOf.DetalleProceso;
+﻿using Sistema_Produccion_3_Backend.DTO.CorridaCombinada;
 using Sistema_Produccion_3_Backend.DTO.Etiquetas.TarjetaEtiqueta;
-using Sistema_Produccion_3_Backend.DTO.ReporteOperador;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.Asignacion;
-using System.ComponentModel.DataAnnotations;
-using Sistema_Produccion_3_Backend.DTO.CorridaCombinada;
-using Sistema_Produccion_3_Backend.Models;
+using Sistema_Produccion_3_Backend.DTO.ProcesoOf.CamposPersonalizados;
+using Sistema_Produccion_3_Backend.DTO.ProcesoOf.DetalleProceso;
+using Sistema_Produccion_3_Backend.DTO.ReporteOperador;
 using Sistema_Produccion_3_Backend.DTO.ReporteOperador.DetalleReporte;
+using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.ComponenteProduccion;
+using Sistema_Produccion_3_Backend.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
 {
@@ -148,6 +149,10 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
 
         public bool? esEnsamblaje { get; set; }
 
+        public DateTime? inicioEstimado { get; set; }
+
+        public DateTime? finEstimado { get; set; }
+
         public List<DetalleReporteDto>? detalleProcesoOf { get; set; }
 
         public List<TarjetaCampoDto>? tarjetaCampoDto { get; set; }
@@ -157,5 +162,7 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
         public MaterialDto? materialDto { get; set; }
 
         public List<CorridaCombinadaDto>? subordinadas { get; set; }
+
+        public List<ComponenteProduccionDto>? componentes { get; set; }
     }
 }

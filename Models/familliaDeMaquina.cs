@@ -16,6 +16,12 @@ public partial class familliaDeMaquina
     [StringLength(100)]
     public string nombreFamilia { get; set; }
 
+    public int? idArea { get; set; }
+
+    [ForeignKey("idArea")]
+    [InverseProperty("familliaDeMaquina")]
+    public virtual areas idAreaNavigation { get; set; }
+
     [InverseProperty("idFamiliaNavigation")]
     public virtual ICollection<maquinas> maquinas { get; set; } = new List<maquinas>();
 

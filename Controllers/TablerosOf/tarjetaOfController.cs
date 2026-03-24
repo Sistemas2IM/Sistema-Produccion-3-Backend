@@ -56,6 +56,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 .Include(u => u.idEstadoOfNavigation)
                 .Include(r => r.etiquetaOf)
                 .ThenInclude(o => o.idEtiquetaNavigation)
+                .Include(f => f.ffeTiemposOfGlobal)
                 .Where(t => t.archivada == false) // Incluye solo los registros donde archivada es false (excluye null y true)
                 .OrderBy(t => t.idEstadoOf == 1 ? 0 : 1)  // Primero las de estado 1
                 .Select(t => new
@@ -92,6 +93,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 .Include(r => r.etiquetaOf)
                 .ThenInclude(o => o.idEtiquetaNavigation)
                 .Include(e => e.idEstadoOfNavigation)
+                .Include(f => f.ffeTiemposOfGlobal)
                 .AsQueryable();
 
             // Aplicar filtros condicionales
@@ -277,6 +279,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             var tarjetaOf = await _context.tarjetaOf
                 .Include(u => u.idEstadoOfNavigation)
                 .Include(r => r.etiquetaOf)
+                .Include(f => f.ffeTiemposOfGlobal)
                 .FirstOrDefaultAsync(u => u.oF == id);
             var tarjetaOfDto = _mapper.Map<TarjetaOfDto>(tarjetaOf);
             

@@ -17,10 +17,22 @@ public partial class tipoReporte
     public string nombreTipoReporte { get; set; }
 
     [InverseProperty("tipoReporteNavigation")]
+    public virtual ICollection<auditoriaProceso> auditoriaProceso { get; set; } = new List<auditoriaProceso>();
+
+    [InverseProperty("tipoReporteNavigation")]
     public virtual ICollection<estadosReporte> estadosReporte { get; set; } = new List<estadosReporte>();
+
+    [InverseProperty("tipoReporteNavigation")]
+    public virtual ICollection<fichaTecnicaProcesos> fichaTecnicaProcesos { get; set; } = new List<fichaTecnicaProcesos>();
 
     [InverseProperty("idTipoReporteNavigation")]
     public virtual ICollection<reportesDeOperadores> reportesDeOperadores { get; set; } = new List<reportesDeOperadores>();
+
+    [InverseProperty("tipoDocumentoNavigation")]
+    public virtual ICollection<seccionDocumento> seccionDocumento { get; set; } = new List<seccionDocumento>();
+
+    [InverseProperty("tipoReporteNavigation")]
+    public virtual ICollection<turnoAuditoria> turnoAuditoria { get; set; } = new List<turnoAuditoria>();
 
     [InverseProperty("tipoReporteNavigation")]
     public virtual ICollection<valeBobina> valeBobina { get; set; } = new List<valeBobina>();

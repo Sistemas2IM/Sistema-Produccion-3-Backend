@@ -35,6 +35,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[auditoriaProceso]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[auxiliares]",
          "ObjectType": 0
       },
@@ -63,6 +67,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[detalleAuditoriaProceso]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[detalleCertificadoCalidad]",
          "ObjectType": 0
       },
@@ -83,6 +91,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[detalleFichaProcesos]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[detalleReporte]",
          "ObjectType": 0
       },
@@ -92,6 +104,10 @@
       },
       {
          "Name": "[dbo].[entregasProductoTerminado]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[especificacionTintas]",
          "ObjectType": 0
       },
       {
@@ -115,11 +131,27 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[ffeTiemposOfGlobal]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ffeTiemposProcesosGlobal]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[fichaTecnicaCliente]",
          "ObjectType": 0
       },
       {
          "Name": "[dbo].[fichaTecnicaCliente_Log]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[fichaTecnicaProcesos]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[formulacionTinta]",
          "ObjectType": 0
       },
       {
@@ -152,6 +184,10 @@
       },
       {
          "Name": "[dbo].[logCambiosProceso]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[logSoporteNexo]",
          "ObjectType": 0
       },
       {
@@ -263,6 +299,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[registroLamparas]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[reportesDeOperadores]",
          "ObjectType": 0
       },
@@ -272,6 +312,10 @@
       },
       {
          "Name": "[dbo].[seccionDocumento]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[secuenciaColor]",
          "ObjectType": 0
       },
       {
@@ -307,15 +351,15 @@
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[tipoDeObjetos]",
-         "ObjectType": 0
-      },
-      {
          "Name": "[dbo].[tipoReporte]",
          "ObjectType": 0
       },
       {
          "Name": "[dbo].[transferenciaProceso]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[turnoAuditoria]",
          "ObjectType": 0
       },
       {

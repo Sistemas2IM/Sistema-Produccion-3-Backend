@@ -32,6 +32,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.FichaTecnicaCliente
                 .Include(f => f.detalleFichaClientes)
                 .ThenInclude(d => d.idUnidadNavigation)
                 .Include(f => f.oFNavigation)
+                .Include(e => e.elaboradoPorNavigation)
                 .Where(f => f.archivado == false)
                 .ToListAsync();
 
@@ -51,6 +52,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.FichaTecnicaCliente
                 .Include(f => f.detalleFichaClientes)
                 .ThenInclude(d => d.idUnidadNavigation)
                 .Include(f => f.oFNavigation)
+                .Include(e => e.elaboradoPorNavigation)
                 .Where(f => f.archivado == false)
                 .FirstOrDefaultAsync(u => u.idFichaCliente == id);
 
@@ -72,6 +74,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.FichaTecnicaCliente
                 .Include(f => f.detalleFichaClientes)
                 .ThenInclude(d => d.idVariableNavigation)
                 .Include(f => f.oFNavigation)
+                .Include(e => e.elaboradoPorNavigation)
                 .Where(f => f.oF == of && f.archivado == false)
                 .ToListAsync();
 
@@ -91,6 +94,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.FichaTecnicaCliente
                 .Include(f => f.detalleFichaClientes)
                 .ThenInclude(d => d.idUnidadNavigation)
                 .Include(f => f.oFNavigation)
+                .Include(e => e.elaboradoPorNavigation)
                 .Where(f => f.archivado == false);
 
             // 2. Aplicamos la lógica del booleano sobre la query

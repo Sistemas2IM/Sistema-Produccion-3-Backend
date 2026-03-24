@@ -5,8 +5,10 @@ using Sistema_Produccion_3_Backend.DTO.ProcesoOf.Asignacion;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.CamposPersonalizados;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.DetalleProceso;
 using Sistema_Produccion_3_Backend.DTO.ReporteOperador;
+using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.ComponenteProduccion;
 using Sistema_Produccion_3_Backend.DTO.Tableros;
 using Sistema_Produccion_3_Backend.DTO.Tableros.Posturas;
+using Sistema_Produccion_3_Backend.Models;
 
 namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
 {
@@ -134,6 +136,10 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
 
         public bool? esEnsamblaje { get; set; }
 
+        public DateTime? inicioEstimado { get; set; }
+
+        public DateTime? finEstimado { get; set; }
+
         public List<AsignacionDto>? asignacionDto { get; set; }
 
         public ProcesoPosturasOfDto? PosturasOfDto { get; set; }
@@ -145,6 +151,8 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
         public List<TarjetaEtiquetaDto>? tarjetaEtiquetaDto { get; set; }
 
         public List<CorridaCombinadaDto>? subordinadas { get; set; }
+
+        public List<ComponenteProduccionDto>? componentes { get; set; }
 
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Sistema_Produccion_3_Backend.DTO.Etiquetas.Etiqueta;
 using Sistema_Produccion_3_Backend.DTO.Etiquetas.EtiquetaOf;
+using Sistema_Produccion_3_Backend.DTO.TiemposEstimados.TiemposOf;
 using Sistema_Produccion_3_Backend.Models;
 using Sistema_Produccion_3_Backend.Services;
 using System.ComponentModel.DataAnnotations;
@@ -88,6 +89,12 @@ namespace Sistema_Produccion_3_Backend.DTO.TarjetasOF
         public int? ofOrigen { get; set; }
 
         public bool? reproceso { get; set; }
+
+        public DateTime? inicioEstimado { get; set; }
+
+        public DateTime? finEstimado { get; set; }
+
+        //public ffeTiemposOfDto? tiemposOfDto { get; set; }
 
         //public EstadoOfDto? estadoOfDto { get; set; }
 

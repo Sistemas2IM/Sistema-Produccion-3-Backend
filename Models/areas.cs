@@ -18,6 +18,15 @@ public partial class areas
 
     public int? secuencia { get; set; }
 
+    [InverseProperty("tipoProcesoNavigation")]
+    public virtual ICollection<auditoriaProceso> auditoriaProceso { get; set; } = new List<auditoriaProceso>();
+
+    [InverseProperty("idAreaNavigation")]
+    public virtual ICollection<familliaDeMaquina> familliaDeMaquina { get; set; } = new List<familliaDeMaquina>();
+
+    [InverseProperty("tipoProcesoNavigation")]
+    public virtual ICollection<fichaTecnicaProcesos> fichaTecnicaProcesos { get; set; } = new List<fichaTecnicaProcesos>();
+
     [InverseProperty("idAreaNavigation")]
     public virtual ICollection<horariosOperativos> horariosOperativos { get; set; } = new List<horariosOperativos>();
 
@@ -44,4 +53,7 @@ public partial class areas
 
     [InverseProperty("idAreaNavigation")]
     public virtual ICollection<usuario> usuario { get; set; } = new List<usuario>();
+
+    [InverseProperty("tipoProcesoNavigation")]
+    public virtual ICollection<variablesTecnicas> variablesTecnicas { get; set; } = new List<variablesTecnicas>();
 }

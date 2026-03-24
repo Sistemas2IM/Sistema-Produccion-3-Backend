@@ -27,5 +27,7 @@
         public int? tipoReporte { get; set; }
 
         public int? estado { get; set; }
+
+        public string? observaciones { get; set; }
     }
 }
