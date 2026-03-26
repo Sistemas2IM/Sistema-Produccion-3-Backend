@@ -155,8 +155,6 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
 
         public List<DetalleReporteDto>? detalleProcesoOf { get; set; }
 
-        public List<TarjetaCampoDto>? tarjetaCampoDto { get; set; }
-
         public List<TarjetaEtiquetaDto>? tarjetaEtiquetaDto { get; set; }
 
         public MaterialDto? materialDto { get; set; }

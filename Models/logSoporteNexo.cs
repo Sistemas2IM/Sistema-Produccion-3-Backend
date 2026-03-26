@@ -33,4 +33,7 @@ public partial class logSoporteNexo
 
     [StringLength(100)]
     public string urlReferencia { get; set; }
+
+    [StringLength(50)]
+    public string tipoDeError { get; set; }
 }
