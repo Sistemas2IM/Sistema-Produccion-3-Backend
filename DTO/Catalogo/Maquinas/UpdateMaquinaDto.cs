@@ -20,6 +20,26 @@
 
         public int? velocidadMaxima { get; set; }
 
+        public int? velocidadTeorica { get; set; }
+
+        public int? idUnidad { get; set; }
+
+        public decimal? tamanoMaxLargoPulg { get; set; }
+
+        public decimal? tamanoMaxAnchoPulg { get; set; }
+
+        public decimal? tamanoMinLargoPulg { get; set; }
+
+        public decimal? tamanoMinAnchoPulg { get; set; }
+
+        public string? metodoImpresion { get; set; }
+
+        public int? cantidadColoresProcesar { get; set; }
+
+        public string? automatizacionControl { get; set; }
+
+        public decimal? anchoImpresion { get; set; }
+
         public int? familiaId { get; set; }
     }
 }

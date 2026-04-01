@@ -35,6 +35,33 @@ public partial class maquinas
 
     public int? velocidadMaxima { get; set; }
 
+    public int? velocidadTeorica { get; set; }
+
+    public int? idUnidad { get; set; }
+
+    [Column(TypeName = "numeric(18, 0)")]
+    public decimal? tamanoMaxLargoPulg { get; set; }
+
+    [Column(TypeName = "numeric(18, 0)")]
+    public decimal? tamanoMaxAnchoPulg { get; set; }
+
+    [Column(TypeName = "numeric(18, 0)")]
+    public decimal? tamanoMinLargoPulg { get; set; }
+
+    [Column(TypeName = "numeric(18, 0)")]
+    public decimal? tamanoMinAnchoPulg { get; set; }
+
+    [StringLength(100)]
+    public string metodoImpresion { get; set; }
+
+    public int? cantidadColoresProcesar { get; set; }
+
+    [StringLength(300)]
+    public string automatizacionControl { get; set; }
+
+    [Column(TypeName = "numeric(18, 0)")]
+    public decimal? anchoImpresion { get; set; }
+
     [InverseProperty("maquinaNavigation")]
     public virtual ICollection<auditoriaProceso> auditoriaProceso { get; set; } = new List<auditoriaProceso>();
 
@@ -53,6 +80,10 @@ public partial class maquinas
     [ForeignKey("idFamilia")]
     [InverseProperty("maquinas")]
     public virtual familliaDeMaquina idFamiliaNavigation { get; set; }
+
+    [ForeignKey("idUnidad")]
+    [InverseProperty("maquinas")]
+    public virtual unidadesMedida idUnidadNavigation { get; set; }
 
     [InverseProperty("idMaquinaNavigation")]
     public virtual ICollection<indisponibilidadMaquinas> indisponibilidadMaquinas { get; set; } = new List<indisponibilidadMaquinas>();
@@ -77,4 +108,16 @@ public partial class maquinas
 
     [InverseProperty("idMaquinaNavigation")]
     public virtual ICollection<tablerosOf> tablerosOf { get; set; } = new List<tablerosOf>();
+
+    [ForeignKey("idMaquina")]
+    [InverseProperty("idMaquina")]
+    public virtual ICollection<catalogoTipoAcabado> idTipoAcabado { get; set; } = new List<catalogoTipoAcabado>();
+
+    [ForeignKey("idMaquina")]
+    [InverseProperty("idMaquina")]
+    public virtual ICollection<catalogoTipoPapel> idTipoPapel { get; set; } = new List<catalogoTipoPapel>();
+
+    [ForeignKey("idMaquina")]
+    [InverseProperty("idMaquina")]
+    public virtual ICollection<catalogoUsoTipico> idUsoTipico { get; set; } = new List<catalogoUsoTipico>();
 }
