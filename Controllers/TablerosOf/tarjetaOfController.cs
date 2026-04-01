@@ -53,20 +53,16 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         public async Task<ActionResult<IEnumerable<TarjetaOfDto>>> GettarjetaOf()
         {
             var tarjetasOrdenadas = await _context.tarjetaOf
+                .AsNoTracking() // 🚀 Libera la memoria de EF Core (clave para endpoints GET)
+                .AsSplitQuery() // 🚀 Evita la "explosión cartesiana" al traer las listas de etiquetaOf y ffeTiempos
+                .Where(t => t.archivada == false)
+                // 🚀 Ordenamiento directo: EF Core traducirá esto a un CASE en SQL sin instanciar objetos anónimos
+                .OrderBy(t => t.idEstadoOf == 1 ? 0 : 1)
+                .ThenBy(t => t.idEstadoOf == 1 ? -t.oF : t.posicion)
                 .Include(u => u.idEstadoOfNavigation)
                 .Include(r => r.etiquetaOf)
-                .ThenInclude(o => o.idEtiquetaNavigation)
+                    .ThenInclude(o => o.idEtiquetaNavigation)
                 .Include(f => f.ffeTiemposOfGlobal)
-                .Where(t => t.archivada == false) // Incluye solo los registros donde archivada es false (excluye null y true)
-                .OrderBy(t => t.idEstadoOf == 1 ? 0 : 1)  // Primero las de estado 1
-                .Select(t => new
-                {
-                    Tarjeta = t,
-                    Orden = t.idEstadoOf == 1 ? -t.oF : t.posicion  // -OF para descendente
-                })
-                .OrderBy(x => x.Tarjeta.idEstadoOf == 1 ? 0 : 1)
-                .ThenBy(x => x.Orden)
-                .Select(x => x.Tarjeta)
                 .ToListAsync();
 
             var tarjetaOfDto = _mapper.Map<List<TarjetaOfDto>>(tarjetasOrdenadas);

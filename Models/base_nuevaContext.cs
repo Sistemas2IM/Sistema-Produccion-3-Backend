@@ -286,6 +286,7 @@ public partial class base_nuevaContext : DbContext
         modelBuilder.Entity<bobinasAsignadas>(entity =>
         {
             entity.HasOne(d => d.idProcesoNavigation).WithMany().HasConstraintName("PROCESO_BOBINA_FK");
+            entity.HasKey(b => new { b.idProceso, b.codigoBobina });
         });
 
         modelBuilder.Entity<cargo>(entity =>
