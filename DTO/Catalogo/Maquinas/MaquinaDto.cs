@@ -1,4 +1,5 @@
-﻿using Sistema_Produccion_3_Backend.DTO.ListaDeOperaciones.ListaMaquina;
+﻿using Sistema_Produccion_3_Backend.DTO.Catalogo.Maquinas.CatalogoTipo;
+using Sistema_Produccion_3_Backend.DTO.ListaDeOperaciones.ListaMaquina;
 
 namespace Sistema_Produccion_3_Backend.DTO.Catalogo.Maquinas
 {
@@ -52,5 +53,10 @@ namespace Sistema_Produccion_3_Backend.DTO.Catalogo.Maquinas
         public string? areaNombre { get; set; }
 
         public List<listaMaquinaCatalogoDto>? listaMaquinaCatalogoDto { get; set; }
+
+        // USO TIPICO
+        public List<CatalogoUsoTipicoDto> UsosTipicos { get; set; } = new List<CatalogoUsoTipicoDto>();
+        public List<CatalogoTipoPapelDto> TiposPapel { get; set; } = new List<CatalogoTipoPapelDto>();
+        public List<CatalogoTipoAcabadoDto> TiposAcabado { get; set; } = new List<CatalogoTipoAcabadoDto>();
     }
 }

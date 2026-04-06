@@ -41,5 +41,10 @@
         public decimal? anchoImpresion { get; set; }
 
         public int? familiaId { get; set; }
+
+        // USO TIPICO
+        public List<int> IdsUsoTipico { get; set; } = new List<int>();
+        public List<int> IdsTipoPapel { get; set; } = new List<int>();
+        public List<int> IdsTipoAcabado { get; set; } = new List<int>();
     }
 }
