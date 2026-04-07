@@ -51,6 +51,18 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[catalogoTipoAcabado]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[catalogoTipoPapel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[catalogoUsoTipico]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[certificadoCalidad]",
          "ObjectType": 0
       },
@@ -195,7 +207,19 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[maquinaAcabado]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[maquinas]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[maquinaTipoPapel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[maquinaUsoTipico]",
          "ObjectType": 0
       },
       {

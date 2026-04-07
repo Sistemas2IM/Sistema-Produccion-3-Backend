@@ -22,5 +22,7 @@ namespace Sistema_Produccion_3_Backend.DTO.GoogleChat.SoporteNexo
         public DateTime? fechaRegistro { get; set; }
 
         public string? urlReferencia { get; set; }
+
+        public string? tipoDeError { get; set; }
     }
 }

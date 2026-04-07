@@ -18,12 +18,14 @@ using Sistema_Produccion_3_Backend.DTO.Calidad.RegistroLamparas;
 using Sistema_Produccion_3_Backend.DTO.Calidad.RegistroLamparas.Batch;
 using Sistema_Produccion_3_Backend.DTO.Calidad.SecuenciaColor;
 using Sistema_Produccion_3_Backend.DTO.Calidad.SecuenciaColor.Batch;
+using Sistema_Produccion_3_Backend.DTO.Calidad.TurnoAuditoria;
 using Sistema_Produccion_3_Backend.DTO.Calidad.UnidadesMedida;
 using Sistema_Produccion_3_Backend.DTO.Calidad.VariablesTecnicas;
 using Sistema_Produccion_3_Backend.DTO.Calidad.VariableUnidadMedida;
 using Sistema_Produccion_3_Backend.DTO.Catalogo.Empleados;
 using Sistema_Produccion_3_Backend.DTO.Catalogo.FamiliaMaquina;
 using Sistema_Produccion_3_Backend.DTO.Catalogo.Maquinas;
+using Sistema_Produccion_3_Backend.DTO.Catalogo.Maquinas.CatalogoTipo;
 using Sistema_Produccion_3_Backend.DTO.Catalogo.Turnos;
 using Sistema_Produccion_3_Backend.DTO.CorridaCombinada;
 using Sistema_Produccion_3_Backend.DTO.Etiquetas.Etiqueta;
@@ -245,6 +247,32 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                             ? src.descripcionOf
                             : src.oFNavigation.descipcionOf))
                 .ReverseMap();
+
+            CreateMap<procesoOf, ProcesoOfTableroListaDto>()
+               .ForMember(dest => dest.tarjetaEtiquetaDto, opt => opt.MapFrom(src => src.tarjetaEtiqueta))
+               .ForMember(dest => dest.materialDto, opt => opt.MapFrom(src => src.idMaterialNavigation))
+               .ForMember(dest => dest.cliente, opt => opt.MapFrom(src => src.oFNavigation.clienteOf))
+               .ForMember(dest => dest.codProd, opt => opt.MapFrom(src => src.oFNavigation.codArticulo))
+               .ForMember(dest => dest.vendedor, opt => opt.MapFrom(src => src.oFNavigation.vendedorOf))
+               .ForMember(dest => dest.nombrePostura, opt => opt.MapFrom(src => src.idPosturaNavigation.nombrePostura))
+               .ForMember(dest => dest.lineaNegocio, opt => opt.MapFrom(src => src.oFNavigation.lineaDeNegocio))
+               .ForMember(dest => dest.cantRequerida, opt => opt.MapFrom(src => src.oFNavigation.cantidadOf))
+               .ForMember(dest => dest.tipoOrden, opt => opt.MapFrom(src => src.oFNavigation.tipoDeOrden))
+               .ForMember(dest => dest.unidadMedida, opt => opt.MapFrom(src => src.oFNavigation.unidadMedida))
+               .ForMember(dest => dest.fsc, opt => opt.MapFrom(src => src.oFNavigation.fsc))
+               .ForMember(dest => dest.asignacionDto, opt => opt.MapFrom(src => src.asignacion))
+               .ForMember(dest => dest.serie, opt => opt.MapFrom(src => src.oFNavigation.seriesOf))
+               .ForMember(dest => dest.fechaVencimiento, opt => opt.MapFrom(src =>
+                       src.corridaCombinada == true
+                           ? src.fechaVencimiento
+                           : src.oFNavigation.fechaVencimiento))
+               .ForMember(dest => dest.subordinadas, opt => opt.MapFrom(src =>
+               src.corridaCombinadamaestroNavigation
+                   .Concat(src.corridaCombinadasubordinadoNavigation != null
+                       ? new List<corridaCombinada> { src.corridaCombinadasubordinadoNavigation }
+                       : new List<corridaCombinada>())))
+               .ReverseMap();
+
             CreateMap<procesoOf, ListaProcesoOfDto>()
                 .ForMember(dest => dest.idArea, opt => opt.MapFrom(src => src.idTableroNavigation.idArea))
                 .ForMember(dest => dest.PosturasOfDto, opt => opt.MapFrom(src => src.idPosturaNavigation))
@@ -521,10 +549,13 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForMember(dest => dest.listaMaquinaCatalogoDto, opt => opt.MapFrom(src => src.listaMaquina))
                 .ForMember(dest => dest.idArea, opt => opt.MapFrom(src => src.idFamiliaNavigation.idAreaNavigation.idArea))
                 .ForMember(dest => dest.areaNombre, opt => opt.MapFrom(src => src.idFamiliaNavigation.idAreaNavigation.nombreArea))
+                .ForMember(dest => dest.UsosTipicos, opt => opt.MapFrom(src => src.idUsoTipico))
+                .ForMember(dest => dest.TiposPapel, opt => opt.MapFrom(src => src.idTipoPapel))
+                .ForMember(dest => dest.TiposAcabado, opt => opt.MapFrom(src => src.idTipoAcabado))
                 .ReverseMap();
             CreateMap<maquinas, ProcesoMaquinaDto>()
                 .ForMember(dest => dest.familiaNombre, opt => opt.MapFrom(src => src.idFamiliaNavigation.nombreFamilia))
-                .ReverseMap(); // <---- para lista procesos por OF
+                .ReverseMap();
             CreateMap<maquinas, AddMaquinaDto>().ReverseMap();
             CreateMap<UpdateMaquinaDto, maquinas>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
@@ -533,7 +564,15 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForMember(dest => dest.familiaNombre, opt => opt.MapFrom(src => src.idFamiliaNavigation.nombreFamilia))
                 .ForMember(dest => dest.idArea, opt => opt.MapFrom(src => src.idFamiliaNavigation.idAreaNavigation.idArea))
                 .ForMember(dest => dest.areaNombre, opt => opt.MapFrom(src => src.idFamiliaNavigation.idAreaNavigation.nombreArea))
+                .ForMember(dest => dest.UsosTipicos, opt => opt.MapFrom(src => src.idUsoTipico))
+                .ForMember(dest => dest.TiposPapel, opt => opt.MapFrom(src => src.idTipoPapel))
+                .ForMember(dest => dest.TiposAcabado, opt => opt.MapFrom(src => src.idTipoAcabado))
                 .ReverseMap();
+
+            // ==== USO MAQUINAS
+            CreateMap<catalogoTipoAcabado, CatalogoTipoAcabadoDto>().ReverseMap();
+            CreateMap<catalogoTipoPapel, CatalogoTipoPapelDto>().ReverseMap();
+            CreateMap<catalogoUsoTipico, CatalogoUsoTipicoDto>().ReverseMap();
 
             CreateMap<familliaDeMaquina, FamilliaDeMaquinaDto>().ReverseMap();
 
@@ -752,6 +791,12 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             CreateMap<detalleAuditoriaProceso, AddBatchDetalleAuditoriaProceso>().ReverseMap();
             CreateMap<UpdateBatchDetalleAuditoriaProceso, detalleAuditoriaProceso>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            // Turno de auditoria
+            CreateMap<turnoAuditoria, TurnoAuditoriaDto>().ReverseMap();
+            CreateMap<turnoAuditoria, AddTurnoAuditoriaDto>().ReverseMap();
+            CreateMap<UpdateTurnoAuditoriaDto, turnoAuditoria>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             // Secuencia de color

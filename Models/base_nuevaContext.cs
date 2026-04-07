@@ -29,6 +29,12 @@ public partial class base_nuevaContext : DbContext
 
     public virtual DbSet<cargo> cargo { get; set; }
 
+    public virtual DbSet<catalogoTipoAcabado> catalogoTipoAcabado { get; set; }
+
+    public virtual DbSet<catalogoTipoPapel> catalogoTipoPapel { get; set; }
+
+    public virtual DbSet<catalogoUsoTipico> catalogoUsoTipico { get; set; }
+
     public virtual DbSet<certificadoCalidad> certificadoCalidad { get; set; }
 
     public virtual DbSet<certificadoCalidad_Log> certificadoCalidad_Log { get; set; }
@@ -295,6 +301,27 @@ public partial class base_nuevaContext : DbContext
 
             entity.Property(e => e.descripcion).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.nombreCargo).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+        });
+
+        modelBuilder.Entity<catalogoTipoAcabado>(entity =>
+        {
+            entity.HasKey(e => e.idTipoAcabado).HasName("PK__Cat_Tipo__018D05F29B1F7189");
+
+            entity.Property(e => e.activo).HasDefaultValue(true);
+        });
+
+        modelBuilder.Entity<catalogoTipoPapel>(entity =>
+        {
+            entity.HasKey(e => e.idTipoPapel).HasName("PK__Cat_Tipo__2C55928036B3E034");
+
+            entity.Property(e => e.activo).HasDefaultValue(true);
+        });
+
+        modelBuilder.Entity<catalogoUsoTipico>(entity =>
+        {
+            entity.HasKey(e => e.idUsoTipico).HasName("PK__Cat_UsoT__A1331DE6556F4B0E");
+
+            entity.Property(e => e.activo).HasDefaultValue(true);
         });
 
         modelBuilder.Entity<certificadoCalidad>(entity =>
@@ -762,6 +789,50 @@ public partial class base_nuevaContext : DbContext
             entity.Property(e => e.nombreMaquina).UseCollation("SQL_Latin1_General_CP1_CI_AS");
 
             entity.HasOne(d => d.idFamiliaNavigation).WithMany(p => p.maquinas).HasConstraintName("FK_MAQUINAS_FAMILIA");
+
+            entity.HasOne(d => d.idUnidadNavigation).WithMany(p => p.maquinas).HasConstraintName("FK_UNIDAD_MEDIDA");
+
+            entity.HasMany(d => d.idTipoAcabado).WithMany(p => p.idMaquina)
+                .UsingEntity<Dictionary<string, object>>(
+                    "maquinaAcabado",
+                    r => r.HasOne<catalogoTipoAcabado>().WithMany()
+                        .HasForeignKey("idTipoAcabado")
+                        .HasConstraintName("FK_MA_Acabado"),
+                    l => l.HasOne<maquinas>().WithMany()
+                        .HasForeignKey("idMaquina")
+                        .HasConstraintName("FK_MA_Maquina"),
+                    j =>
+                    {
+                        j.HasKey("idMaquina", "idTipoAcabado").HasName("PK__maquinaA__1FA02745BDC09726");
+                    });
+
+            entity.HasMany(d => d.idTipoPapel).WithMany(p => p.idMaquina)
+                .UsingEntity<Dictionary<string, object>>(
+                    "maquinaTipoPapel",
+                    r => r.HasOne<catalogoTipoPapel>().WithMany()
+                        .HasForeignKey("idTipoPapel")
+                        .HasConstraintName("FK_MT_Papel"),
+                    l => l.HasOne<maquinas>().WithMany()
+                        .HasForeignKey("idMaquina")
+                        .HasConstraintName("FK_MT_Maquina"),
+                    j =>
+                    {
+                        j.HasKey("idMaquina", "idTipoPapel").HasName("PK__maquinaT__3D7DAE3277879698");
+                    });
+
+            entity.HasMany(d => d.idUsoTipico).WithMany(p => p.idMaquina)
+                .UsingEntity<Dictionary<string, object>>(
+                    "maquinaUsoTipico",
+                    r => r.HasOne<catalogoUsoTipico>().WithMany()
+                        .HasForeignKey("idUsoTipico")
+                        .HasConstraintName("FK_MU_Uso"),
+                    l => l.HasOne<maquinas>().WithMany()
+                        .HasForeignKey("idMaquina")
+                        .HasConstraintName("FK_MU_Maquina"),
+                    j =>
+                    {
+                        j.HasKey("idMaquina", "idUsoTipico").HasName("PK__maquinaU__55ABC6C48613736F");
+                    });
         });
 
         modelBuilder.Entity<material>(entity =>

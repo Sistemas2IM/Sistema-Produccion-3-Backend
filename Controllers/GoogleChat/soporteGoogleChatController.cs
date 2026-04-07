@@ -80,10 +80,18 @@ namespace Sistema_Produccion_3_Backend.Controllers.GoogleChat
                                                 }
                                             }
                                         },
-                                        new {
+                                        new
+                                        {
                                             columns = new {
                                                 columnItems = new object[] {
+                                                    new { widgets = new object[] { new { decoratedText = new { topLabel = "TIPO DE ERROR", text = logDto.tipoDeError } } } },
                                                     new { widgets = new object[] { new { decoratedText = new { topLabel = "SEVERIDAD", text = iconoSeveridad } } } },
+                                                }
+                                            }
+                                        },
+                                        new {
+                                            columns = new {
+                                                columnItems = new object[] {                                             
                                                     new { widgets = new object[] { new { decoratedText = new { topLabel = "FECHA/HORA", text = logSoporte.fechaRegistro?.ToString("g") } } } }
                                                 }
                                             }

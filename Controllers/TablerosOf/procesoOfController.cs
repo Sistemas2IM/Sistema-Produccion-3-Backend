@@ -302,24 +302,30 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         [HttpGet("get/{id}")]
         public async Task<ActionResult<ProcesoOfDto>> GetprocesoOf(int id)
         {
+            // 1. Obtener el proceso único de la base de datos
             var procesoOf = await _context.procesoOf
                 .Include(u => u.detalleReporte).ThenInclude(o => o.idOperacionNavigation)
-                .Include(u => u.idTableroNavigation)
-                .ThenInclude(a => a.idAreaNavigation)
-                .Include(u => u.idTableroNavigation)
-                .ThenInclude(u => u.idMaquinaNavigation)
-                .Include(s => s.tarjetaEtiqueta)
+                .Include(u => u.idTableroNavigation).ThenInclude(a => a.idAreaNavigation)
+                .Include(u => u.idTableroNavigation).ThenInclude(u => u.idMaquinaNavigation)
+                .Include(s => s.tarjetaEtiqueta).ThenInclude(e => e.idEtiquetaNavigation)
                 .Include(d => d.idPosturaNavigation)
                 .Include(c => c.idTableroNavigation)
                 .Include(v => v.idMaterialNavigation)
+                .Include(a => a.asignacion).ThenInclude(u => u.userNavigation)
                 .Include(f => f.oFNavigation)
                 .Include(p => p.corridaCombinadamaestroNavigation)
                 .Include(p => p.corridaCombinadasubordinadoNavigation)
                 .Include(f => f.ffeTiemposProcesosGlobal)
                 .FirstOrDefaultAsync(u => u.idProceso == id);
 
-            // Cargar subordinadoNavigation manualmente
-            if (procesoOf?.corridaCombinadamaestroNavigation != null)
+            // 2. Validación temprana (si no existe, salimos de inmediato)
+            if (procesoOf == null)
+            {
+                return NotFound($"No se encontró el proceso de la OF con el id: {id}");
+            }
+
+            // 3. Cargar subordinadoNavigation manualmente
+            if (procesoOf.corridaCombinadamaestroNavigation != null)
             {
                 foreach (var corrida in procesoOf.corridaCombinadamaestroNavigation)
                 {
@@ -334,7 +340,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 }
             }
 
-            if (procesoOf?.corridaCombinadasubordinadoNavigation?.subordinado != null)
+            if (procesoOf.corridaCombinadasubordinadoNavigation?.subordinado != null)
             {
                 var subordinado = await _context.procesoOf
                     .Include(p => p.oFNavigation)
@@ -343,11 +349,78 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 procesoOf.corridaCombinadasubordinadoNavigation.subordinadoNavigation = subordinado;
             }
 
+            // 4. Mapear la entidad principal a tu DTO
             var procesoOfDto = _mapper.Map<ProcesoOfDto>(procesoOf);
 
-            if (procesoOfDto == null)
+            // Si necesitas ordenar los detalles del reporte (ajusta 'IdDetalle' por el campo con el que ordenes)
+            if (procesoOf.detalleReporte != null)
             {
-                return NotFound("No se encontro el proceso de la Of con el id: " + id);
+                var detallesOrdenados = procesoOf.detalleReporte.OrderBy(r => r.idDetalleReporte).ToList();
+                procesoOfDto.detalleProcesoOf = _mapper.Map<List<DetalleReporteDto>>(detallesOrdenados);
+            }
+
+            // 5. Cargar el detalle específico según el tipo de máquina usando el 'id'
+            // Asegúrate de que 'tipoMaquinaSAP' esté en el nivel correcto (ej. procesoOf.tipoMaquinaSAP o procesoOf.idTableroNavigation.tipoMaquinaSAP)
+            switch (procesoOf.tipoMaquinaSAP)
+            {
+                case "impresion":
+                    procesoOfDto.DetalleProceso = _mapper.Map<ProcesoImpresoraDto>(
+                        await _context.procesoImpresora.FirstOrDefaultAsync(p => p.idProceso == id));
+                    break;
+
+                case "troquel":
+                    procesoOfDto.DetalleProceso = _mapper.Map<ProcesoTroqueladoraDto>(
+                        await _context.procesoTroqueladora.FirstOrDefaultAsync(p => p.idProceso == id));
+                    break;
+
+                case "barniz":
+                    procesoOfDto.DetalleProceso = _mapper.Map<ProcesoBarnizDto>(
+                        await _context.procesoBarniz.FirstOrDefaultAsync(p => p.idProceso == id));
+                    break;
+
+                case "pegadora":
+                    procesoOfDto.DetalleProceso = _mapper.Map<ProcesoPegadoraDto>(
+                        await _context.procesoPegadora.FirstOrDefaultAsync(p => p.idProceso == id));
+                    break;
+
+                case "acabado":
+                    procesoOfDto.DetalleProceso = _mapper.Map<ProcesoAcabadoDto>(
+                        await _context.procesoAcabado.FirstOrDefaultAsync(p => p.idProceso == id));
+                    break;
+
+                case "preprensa":
+                    procesoOfDto.DetalleProceso = _mapper.Map<ProcesoPreprensaDto>(
+                        await _context.procesoPreprensa.FirstOrDefaultAsync(p => p.idProceso == id));
+                    break;
+
+                case "serigrafia":
+                    procesoOfDto.DetalleProceso = _mapper.Map<ProcesoSerigrafiaDto>(
+                        await _context.procesoSerigrafia.FirstOrDefaultAsync(p => p.idProceso == id));
+                    break;
+
+                case "impresionFlexo":
+                    procesoOfDto.DetalleProceso = _mapper.Map<ProcesoImpresoraFlexoDto>(
+                        await _context.procesoImpresoraFlexo.FirstOrDefaultAsync(p => p.idProceso == id));
+                    break;
+
+                case "acabadoFlexo":
+                    procesoOfDto.DetalleProceso = _mapper.Map<ProcesoAcabadoFlexoDto>(
+                        await _context.procesoAcabadoFlexo.FirstOrDefaultAsync(p => p.idProceso == id));
+                    break;
+
+                case "mangaFlexo":
+                    procesoOfDto.DetalleProceso = _mapper.Map<ProcesoMangaFlexoDto>(
+                        await _context.procesoMangaFlexo.FirstOrDefaultAsync(p => p.idProceso == id));
+                    break;
+
+                case "procesosFlexo":
+                    procesoOfDto.DetalleProceso = _mapper.Map<ProcesosFlexoDto>(
+                        await _context.procesosFlexo.FirstOrDefaultAsync(p => p.idProceso == id));
+                    break;
+
+                default:
+                    procesoOfDto.DetalleProceso = null;
+                    break;
             }
 
             return Ok(procesoOfDto);
@@ -409,16 +482,17 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
 
         // GET: api/procesoOf/5 LISTA
         [HttpGet("get/lista/oF/{of}")]
-        public async Task<ActionResult<ListaProcesoOfDto>> GetprocesoOfTarjetaLista(int of)
+        public async Task<ActionResult<IEnumerable<ListaProcesoOfDto>>> GetprocesoOfTarjetaLista(int of)
         {
-            // Procesos normales ligados a una OF
-            var procesosNormales = await _context.procesoOf
+            // 1. OPTIMIZACIÓN: AsNoTracking y AsSplitQuery para rendimiento de lectura masiva
+            var procesosNormalesQuery = _context.procesoOf
+                .AsNoTracking()
+                .AsSplitQuery()
                 .Where(o => o.oF == of && o.cancelada == false)
-                    .Include(u => u.idTableroNavigation)
-                .ThenInclude(a => a.idAreaNavigation)
+                .Include(u => u.idTableroNavigation)
+                    .ThenInclude(a => a.idAreaNavigation)
                 .Include(d => d.idPosturaNavigation)
-                .Include(c => c.idTableroNavigation)
-                    .ThenInclude(v => v.idAreaNavigation)
+                // Nota: EF Core agrupa Includes duplicados automáticamente, puedes simplificar la sintaxis del tablero/maquina si quieres
                 .Include(c => c.idTableroNavigation)
                     .ThenInclude(m => m.idMaquinaNavigation)
                 .Include(f => f.oFNavigation)
@@ -429,12 +503,17 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 .Include(p => p.corridaCombinadasubordinadoNavigation)
                 .Include(f => f.ffeTiemposProcesosGlobal)
                 .Include(co => co.componenteProduccion)
-                    .ThenInclude(tp => tp.tipoComponenteNavigation)
-                .ToListAsync();
+                    .ThenInclude(tp => tp.tipoComponenteNavigation);
 
-            // Procesos maestros de corrida combinada (no ligados directamente a una OF)
-            var procesosMaestros = await _context.procesoOf
-                .Where(p => p.corridaCombinada == true && p.oF == null && p.cancelada == false)
+            // 2. OPTIMIZACIÓN: Filtro movido al motor de base de datos (SQL) en lugar de RAM
+            var procesosMaestrosQuery = _context.procesoOf
+                .AsNoTracking()
+                .AsSplitQuery()
+                .Where(p => p.corridaCombinada == true &&
+                            p.oF == null &&
+                            p.cancelada == false &&
+                            // Filtrar directo en SQL para no saturar la memoria
+                            p.corridaCombinadamaestroNavigation.Any(c => c.subordinadoNavigation != null && c.subordinadoNavigation.oF == of))
                 .Include(p => p.corridaCombinadamaestroNavigation)
                     .ThenInclude(c => c.subordinadoNavigation)
                         .ThenInclude(s => s.oFNavigation)
@@ -445,141 +524,144 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                     .ThenInclude(m => m.idMaquinaNavigation)
                 .Include(e => e.tarjetaEtiqueta)
                 .Include(a => a.asignacion)
-                    .ThenInclude(u => u.userNavigation)
-                .ToListAsync();
+                    .ThenInclude(u => u.userNavigation);
 
-            // Filtramos solo los procesos maestros cuyos subordinados tengan la OF solicitada
-            var procesosMaestrosConOf = procesosMaestros
-                .Where(m => m.corridaCombinadamaestroNavigation
-                    .Any(c => c.subordinadoNavigation?.oF == of))
-                .ToList();
+            // Ejecutamos las consultas de forma secuencial (DbContext no permite consultas concurrentes)
+            var procesosNormales = await procesosNormalesQuery.ToListAsync();
+            var procesosMaestros = await procesosMaestrosQuery.ToListAsync();
 
             // Combinamos ambos conjuntos
-            var procesos = procesosNormales.Concat(procesosMaestrosConOf).ToList();
+            var procesos = procesosNormales.Concat(procesosMaestros).ToList();
 
+            // 3. CARGA POR LOTES DE SUBORDINADOS (Evita el problema N+1)
+            var idsSubordinados = procesos
+                .SelectMany(p => p.corridaCombinadamaestroNavigation?.Select(c => c.subordinado) ?? Enumerable.Empty<int?>())
+                .Union(procesos.Select(p => p.corridaCombinadasubordinadoNavigation?.subordinado))
+                .Where(id => id.HasValue)
+                .Select(id => id.Value)
+                .Distinct()
+                .ToList();
+
+            var subordinadosDict = new Dictionary<int, procesoOf>();
+            if (idsSubordinados.Any())
+            {
+                subordinadosDict = await _context.procesoOf
+                    .AsNoTracking()
+                    .Include(p => p.oFNavigation)
+                    .Where(p => idsSubordinados.Contains(p.idProceso))
+                    .ToDictionaryAsync(p => p.idProceso);
+            }
+
+            // Asignación de subordinados en memoria (instantáneo)
             foreach (var proceso in procesos)
             {
-                // Cargar subordinados de corridaCombinadamaestroNavigation (lista 1:N)
                 if (proceso.corridaCombinadamaestroNavigation != null)
                 {
                     foreach (var corrida in proceso.corridaCombinadamaestroNavigation)
                     {
-                        if (corrida.subordinado != null)
+                        if (corrida.subordinado.HasValue && subordinadosDict.TryGetValue(corrida.subordinado.Value, out var subordinado))
                         {
-                            var subordinado = await _context.procesoOf
-                                .Include(p => p.oFNavigation)
-                                .FirstOrDefaultAsync(p => p.idProceso == corrida.subordinado);
-
                             corrida.subordinadoNavigation = subordinado;
                         }
                     }
                 }
 
-                // Cargar subordinado de corridaCombinadasubordinadoNavigation (1:1)
                 if (proceso.corridaCombinadasubordinadoNavigation?.subordinado != null)
                 {
-                    var subordinado = await _context.procesoOf
-                        .Include(p => p.oFNavigation)
-                        .FirstOrDefaultAsync(p => p.idProceso == proceso.corridaCombinadasubordinadoNavigation.subordinado);
-
-                    proceso.corridaCombinadasubordinadoNavigation.subordinadoNavigation = subordinado;
+                    if (subordinadosDict.TryGetValue(proceso.corridaCombinadasubordinadoNavigation.subordinado.Value, out var subordinado))
+                    {
+                        proceso.corridaCombinadasubordinadoNavigation.subordinadoNavigation = subordinado;
+                    }
                 }
             }
 
+            // Mapeamos todos de golpe usando AutoMapper (más limpio y eficiente)
+            var dtos = _mapper.Map<List<ListaProcesoOfDto>>(procesos);
 
-            var dtos = new List<ListaProcesoOfDto>();
+            // 4. CARGA POR LOTES DE DETALLES DE MÁQUINA (Batching del Switch)
+            var maquinasPorTipo = dtos
+                .Where(d => !string.IsNullOrEmpty(d.tipoMaquinaSAP)) // 🚀 Filtramos los nulos primero
+                .GroupBy(d => d.tipoMaquinaSAP!) // El '!' le dice al compilador que estamos seguros de que no es null
+                .ToDictionary(g => g.Key, g => g.Select(d => d.idProceso).ToList());
 
-            foreach (var proceso in procesos)
+            if (maquinasPorTipo.TryGetValue("preprensa", out var idsPreprensa))
             {
-                var dto = _mapper.Map<ListaProcesoOfDto>(proceso);
-
-                switch (proceso.tipoMaquinaSAP)
-                {
-                    case "preprensa":
-                        var detallePreprensa = await _context.procesoPreprensa
-                            .Where(p => p.idProceso == proceso.idProceso)
-                            .FirstOrDefaultAsync();
-                        dto.DetalleProceso = _mapper.Map<ProcesoPreprensaDto>(detallePreprensa);
-                        break;
-
-                    case "impresion":
-                        var detalleImpresora = await _context.procesoImpresora
-                            .Where(p => p.idProceso == proceso.idProceso)
-                            .FirstOrDefaultAsync();
-                        dto.DetalleProceso = _mapper.Map<ProcesoImpresoraDto>(detalleImpresora);
-                        break;
-
-                    case "troquel":
-                        var detalleTroqueladora = await _context.procesoTroqueladora
-                            .Where(p => p.idProceso == proceso.idProceso)
-                            .FirstOrDefaultAsync();
-                        dto.DetalleProceso = _mapper.Map<ProcesoTroqueladoraDto>(detalleTroqueladora);
-                        break;
-
-                    case "barniz":
-                        var detalleBarnizadora = await _context.procesoBarniz
-                            .Where(p => p.idProceso == proceso.idProceso)
-                            .FirstOrDefaultAsync();
-                        dto.DetalleProceso = _mapper.Map<ProcesoBarnizDto>(detalleBarnizadora);
-                        break;
-
-                    case "pegadora":
-                        var detallePegadora = await _context.procesoPegadora
-                            .Where(p => p.idProceso == proceso.idProceso)
-                            .FirstOrDefaultAsync();
-                        dto.DetalleProceso = _mapper.Map<ProcesoPegadoraDto>(detallePegadora);
-                        break;
-
-                    case "acabado":
-                        var detalleAcabado = await _context.procesoAcabado
-                            .Where(p => p.idProceso == proceso.idProceso)
-                            .FirstOrDefaultAsync();
-                        dto.DetalleProceso = _mapper.Map<ProcesoAcabadoDto>(detalleAcabado);
-                        break;                   
-
-                    case "serigrafia":
-                        var detalleSerigrafia = await _context.procesoSerigrafia
-                            .Where(p => p.idProceso == proceso.idProceso)
-                            .FirstOrDefaultAsync();
-                        dto.DetalleProceso = _mapper.Map<ProcesoSerigrafiaDto>(detalleSerigrafia);
-                        break;
-
-                    case "impresionFlexo":
-                        var detalleImpresionFlexo = await _context.procesoImpresoraFlexo
-                            .Where(p => p.idProceso == proceso.idProceso)
-                            .FirstOrDefaultAsync();
-                        dto.DetalleProceso = _mapper.Map<ProcesoImpresoraFlexoDto>(detalleImpresionFlexo);
-                        break;
-
-                    case "acabadoFlexo":
-                        var detalleAcabadoFlexo = await _context.procesoAcabadoFlexo
-                            .Where(p => p.idProceso == proceso.idProceso)
-                            .FirstOrDefaultAsync();
-                        dto.DetalleProceso = _mapper.Map<ProcesoAcabadoFlexoDto>(detalleAcabadoFlexo);
-                        break;
-
-                    case "mangaFlexo":
-                        var detalleMangaFlexo = await _context.procesoMangaFlexo
-                            .Where(p => p.idProceso == proceso.idProceso)
-                            .FirstOrDefaultAsync();
-                        dto.DetalleProceso = _mapper.Map<ProcesoMangaFlexoDto>(detalleMangaFlexo);
-                        break;
-
-                        case "procesosFlexo":
-                        var detalleProcesosFlexo = await _context.procesosFlexo
-                        .Where(p => p.idProceso == proceso.idProceso)
-                        .FirstOrDefaultAsync();
-                        dto.DetalleProceso = _mapper.Map<ProcesosFlexoDto>(detalleProcesosFlexo);
-                        break;
-
-                    default:
-                        dto.DetalleProceso = null;
-                        break;
-                }
-
-                dtos.Add(dto);
+                var detalles = await _context.procesoPreprensa.AsNoTracking().Where(p => idsPreprensa.Contains(p.idProceso)).ToDictionaryAsync(p => p.idProceso);
+                foreach (var dto in dtos.Where(d => d.tipoMaquinaSAP == "preprensa"))
+                    dto.DetalleProceso = _mapper.Map<ProcesoPreprensaDto>(detalles.GetValueOrDefault(dto.idProceso));
             }
-            // Ordenamos por secuenciaArea
+
+            if (maquinasPorTipo.TryGetValue("impresion", out var idsImpresion))
+            {
+                var detalles = await _context.procesoImpresora.AsNoTracking().Where(p => idsImpresion.Contains(p.idProceso)).ToDictionaryAsync(p => p.idProceso);
+                foreach (var dto in dtos.Where(d => d.tipoMaquinaSAP == "impresion"))
+                    dto.DetalleProceso = _mapper.Map<ProcesoImpresoraDto>(detalles.GetValueOrDefault(dto.idProceso));
+            }
+
+            if (maquinasPorTipo.TryGetValue("troquel", out var idsTroquel))
+            {
+                var detalles = await _context.procesoTroqueladora.AsNoTracking().Where(p => idsTroquel.Contains(p.idProceso)).ToDictionaryAsync(p => p.idProceso);
+                foreach (var dto in dtos.Where(d => d.tipoMaquinaSAP == "troquel"))
+                    dto.DetalleProceso = _mapper.Map<ProcesoTroqueladoraDto>(detalles.GetValueOrDefault(dto.idProceso));
+            }
+
+            if (maquinasPorTipo.TryGetValue("barniz", out var idsBarniz))
+            {
+                var detalles = await _context.procesoBarniz.AsNoTracking().Where(p => idsBarniz.Contains(p.idProceso)).ToDictionaryAsync(p => p.idProceso);
+                foreach (var dto in dtos.Where(d => d.tipoMaquinaSAP == "barniz"))
+                    dto.DetalleProceso = _mapper.Map<ProcesoBarnizDto>(detalles.GetValueOrDefault(dto.idProceso));
+            }
+
+            if (maquinasPorTipo.TryGetValue("pegadora", out var idsPegadora))
+            {
+                var detalles = await _context.procesoPegadora.AsNoTracking().Where(p => idsPegadora.Contains(p.idProceso)).ToDictionaryAsync(p => p.idProceso);
+                foreach (var dto in dtos.Where(d => d.tipoMaquinaSAP == "pegadora"))
+                    dto.DetalleProceso = _mapper.Map<ProcesoPegadoraDto>(detalles.GetValueOrDefault(dto.idProceso));
+            }
+
+            if (maquinasPorTipo.TryGetValue("acabado", out var idsAcabado))
+            {
+                var detalles = await _context.procesoAcabado.AsNoTracking().Where(p => idsAcabado.Contains(p.idProceso)).ToDictionaryAsync(p => p.idProceso);
+                foreach (var dto in dtos.Where(d => d.tipoMaquinaSAP == "acabado"))
+                    dto.DetalleProceso = _mapper.Map<ProcesoAcabadoDto>(detalles.GetValueOrDefault(dto.idProceso));
+            }
+
+            if (maquinasPorTipo.TryGetValue("serigrafia", out var idsSerigrafia))
+            {
+                var detalles = await _context.procesoSerigrafia.AsNoTracking().Where(p => idsSerigrafia.Contains(p.idProceso)).ToDictionaryAsync(p => p.idProceso);
+                foreach (var dto in dtos.Where(d => d.tipoMaquinaSAP == "serigrafia"))
+                    dto.DetalleProceso = _mapper.Map<ProcesoSerigrafiaDto>(detalles.GetValueOrDefault(dto.idProceso));
+            }
+
+            if (maquinasPorTipo.TryGetValue("impresionFlexo", out var idsImpresionFlexo))
+            {
+                var detalles = await _context.procesoImpresoraFlexo.AsNoTracking().Where(p => idsImpresionFlexo.Contains(p.idProceso)).ToDictionaryAsync(p => p.idProceso);
+                foreach (var dto in dtos.Where(d => d.tipoMaquinaSAP == "impresionFlexo"))
+                    dto.DetalleProceso = _mapper.Map<ProcesoImpresoraFlexoDto>(detalles.GetValueOrDefault(dto.idProceso));
+            }
+
+            if (maquinasPorTipo.TryGetValue("acabadoFlexo", out var idsAcabadoFlexo))
+            {
+                var detalles = await _context.procesoAcabadoFlexo.AsNoTracking().Where(p => idsAcabadoFlexo.Contains(p.idProceso)).ToDictionaryAsync(p => p.idProceso);
+                foreach (var dto in dtos.Where(d => d.tipoMaquinaSAP == "acabadoFlexo"))
+                    dto.DetalleProceso = _mapper.Map<ProcesoAcabadoFlexoDto>(detalles.GetValueOrDefault(dto.idProceso));
+            }
+
+            if (maquinasPorTipo.TryGetValue("mangaFlexo", out var idsMangaFlexo))
+            {
+                var detalles = await _context.procesoMangaFlexo.AsNoTracking().Where(p => idsMangaFlexo.Contains(p.idProceso)).ToDictionaryAsync(p => p.idProceso);
+                foreach (var dto in dtos.Where(d => d.tipoMaquinaSAP == "mangaFlexo"))
+                    dto.DetalleProceso = _mapper.Map<ProcesoMangaFlexoDto>(detalles.GetValueOrDefault(dto.idProceso));
+            }
+
+            if (maquinasPorTipo.TryGetValue("procesosFlexo", out var idsProcesosFlexo))
+            {
+                var detalles = await _context.procesosFlexo.AsNoTracking().Where(p => idsProcesosFlexo.Contains(p.idProceso)).ToDictionaryAsync(p => p.idProceso);
+                foreach (var dto in dtos.Where(d => d.tipoMaquinaSAP == "procesosFlexo"))
+                    dto.DetalleProceso = _mapper.Map<ProcesosFlexoDto>(detalles.GetValueOrDefault(dto.idProceso));
+            }
+
+            // 5. Ordenamiento final
             dtos = dtos.OrderBy(d => d.secuenciaArea ?? 999).ToList();
 
             return Ok(dtos);
@@ -901,6 +983,335 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
 
             return Ok(dtos);
         }
+
+        //// GET: api/procesoOf/lista
+        //[HttpGet("get/lista/tablero/{id}")]
+        //public async Task<ActionResult<IEnumerable<ProcesoOfTableroListaDto>>> GetprocesoOfTableroLista(int id)
+        //{
+        //    var procesos = await _context.procesoOf
+        //        .OrderBy(p => p.posicion)
+        //        .Where(t => t.idTablero == id && t.archivada == false)
+        //        .Include(u => u.detalleReporte)
+        //            .ThenInclude(o => o.idOperacionNavigation)
+        //        .Include(u => u.detalleReporte)
+        //            .ThenInclude(m => m.maquinaNavigation)
+        //        .Include(s => s.tarjetaEtiqueta)
+        //            .ThenInclude(e => e.idEtiquetaNavigation)
+        //        .Include(f => f.oFNavigation)
+        //        .Include(l => l.idPosturaNavigation)
+        //        .Include(v => v.idMaterialNavigation)
+        //        .Include(a => a.asignacion)
+        //            .ThenInclude(u => u.userNavigation)
+        //        .Include(p => p.corridaCombinadamaestroNavigation)
+        //        .Include(p => p.corridaCombinadasubordinadoNavigation)
+        //        .Select(p => new
+        //        {
+        //            Proceso = p,
+        //            DetalleReporteOrdenado = p.detalleReporte
+        //                .OrderBy(d => d.fechaHora)
+        //                .ThenBy(d => d.horaInicio)
+        //                .ToList()
+        //        })
+        //        .ToListAsync();
+
+        //    // Cargar subordinados de corrida combinada
+        //    foreach (var procesoWrapper in procesos)
+        //    {
+        //        var proceso = procesoWrapper.Proceso;
+
+        //        if (proceso.corridaCombinadamaestroNavigation != null)
+        //        {
+        //            foreach (var corrida in proceso.corridaCombinadamaestroNavigation)
+        //            {
+        //                if (corrida.subordinado != null)
+        //                {
+        //                    var subordinado = await _context.procesoOf
+        //                        .Include(p => p.oFNavigation)
+        //                        .FirstOrDefaultAsync(p => p.idProceso == corrida.subordinado);
+
+        //                    corrida.subordinadoNavigation = subordinado;
+        //                }
+        //            }
+        //        }
+
+        //        if (proceso.corridaCombinadasubordinadoNavigation?.subordinado != null)
+        //        {
+        //            var subordinado = await _context.procesoOf
+        //                .Include(p => p.oFNavigation)
+        //                .FirstOrDefaultAsync(p => p.idProceso == proceso.corridaCombinadasubordinadoNavigation.subordinado);
+
+        //            proceso.corridaCombinadasubordinadoNavigation.subordinadoNavigation = subordinado;
+        //        }
+        //    }
+
+        //    var dtos = new List<ProcesoOfTableroListaDto>();
+
+        //    foreach (var procesoWrapper in procesos)
+        //    {
+        //        var proceso = procesoWrapper.Proceso;
+        //        var dto = _mapper.Map<ProcesoOfTableroListaDto>(proceso);
+
+        //        // --- NUEVA VALIDACIÓN PARA detOps ---
+        //        // Verificamos si en los detalles del reporte existe al menos una operación 
+        //        // que tenga la descripción o tipo "Producción"
+        //        dto.detOps = proceso.detalleReporte != null && proceso.detalleReporte.Any(d =>
+        //            d.idOperacionNavigation != null &&
+        //            d.idOperacionNavigation.tipoOperacion == "Producción" // Ajusta "nombre" o "tipo" según tu DB
+        //        );
+
+        //        switch (proceso.tipoMaquinaSAP)
+        //        {
+        //            case "impresion":
+        //                dto.DetalleProceso = _mapper.Map<ProcesoImpresoraDto>(
+        //                    await _context.procesoImpresora.FirstOrDefaultAsync(p => p.idProceso == proceso.idProceso));
+        //                break;
+
+        //            case "troquel":
+        //                dto.DetalleProceso = _mapper.Map<ProcesoTroqueladoraDto>(
+        //                    await _context.procesoTroqueladora.FirstOrDefaultAsync(p => p.idProceso == proceso.idProceso));
+        //                break;
+
+        //            case "barniz":
+        //                dto.DetalleProceso = _mapper.Map<ProcesoBarnizDto>(
+        //                    await _context.procesoBarniz.FirstOrDefaultAsync(p => p.idProceso == proceso.idProceso));
+        //                break;
+
+        //            case "pegadora":
+        //                dto.DetalleProceso = _mapper.Map<ProcesoPegadoraDto>(
+        //                    await _context.procesoPegadora.FirstOrDefaultAsync(p => p.idProceso == proceso.idProceso));
+        //                break;
+
+        //            case "acabado":
+        //                dto.DetalleProceso = _mapper.Map<ProcesoAcabadoDto>(
+        //                    await _context.procesoAcabado.FirstOrDefaultAsync(p => p.idProceso == proceso.idProceso));
+        //                break;
+
+        //            case "preprensa":
+        //                dto.DetalleProceso = _mapper.Map<ProcesoPreprensaDto>(
+        //                    await _context.procesoPreprensa.FirstOrDefaultAsync(p => p.idProceso == proceso.idProceso));
+        //                break;
+
+        //            case "serigrafia":
+        //                dto.DetalleProceso = _mapper.Map<ProcesoSerigrafiaDto>(
+        //                    await _context.procesoSerigrafia.FirstOrDefaultAsync(p => p.idProceso == proceso.idProceso));
+        //                break;
+
+        //            case "impresionFlexo":
+        //                dto.DetalleProceso = _mapper.Map<ProcesoImpresoraFlexoDto>(
+        //                    await _context.procesoImpresoraFlexo.FirstOrDefaultAsync(p => p.idProceso == proceso.idProceso));
+        //                break;
+
+        //            case "acabadoFlexo":
+        //                dto.DetalleProceso = _mapper.Map<ProcesoAcabadoFlexoDto>(
+        //                    await _context.procesoAcabadoFlexo.FirstOrDefaultAsync(p => p.idProceso == proceso.idProceso));
+        //                break;
+
+        //            case "mangaFlexo":
+        //                dto.DetalleProceso = _mapper.Map<ProcesoMangaFlexoDto>(
+        //                    await _context.procesoMangaFlexo.FirstOrDefaultAsync(p => p.idProceso == proceso.idProceso));
+        //                break;
+
+        //            case "procesosFlexo":
+        //                dto.DetalleProceso = _mapper.Map<ProcesosFlexoDto>(
+        //                    await _context.procesosFlexo.FirstOrDefaultAsync(p => p.idProceso == proceso.idProceso));
+        //                break;
+
+        //            default:
+        //                dto.DetalleProceso = null;
+        //                break;
+        //        }
+
+        //        dtos.Add(dto);
+        //    }
+
+        //    return Ok(dtos);
+        //}
+
+
+
+        // GET: api/procesoOf/lista
+        [HttpGet("get/lista/tablero/{id}")]
+        public async Task<ActionResult<IEnumerable<ProcesoOfTableroListaDto>>> GetprocesoOfTableroLista(int id)
+        {
+            // 1. OPTIMIZACIÓN DE CONSULTA PRINCIPAL
+            var procesos = await _context.procesoOf
+                .AsNoTracking() // Libera memoria, ideal para consultas de solo lectura
+                .AsSplitQuery() // Divide los Includes en consultas separadas para evitar redundancia de datos masiva
+                .OrderBy(p => p.posicion)
+                .Where(t => t.idTablero == id && t.archivada == false)
+                .Include(u => u.detalleReporte)
+                    .ThenInclude(o => o.idOperacionNavigation)
+                .Include(u => u.detalleReporte)
+                    .ThenInclude(m => m.maquinaNavigation)
+                .Include(s => s.tarjetaEtiqueta)
+                    .ThenInclude(e => e.idEtiquetaNavigation)
+                .Include(f => f.oFNavigation)
+                .Include(l => l.idPosturaNavigation)
+                .Include(v => v.idMaterialNavigation)
+                .Include(a => a.asignacion)
+                    .ThenInclude(u => u.userNavigation)
+                .Include(p => p.corridaCombinadamaestroNavigation)
+                .Include(p => p.corridaCombinadasubordinadoNavigation)
+                .Select(p => new
+                {
+                    Proceso = p,
+                    DetalleReporteOrdenado = p.detalleReporte
+                        .OrderBy(d => d.fechaHora)
+                        .ThenBy(d => d.horaInicio)
+                        .ToList()
+                })
+                .ToListAsync();
+
+            // 2. CARGA POR LOTES DE SUBORDINADOS (Evita el N+1)
+            // Extraemos todos los IDs de subordinados que necesitamos buscar en un solo paso
+            var idsSubordinados = procesos
+                .SelectMany(pw => pw.Proceso.corridaCombinadamaestroNavigation?.Select(c => c.subordinado) ?? Enumerable.Empty<int?>())
+                .Union(procesos.Select(pw => pw.Proceso.corridaCombinadasubordinadoNavigation?.subordinado))
+                .Where(id => id.HasValue)
+                .Select(id => id.Value)
+                .Distinct()
+                .ToList();
+
+            // Buscamos todos los subordinados de golpe
+            var subordinadosDict = new Dictionary<int, procesoOf>();
+            if (idsSubordinados.Any())
+            {
+                subordinadosDict = await _context.procesoOf
+                    .AsNoTracking()
+                    .Include(p => p.oFNavigation)
+                    .Where(p => idsSubordinados.Contains(p.idProceso))
+                    .ToDictionaryAsync(p => p.idProceso);
+            }
+
+            // Asignamos los subordinados en memoria
+            foreach (var procesoWrapper in procesos)
+            {
+                var proceso = procesoWrapper.Proceso;
+
+                if (proceso.corridaCombinadamaestroNavigation != null)
+                {
+                    foreach (var corrida in proceso.corridaCombinadamaestroNavigation)
+                    {
+                        if (corrida.subordinado.HasValue && subordinadosDict.TryGetValue(corrida.subordinado.Value, out var subordinado))
+                        {
+                            corrida.subordinadoNavigation = subordinado;
+                        }
+                    }
+                }
+
+                if (proceso.corridaCombinadasubordinadoNavigation?.subordinado != null)
+                {
+                    if (subordinadosDict.TryGetValue(proceso.corridaCombinadasubordinadoNavigation.subordinado.Value, out var subordinado))
+                    {
+                        proceso.corridaCombinadasubordinadoNavigation.subordinadoNavigation = subordinado;
+                    }
+                }
+            }
+
+            // 3. MAPEO A DTOs
+            var dtos = new List<ProcesoOfTableroListaDto>();
+            foreach (var procesoWrapper in procesos)
+            {
+                var proceso = procesoWrapper.Proceso;
+                var dto = _mapper.Map<ProcesoOfTableroListaDto>(proceso);
+
+                // --- VALIDACIÓN PARA detOps ---
+                dto.detOps = proceso.detalleReporte != null && proceso.detalleReporte.Any(d =>
+                    d.idOperacionNavigation != null &&
+                    d.idOperacionNavigation.tipoOperacion == "Producción" // Ajusta según tu DB
+                );
+
+                dtos.Add(dto);
+            }
+
+            // 4. CARGA POR LOTES DE MÁQUINAS (El asesino del rendimiento solucionado)
+            // Agrupamos los IDs de proceso por el tipo de máquina que requieren
+            var maquinasPorTipo = dtos
+                .Where(d => !string.IsNullOrEmpty(d.tipoMaquinaSAP))
+                .GroupBy(d => d.tipoMaquinaSAP!)
+                .ToDictionary(g => g.Key, g => g.Select(d => d.idProceso).ToList());
+
+            // Buscamos y mapeamos solo si existen registros de ese tipo en este lote
+            if (maquinasPorTipo.TryGetValue("impresion", out var idsImpresion))
+            {
+                var detalles = await _context.procesoImpresora.Where(p => idsImpresion.Contains(p.idProceso)).ToDictionaryAsync(p => p.idProceso);
+                foreach (var dto in dtos.Where(d => d.tipoMaquinaSAP == "impresion"))
+                    dto.DetalleProceso = _mapper.Map<ProcesoImpresoraDto>(detalles.GetValueOrDefault(dto.idProceso));
+            }
+
+            if (maquinasPorTipo.TryGetValue("troquel", out var idsTroquel))
+            {
+                var detalles = await _context.procesoTroqueladora.Where(p => idsTroquel.Contains(p.idProceso)).ToDictionaryAsync(p => p.idProceso);
+                foreach (var dto in dtos.Where(d => d.tipoMaquinaSAP == "troquel"))
+                    dto.DetalleProceso = _mapper.Map<ProcesoTroqueladoraDto>(detalles.GetValueOrDefault(dto.idProceso));
+            }
+
+            if (maquinasPorTipo.TryGetValue("barniz", out var idsBarniz))
+            {
+                var detalles = await _context.procesoBarniz.Where(p => idsBarniz.Contains(p.idProceso)).ToDictionaryAsync(p => p.idProceso);
+                foreach (var dto in dtos.Where(d => d.tipoMaquinaSAP == "barniz"))
+                    dto.DetalleProceso = _mapper.Map<ProcesoBarnizDto>(detalles.GetValueOrDefault(dto.idProceso));
+            }
+
+            if (maquinasPorTipo.TryGetValue("pegadora", out var idsPegadora))
+            {
+                var detalles = await _context.procesoPegadora.Where(p => idsPegadora.Contains(p.idProceso)).ToDictionaryAsync(p => p.idProceso);
+                foreach (var dto in dtos.Where(d => d.tipoMaquinaSAP == "pegadora"))
+                    dto.DetalleProceso = _mapper.Map<ProcesoPegadoraDto>(detalles.GetValueOrDefault(dto.idProceso));
+            }
+
+            if (maquinasPorTipo.TryGetValue("acabado", out var idsAcabado))
+            {
+                var detalles = await _context.procesoAcabado.Where(p => idsAcabado.Contains(p.idProceso)).ToDictionaryAsync(p => p.idProceso);
+                foreach (var dto in dtos.Where(d => d.tipoMaquinaSAP == "acabado"))
+                    dto.DetalleProceso = _mapper.Map<ProcesoAcabadoDto>(detalles.GetValueOrDefault(dto.idProceso));
+            }
+
+            if (maquinasPorTipo.TryGetValue("preprensa", out var idsPreprensa))
+            {
+                var detalles = await _context.procesoPreprensa.Where(p => idsPreprensa.Contains(p.idProceso)).ToDictionaryAsync(p => p.idProceso);
+                foreach (var dto in dtos.Where(d => d.tipoMaquinaSAP == "preprensa"))
+                    dto.DetalleProceso = _mapper.Map<ProcesoPreprensaDto>(detalles.GetValueOrDefault(dto.idProceso));
+            }
+
+            if (maquinasPorTipo.TryGetValue("serigrafia", out var idsSerigrafia))
+            {
+                var detalles = await _context.procesoSerigrafia.Where(p => idsSerigrafia.Contains(p.idProceso)).ToDictionaryAsync(p => p.idProceso);
+                foreach (var dto in dtos.Where(d => d.tipoMaquinaSAP == "serigrafia"))
+                    dto.DetalleProceso = _mapper.Map<ProcesoSerigrafiaDto>(detalles.GetValueOrDefault(dto.idProceso));
+            }
+
+            if (maquinasPorTipo.TryGetValue("impresionFlexo", out var idsImpresionFlexo))
+            {
+                var detalles = await _context.procesoImpresoraFlexo.Where(p => idsImpresionFlexo.Contains(p.idProceso)).ToDictionaryAsync(p => p.idProceso);
+                foreach (var dto in dtos.Where(d => d.tipoMaquinaSAP == "impresionFlexo"))
+                    dto.DetalleProceso = _mapper.Map<ProcesoImpresoraFlexoDto>(detalles.GetValueOrDefault(dto.idProceso));
+            }
+
+            if (maquinasPorTipo.TryGetValue("acabadoFlexo", out var idsAcabadoFlexo))
+            {
+                var detalles = await _context.procesoAcabadoFlexo.Where(p => idsAcabadoFlexo.Contains(p.idProceso)).ToDictionaryAsync(p => p.idProceso);
+                foreach (var dto in dtos.Where(d => d.tipoMaquinaSAP == "acabadoFlexo"))
+                    dto.DetalleProceso = _mapper.Map<ProcesoAcabadoFlexoDto>(detalles.GetValueOrDefault(dto.idProceso));
+            }
+
+            if (maquinasPorTipo.TryGetValue("mangaFlexo", out var idsMangaFlexo))
+            {
+                var detalles = await _context.procesoMangaFlexo.Where(p => idsMangaFlexo.Contains(p.idProceso)).ToDictionaryAsync(p => p.idProceso);
+                foreach (var dto in dtos.Where(d => d.tipoMaquinaSAP == "mangaFlexo"))
+                    dto.DetalleProceso = _mapper.Map<ProcesoMangaFlexoDto>(detalles.GetValueOrDefault(dto.idProceso));
+            }
+
+            if (maquinasPorTipo.TryGetValue("procesosFlexo", out var idsProcesosFlexo))
+            {
+                var detalles = await _context.procesosFlexo.Where(p => idsProcesosFlexo.Contains(p.idProceso)).ToDictionaryAsync(p => p.idProceso);
+                foreach (var dto in dtos.Where(d => d.tipoMaquinaSAP == "procesosFlexo"))
+                    dto.DetalleProceso = _mapper.Map<ProcesosFlexoDto>(detalles.GetValueOrDefault(dto.idProceso));
+            }
+
+            return Ok(dtos);
+        }
+
 
 
         // GET: api/procesoOf

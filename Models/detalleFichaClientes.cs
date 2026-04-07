@@ -24,16 +24,16 @@ public partial class detalleFichaClientes
 
     public int? idUnidad { get; set; }
 
-    [StringLength(25)]
+    [StringLength(75)]
     public string toleranciaPromedio { get; set; }
 
-    [StringLength(25)]
+    [StringLength(75)]
     public string toleranciaMinima { get; set; }
 
-    [StringLength(25)]
+    [StringLength(75)]
     public string toleranciaMaxima { get; set; }
 
-    [StringLength(25)]
+    [StringLength(75)]
     public string toleranciaMedida { get; set; }
 
     [ForeignKey("idFichaCliente")]

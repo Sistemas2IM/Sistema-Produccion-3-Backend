@@ -11,5 +11,9 @@
         public string? estado_anterior { get; set; }
 
         public string? nuevo_estado { get; set; }
+
+        public string? posicion_anterior { get; set; }
+
+        public string? nueva_posicion { get; set; }
     }
 }

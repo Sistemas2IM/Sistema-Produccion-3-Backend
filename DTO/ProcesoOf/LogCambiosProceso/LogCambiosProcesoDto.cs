@@ -1,4 +1,6 @@
-﻿namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf.LogCambiosProceso
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf.LogCambiosProceso
 {
     public class LogCambiosProcesoDto
     {
@@ -13,5 +15,9 @@
         public string? estado_anterior { get; set; }
 
         public string? nuevo_estado { get; set; }
+
+        public string? posicion_anterior { get; set; }
+
+        public string? nueva_posicion { get; set; }
     }
 }
