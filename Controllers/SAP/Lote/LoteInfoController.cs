@@ -17,6 +17,8 @@ namespace TuNamespace.Controllers // Asegúrate de ajustar el namespace
         {
             try
             {
+                distNumber = System.Net.WebUtility.UrlDecode(distNumber);
+
                 // 1. Conectar a HANA (Usando tu clase helper existente)
                 HANAConnection.sapConn();
                 int retVal = HANAConnection.RetVal;

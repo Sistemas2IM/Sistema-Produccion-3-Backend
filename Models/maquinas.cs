@@ -39,16 +39,16 @@ public partial class maquinas
 
     public int? idUnidad { get; set; }
 
-    [Column(TypeName = "numeric(18, 0)")]
+    [Column(TypeName = "numeric(18, 2)")]
     public decimal? tamanoMaxLargoPulg { get; set; }
 
-    [Column(TypeName = "numeric(18, 0)")]
+    [Column(TypeName = "numeric(18, 3)")]
     public decimal? tamanoMaxAnchoPulg { get; set; }
 
-    [Column(TypeName = "numeric(18, 0)")]
+    [Column(TypeName = "numeric(18, 2)")]
     public decimal? tamanoMinLargoPulg { get; set; }
 
-    [Column(TypeName = "numeric(18, 0)")]
+    [Column(TypeName = "numeric(18, 2)")]
     public decimal? tamanoMinAnchoPulg { get; set; }
 
     [StringLength(100)]

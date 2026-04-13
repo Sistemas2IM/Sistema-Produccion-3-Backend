@@ -129,6 +129,8 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForMember(dest => dest.etiquetaDto, opt => opt.MapFrom(src => src.etiquetaOf))
                 .ForMember(dest => dest.inicioEstimado, opt => opt.MapFrom(src => src.ffeTiemposOfGlobal.Inicio_Estimado))
                 .ForMember(dest => dest.finEstimado, opt => opt.MapFrom(src => src.ffeTiemposOfGlobal.Fin_Proyectado))
+                .ForMember(dest => dest.inicioReal, opt => opt.MapFrom(src => src.ffeTiemposOfGlobal.Inicio_Real))
+                .ForMember(dest => dest.finReal, opt => opt.MapFrom(src => src.ffeTiemposOfGlobal.Fin_Real))
                 .ReverseMap();
             //.ForPath(src => src.idEstadoOfNavigation, opt => opt.Ignore());
             CreateMap<tarjetaOf, TarjetaBusquedaDto>().ReverseMap();
@@ -352,7 +354,6 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                     .ReverseMap();
 
                 CreateMap<procesoOf, AddProcesoOfMaquinas>()
-                    .ForMember(dest => dest.posturasOfDto, opt => opt.MapFrom(src => src.idPosturaNavigation))
                     .ReverseMap();
 
                 CreateMap<UpProcesoOfMaquinas, procesoOf>()

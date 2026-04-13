@@ -16,8 +16,8 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf.LogCambiosProceso
 
         public string? nuevo_estado { get; set; }
 
-        public string? posicion_anterior { get; set; }
+        public int? posicion_anterior { get; set; }
 
-        public string? nueva_posicion { get; set; }
+        public int? nueva_posicion { get; set; }
     }
 }

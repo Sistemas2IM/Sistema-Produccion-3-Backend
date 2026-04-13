@@ -107,7 +107,5 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas
         public int? tipoSalida { get; set; }
 
         public bool? esEnsamblaje { get; set; }
-
-        public PosturasOfDto? posturasOfDto { get; set; }
     }
 }

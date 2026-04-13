@@ -2,11 +2,9 @@
 {
     public class AddMaterialOfDto
     {
-        public string? idMaterial { get; set; }
-
         public string? nombreMaterial { get; set; }
 
-        public string? tipoMaterial { get; set; }
+        public string? marca { get; set; }
 
         public string? calibre { get; set; }
 

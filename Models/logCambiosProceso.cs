@@ -29,11 +29,9 @@ public partial class logCambiosProceso
     [StringLength(100)]
     public string nuevo_estado { get; set; }
 
-    [StringLength(100)]
-    public string posicion_anterior { get; set; }
+    public int? posicion_anterior { get; set; }
 
-    [StringLength(100)]
-    public string nueva_posicion { get; set; }
+    public int? nueva_posicion { get; set; }
 
     [ForeignKey("proceso_id")]
     [InverseProperty("logCambiosProceso")]
