@@ -42,6 +42,8 @@ namespace Sistema_Produccion_3_Backend.DTO.Calidad.AuditoriaProceso
 
         public int? tipoReporte { get; set; }
 
+        public int? turnoAuditoria { get; set; }
+
         public List<DetalleAuditoriaProcesoDto>? detalleAuditoriaProceso { get; set; }
     }
 }

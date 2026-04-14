@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf;
+using Sistema_Produccion_3_Backend.DTO.ProductoTerminado;
+using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.SolicitudMaterialOF;
 using Sistema_Produccion_3_Backend.DTO.Tableros;
 using Sistema_Produccion_3_Backend.DTO.TarjetasOF;
 using Sistema_Produccion_3_Backend.Models;
@@ -79,16 +81,45 @@ namespace Sistema_Produccion_3_Backend.Controllers.Buscadores.TablerosOf
                 .Take(20) // 🚀 Limitamos los resultados
                 .ToListAsync();
 
+            // 4. ENTREGA DE PRODUCTO TERMINADO
+            var entregasProductoTerminado = await _context.entregasProductoTerminado
+                    .AsNoTracking()
+                    .Where(u =>
+                        (u.idEntregaPt == numeroBuscado) ||
+                        (esNumero && u.of == numeroBuscado) ||
+                        u.of.ToString().Contains(termino) ||
+                        u.ofNavigation.clienteOf.Contains(termino) ||
+                        u.ofNavigation.productoOf.Contains(termino) ||
+                        u.ofNavigation.codArticulo.Contains(termino))
+                    .Take(30)
+                    .ToListAsync();
+
+            // 5. SOLICITUD DE MATERIALES
+                var solicitudesMateriales = await _context.solicitudMaterialesOf
+                        .AsNoTracking()
+                        .Where(u =>
+                            (u.idSolicitud == numeroBuscado) ||
+                            (u.oF == numeroBuscado) ||
+                            u.idSolicitudNavigation.materialDescripcion.Contains(termino) ||
+                            u.oFNavigation.productoOf.Contains(termino) ||
+                            u.oFNavigation.clienteOf.Contains(termino) ||
+                            u.oFNavigation.codArticulo.Contains(termino))
+                        .Take(30)
+                        .ToListAsync();
+
             // Mapear los resultados a DTOs
             var procesosOfDto = _mapper.Map<List<ProcesoOfDto>>(procesosOf);
             var tarjetasOfDto = _mapper.Map<List<TarjetaOfDto>>(tarjetasOf);
             var tablerosDto = _mapper.Map<List<TablerosOfDto>>(tableros);
+            var entregasProductoTerminadoDto = _mapper.Map<List<ProductoTerminadoDto>>(entregasProductoTerminado);
+            var solicitudesMaterialesDto = _mapper.Map<List<solicitudMaterialesOfDto>>(solicitudesMateriales);
 
             var resultado = new
             {
                 ProcesosOf = procesosOfDto,
                 TarjetasOf = tarjetasOfDto,
-                Tableros = tablerosDto
+                Tableros = tablerosDto,
+                EntregaProductoTerminado = entregasProductoTerminadoDto
             };
 
             if (!procesosOfDto.Any() && !tarjetasOfDto.Any() && !tablerosDto.Any())

@@ -58,6 +58,8 @@ public partial class auditoriaProceso
 
     public int? tipoReporte { get; set; }
 
+    public int? turnoAuditoria { get; set; }
+
     [ForeignKey("actualizadoPor")]
     [InverseProperty("auditoriaProcesoactualizadoPorNavigation")]
     public virtual usuario actualizadoPorNavigation { get; set; }
@@ -104,4 +106,8 @@ public partial class auditoriaProceso
     [ForeignKey("tipoReporte")]
     [InverseProperty("auditoriaProceso")]
     public virtual tipoReporte tipoReporteNavigation { get; set; }
+
+    [ForeignKey("turnoAuditoria")]
+    [InverseProperty("auditoriaProceso")]
+    public virtual turnoAuditoria turnoAuditoriaNavigation { get; set; }
 }

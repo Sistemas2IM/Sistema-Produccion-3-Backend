@@ -280,6 +280,8 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.tipoProcesoNavigation).WithMany(p => p.auditoriaProceso).HasConstraintName("FK_TIPO_PROCESO_AUDITORIA");
 
             entity.HasOne(d => d.tipoReporteNavigation).WithMany(p => p.auditoriaProceso).HasConstraintName("FK_TIPO_AUDITORIA");
+
+            entity.HasOne(d => d.turnoAuditoriaNavigation).WithMany(p => p.auditoriaProceso).HasConstraintName("FK_TURNO_AUDITORIA");
         });
 
         modelBuilder.Entity<auxiliares>(entity =>
@@ -1514,7 +1516,7 @@ public partial class base_nuevaContext : DbContext
 
             entity.HasOne(d => d.tipoReporteNavigation).WithMany(p => p.turnoAuditoria).HasConstraintName("FK_TIPO_DOCUMENTO");
 
-            entity.HasOne(d => d.turnoNavigation).WithMany(p => p.turnoAuditoria).HasConstraintName("FK_TURNO_AUDITORIA");
+            entity.HasOne(d => d.turnoNavigation).WithMany(p => p.turnoAuditoria).HasConstraintName("FK_TURNO_AUDITOR");
         });
 
         modelBuilder.Entity<turnos>(entity =>

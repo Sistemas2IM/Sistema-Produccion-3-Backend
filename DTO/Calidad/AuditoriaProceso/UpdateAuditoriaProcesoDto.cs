@@ -37,5 +37,7 @@
         public bool? cancelado { get; set; }
 
         public int? tipoReporte { get; set; }
+
+        public int? turnoAuditoria { get; set; }
     }
 }

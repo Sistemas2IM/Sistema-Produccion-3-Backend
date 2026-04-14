@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Sistema_Produccion_3_Backend.DTO.AnexosNEXO;
+using Sistema_Produccion_3_Backend.DTO.Buscadores.DTOGlobales;
 using Sistema_Produccion_3_Backend.DTO.Calidad.AuditoriaProceso;
 using Sistema_Produccion_3_Backend.DTO.Calidad.AuditoriaProceso.DetalleAuditoriaProceso;
 using Sistema_Produccion_3_Backend.DTO.Calidad.AuditoriaProceso.DetalleAuditoriaProceso.Batch;
@@ -1111,6 +1112,28 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
 
             // SOPORTE NEXO =========================================================================================
             CreateMap<logSoporteNexo, LogSoporteNexoDto>().ReverseMap();
+
+            // BUSCADOR GLOBAL =========================================================================================
+                CreateMap<tarjetaOf, SB_TarjetaOfDto>().ReverseMap();
+
+                CreateMap<procesoOf, SB_ProcesoOfDto>()
+                    .ForMember(dest => dest.nombreTablero, opt => opt.MapFrom(src => src.idTableroNavigation.nombreTablero))
+                    .ForMember(dest => dest.clienteOf, opt => opt.MapFrom(src => src.oFNavigation.clienteOf))
+                    .ForMember(dest => dest.productoOf, opt => opt.MapFrom(src => src.oFNavigation.productoOf))
+                    .ForMember(dest => dest.codArticulo, opt => opt.MapFrom(src => src.oFNavigation.codArticulo))
+                    .ReverseMap();
+
+                CreateMap<entregasProductoTerminado, SB_ProductoTerminadoDto>()
+                    .ForMember(dest => dest.clienteOf, opt => opt.MapFrom(src => src.ofNavigation.clienteOf))
+                    .ForMember(dest => dest.productoOf, opt => opt.MapFrom(src => src.ofNavigation.productoOf))
+                    .ForMember(dest => dest.codArticulo, opt => opt.MapFrom(src => src.ofNavigation.codArticulo))
+                    .ReverseMap();
+
+                 CreateMap<solicitudMaterialesOf, SB_SolicitudMaterialesOfDto>()
+                    .ForMember(dest => dest.clienteOf, opt => opt.MapFrom(src => src.oFNavigation.clienteOf))
+                    .ForMember(dest => dest.productoOf, opt => opt.MapFrom(src => src.oFNavigation.productoOf))
+                    .ForMember(dest => dest.codArticulo, opt => opt.MapFrom(src => src.oFNavigation.codArticulo))
+                    .ReverseMap();
         }
     }
 }
