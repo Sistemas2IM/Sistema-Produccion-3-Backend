@@ -114,6 +114,9 @@ using Sistema_Produccion_3_Backend.DTO.TarjetasOF.NotasOf;
 using Sistema_Produccion_3_Backend.DTO.TarjetasOF.Reportes;
 using Sistema_Produccion_3_Backend.DTO.TiemposEstimados.TiemposOf;
 using Sistema_Produccion_3_Backend.DTO.TiemposEstimados.TiemposProceso;
+using Sistema_Produccion_3_Backend.DTO.ValidacionArranque;
+using Sistema_Produccion_3_Backend.DTO.ValidacionArranque.DetalleValidacionArranque;
+using Sistema_Produccion_3_Backend.DTO.ValidacionArranque.DetalleValidacionArranque.Batch;
 using Sistema_Produccion_3_Backend.Models;
 
 namespace Sistema_Produccion_3_Backend.AutomapperProfiles
@@ -1134,6 +1137,22 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                     .ForMember(dest => dest.productoOf, opt => opt.MapFrom(src => src.oFNavigation.productoOf))
                     .ForMember(dest => dest.codArticulo, opt => opt.MapFrom(src => src.oFNavigation.codArticulo))
                     .ReverseMap();
+
+            // VALIDACION DE ARRANQUE =========================================================================================
+            CreateMap<validacionArranque, ValidacionArranqueDto>()
+                .ForMember(dest => dest.detalleValidacionArranque, opt => opt.MapFrom(src => src.detalleValidacionArranque))
+                .ReverseMap();
+            CreateMap<validacionArranque, AddValidacionArranqueDto>().ReverseMap();
+            CreateMap<UpdateValidacionArranqueDto, validacionArranque>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            CreateMap<detalleValidacionArranque, DetalleValidacionArranqueDto>().ReverseMap();
+            CreateMap<detalleValidacionArranque, AddDetalleValidacionArranqueDto>().ReverseMap();
+            CreateMap<UpdateDetalleValidacionArranqueDto, detalleValidacionArranque>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<detalleValidacionArranque, AddBatchDetalleVArranqueDto>().ReverseMap();
+            CreateMap<UpdateBatchDetalleVArranqueDto, detalleValidacionArranque>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
         }
     }
 }

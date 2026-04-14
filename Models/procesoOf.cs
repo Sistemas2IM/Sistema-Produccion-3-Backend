@@ -267,4 +267,7 @@ public partial class procesoOf
 
     [InverseProperty("idOrigenNavigation")]
     public virtual ICollection<transferenciaProceso> transferenciaProcesoidOrigenNavigation { get; set; } = new List<transferenciaProceso>();
+
+    [InverseProperty("idProcesoNavigation")]
+    public virtual ICollection<validacionArranque> validacionArranque { get; set; } = new List<validacionArranque>();
 }
