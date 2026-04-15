@@ -60,6 +60,8 @@ public partial class auditoriaProceso
 
     public int? turnoAuditoria { get; set; }
 
+    public bool? completo { get; set; }
+
     [ForeignKey("actualizadoPor")]
     [InverseProperty("auditoriaProcesoactualizadoPorNavigation")]
     public virtual usuario actualizadoPorNavigation { get; set; }

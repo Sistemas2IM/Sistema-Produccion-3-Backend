@@ -39,5 +39,7 @@
         public int? tipoReporte { get; set; }
 
         public int? turnoAuditoria { get; set; }
+
+        public bool? completo { get; set; }
     }
 }

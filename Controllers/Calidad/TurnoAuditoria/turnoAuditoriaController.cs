@@ -25,7 +25,11 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.TurnoAuditoria
         [HttpGet("get")]
         public async Task<ActionResult<IEnumerable<TurnoAuditoriaDto>>> GetTurnoAuditoria()
         {
-            var turnoAuditoria = await _context.turnoAuditoria.ToListAsync();
+            var turnoAuditoria = await _context.turnoAuditoria
+                .Include(t => t.aprobadoPorNavigation)
+                .Include(t => t.auditorNavigation)
+                .Include(t => t.turnoNavigation)
+                .ToListAsync();
 
             var turnoAuditoriaDto = _mapper.Map<List<TurnoAuditoriaDto>>(turnoAuditoria);
 
@@ -36,7 +40,11 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.TurnoAuditoria
         [HttpGet("get/{id}")]
         public async Task<ActionResult<TurnoAuditoriaDto>> GetTurnoAuditoria(int id)
         {
-            var turnoAuditoria = await _context.turnoAuditoria.FirstOrDefaultAsync(u => u.idTurnoAuditor == id);
+            var turnoAuditoria = await _context.turnoAuditoria
+                .Include(t => t.aprobadoPorNavigation)
+                .Include(t => t.auditorNavigation)
+                .Include(t => t.turnoNavigation)
+                .FirstOrDefaultAsync(u => u.idTurnoAuditor == id);
 
             if (turnoAuditoria == null)
             {

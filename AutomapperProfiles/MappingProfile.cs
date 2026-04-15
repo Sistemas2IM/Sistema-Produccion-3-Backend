@@ -799,7 +799,11 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             // Turno de auditoria
-            CreateMap<turnoAuditoria, TurnoAuditoriaDto>().ReverseMap();
+            CreateMap<turnoAuditoria, TurnoAuditoriaDto>()
+                .ForMember(dest => dest.nombreAuditor, opt => opt.MapFrom(src => src.auditorNavigation.nombres + " " + src.auditorNavigation.apellidos))
+                .ForMember(dest => dest.nombreTurno, opt => opt.MapFrom(src => src.turnoNavigation.turno))
+                .ForMember(dest => dest.nombreAprobador, opt => opt.MapFrom(src => src.aprobadoPorNavigation.nombres + " " + src.aprobadoPorNavigation.apellidos))
+                .ReverseMap();
             CreateMap<turnoAuditoria, AddTurnoAuditoriaDto>().ReverseMap();
             CreateMap<UpdateTurnoAuditoriaDto, turnoAuditoria>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
@@ -1136,6 +1140,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                     .ForMember(dest => dest.clienteOf, opt => opt.MapFrom(src => src.oFNavigation.clienteOf))
                     .ForMember(dest => dest.productoOf, opt => opt.MapFrom(src => src.oFNavigation.productoOf))
                     .ForMember(dest => dest.codArticulo, opt => opt.MapFrom(src => src.oFNavigation.codArticulo))
+                    .ForMember(dest => dest.materialDescripcion, opt => opt.MapFrom(src => src.idSolicitudNavigation.materialDescripcion))
                     .ReverseMap();
 
             // VALIDACION DE ARRANQUE =========================================================================================

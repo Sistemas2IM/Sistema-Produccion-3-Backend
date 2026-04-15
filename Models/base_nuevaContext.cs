@@ -259,6 +259,7 @@ public partial class base_nuevaContext : DbContext
             entity.Property(e => e.archivado).HasDefaultValue(false);
             entity.Property(e => e.auditor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.cancelado).HasDefaultValue(false);
+            entity.Property(e => e.completo).HasDefaultValue(false);
             entity.Property(e => e.creadoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.operador).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.supervisor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
