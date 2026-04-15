@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Sistema_Produccion_3_Backend.Models;
 using Sistema_Produccion_3_Backend.DTO.Calidad.TurnoAuditoria;
+using Sistema_Produccion_3_Backend.DTO.Calidad.TurnoAuditoria.Batch;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -93,6 +94,35 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.TurnoAuditoria
                 }
             }
             return NoContent();
+        }
+
+        // PUT BATCH ESTADO
+        [HttpPut("put/Batch")]
+        public async Task<IActionResult> BatchUpdateTurnoAuditor([FromBody] BatchUpdateTurnoAuditoriaDto batchUpdateDto)
+        {
+            if (batchUpdateDto.TurnoAuditoriaUpdates == null || !batchUpdateDto.TurnoAuditoriaUpdates.Any())
+            {
+                return BadRequest("No se proporcionaron actualizaciones.");
+            }
+            var idsToUpdate = batchUpdateDto.TurnoAuditoriaUpdates.Select(u => u.idTurnoAuditor).ToList();
+            var turnoAuditoriaList = await _context.turnoAuditoria.Where(t => idsToUpdate.Contains(t.idTurnoAuditor)).ToListAsync();
+            foreach (var update in batchUpdateDto.TurnoAuditoriaUpdates)
+            {
+                var turnoAuditoria = turnoAuditoriaList.FirstOrDefault(t => t.idTurnoAuditor == update.idTurnoAuditor);
+                if (turnoAuditoria != null)
+                {
+                    _mapper.Map(update, turnoAuditoria);
+                }
+            }
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return StatusCode(500, "Error al actualizar los registros.");
+            }
+            return Ok("Actualización realizada correctamente");
         }
 
         private bool turnoAuditoriaExists(int id)

@@ -20,6 +20,7 @@ using Sistema_Produccion_3_Backend.DTO.Calidad.RegistroLamparas.Batch;
 using Sistema_Produccion_3_Backend.DTO.Calidad.SecuenciaColor;
 using Sistema_Produccion_3_Backend.DTO.Calidad.SecuenciaColor.Batch;
 using Sistema_Produccion_3_Backend.DTO.Calidad.TurnoAuditoria;
+using Sistema_Produccion_3_Backend.DTO.Calidad.TurnoAuditoria.Batch;
 using Sistema_Produccion_3_Backend.DTO.Calidad.UnidadesMedida;
 using Sistema_Produccion_3_Backend.DTO.Calidad.VariablesTecnicas;
 using Sistema_Produccion_3_Backend.DTO.Calidad.VariableUnidadMedida;
@@ -785,6 +786,13 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             // AUDITORIA PROCESO =======================================================================================
             CreateMap<auditoriaProceso, AuditoriaProcesoDto>()
                 .ForMember(dest => dest.detalleAuditoriaProceso, opt => opt.MapFrom(src => src.detalleAuditoriaProceso))
+                .ForMember(dest => dest.clienteOf, opt => opt.MapFrom(src => src.oFNavigation.clienteOf))
+                .ForMember(dest => dest.productoOf, opt => opt.MapFrom(src => src.oFNavigation.productoOf))
+                .ForMember(dest => dest.nombreMaquina, opt => opt.MapFrom(src => src.maquinaNavigation.nombreCorto))
+                .ForMember(dest => dest.nombreAuditor, opt => opt.MapFrom(src => src.auditorNavigation.nombres + " " + src.auditorNavigation.apellidos))
+                .ForMember(dest => dest.nombreOperador, opt => opt.MapFrom(src => src.operadorNavigation.nombres + " " + src.operadorNavigation.apellidos))
+                .ForMember(dest => dest.nombreSupervisor, opt => opt.MapFrom(src => src.supervisorNavigation.nombres + " " + src.supervisorNavigation.apellidos))
+                .ForMember(dest => dest.nombreEstado, opt => opt.MapFrom(src => src.estadoNavigation.nombreEstado))
                 .ReverseMap();
             CreateMap<auditoriaProceso, AddAuditoriaProcesoDto>().ReverseMap();
             CreateMap<UpdateAuditoriaProcesoDto, auditoriaProceso>()
@@ -806,6 +814,8 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ReverseMap();
             CreateMap<turnoAuditoria, AddTurnoAuditoriaDto>().ReverseMap();
             CreateMap<UpdateTurnoAuditoriaDto, turnoAuditoria>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<BatchUpdateTurnoAuditoriaDto, turnoAuditoria>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             // Secuencia de color
