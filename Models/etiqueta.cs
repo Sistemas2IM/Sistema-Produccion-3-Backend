@@ -27,5 +27,8 @@ public partial class etiqueta
     public virtual ICollection<etiquetaOf> etiquetaOf { get; set; } = new List<etiquetaOf>();
 
     [InverseProperty("idEtiquetaNavigation")]
+    public virtual ICollection<etiquetaSolicitud> etiquetaSolicitud { get; set; } = new List<etiquetaSolicitud>();
+
+    [InverseProperty("idEtiquetaNavigation")]
     public virtual ICollection<tarjetaEtiqueta> tarjetaEtiqueta { get; set; } = new List<tarjetaEtiqueta>();
 }

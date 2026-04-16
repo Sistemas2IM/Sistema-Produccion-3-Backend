@@ -75,6 +75,8 @@ public partial class base_nuevaContext : DbContext
 
     public virtual DbSet<etiquetaOf> etiquetaOf { get; set; }
 
+    public virtual DbSet<etiquetaSolicitud> etiquetaSolicitud { get; set; }
+
     public virtual DbSet<familliaDeMaquina> familliaDeMaquina { get; set; }
 
     public virtual DbSet<ffeTiemposOfGlobal> ffeTiemposOfGlobal { get; set; }
@@ -574,6 +576,15 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.idEtiquetaNavigation).WithMany(p => p.etiquetaOf).HasConstraintName("FK_ETIQUETAS");
 
             entity.HasOne(d => d.oFNavigation).WithMany(p => p.etiquetaOf).HasConstraintName("FK_ETIQUETA_OF");
+        });
+
+        modelBuilder.Entity<etiquetaSolicitud>(entity =>
+        {
+            entity.HasKey(e => e.idEtiqSolicitud).HasName("PK_ETIQ_SOLICITUD");
+
+            entity.HasOne(d => d.idEtiquetaNavigation).WithMany(p => p.etiquetaSolicitud).HasConstraintName("FK_ETIQUETA_SOL");
+
+            entity.HasOne(d => d.idSolicitudNavigation).WithMany(p => p.etiquetaSolicitud).HasConstraintName("FK_SOLICITUD_ETIQ");
         });
 
         modelBuilder.Entity<familliaDeMaquina>(entity =>
