@@ -48,6 +48,26 @@ namespace Sistema_Produccion_3_Backend.Controllers.Catalogo
             return Ok(materialDto);
         }
 
+        [HttpGet("get/of/{of}")]
+        public async Task<ActionResult<IEnumerable<MaterialDto>>> GetMaterialOf(int of)
+        {
+            var materiales = await _context.procesoOf
+                .Where(p => p.oF == of)
+                .Select(p => p.idMaterialNavigation)
+                .Where(m => m != null)
+                .Distinct()
+                .ToListAsync();
+
+            if (materiales == null || !materiales.Any())
+            {
+                return NotFound($"No se encontraron materiales asignados a los procesos de la OF: {of}");
+            }
+
+            var materialDto = _mapper.Map<List<MaterialDto>>(materiales);
+
+            return Ok(materialDto);
+        }
+
 
         // PUT api/<materialController>/5
         [HttpPut("put/{id}")]

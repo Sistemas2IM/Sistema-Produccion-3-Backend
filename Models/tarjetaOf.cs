@@ -156,4 +156,7 @@ public partial class tarjetaOf
 
     [InverseProperty("oFDestinoNavigation")]
     public virtual ICollection<transferenciaProceso> transferenciaProceso { get; set; } = new List<transferenciaProceso>();
+
+    [InverseProperty("oFNavigation")]
+    public virtual ICollection<validacionArranque> validacionArranque { get; set; } = new List<validacionArranque>();
 }

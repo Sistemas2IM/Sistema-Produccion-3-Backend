@@ -111,6 +111,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[detalleValidacionArranque]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[empleadoCatalogo]",
          "ObjectType": 0
       },
@@ -408,6 +412,10 @@
       },
       {
          "Name": "[dbo].[valeBobina]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[validacionArranque]",
          "ObjectType": 0
       },
       {

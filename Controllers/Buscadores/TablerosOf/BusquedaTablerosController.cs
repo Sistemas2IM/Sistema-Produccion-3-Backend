@@ -1,7 +1,10 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Sistema_Produccion_3_Backend.DTO.Buscadores.DTOGlobales;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf;
+using Sistema_Produccion_3_Backend.DTO.ProductoTerminado;
+using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.SolicitudMaterialOF;
 using Sistema_Produccion_3_Backend.DTO.Tableros;
 using Sistema_Produccion_3_Backend.DTO.TarjetasOF;
 using Sistema_Produccion_3_Backend.Models;
@@ -25,62 +28,108 @@ namespace Sistema_Produccion_3_Backend.Controllers.Buscadores.TablerosOf
         [HttpGet("buscarGlobal/{termino}")]
         public async Task<ActionResult<object>> BuscarGlobal(string termino)
         {
-            // Convertir el término de búsqueda a minúsculas para hacer la búsqueda insensible a mayúsculas
-            termino = termino.ToLower();
+            // Opcional: Limpiamos espacios en blanco accidentales
+            termino = termino.Trim();
 
-            // Buscar en la tabla procesoOf
+            // Validamos si el término es un número entero exacto para optimizar la búsqueda de OF y OV
+            bool esNumero = int.TryParse(termino, out int numeroBuscado);
+
+            // 1. PROCESOS OF
             var procesosOf = await _context.procesoOf
+                .AsNoTracking() // Libera la memoria del tracker
+                .AsSplitQuery() // Evita explosión cartesiana por los Includes
                 .Include(s => s.tarjetaEtiqueta)
                 .Include(d => d.idPosturaNavigation)
                 .Include(c => c.idTableroNavigation)
                 .Include(v => v.idMaterialNavigation)
                 .Include(f => f.oFNavigation)
                 .Where(u =>
-                    u.oF.ToString().Contains(termino) ||  // Buscar en el número de OF
-                    u.oFNavigation.clienteOf.ToLower().Contains(termino) ||  // Buscar en el nombre del material
-                    u.productoOf.ToLower().Contains(termino) ||
-                    u.oFNavigation.codArticulo.ToLower().Contains(termino) ||
-                    u.oFNavigation.oV.ToString().Contains(termino) ||
-                    u.idMaquinaSAP.ToLower().Contains(termino))
+                    // Si es número, buscamos coincidencia exacta (Usa índices y es 100x más rápido)
+                    // Si quieres que busque "12" dentro de "123", mantén u.oF.ToString().Contains(termino)
+                    (esNumero && u.oF == numeroBuscado) ||
+                    (esNumero && u.oFNavigation.oV == numeroBuscado) ||
+                    u.oF.ToString().Contains(termino) ||
+                    u.oFNavigation.clienteOf.Contains(termino) ||
+                    u.productoOf.Contains(termino) ||
+                    u.oFNavigation.codArticulo.Contains(termino) ||
+                    u.idMaquinaSAP.Contains(termino))
+                .Take(30) // 🚀 EL SALVAVIDAS: Solo traemos los primeros 30 resultados
                 .ToListAsync();
 
-            // Buscar en la tabla tarjetaOf
+            // 2. TARJETAS OF
             var tarjetasOf = await _context.tarjetaOf
+                .AsNoTracking()
+                .AsSplitQuery()
                 .Include(u => u.idEstadoOfNavigation)
                 .Include(r => r.etiquetaOf)
                 .Where(u =>
-                    u.oF.ToString().Contains(termino) ||  // Buscar en el número de OF
-                    u.clienteOf.ToLower().Contains(termino) ||  // Buscar en el nombre del material
-                    u.vendedorOf.ToLower().Contains(termino) ||
-                    u.productoOf.ToLower().Contains(termino) ||
-                    u.codArticulo.ToLower().Contains(termino) ||
-                    u.oV.ToString().Contains(termino))
+                    (esNumero && u.oF == numeroBuscado) ||
+                    (esNumero && u.oV == numeroBuscado) ||
+                    u.oF.ToString().Contains(termino) ||
+                    u.clienteOf.Contains(termino) ||
+                    u.vendedorOf.Contains(termino) ||
+                    u.productoOf.Contains(termino) ||
+                    u.codArticulo.Contains(termino))
+                .Take(30) // 🚀 Limitamos los resultados
                 .ToListAsync();
 
-            // Tableros
+            // 3. TABLEROS
             var tableros = await _context.tablerosOf
+                .AsNoTracking()
                 .Where(u =>
-                    u.nombreTablero.ToLower().Contains(termino) ||
-                    u.idSapMaquina.ToLower().Contains(termino))          
+                    u.nombreTablero.Contains(termino) ||
+                    u.idSapMaquina.Contains(termino))
+                .Take(20) // 🚀 Limitamos los resultados
                 .ToListAsync();
+
+            // 4. ENTREGA DE PRODUCTO TERMINADO
+            var entregasProductoTerminado = await _context.entregasProductoTerminado
+                    .AsNoTracking()
+                    .Include(f => f.ofNavigation)
+                    .Where(u =>
+                        (u.idEntregaPt == numeroBuscado) ||
+                        (esNumero && u.of == numeroBuscado) ||
+                        u.of.ToString().Contains(termino) ||
+                        u.ofNavigation.clienteOf.Contains(termino) ||
+                        u.ofNavigation.productoOf.Contains(termino) ||
+                        u.ofNavigation.codArticulo.Contains(termino))
+                    .Take(30)
+                    .ToListAsync();
+
+            // 5. SOLICITUD DE MATERIALES
+                var solicitudesMateriales = await _context.solicitudMaterialesOf
+                        .AsNoTracking()
+                        .Include(f => f.oFNavigation)
+                        .Include(sm => sm.idSolicitudNavigation)
+                        .Where(u =>
+                            (u.idSolicitud == numeroBuscado) ||
+                            (u.oF == numeroBuscado) ||
+                            u.idSolicitudNavigation.materialDescripcion.Contains(termino) ||
+                            u.oFNavigation.productoOf.Contains(termino) ||
+                            u.oFNavigation.clienteOf.Contains(termino) ||
+                            u.oFNavigation.codArticulo.Contains(termino))
+                        .Take(30)
+                        .ToListAsync();
 
             // Mapear los resultados a DTOs
-            var procesosOfDto = _mapper.Map<List<ProcesoOfDto>>(procesosOf);
-            var tarjetasOfDto = _mapper.Map<List<TarjetaOfDto>>(tarjetasOf);
-            var tablerosDto = _mapper.Map<List<TablerosOfDto>>(tableros);
+            var procesosOfDto = _mapper.Map<List<SB_ProcesoOfDto>>(procesosOf);
+            var tarjetasOfDto = _mapper.Map<List<SB_TarjetaOfDto>>(tarjetasOf);
+            //var tablerosDto = _mapper.Map<List<TablerosOfDto>>(tableros);
+            var entregasProductoTerminadoDto = _mapper.Map<List<SB_ProductoTerminadoDto>>(entregasProductoTerminado);
+            var solicitudesMaterialesDto = _mapper.Map<List<SB_SolicitudMaterialesOfDto>>(solicitudesMateriales);
 
-            // Crear un objeto anónimo para devolver ambos resultados
             var resultado = new
             {
-                ProcesosOf = procesosOfDto,  // Lista de procesos
-                TarjetasOf = tarjetasOfDto,   // Lista de tarjetas
-                Tableros = tablerosDto
+                ProcesosOf = procesosOfDto,
+                TarjetasOf = tarjetasOfDto,
+                //Tableros = tablerosDto,
+                EntregaProductoTerminado = entregasProductoTerminadoDto,
+                SolicitudesMateriales = solicitudesMaterialesDto
             };
 
-            // Verificar si se encontraron resultados en alguna de las tablas
-            if (!procesosOfDto.Any() && !tarjetasOfDto.Any() && !tablerosDto.Any())
+            if (!procesosOfDto.Any() && !tarjetasOfDto.Any() && !entregasProductoTerminadoDto.Any() && !solicitudesMaterialesDto.Any())
             {
-                return NotFound("No se encontraron resultados para el término de búsqueda: " + termino);
+                return NotFound($"No se encontraron resultados para el término de búsqueda: {termino}");
             }
 
             return Ok(resultado);

@@ -8,21 +8,35 @@ namespace Sistema_Produccion_3_Backend.DTO.Calidad.AuditoriaProceso
 
         public int? oF { get; set; }
 
+        public string? clienteOf { get; set; }
+
+        public string? productoOf { get; set; }
+
         public int? idProceso { get; set; }
 
         public int? maquina { get; set; }
 
+        public string? nombreMaquina { get; set; }
+
         public string? auditor { get; set; }
+
+        public string? nombreAuditor { get; set; }
 
         public string? operador { get; set; }
 
+        public string? nombreOperador { get; set; }
+
         public string? supervisor { get; set; }
+
+        public string? nombreSupervisor { get; set; }
 
         public string? tipoImpresion { get; set; }
 
         public DateTime? fechaAuditoria { get; set; }
 
         public int? estado { get; set; }
+
+        public string? nombreEstado { get; set; }
 
         public int? tipoProceso { get; set; }
 
@@ -41,6 +55,10 @@ namespace Sistema_Produccion_3_Backend.DTO.Calidad.AuditoriaProceso
         public bool? cancelado { get; set; }
 
         public int? tipoReporte { get; set; }
+
+        public int? turnoAuditoria { get; set; }
+
+        public bool? completo { get; set; }
 
         public List<DetalleAuditoriaProcesoDto>? detalleAuditoriaProceso { get; set; }
     }

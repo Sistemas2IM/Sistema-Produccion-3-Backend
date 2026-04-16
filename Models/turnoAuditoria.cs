@@ -43,6 +43,9 @@ public partial class turnoAuditoria
     [InverseProperty("turnoAuditoriaauditorNavigation")]
     public virtual usuario auditorNavigation { get; set; }
 
+    [InverseProperty("turnoAuditoriaNavigation")]
+    public virtual ICollection<auditoriaProceso> auditoriaProceso { get; set; } = new List<auditoriaProceso>();
+
     [ForeignKey("estado")]
     [InverseProperty("turnoAuditoria")]
     public virtual estadosReporte estadoNavigation { get; set; }
@@ -54,4 +57,7 @@ public partial class turnoAuditoria
     [ForeignKey("turno")]
     [InverseProperty("turnoAuditoria")]
     public virtual turnos turnoNavigation { get; set; }
+
+    [InverseProperty("turnoNavigation")]
+    public virtual ICollection<validacionArranque> validacionArranque { get; set; } = new List<validacionArranque>();
 }

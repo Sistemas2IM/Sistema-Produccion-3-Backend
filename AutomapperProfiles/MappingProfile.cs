@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Sistema_Produccion_3_Backend.DTO.AnexosNEXO;
+using Sistema_Produccion_3_Backend.DTO.Buscadores.DTOGlobales;
 using Sistema_Produccion_3_Backend.DTO.Calidad.AuditoriaProceso;
 using Sistema_Produccion_3_Backend.DTO.Calidad.AuditoriaProceso.DetalleAuditoriaProceso;
 using Sistema_Produccion_3_Backend.DTO.Calidad.AuditoriaProceso.DetalleAuditoriaProceso.Batch;
@@ -19,6 +20,7 @@ using Sistema_Produccion_3_Backend.DTO.Calidad.RegistroLamparas.Batch;
 using Sistema_Produccion_3_Backend.DTO.Calidad.SecuenciaColor;
 using Sistema_Produccion_3_Backend.DTO.Calidad.SecuenciaColor.Batch;
 using Sistema_Produccion_3_Backend.DTO.Calidad.TurnoAuditoria;
+using Sistema_Produccion_3_Backend.DTO.Calidad.TurnoAuditoria.Batch;
 using Sistema_Produccion_3_Backend.DTO.Calidad.UnidadesMedida;
 using Sistema_Produccion_3_Backend.DTO.Calidad.VariablesTecnicas;
 using Sistema_Produccion_3_Backend.DTO.Calidad.VariableUnidadMedida;
@@ -113,6 +115,9 @@ using Sistema_Produccion_3_Backend.DTO.TarjetasOF.NotasOf;
 using Sistema_Produccion_3_Backend.DTO.TarjetasOF.Reportes;
 using Sistema_Produccion_3_Backend.DTO.TiemposEstimados.TiemposOf;
 using Sistema_Produccion_3_Backend.DTO.TiemposEstimados.TiemposProceso;
+using Sistema_Produccion_3_Backend.DTO.ValidacionArranque;
+using Sistema_Produccion_3_Backend.DTO.ValidacionArranque.DetalleValidacionArranque;
+using Sistema_Produccion_3_Backend.DTO.ValidacionArranque.DetalleValidacionArranque.Batch;
 using Sistema_Produccion_3_Backend.Models;
 
 namespace Sistema_Produccion_3_Backend.AutomapperProfiles
@@ -129,6 +134,8 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForMember(dest => dest.etiquetaDto, opt => opt.MapFrom(src => src.etiquetaOf))
                 .ForMember(dest => dest.inicioEstimado, opt => opt.MapFrom(src => src.ffeTiemposOfGlobal.Inicio_Estimado))
                 .ForMember(dest => dest.finEstimado, opt => opt.MapFrom(src => src.ffeTiemposOfGlobal.Fin_Proyectado))
+                .ForMember(dest => dest.inicioReal, opt => opt.MapFrom(src => src.ffeTiemposOfGlobal.Inicio_Real))
+                .ForMember(dest => dest.finReal, opt => opt.MapFrom(src => src.ffeTiemposOfGlobal.Fin_Real))
                 .ReverseMap();
             //.ForPath(src => src.idEstadoOfNavigation, opt => opt.Ignore());
             CreateMap<tarjetaOf, TarjetaBusquedaDto>().ReverseMap();
@@ -352,7 +359,6 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                     .ReverseMap();
 
                 CreateMap<procesoOf, AddProcesoOfMaquinas>()
-                    .ForMember(dest => dest.posturasOfDto, opt => opt.MapFrom(src => src.idPosturaNavigation))
                     .ReverseMap();
 
                 CreateMap<UpProcesoOfMaquinas, procesoOf>()
@@ -780,6 +786,13 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             // AUDITORIA PROCESO =======================================================================================
             CreateMap<auditoriaProceso, AuditoriaProcesoDto>()
                 .ForMember(dest => dest.detalleAuditoriaProceso, opt => opt.MapFrom(src => src.detalleAuditoriaProceso))
+                .ForMember(dest => dest.clienteOf, opt => opt.MapFrom(src => src.oFNavigation.clienteOf))
+                .ForMember(dest => dest.productoOf, opt => opt.MapFrom(src => src.oFNavigation.productoOf))
+                .ForMember(dest => dest.nombreMaquina, opt => opt.MapFrom(src => src.maquinaNavigation.nombreCorto))
+                .ForMember(dest => dest.nombreAuditor, opt => opt.MapFrom(src => src.auditorNavigation.nombres + " " + src.auditorNavigation.apellidos))
+                .ForMember(dest => dest.nombreOperador, opt => opt.MapFrom(src => src.operadorNavigation.nombres + " " + src.operadorNavigation.apellidos))
+                .ForMember(dest => dest.nombreSupervisor, opt => opt.MapFrom(src => src.supervisorNavigation.nombres + " " + src.supervisorNavigation.apellidos))
+                .ForMember(dest => dest.nombreEstado, opt => opt.MapFrom(src => src.estadoNavigation.nombreEstado))
                 .ReverseMap();
             CreateMap<auditoriaProceso, AddAuditoriaProcesoDto>().ReverseMap();
             CreateMap<UpdateAuditoriaProcesoDto, auditoriaProceso>()
@@ -794,9 +807,15 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             // Turno de auditoria
-            CreateMap<turnoAuditoria, TurnoAuditoriaDto>().ReverseMap();
+            CreateMap<turnoAuditoria, TurnoAuditoriaDto>()
+                .ForMember(dest => dest.nombreAuditor, opt => opt.MapFrom(src => src.auditorNavigation.nombres + " " + src.auditorNavigation.apellidos))
+                .ForMember(dest => dest.nombreTurno, opt => opt.MapFrom(src => src.turnoNavigation.turno))
+                .ForMember(dest => dest.nombreAprobador, opt => opt.MapFrom(src => src.aprobadoPorNavigation.nombres + " " + src.aprobadoPorNavigation.apellidos))
+                .ReverseMap();
             CreateMap<turnoAuditoria, AddTurnoAuditoriaDto>().ReverseMap();
             CreateMap<UpdateTurnoAuditoriaDto, turnoAuditoria>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<BatchUpdateTurnoAuditoriaDto, turnoAuditoria>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             // Secuencia de color
@@ -1110,6 +1129,45 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
 
             // SOPORTE NEXO =========================================================================================
             CreateMap<logSoporteNexo, LogSoporteNexoDto>().ReverseMap();
+
+            // BUSCADOR GLOBAL =========================================================================================
+                CreateMap<tarjetaOf, SB_TarjetaOfDto>().ReverseMap();
+
+                CreateMap<procesoOf, SB_ProcesoOfDto>()
+                    .ForMember(dest => dest.nombreTablero, opt => opt.MapFrom(src => src.idTableroNavigation.nombreTablero))
+                    .ForMember(dest => dest.clienteOf, opt => opt.MapFrom(src => src.oFNavigation.clienteOf))
+                    .ForMember(dest => dest.productoOf, opt => opt.MapFrom(src => src.oFNavigation.productoOf))
+                    .ForMember(dest => dest.codArticulo, opt => opt.MapFrom(src => src.oFNavigation.codArticulo))
+                    .ReverseMap();
+
+                CreateMap<entregasProductoTerminado, SB_ProductoTerminadoDto>()
+                    .ForMember(dest => dest.clienteOf, opt => opt.MapFrom(src => src.ofNavigation.clienteOf))
+                    .ForMember(dest => dest.productoOf, opt => opt.MapFrom(src => src.ofNavigation.productoOf))
+                    .ForMember(dest => dest.codArticulo, opt => opt.MapFrom(src => src.ofNavigation.codArticulo))
+                    .ReverseMap();
+
+                 CreateMap<solicitudMaterialesOf, SB_SolicitudMaterialesOfDto>()
+                    .ForMember(dest => dest.clienteOf, opt => opt.MapFrom(src => src.oFNavigation.clienteOf))
+                    .ForMember(dest => dest.productoOf, opt => opt.MapFrom(src => src.oFNavigation.productoOf))
+                    .ForMember(dest => dest.codArticulo, opt => opt.MapFrom(src => src.oFNavigation.codArticulo))
+                    .ForMember(dest => dest.materialDescripcion, opt => opt.MapFrom(src => src.idSolicitudNavigation.materialDescripcion))
+                    .ReverseMap();
+
+            // VALIDACION DE ARRANQUE =========================================================================================
+            CreateMap<validacionArranque, ValidacionArranqueDto>()
+                .ForMember(dest => dest.detalleValidacionArranque, opt => opt.MapFrom(src => src.detalleValidacionArranque))
+                .ReverseMap();
+            CreateMap<validacionArranque, AddValidacionArranqueDto>().ReverseMap();
+            CreateMap<UpdateValidacionArranqueDto, validacionArranque>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            CreateMap<detalleValidacionArranque, DetalleValidacionArranqueDto>().ReverseMap();
+            CreateMap<detalleValidacionArranque, AddDetalleValidacionArranqueDto>().ReverseMap();
+            CreateMap<UpdateDetalleValidacionArranqueDto, detalleValidacionArranque>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<detalleValidacionArranque, AddBatchDetalleVArranqueDto>().ReverseMap();
+            CreateMap<UpdateBatchDetalleVArranqueDto, detalleValidacionArranque>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
         }
     }
 }

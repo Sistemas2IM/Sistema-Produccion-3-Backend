@@ -79,6 +79,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales
 
             try
             {
+                codBobina = System.Net.WebUtility.UrlDecode(codBobina);
+
                 // 1. Llamar al servicio que ejecuta el SP
                 var resultados = await _contextSP.infoConversionBobinaAsync(codBobina);
 

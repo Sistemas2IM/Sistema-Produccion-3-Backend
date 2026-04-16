@@ -90,9 +90,14 @@ namespace Sistema_Produccion_3_Backend.DTO.TarjetasOF
 
         public bool? reproceso { get; set; }
 
+        // Tiempo estimado
         public DateTime? inicioEstimado { get; set; }
 
         public DateTime? finEstimado { get; set; }
+
+        public DateTime? inicioReal { get; set; }
+
+        public DateTime? finReal { get; set; }
 
         //public ffeTiemposOfDto? tiemposOfDto { get; set; }
 

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Sistema_Produccion_3_Backend.Models;
 using Sistema_Produccion_3_Backend.DTO.Calidad.TurnoAuditoria;
+using Sistema_Produccion_3_Backend.DTO.Calidad.TurnoAuditoria.Batch;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -25,7 +26,11 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.TurnoAuditoria
         [HttpGet("get")]
         public async Task<ActionResult<IEnumerable<TurnoAuditoriaDto>>> GetTurnoAuditoria()
         {
-            var turnoAuditoria = await _context.turnoAuditoria.ToListAsync();
+            var turnoAuditoria = await _context.turnoAuditoria
+                .Include(t => t.aprobadoPorNavigation)
+                .Include(t => t.auditorNavigation)
+                .Include(t => t.turnoNavigation)
+                .ToListAsync();
 
             var turnoAuditoriaDto = _mapper.Map<List<TurnoAuditoriaDto>>(turnoAuditoria);
 
@@ -36,7 +41,11 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.TurnoAuditoria
         [HttpGet("get/{id}")]
         public async Task<ActionResult<TurnoAuditoriaDto>> GetTurnoAuditoria(int id)
         {
-            var turnoAuditoria = await _context.turnoAuditoria.FirstOrDefaultAsync(u => u.idTurnoAuditor == id);
+            var turnoAuditoria = await _context.turnoAuditoria
+                .Include(t => t.aprobadoPorNavigation)
+                .Include(t => t.auditorNavigation)
+                .Include(t => t.turnoNavigation)
+                .FirstOrDefaultAsync(u => u.idTurnoAuditor == id);
 
             if (turnoAuditoria == null)
             {
@@ -85,6 +94,35 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.TurnoAuditoria
                 }
             }
             return NoContent();
+        }
+
+        // PUT BATCH ESTADO
+        [HttpPut("put/Batch")]
+        public async Task<IActionResult> BatchUpdateTurnoAuditor([FromBody] BatchUpdateTurnoAuditoriaDto batchUpdateDto)
+        {
+            if (batchUpdateDto.TurnoAuditoriaUpdates == null || !batchUpdateDto.TurnoAuditoriaUpdates.Any())
+            {
+                return BadRequest("No se proporcionaron actualizaciones.");
+            }
+            var idsToUpdate = batchUpdateDto.TurnoAuditoriaUpdates.Select(u => u.idTurnoAuditor).ToList();
+            var turnoAuditoriaList = await _context.turnoAuditoria.Where(t => idsToUpdate.Contains(t.idTurnoAuditor)).ToListAsync();
+            foreach (var update in batchUpdateDto.TurnoAuditoriaUpdates)
+            {
+                var turnoAuditoria = turnoAuditoriaList.FirstOrDefault(t => t.idTurnoAuditor == update.idTurnoAuditor);
+                if (turnoAuditoria != null)
+                {
+                    _mapper.Map(update, turnoAuditoria);
+                }
+            }
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return StatusCode(500, "Error al actualizar los registros.");
+            }
+            return Ok("Actualización realizada correctamente");
         }
 
         private bool turnoAuditoriaExists(int id)

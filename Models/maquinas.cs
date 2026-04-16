@@ -39,16 +39,16 @@ public partial class maquinas
 
     public int? idUnidad { get; set; }
 
-    [Column(TypeName = "numeric(18, 0)")]
+    [Column(TypeName = "numeric(18, 2)")]
     public decimal? tamanoMaxLargoPulg { get; set; }
 
-    [Column(TypeName = "numeric(18, 0)")]
+    [Column(TypeName = "numeric(18, 3)")]
     public decimal? tamanoMaxAnchoPulg { get; set; }
 
-    [Column(TypeName = "numeric(18, 0)")]
+    [Column(TypeName = "numeric(18, 2)")]
     public decimal? tamanoMinLargoPulg { get; set; }
 
-    [Column(TypeName = "numeric(18, 0)")]
+    [Column(TypeName = "numeric(18, 2)")]
     public decimal? tamanoMinAnchoPulg { get; set; }
 
     [StringLength(100)]
@@ -108,6 +108,9 @@ public partial class maquinas
 
     [InverseProperty("idMaquinaNavigation")]
     public virtual ICollection<tablerosOf> tablerosOf { get; set; } = new List<tablerosOf>();
+
+    [InverseProperty("maquinaNavigation")]
+    public virtual ICollection<validacionArranque> validacionArranque { get; set; } = new List<validacionArranque>();
 
     [ForeignKey("idMaquina")]
     [InverseProperty("idMaquina")]

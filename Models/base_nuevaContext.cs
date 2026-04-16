@@ -59,6 +59,8 @@ public partial class base_nuevaContext : DbContext
 
     public virtual DbSet<detalleReporte> detalleReporte { get; set; }
 
+    public virtual DbSet<detalleValidacionArranque> detalleValidacionArranque { get; set; }
+
     public virtual DbSet<empleadoCatalogo> empleadoCatalogo { get; set; }
 
     public virtual DbSet<entregasProductoTerminado> entregasProductoTerminado { get; set; }
@@ -203,6 +205,8 @@ public partial class base_nuevaContext : DbContext
 
     public virtual DbSet<valeBobina> valeBobina { get; set; }
 
+    public virtual DbSet<validacionArranque> validacionArranque { get; set; }
+
     public virtual DbSet<variableUnidadMedida> variableUnidadMedida { get; set; }
 
     public virtual DbSet<variablesTecnicas> variablesTecnicas { get; set; }
@@ -255,6 +259,7 @@ public partial class base_nuevaContext : DbContext
             entity.Property(e => e.archivado).HasDefaultValue(false);
             entity.Property(e => e.auditor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.cancelado).HasDefaultValue(false);
+            entity.Property(e => e.completo).HasDefaultValue(false);
             entity.Property(e => e.creadoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.operador).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.supervisor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
@@ -280,6 +285,8 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.tipoProcesoNavigation).WithMany(p => p.auditoriaProceso).HasConstraintName("FK_TIPO_PROCESO_AUDITORIA");
 
             entity.HasOne(d => d.tipoReporteNavigation).WithMany(p => p.auditoriaProceso).HasConstraintName("FK_TIPO_AUDITORIA");
+
+            entity.HasOne(d => d.turnoAuditoriaNavigation).WithMany(p => p.auditoriaProceso).HasConstraintName("FK_TURNO_AUDITORIA");
         });
 
         modelBuilder.Entity<auxiliares>(entity =>
@@ -495,6 +502,13 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.maquinaNavigation).WithMany(p => p.detalleReporte).HasConstraintName("FK_MAQUINA_OPERACION_PROCESO");
 
             entity.HasOne(d => d.oFNavigation).WithMany(p => p.detalleReporte).HasConstraintName("FK_DETALLE_OF");
+        });
+
+        modelBuilder.Entity<detalleValidacionArranque>(entity =>
+        {
+            entity.HasKey(e => e.idDetalleValidacion).HasName("PK_DETALLE_ARRANQUE");
+
+            entity.HasOne(d => d.idValidacionArranqueNavigation).WithMany(p => p.detalleValidacionArranque).HasConstraintName("FK_ARRANQUE_VALIDACION");
         });
 
         modelBuilder.Entity<empleadoCatalogo>(entity =>
@@ -1514,7 +1528,7 @@ public partial class base_nuevaContext : DbContext
 
             entity.HasOne(d => d.tipoReporteNavigation).WithMany(p => p.turnoAuditoria).HasConstraintName("FK_TIPO_DOCUMENTO");
 
-            entity.HasOne(d => d.turnoNavigation).WithMany(p => p.turnoAuditoria).HasConstraintName("FK_TURNO_AUDITORIA");
+            entity.HasOne(d => d.turnoNavigation).WithMany(p => p.turnoAuditoria).HasConstraintName("FK_TURNO_AUDITOR");
         });
 
         modelBuilder.Entity<turnos>(entity =>
@@ -1573,6 +1587,32 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.idMaterialNavigation).WithMany(p => p.valeBobina).HasConstraintName("FK_IDMATERIAL_VALE");
 
             entity.HasOne(d => d.tipoReporteNavigation).WithMany(p => p.valeBobina).HasConstraintName("FK_TIPO_REPORTE_VALE");
+        });
+
+        modelBuilder.Entity<validacionArranque>(entity =>
+        {
+            entity.HasKey(e => e.idValidacionArranque).HasName("PK_VALIDACION_ARRANQUE");
+
+            entity.Property(e => e.aprobadoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.archivado).HasDefaultValue(false);
+            entity.Property(e => e.cancelado).HasDefaultValue(false);
+            entity.Property(e => e.fechaCreacion).HasDefaultValueSql("(getdate())");
+            entity.Property(e => e.operador).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.supervisor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+
+            entity.HasOne(d => d.aprobadoPorNavigation).WithMany(p => p.validacionArranqueaprobadoPorNavigation).HasConstraintName("FK_APROBADOR_ARRANQUE");
+
+            entity.HasOne(d => d.idProcesoNavigation).WithMany(p => p.validacionArranque).HasConstraintName("FK_PROCESO_ARRANQUE");
+
+            entity.HasOne(d => d.maquinaNavigation).WithMany(p => p.validacionArranque).HasConstraintName("FK_MAQUINA_ARRANQUE");
+
+            entity.HasOne(d => d.oFNavigation).WithMany(p => p.validacionArranque).HasConstraintName("FK_OF_ARRANQUE");
+
+            entity.HasOne(d => d.operadorNavigation).WithMany(p => p.validacionArranqueoperadorNavigation).HasConstraintName("FK_OPERADOR_ARRANQUE");
+
+            entity.HasOne(d => d.supervisorNavigation).WithMany(p => p.validacionArranquesupervisorNavigation).HasConstraintName("FK_SUPERVISOR_ARRANQUE");
+
+            entity.HasOne(d => d.turnoNavigation).WithMany(p => p.validacionArranque).HasConstraintName("FK_TURNO_ARRANQUE");
         });
 
         modelBuilder.Entity<variableUnidadMedida>(entity =>

@@ -27,6 +27,12 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.AuditoriaProceso
         {
             var auditoriaProceso = await _context.auditoriaProceso
                 .Include(a => a.detalleAuditoriaProceso)
+                .Include(of => of.oFNavigation)
+                .Include(ma => ma.maquinaNavigation)
+                .Include(a => a.auditorNavigation)
+                .Include(o => o.operadorNavigation)
+                .Include(s => s.supervisorNavigation)
+                .Include(e => e.estadoNavigation)
                 .ToListAsync();
 
             var auditoriaProcesoDto = _mapper.Map<List<AuditoriaProcesoDto>>(auditoriaProceso);
@@ -40,6 +46,12 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.AuditoriaProceso
         {
             var auditoriaProceso = await _context.auditoriaProceso
                 .Include(a => a.detalleAuditoriaProceso)
+                .Include(of => of.oFNavigation)
+                .Include(ma => ma.maquinaNavigation)
+                .Include(a => a.auditorNavigation)
+                .Include(o => o.operadorNavigation)
+                .Include(s => s.supervisorNavigation)
+                .Include(e => e.estadoNavigation)
                 .FirstOrDefaultAsync(u => u.idAuditoria == id);
 
             if (auditoriaProceso == null)
@@ -47,6 +59,20 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.AuditoriaProceso
                 return NotFound();
             }
             var auditoriaProcesoDto = _mapper.Map<AuditoriaProcesoDto>(auditoriaProceso);
+
+            return Ok(auditoriaProcesoDto);
+        }
+
+        // GET: api/<auditoriaProcesoController>
+        [HttpGet("get/turno/{turno}")]
+        public async Task<ActionResult<IEnumerable<AuditoriaProcesoDto>>> GetAuditoriaProcesoByTurno(int turno)
+        {
+            var auditoriaProceso = await _context.auditoriaProceso
+                .Include(a => a.detalleAuditoriaProceso)
+                .Where(a => a.turnoAuditoria == turno)
+                .ToListAsync();
+
+            var auditoriaProcesoDto = _mapper.Map<List<AuditoriaProcesoDto>>(auditoriaProceso);
 
             return Ok(auditoriaProcesoDto);
         }

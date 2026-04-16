@@ -8,13 +8,19 @@
 
         public string? auditor { get; set; }
 
+        public string? nombreAuditor { get; set; }
+
         public int? turno { get; set; }
+
+        public string? nombreTurno { get; set; }
 
         public int? estado { get; set; }
 
         public int? tipoReporte { get; set; }
 
         public string? aprobadoPor { get; set; }
+
+        public string? nombreAprobador { get; set; }
 
         public DateTime? fechaAprobacion { get; set; }
 
