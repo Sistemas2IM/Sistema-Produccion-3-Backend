@@ -2,6 +2,7 @@
 using Sistema_Produccion_3_Backend.DTO.AnexosNEXO;
 using Sistema_Produccion_3_Backend.DTO.Buscadores.DTOGlobales;
 using Sistema_Produccion_3_Backend.DTO.Calidad.AuditoriaProceso;
+using Sistema_Produccion_3_Backend.DTO.Calidad.AuditoriaProceso.Batch;
 using Sistema_Produccion_3_Backend.DTO.Calidad.AuditoriaProceso.DetalleAuditoriaProceso;
 using Sistema_Produccion_3_Backend.DTO.Calidad.AuditoriaProceso.DetalleAuditoriaProceso.Batch;
 using Sistema_Produccion_3_Backend.DTO.Calidad.CertificadoCalidad;
@@ -96,6 +97,8 @@ using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.BobinasAsignadas;
 using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.BobinasAsignadas.Batch;
 using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.ComponenteProduccion;
 using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.ComponenteProduccion.Batch;
+using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.EtiquetaSolicitud;
+using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.EtiquetaSolicitud.Batch;
 using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.LotePliego;
 using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.SolicitudMateriales;
 using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.SolicitudMateriales.Batch;
@@ -797,6 +800,8 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             CreateMap<auditoriaProceso, AddAuditoriaProcesoDto>().ReverseMap();
             CreateMap<UpdateAuditoriaProcesoDto, auditoriaProceso>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<UpdateBatchAuditoriaProcesoDto, auditoriaProceso>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             CreateMap<detalleAuditoriaProceso, DetalleAuditoriaProcesoDto>().ReverseMap();
             CreateMap<detalleAuditoriaProceso, AddDetalleAuditoriaProcesoDto>().ReverseMap();
@@ -1022,6 +1027,17 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ReverseMap();
             CreateMap<solicitudMaterialesOf, AddSolicitudMaterialesOfDto>().ReverseMap();
             CreateMap<UpdateSolicitudMaterialesOfDto, solicitudMaterialesOf>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            CreateMap<etiquetaSolicitud, EtiquetaSolicitudDto>()
+                .ForMember(dest => dest.color, opt => opt.MapFrom(src => src.idEtiquetaNavigation.color))
+                .ForMember(dest => dest.texto, opt => opt.MapFrom(src => src.idEtiquetaNavigation.texto))
+                .ReverseMap();
+            CreateMap<etiquetaSolicitud, AddEtiquetaSolicitudDto>().ReverseMap();
+            CreateMap<UpdateEtiquetaSolicitudDto, etiquetaSolicitud>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<etiquetaSolicitud, AddBatchEtiquetaSolicitudDto>().ReverseMap();
+            CreateMap<UpdateBatchEtiquetaSolicitudDto, etiquetaSolicitud>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             CreateMap<lotePliego, lotePliegoDto>()

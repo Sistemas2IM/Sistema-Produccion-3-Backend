@@ -14,5 +14,7 @@ namespace Sistema_Produccion_3_Backend.DTO.Calidad.FormulacionTinta.Especificaci
         public string? proveedor { get; set; }
 
         public decimal? porcentajeTinta { get; set; }
+
+        public string? loteTinta { get; set; }
     }
 }
