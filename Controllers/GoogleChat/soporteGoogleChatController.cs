@@ -49,15 +49,68 @@ namespace Sistema_Produccion_3_Backend.Controllers.GoogleChat
             // 3. Lógica de severidad
             string iconoSeveridad = logDto.severidad switch
             {
-                "P1" => "🔴 CRÍTICO",
-                "P2" => "🟠 ALTA",
-                "P3" => "🟡 MEDIA",
-                _ => "🔵 BAJA"
+                "Crítico" => "🔴 CRÍTICO",
+                "Alto" => "🟠 ALTA",
+                "Medio" => "🟡 MEDIA",
+                "Bajo" => "🔵 BAJA"
             };
+
+            // 1. Definición de IDs (Gaia IDs)
+            string idGaby = "113216648114435613456";    // Procesos
+            string idNestor = "112640148632860820770";  // Desarrollador (Futuro)
+            string idWilber = "107197359071551964527";  // Equipos
+            string idRicardo = "108799712826803307406"; // Equipos
+            string idNelson = "108446408022178816605";  // Transferencias
+            string idCarlos = "105030089368515489216";  // Datos
+
+            // 2. Variables para el payload
+            string menciones = "";
+            string nombreVisual = "";
+
+            // 3. Switch de asignación según tipoDeError
+            switch (logDto.tipoDeError)
+            {
+                case "Error de proceso":
+                    menciones = $"<users/{idGaby}>";
+                    nombreVisual = "Gaby (Procesos)";
+                    break;
+
+                case "Duda operativa":
+                    menciones = $"<users/{idGaby}>";
+                    nombreVisual = "Gaby (Procesos)";
+                    break;
+
+                case "Problemas con el equipo": // Asumiendo que este mapea a Equipos
+                    menciones = $"<users/{idWilber}> <users/{idRicardo}>";
+                    nombreVisual = "Wilber / Ricardo (Mantenimiento)";
+                    break;
+
+                case "Error de transferencias": // Ajustar según el ID que mandes del front
+                    menciones = $"<users/{idNelson}>";
+                    nombreVisual = "Nelson (Transferencias)";
+                    break;
+
+                case "Error de datos":
+                    menciones = $"<users/{idCarlos}>";
+                    nombreVisual = "Carlos (Datos)";
+                    break;
+
+                case "Incidente operativo":
+                    menciones = $"<users/{idCarlos}>";
+                    nombreVisual = "Carlos (Datos)";
+                    break;
+
+                default:
+                    // Si no cae en ninguno, te menciona a ti o a un canal general
+                    menciones = $"<users/{idNestor}>";
+                    nombreVisual = "Soporte Técnico";
+                    break;
+            }
 
             // 4. Construcción del Payload
             var payload = new
             {
+                text = $"⚠️ {menciones}, se requiere su apoyo.",
                 cardsV2 = new object[] {
                     new {
                         cardId = $"soporte-nexo-{logSoporte.idLogSoporte}",

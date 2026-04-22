@@ -37,5 +37,7 @@
         public int? tipoProceso { get; set; }
 
         public string? tooltip { get; set; }
+
+        public string valorPorDefecto { get; set; }
     }
 }

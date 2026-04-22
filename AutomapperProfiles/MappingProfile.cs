@@ -816,11 +816,12 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForMember(dest => dest.nombreAuditor, opt => opt.MapFrom(src => src.auditorNavigation.nombres + " " + src.auditorNavigation.apellidos))
                 .ForMember(dest => dest.nombreTurno, opt => opt.MapFrom(src => src.turnoNavigation.turno))
                 .ForMember(dest => dest.nombreAprobador, opt => opt.MapFrom(src => src.aprobadoPorNavigation.nombres + " " + src.aprobadoPorNavigation.apellidos))
+                .ForMember(dest => dest.nombreEstado, opt => opt.MapFrom(src => src.estadoNavigation.nombreEstado))
                 .ReverseMap();
             CreateMap<turnoAuditoria, AddTurnoAuditoriaDto>().ReverseMap();
             CreateMap<UpdateTurnoAuditoriaDto, turnoAuditoria>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
-            CreateMap<BatchUpdateTurnoAuditoriaDto, turnoAuditoria>()
+            CreateMap<UpdateBatchTurnoAuditoriaDto, turnoAuditoria>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             // Secuencia de color
@@ -1006,6 +1007,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             CreateMap<solicitudMateriales, solicitudMaterialesDto>()
                 .ForMember(dest => dest.solicitudMaterialOf, opt => opt.MapFrom(src => src.solicitudMaterialesOf))
                 .ForMember(dest => dest.nombreMaquina, opt => opt.MapFrom(src => src.idMaquinaNavigation.nombreMaquina))
+                .ForMember(dest => dest.etiquetaSolicitudDto, opt => opt.MapFrom(src => src.etiquetaSolicitud))
                 .ReverseMap();
             CreateMap<solicitudMateriales, AddSolicitudMaterialesDto>().ReverseMap();
             CreateMap<UpdateSolicitudMaterialesDto, solicitudMateriales>()

@@ -16,6 +16,8 @@
 
         public int? estado { get; set; }
 
+        public string? nombreEstado { get; set; }
+
         public int? tipoReporte { get; set; }
 
         public string? aprobadoPor { get; set; }

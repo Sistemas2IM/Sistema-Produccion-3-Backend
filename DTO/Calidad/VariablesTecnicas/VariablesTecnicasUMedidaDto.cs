@@ -42,6 +42,8 @@ namespace Sistema_Produccion_3_Backend.DTO.Calidad.VariablesTecnicas
 
         public string? tooltip { get; set; }
 
+        public string valorPorDefecto { get; set; }
+
         public List<VariableUnidadMedidaDto>? variableUnidadMedidas { get; set; }
     }
 }
