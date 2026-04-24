@@ -1156,12 +1156,14 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                     .ForMember(dest => dest.clienteOf, opt => opt.MapFrom(src => src.oFNavigation.clienteOf))
                     .ForMember(dest => dest.productoOf, opt => opt.MapFrom(src => src.oFNavigation.productoOf))
                     .ForMember(dest => dest.codArticulo, opt => opt.MapFrom(src => src.oFNavigation.codArticulo))
+                    .ForMember(dest => dest.oV, opt => opt.MapFrom(src => src.oFNavigation.oV))
                     .ReverseMap();
 
                 CreateMap<entregasProductoTerminado, SB_ProductoTerminadoDto>()
                     .ForMember(dest => dest.clienteOf, opt => opt.MapFrom(src => src.ofNavigation.clienteOf))
                     .ForMember(dest => dest.productoOf, opt => opt.MapFrom(src => src.ofNavigation.productoOf))
                     .ForMember(dest => dest.codArticulo, opt => opt.MapFrom(src => src.ofNavigation.codArticulo))
+                    .ForMember(dest => dest.oV, opt => opt.MapFrom(src => src.ofNavigation.oV))
                     .ReverseMap();
 
                  CreateMap<solicitudMaterialesOf, SB_SolicitudMaterialesOfDto>()
@@ -1169,6 +1171,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                     .ForMember(dest => dest.productoOf, opt => opt.MapFrom(src => src.oFNavigation.productoOf))
                     .ForMember(dest => dest.codArticulo, opt => opt.MapFrom(src => src.oFNavigation.codArticulo))
                     .ForMember(dest => dest.materialDescripcion, opt => opt.MapFrom(src => src.idSolicitudNavigation.materialDescripcion))
+                    .ForMember(dest => dest.oV, opt => opt.MapFrom(src => src.oFNavigation.oV))
                     .ReverseMap();
 
             // VALIDACION DE ARRANQUE =========================================================================================

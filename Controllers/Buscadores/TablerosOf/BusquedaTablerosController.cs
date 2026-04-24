@@ -28,93 +28,107 @@ namespace Sistema_Produccion_3_Backend.Controllers.Buscadores.TablerosOf
         [HttpGet("buscarGlobal/{termino}")]
         public async Task<ActionResult<object>> BuscarGlobal(string termino)
         {
-            // Opcional: Limpiamos espacios en blanco accidentales
             termino = termino.Trim();
 
-            // Validamos si el término es un número entero exacto para optimizar la búsqueda de OF y OV
-            bool esNumero = int.TryParse(termino, out int numeroBuscado);
+            // 1. INTELIGENCIA DE BÚSQUEDA: Separar en palabras
+            // Ignoramos palabras de 1 sola letra para no saturar la base de datos (ej. "y", "a", "o")
+            var terminosBusqueda = termino.Split(' ', StringSplitOptions.RemoveEmptyEntries)
+                                          .Where(t => t.Length > 1)
+                                          .ToList();
 
-            // 1. PROCESOS OF
-            var procesosOf = await _context.procesoOf
-                .AsNoTracking() // Libera la memoria del tracker
-                .AsSplitQuery() // Evita explosión cartesiana por los Includes
+            // Si el usuario buscó literalmente solo una letra (ej. "A"), la usamos como único término
+            if (!terminosBusqueda.Any())
+            {
+                terminosBusqueda.Add(termino);
+            }
+
+            // 2. PREPARAR LAS CONSULTAS BASE (Sin ejecutar aún)
+            var queryProcesos = _context.procesoOf.AsNoTracking().AsSplitQuery()
                 .Include(s => s.tarjetaEtiqueta)
                 .Include(d => d.idPosturaNavigation)
                 .Include(c => c.idTableroNavigation)
                 .Include(v => v.idMaterialNavigation)
                 .Include(f => f.oFNavigation)
-                .Where(u =>
-                    // Si es número, buscamos coincidencia exacta (Usa índices y es 100x más rápido)
-                    // Si quieres que busque "12" dentro de "123", mantén u.oF.ToString().Contains(termino)
-                    (esNumero && u.oF == numeroBuscado) ||
-                    (esNumero && u.oFNavigation.oV == numeroBuscado) ||
-                    u.oF.ToString().Contains(termino) ||
-                    u.oFNavigation.clienteOf.Contains(termino) ||
-                    u.productoOf.Contains(termino) ||
-                    u.oFNavigation.codArticulo.Contains(termino) ||
-                    u.idMaquinaSAP.Contains(termino))
-                .Take(30) // 🚀 EL SALVAVIDAS: Solo traemos los primeros 30 resultados
-                .ToListAsync();
+                .AsQueryable();
 
-            // 2. TARJETAS OF
-            var tarjetasOf = await _context.tarjetaOf
-                .AsNoTracking()
-                .AsSplitQuery()
+            var queryTarjetas = _context.tarjetaOf.AsNoTracking().AsSplitQuery()
                 .Include(u => u.idEstadoOfNavigation)
                 .Include(r => r.etiquetaOf)
-                .Where(u =>
-                    (esNumero && u.oF == numeroBuscado) ||
-                    (esNumero && u.oV == numeroBuscado) ||
-                    u.oF.ToString().Contains(termino) ||
-                    u.clienteOf.Contains(termino) ||
-                    u.vendedorOf.Contains(termino) ||
-                    u.productoOf.Contains(termino) ||
-                    u.codArticulo.Contains(termino))
-                .Take(30) // 🚀 Limitamos los resultados
-                .ToListAsync();
+                .AsQueryable();
 
-            // 3. TABLEROS
-            var tableros = await _context.tablerosOf
-                .AsNoTracking()
-                .Where(u =>
-                    u.nombreTablero.Contains(termino) ||
-                    u.idSapMaquina.Contains(termino))
-                .Take(20) // 🚀 Limitamos los resultados
-                .ToListAsync();
+            var queryTableros = _context.tablerosOf.AsNoTracking().AsQueryable();
 
-            // 4. ENTREGA DE PRODUCTO TERMINADO
-            var entregasProductoTerminado = await _context.entregasProductoTerminado
-                    .AsNoTracking()
-                    .Include(f => f.ofNavigation)
-                    .Where(u =>
-                        (u.idEntregaPt == numeroBuscado) ||
-                        (esNumero && u.of == numeroBuscado) ||
-                        u.of.ToString().Contains(termino) ||
-                        u.ofNavigation.clienteOf.Contains(termino) ||
-                        u.ofNavigation.productoOf.Contains(termino) ||
-                        u.ofNavigation.codArticulo.Contains(termino))
-                    .Take(30)
-                    .ToListAsync();
+            var queryEntregas = _context.entregasProductoTerminado.AsNoTracking()
+                .Include(f => f.ofNavigation)
+                .AsQueryable();
 
-            // 5. SOLICITUD DE MATERIALES
-                var solicitudesMateriales = await _context.solicitudMaterialesOf
-                        .AsNoTracking()
-                        .Include(f => f.oFNavigation)
-                        .Include(sm => sm.idSolicitudNavigation)
-                        .Where(u =>
-                            (u.idSolicitud == numeroBuscado) ||
-                            (u.oF == numeroBuscado) ||
-                            u.idSolicitudNavigation.materialDescripcion.Contains(termino) ||
-                            u.oFNavigation.productoOf.Contains(termino) ||
-                            u.oFNavigation.clienteOf.Contains(termino) ||
-                            u.oFNavigation.codArticulo.Contains(termino))
-                        .Take(30)
-                        .ToListAsync();
+            var querySolicitudes = _context.solicitudMaterialesOf.AsNoTracking()
+                .Include(f => f.oFNavigation)
+                .Include(sm => sm.idSolicitudNavigation)
+                .AsQueryable();
 
-            // Mapear los resultados a DTOs
+            // 3. CONSTRUCCIÓN DINÁMICA: Aplicar cada palabra como un filtro obligatorio (AND)
+            foreach (var t in terminosBusqueda)
+            {
+                var terminoActual = t.ToLower();
+                bool esNumero = int.TryParse(terminoActual, out int numActual);
+
+                queryProcesos = queryProcesos.Where(u =>
+                    (esNumero && u.oF == numActual) ||
+                    (esNumero && u.oFNavigation != null && u.oFNavigation.oV == numActual) ||
+                    u.oF.ToString().Contains(terminoActual) ||
+                    (u.oFNavigation != null && u.oFNavigation.oV.ToString().Contains(terminoActual)) ||
+                    (u.oFNavigation != null && u.oFNavigation.clienteOf != null && u.oFNavigation.clienteOf.ToLower().Contains(terminoActual)) ||
+                    (u.oFNavigation != null && u.oFNavigation.vendedorOf != null && u.oFNavigation.vendedorOf.ToLower().Contains(terminoActual)) || // 🚀 ¡AQUÍ ESTÁ! Ahora sí busca al ejecutivo
+                    (u.productoOf != null && u.productoOf.ToLower().Contains(terminoActual)) ||
+                    (u.oFNavigation != null && u.oFNavigation.codArticulo != null && u.oFNavigation.codArticulo.ToLower().Contains(terminoActual)) ||
+                    (u.idMaquinaSAP != null && u.idMaquinaSAP.ToLower().Contains(terminoActual)));
+
+                queryTarjetas = queryTarjetas.Where(u =>
+                    (esNumero && u.oF == numActual) ||
+                    (esNumero && u.oV == numActual) ||
+                    u.oF.ToString().Contains(terminoActual) ||
+                    (u.oV != null && u.oV.ToString().Contains(terminoActual)) ||
+                    (u.clienteOf != null && u.clienteOf.ToLower().Contains(terminoActual)) ||
+                    (u.vendedorOf != null && u.vendedorOf.ToLower().Contains(terminoActual)) || // (Este ya lo tenías, pero le agregamos protección null)
+                    (u.productoOf != null && u.productoOf.ToLower().Contains(terminoActual)) ||
+                    (u.codArticulo != null && u.codArticulo.ToLower().Contains(terminoActual)));
+
+                queryTableros = queryTableros.Where(u =>
+                    (u.nombreTablero != null && u.nombreTablero.ToLower().Contains(terminoActual)) ||
+                    (u.idSapMaquina != null && u.idSapMaquina.ToLower().Contains(terminoActual)));
+
+                queryEntregas = queryEntregas.Where(u =>
+                    (esNumero && u.idEntregaPt == numActual) ||
+                    (esNumero && u.of == numActual) ||
+                    u.of.ToString().Contains(terminoActual) ||
+                    (u.ofNavigation != null && u.ofNavigation.clienteOf != null && u.ofNavigation.clienteOf.ToLower().Contains(terminoActual)) ||
+                    (u.ofNavigation != null && u.ofNavigation.vendedorOf != null && u.ofNavigation.vendedorOf.ToLower().Contains(terminoActual)) || // 🚀 Vendedor agregado
+                    (u.ofNavigation != null && u.ofNavigation.oV != null && u.ofNavigation.oV.ToString().Contains(terminoActual)) ||
+                    (u.ofNavigation != null && u.ofNavigation.productoOf != null && u.ofNavigation.productoOf.ToLower().Contains(terminoActual)) ||
+                    (u.ofNavigation != null && u.ofNavigation.codArticulo != null && u.ofNavigation.codArticulo.ToLower().Contains(terminoActual)));
+
+                querySolicitudes = querySolicitudes.Where(u =>
+                    (esNumero && u.idSolicitud == numActual) ||
+                    (esNumero && u.oF == numActual) ||
+                    (u.idSolicitudNavigation != null && u.idSolicitudNavigation.materialDescripcion != null && u.idSolicitudNavigation.materialDescripcion.ToLower().Contains(terminoActual)) ||
+                    (u.oFNavigation != null && u.oFNavigation.productoOf != null && u.oFNavigation.productoOf.ToLower().Contains(terminoActual)) ||
+                    (u.oFNavigation != null && u.oFNavigation.clienteOf != null && u.oFNavigation.clienteOf.ToLower().Contains(terminoActual)) ||
+                    (u.oFNavigation != null && u.oFNavigation.vendedorOf != null && u.oFNavigation.vendedorOf.ToLower().Contains(terminoActual)) || // 🚀 Vendedor agregado
+                    (u.oFNavigation != null && u.oFNavigation.oV != null && u.oFNavigation.oV.ToString().Contains(terminoActual)) ||
+                    (u.oFNavigation != null && u.oFNavigation.codArticulo != null && u.oFNavigation.codArticulo.ToLower().Contains(terminoActual)));
+            }
+
+            // 4. EJECUTAR CONSULTAS CON LÍMITES
+            var procesosOf = await queryProcesos.Take(30).ToListAsync();
+            var tarjetasOf = await queryTarjetas.Take(30).ToListAsync();
+            var tableros = await queryTableros.Take(20).ToListAsync();
+            var entregasProductoTerminado = await queryEntregas.Take(30).ToListAsync();
+            var solicitudesMateriales = await querySolicitudes.Take(30).ToListAsync();
+
+            // 5. MAPEO Y RESPUESTA
             var procesosOfDto = _mapper.Map<List<SB_ProcesoOfDto>>(procesosOf);
             var tarjetasOfDto = _mapper.Map<List<SB_TarjetaOfDto>>(tarjetasOf);
-            //var tablerosDto = _mapper.Map<List<TablerosOfDto>>(tableros);
             var entregasProductoTerminadoDto = _mapper.Map<List<SB_ProductoTerminadoDto>>(entregasProductoTerminado);
             var solicitudesMaterialesDto = _mapper.Map<List<SB_SolicitudMaterialesOfDto>>(solicitudesMateriales);
 

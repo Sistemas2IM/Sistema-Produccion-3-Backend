@@ -5,7 +5,9 @@
         public int idSolicitud { get; set; }
 
         public int oF { get; set; }
-        
+
+        public int? oV { get; set; }
+
         public string? materialDescripcion { get; set; }
 
         public string? clienteOf { get; set; }
