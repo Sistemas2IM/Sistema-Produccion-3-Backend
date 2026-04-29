@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Sistema_Produccion_3_Backend.DTO.Calidad.AuditoriaProceso;
+using Sistema_Produccion_3_Backend.DTO.Calidad.AuditoriaProceso.Batch;
 using Sistema_Produccion_3_Backend.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -69,6 +70,12 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.AuditoriaProceso
         {
             var auditoriaProceso = await _context.auditoriaProceso
                 .Include(a => a.detalleAuditoriaProceso)
+                .Include(of => of.oFNavigation)
+                .Include(ma => ma.maquinaNavigation)
+                .Include(a => a.auditorNavigation)
+                .Include(o => o.operadorNavigation)
+                .Include(s => s.supervisorNavigation)
+                .Include(e => e.estadoNavigation)
                 .Where(a => a.turnoAuditoria == turno)
                 .ToListAsync();
 
@@ -120,6 +127,39 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.AuditoriaProceso
             }
 
             return Ok(updateAuditoriaProcesoDto);
+        }
+
+        // PUT BATCH ESTADO
+        [HttpPut("put/Batch")]
+        public async Task<IActionResult> BatchUpdateAuditoriaProceso([FromBody] BatchUpdateAuditoriaProcesoDto batchUpdateDto)
+        {
+            if (batchUpdateDto.updateBatchAuditoriaProcesos == null || !batchUpdateDto.updateBatchAuditoriaProcesos.Any())
+            {
+                return BadRequest();
+            }
+
+            var idsToUpdate = batchUpdateDto.updateBatchAuditoriaProcesos.Select(u => u.idAuditoria).ToList();
+            var auditoriasToUpdate = await _context.auditoriaProceso.Where(a => idsToUpdate.Contains(a.idAuditoria)).ToListAsync();
+            foreach (var auditoria in auditoriasToUpdate)
+            {
+                var updateDto = batchUpdateDto.updateBatchAuditoriaProcesos.FirstOrDefault(u => u.idAuditoria == auditoria.idAuditoria);
+                if (updateDto != null)
+                {
+                    _mapper.Map(updateDto, auditoria);
+                    _context.Entry(auditoria).State = EntityState.Modified;
+                }
+            }
+            try
+            {
+                await _context.SaveChangesAsync();
+
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return StatusCode(500, "Error al actualizar los registros. Por favor, inténtelo de nuevo.");
+            }
+
+            return Ok(batchUpdateDto);
         }
 
         private bool auditoriaProcesoExists(int id)

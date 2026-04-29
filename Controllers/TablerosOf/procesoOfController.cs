@@ -2033,6 +2033,112 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             return Ok(new { message = "Procesos actualizados exitosamente", procesos = procesos });
         }
 
+        //[HttpPut("put/BatchUpdate")]
+        //public async Task<IActionResult> BatchUpdateProcesos([FromBody] BatchUpdateProcesoOfDto batchUpdateDto)
+        //{
+        //    if (batchUpdateDto == null || batchUpdateDto.ProcesosOf == null || !batchUpdateDto.ProcesosOf.Any())
+        //    {
+        //        return BadRequest("No se enviaron datos para actualizar.");
+        //    }
+
+        //    // 1. Obtener los IDs que se quieren mover
+        //    var idsActualizar = batchUpdateDto.ProcesosOf.Select(t => t.idProceso).ToList();
+        //    var procesosMovidos = await _context.procesoOf
+        //        .Where(t => idsActualizar.Contains(t.idProceso))
+        //        .ToListAsync();
+
+        //    if (!procesosMovidos.Any()) return NotFound("No se encontraron procesos para los IDs proporcionados.");
+
+        //    // 2. Extraer los Tableros y Posturas afectados para traer solo esos datos (Optimización de carga)
+        //    var tablerosAfectados = procesosMovidos.Select(p => p.idTablero).Distinct().ToList();
+        //    var posturasAfectadas = procesosMovidos.Select(p => p.idPostura).Distinct().ToList();
+
+        //    // Traemos TODOS los procesos activos que pertenecen a los tableros/posturas que estamos tocando
+        //    var procesosDelContexto = await _context.procesoOf
+        //        .Where(p => tablerosAfectados.Contains(p.idTablero) &&
+        //                    posturasAfectadas.Contains(p.idPostura) &&
+        //                    p.archivada == false &&
+        //                    p.cancelada == false) // Asumo tus banderas de estado
+        //        .OrderBy(p => p.posicion)
+        //        .ToListAsync();
+
+        //    using var transaction = await _context.Database.BeginTransactionAsync();
+
+        //    try
+        //    {
+        //        // 3. Agrupamos por Tablero y Postura (Por si enviaron movimientos de múltiples columnas a la vez)
+        //        var grupos = procesosDelContexto.GroupBy(p => new { p.idTablero, p.idPostura });
+
+        //        var procesosAModificar = new List<procesoOf>();
+
+        //        foreach (var grupo in grupos)
+        //        {
+        //            var listaOrdenada = grupo.ToList();
+
+        //            // Procesamos los movimientos solicitados para este tablero/postura
+        //            foreach (var peticion in batchUpdateDto.ProcesosOf)
+        //            {
+        //                var itemAMover = listaOrdenada.FirstOrDefault(p => p.idProceso == peticion.idProceso);
+        //                if (itemAMover != null)
+        //                {
+        //                    // Lo sacamos de su posición actual
+        //                    listaOrdenada.Remove(itemAMover);
+
+        //                    // Calculamos el nuevo índice (Asegurándonos de no salirnos de los límites)
+        //                    int targetIndex = (peticion.posicion ?? 1) - 1;
+        //                    if (targetIndex < 0) targetIndex = 0;
+        //                    if (targetIndex > listaOrdenada.Count) targetIndex = listaOrdenada.Count;
+
+        //                    // Lo insertamos como si fuera una baraja de cartas
+        //                    listaOrdenada.Insert(targetIndex, itemAMover);
+        //                }
+        //            }
+
+        //            // 4. Reasignamos las posiciones del 1 al N basándonos en el nuevo orden
+        //            for (int i = 0; i < listaOrdenada.Count; i++)
+        //            {
+        //                var proceso = listaOrdenada[i];
+        //                int nuevaPosicionReal = i + 1;
+
+        //                // Solo marcamos como modificados los que realmente cambiaron de posición
+        //                if (proceso.posicion != nuevaPosicionReal)
+        //                {
+        //                    // Guardamos la nueva posición en un campo temporal (o sobrescribimos)
+        //                    proceso.posicion = nuevaPosicionReal;
+        //                    procesosAModificar.Add(proceso);
+        //                }
+        //            }
+        //        }
+
+        //        // --- EL TRUCO PARA EVITAR EL CHOQUE DEL ÍNDICE ÚNICO ---
+
+        //        // PASO A: Pasamos todas las posiciones cambiadas a NEGATIVO
+        //        foreach (var p in procesosAModificar)
+        //        {
+        //            p.posicion = -p.posicion;
+        //            _context.Entry(p).State = EntityState.Modified;
+        //        }
+        //        await _context.SaveChangesAsync();
+
+        //        // PASO B: Las pasamos a su posición POSITIVA real
+        //        foreach (var p in procesosAModificar)
+        //        {
+        //            p.posicion = Math.Abs(p.posicion ?? 0); // Lo volvemos positivo
+        //            _context.Entry(p).State = EntityState.Modified;
+        //        }
+        //        await _context.SaveChangesAsync();
+
+        //        await transaction.CommitAsync();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        await transaction.RollbackAsync();
+        //        return StatusCode(StatusCodes.Status500InternalServerError, $"Error interno: {ex.Message}");
+        //    }
+
+        //    return Ok(new { message = "Posiciones reordenadas exitosamente." });
+        //}
+
         [HttpPut("put/BatchUpdateArchivada")]
         public async Task<IActionResult> BatchUpdateProcesosArchivo([FromBody] BatchUpdateArchivadaOf batchUpdateDto)
         {

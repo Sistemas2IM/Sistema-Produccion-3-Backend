@@ -35,6 +35,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales
                 .Include(s => s.solicitudMaterialesOf)
                     .ThenInclude(so => so.oFNavigation)
                 .Include(ma => ma.idMaquinaNavigation)
+                .Include(s => s.etiquetaSolicitud)
+                    .ThenInclude(se => se.idEtiquetaNavigation)
                 .Where(s => s.archivado == false)
                 .ToListAsync();
 
@@ -52,6 +54,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales
                 .Include(s => s.solicitudMaterialesOf)
                     .ThenInclude(so => so.oFNavigation)
                 .Include(ma => ma.idMaquinaNavigation)
+                .Include(s => s.etiquetaSolicitud)
+                    .ThenInclude(se => se.idEtiquetaNavigation)
                 .Where(s => s.archivado == false)
                 .FirstOrDefaultAsync(s => s.idSolicitud == id);
 
@@ -75,6 +79,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales
                 .Include(s => s.solicitudMaterialesOf)
                     .ThenInclude(so => so.oFNavigation)
                 .Include(ma => ma.idMaquinaNavigation)
+                .Include(s => s.etiquetaSolicitud)
+                    .ThenInclude(se => se.idEtiquetaNavigation)
                 .Where(s => s.archivado == false)
                 .FirstOrDefaultAsync();
 
@@ -104,6 +110,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales
                 .Include(s => s.solicitudMaterialesOf)
                     .ThenInclude(so => so.oFNavigation)
                 .Include(ma => ma.idMaquinaNavigation)
+                .Include(s => s.etiquetaSolicitud)
+                    .ThenInclude(se => se.idEtiquetaNavigation)
                 .Where(s => s.archivado == false)
                 .AsQueryable();
 

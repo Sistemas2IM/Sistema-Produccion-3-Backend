@@ -30,6 +30,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.TurnoAuditoria
                 .Include(t => t.aprobadoPorNavigation)
                 .Include(t => t.auditorNavigation)
                 .Include(t => t.turnoNavigation)
+                .Include(t => t.estadoNavigation)
                 .ToListAsync();
 
             var turnoAuditoriaDto = _mapper.Map<List<TurnoAuditoriaDto>>(turnoAuditoria);
@@ -45,6 +46,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.TurnoAuditoria
                 .Include(t => t.aprobadoPorNavigation)
                 .Include(t => t.auditorNavigation)
                 .Include(t => t.turnoNavigation)
+                .Include(t => t.estadoNavigation)
                 .FirstOrDefaultAsync(u => u.idTurnoAuditor == id);
 
             if (turnoAuditoria == null)

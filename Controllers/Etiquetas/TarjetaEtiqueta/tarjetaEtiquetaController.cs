@@ -133,7 +133,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Etiquetas.TarjetaEtiqueta
 
         // POST: api/tarjetaEtiqueta
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
+        [HttpPost("post")]
         public async Task<ActionResult<tarjetaEtiqueta>> PosttarjetaEtiqueta(AddTarjetaEtiquetaDto addTarjetaEtiqueta)
         {
             var tarjetaEtiqueta = _mapper.Map<tarjetaEtiqueta>(addTarjetaEtiqueta);

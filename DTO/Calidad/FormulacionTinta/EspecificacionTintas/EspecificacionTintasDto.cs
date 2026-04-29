@@ -11,5 +11,7 @@
         public string? proveedor { get; set; }
 
         public decimal? porcentajeTinta { get; set; }
+
+        public string? loteTinta { get; set; }
     }
 }

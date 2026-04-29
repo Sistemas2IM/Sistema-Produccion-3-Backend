@@ -56,6 +56,9 @@ public partial class variablesTecnicas
 
     public string tooltip { get; set; }
 
+    [StringLength(100)]
+    public string valorPorDefecto { get; set; }
+
     [InverseProperty("idVariableNavigation")]
     public virtual ICollection<detalleAuditoriaProceso> detalleAuditoriaProceso { get; set; } = new List<detalleAuditoriaProceso>();
 

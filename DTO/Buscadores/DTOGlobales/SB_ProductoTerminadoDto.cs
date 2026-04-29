@@ -6,6 +6,8 @@
 
         public int? of { get; set; }
 
+        public int? oV { get; set; }
+
         public string? clienteOf { get; set; }
 
         public string? productoOf { get; set; }

@@ -143,6 +143,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[etiquetaSolicitud]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[familliaDeMaquina]",
          "ObjectType": 0
       },

@@ -1,4 +1,5 @@
-﻿using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.SolicitudMaterialOF;
+﻿using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.EtiquetaSolicitud;
+using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.SolicitudMaterialOF;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -97,5 +98,7 @@ namespace Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.SolicitudMateri
         public string? serie { get; set; }
 
         public List<solicitudMaterialesOfDto>? solicitudMaterialOf { get; set; }
+
+        public List<EtiquetaSolicitudDto>? etiquetaSolicitudDto { get; set; }
     }
 }

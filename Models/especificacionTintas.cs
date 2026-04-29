@@ -24,6 +24,9 @@ public partial class especificacionTintas
     [Column(TypeName = "decimal(12, 2)")]
     public decimal? porcentajeTinta { get; set; }
 
+    [StringLength(100)]
+    public string loteTinta { get; set; }
+
     [ForeignKey("idFormulacion")]
     [InverseProperty("especificacionTintas")]
     public virtual formulacionTinta idFormulacionNavigation { get; set; }

@@ -129,6 +129,9 @@ public partial class solicitudMateriales
     [StringLength(5)]
     public string serie { get; set; }
 
+    [InverseProperty("idSolicitudNavigation")]
+    public virtual ICollection<etiquetaSolicitud> etiquetaSolicitud { get; set; } = new List<etiquetaSolicitud>();
+
     [ForeignKey("idMaquina")]
     [InverseProperty("solicitudMateriales")]
     public virtual maquinas idMaquinaNavigation { get; set; }
