@@ -120,11 +120,31 @@ namespace Sistema_Produccion_3_Backend.Controllers.Buscadores.TablerosOf
             }
 
             // 4. EJECUTAR CONSULTAS CON LÍMITES
-            var procesosOf = await queryProcesos.Take(30).ToListAsync();
-            var tarjetasOf = await queryTarjetas.Take(30).ToListAsync();
-            var tableros = await queryTableros.Take(20).ToListAsync();
-            var entregasProductoTerminado = await queryEntregas.Take(30).ToListAsync();
-            var solicitudesMateriales = await querySolicitudes.Take(30).ToListAsync();
+            // 4. EJECUTAR CONSULTAS ORDENANDO POR LOS MÁS RECIENTES Y CON LÍMITES
+            var procesosOf = await queryProcesos
+                .OrderByDescending(u => u.idProceso) // 🚀 Ordena del ID mayor al menor (más recientes primero)
+                .Take(30)
+                .ToListAsync();
+
+            var tarjetasOf = await queryTarjetas
+                .OrderByDescending(u => u.oF) // 🚀 Ajusta "oF" si tu tabla tiene una llave primaria como "idTarjeta"
+                .Take(30)
+                .ToListAsync();
+
+            var tableros = await queryTableros
+                // .OrderByDescending(u => u.idTablero) // Descomenta y ajusta si vas a usar tableros
+                .Take(20)
+                .ToListAsync();
+
+            var entregasProductoTerminado = await queryEntregas
+                .OrderByDescending(u => u.idEntregaPt) // 🚀 Los IDs de entrega más altos primero
+                .Take(30)
+                .ToListAsync();
+
+            var solicitudesMateriales = await querySolicitudes
+                .OrderByDescending(u => u.idSolicitud) // 🚀 Las solicitudes más recientes
+                .Take(30)
+                .ToListAsync();
 
             // 5. MAPEO Y RESPUESTA
             var procesosOfDto = _mapper.Map<List<SB_ProcesoOfDto>>(procesosOf);
