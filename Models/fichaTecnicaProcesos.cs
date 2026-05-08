@@ -88,6 +88,9 @@ public partial class fichaTecnicaProcesos
     [InverseProperty("fichaTecnicaProcesos")]
     public virtual maquinas maquinaNavigation { get; set; }
 
+    [InverseProperty("idFichaProcesoNavigation")]
+    public virtual ICollection<medicionAguas> medicionAguas { get; set; } = new List<medicionAguas>();
+
     [ForeignKey("oF")]
     [InverseProperty("fichaTecnicaProcesos")]
     public virtual tarjetaOf oFNavigation { get; set; }

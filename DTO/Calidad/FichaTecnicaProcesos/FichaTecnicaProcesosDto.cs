@@ -1,5 +1,6 @@
 ﻿using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnicaProcesos.DetalleFichaProcesos;
 using Sistema_Produccion_3_Backend.DTO.Calidad.FormulacionTinta;
+using Sistema_Produccion_3_Backend.DTO.Calidad.MedicionAguas;
 using Sistema_Produccion_3_Backend.DTO.Calidad.RegistroLamparas;
 using Sistema_Produccion_3_Backend.DTO.Calidad.SecuenciaColor;
 
@@ -67,5 +68,7 @@ namespace Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnicaProcesos
         public List<SecuenciaColorDto>? secuenciaColor { get; set; }
 
         public List<RegistroLamparasDto>? registroLamparas { get; set; }
+
+        public List<MedicionAguasDto>? medicionAguas { get; set; }
     }
 }

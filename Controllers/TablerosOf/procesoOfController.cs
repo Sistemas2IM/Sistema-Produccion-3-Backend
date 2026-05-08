@@ -1728,6 +1728,45 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             return Ok(resultDtos);
         }
 
+        // GET PROCESOS FINALIZADOS POR TABLERO Y FECHA ESPECÍFICA
+        // Ejemplo: /api/procesoOf/get/finalizados/idTablero/10/fecha/2026-05-08
+        [HttpGet("get/finalizados/idTablero/{idTablero}/fecha/{fecha}")]
+        public async Task<ActionResult<object>> GetProcesosFinalizados(int idTablero, [FromRoute] DateTime fecha)
+        {
+            // 1. Definimos el rango del día (00:00:00 a 23:59:59) directamente con la fecha obligatoria
+            DateTime inicioDia = fecha.Date;
+            DateTime finDia = inicioDia.AddDays(1).AddSeconds(-1);
+
+            var resultadosLimpio = await _context.procesoOf
+                .AsNoTracking()
+                .Where(p =>
+                    p.completada == true &&
+                    p.idTablero == idTablero && // Filtro obligatorio por tablero
+                    p.fechaFinalizacion >= inicioDia &&
+                    p.fechaFinalizacion <= finDia
+                )
+                // 🚀 PROYECCIÓN DIRECTA
+                .Select(p => new
+                {
+                    idProceso = p.idProceso,
+                    oF = p.oF,
+                    cliente = p.oFNavigation != null ? p.oFNavigation.clienteOf : null,
+                    productoOf = p.productoOf,
+                    // Agregamos la fechaInicio por si la necesitan ver, aunque es opcional
+                    fechaInicio = p.fechaInicio,
+                    fechaFinalizacion = p.fechaFinalizacion,
+
+                    // Si ambas fechas existen, calculamos los minutos y los dividimos entre 60.
+                    // Usamos Math.Round para que te devuelva máximo 2 decimales (ej. 3.25 horas).
+                    horasInvertidas = p.fechaInicio != null && p.fechaFinalizacion != null
+                        ? Math.Round((double)EF.Functions.DateDiffMinute(p.fechaInicio, p.fechaFinalizacion) / 60.0, 2)
+                        : 0 // Si no hay fecha de inicio, devolvemos 0 horas
+                })
+                .ToListAsync();
+
+            return Ok(resultadosLimpio);
+        }
+
         // PUT: api/procesoOf/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         //[HttpPut("put/{id}")]
