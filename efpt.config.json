@@ -235,6 +235,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[medicionAguas]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[menu]",
          "ObjectType": 0
       },

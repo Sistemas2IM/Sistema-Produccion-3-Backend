@@ -115,6 +115,8 @@ public partial class base_nuevaContext : DbContext
 
     public virtual DbSet<material> material { get; set; }
 
+    public virtual DbSet<medicionAguas> medicionAguas { get; set; }
+
     public virtual DbSet<menu> menu { get; set; }
 
     public virtual DbSet<modulo> modulo { get; set; }
@@ -869,6 +871,13 @@ public partial class base_nuevaContext : DbContext
             entity.Property(e => e.calibre).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.nombreMaterial).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.tipoMaterial).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+        });
+
+        modelBuilder.Entity<medicionAguas>(entity =>
+        {
+            entity.HasKey(e => e.idMedicionAguas).HasName("PK__medicion__71B62FD22974133A");
+
+            entity.HasOne(d => d.idFichaProcesoNavigation).WithMany(p => p.medicionAguas).HasConstraintName("FK_FICHA_MEDICION_AGUA");
         });
 
         modelBuilder.Entity<menu>(entity =>

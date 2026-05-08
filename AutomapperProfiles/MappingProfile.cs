@@ -16,6 +16,8 @@ using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnicaProcesos.DetalleFicha
 using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnicaProcesos.DetalleFichaProcesos.Batch;
 using Sistema_Produccion_3_Backend.DTO.Calidad.FormulacionTinta;
 using Sistema_Produccion_3_Backend.DTO.Calidad.FormulacionTinta.EspecificacionTintas;
+using Sistema_Produccion_3_Backend.DTO.Calidad.MedicionAguas;
+using Sistema_Produccion_3_Backend.DTO.Calidad.MedicionAguas.Batch;
 using Sistema_Produccion_3_Backend.DTO.Calidad.RegistroLamparas;
 using Sistema_Produccion_3_Backend.DTO.Calidad.RegistroLamparas.Batch;
 using Sistema_Produccion_3_Backend.DTO.Calidad.SecuenciaColor;
@@ -745,6 +747,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForMember(dest => dest.secuenciaColor, opt => opt.MapFrom(src => src.secuenciaColor))
                 .ForMember(dest => dest.registroLamparas, opt => opt.MapFrom(src => src.registroLamparas))
                 .ForMember(dest => dest.nombreEstado, opt => opt.MapFrom(src => src.estadoNavigation.nombreEstado))
+                .ForMember(dest => dest.medicionAguas, opt => opt.MapFrom(src => src.medicionAguas))
                 .ReverseMap();
             CreateMap<fichaTecnicaProcesos, AddFichaTecnicaProcesosDto>().ReverseMap();
             CreateMap<UpdateFichaTecnicaProcesosDto, fichaTecnicaProcesos>()
@@ -756,6 +759,14 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             CreateMap<detalleFichaProcesos, AddBatchDetalleFichaProcesos>().ReverseMap();
             CreateMap<UpdateBatchDetalleFichaProcesos, detalleFichaProcesos>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            CreateMap<medicionAguas, MedicionAguasDto>().ReverseMap();
+            CreateMap<medicionAguas, AddMedicionAguasDto>().ReverseMap();
+            CreateMap<UpdateMedicionAguasDto, medicionAguas>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<medicionAguas, AddBatchMedicionAguasDto>().ReverseMap();
+            CreateMap<UpdateBatchMedicionAguasDto, medicionAguas>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             // =============================================================================================================
