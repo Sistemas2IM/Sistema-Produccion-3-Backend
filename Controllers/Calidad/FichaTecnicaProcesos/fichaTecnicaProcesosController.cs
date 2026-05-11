@@ -37,6 +37,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.FichaTecnicaProcesos
                 .ThenInclude(v => v.idVariableNavigation)
                 .Include(e => e.estadoNavigation)
                 .Include(m => m.medicionAguas)
+                .Include(ma => ma.maquinaNavigation)
                 .ToListAsync();
 
             var fichaTecnicaProcesoDto = _mapper.Map<List<FichaTecnicaProcesosDto>>(fichaTecnicaProceso);
@@ -60,6 +61,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.FichaTecnicaProcesos
                 .ThenInclude(v => v.idVariableNavigation)
                 .Include(e => e.estadoNavigation)
                 .Include(m => m.medicionAguas)
+                .Include(ma => ma.maquinaNavigation)
                 .FirstOrDefaultAsync(f => f.idFichaProceso == id);
 
             if (fichaTecnicaProceso == null)
@@ -87,6 +89,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.FichaTecnicaProcesos
                 .ThenInclude(v => v.idVariableNavigation)
                 .Include(e => e.estadoNavigation)
                 .Include(m => m.medicionAguas)
+                .Include(ma => ma.maquinaNavigation)
                 .FirstOrDefaultAsync(f => f.oFNavigation.oF == of && f.oFNavigation.codArticulo == codArticulo);
 
             if (fichaTecnicaProceso == null)
