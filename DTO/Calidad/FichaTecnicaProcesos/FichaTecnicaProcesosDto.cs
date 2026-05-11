@@ -16,6 +16,8 @@ namespace Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnicaProcesos
 
         public int? maquina { get; set; }
 
+        public string? nombreMaquina { get; set; }
+
         public int? estado { get; set; }
 
         // campo relacion

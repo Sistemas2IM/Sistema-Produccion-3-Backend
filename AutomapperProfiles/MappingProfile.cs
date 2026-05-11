@@ -748,6 +748,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForMember(dest => dest.registroLamparas, opt => opt.MapFrom(src => src.registroLamparas))
                 .ForMember(dest => dest.nombreEstado, opt => opt.MapFrom(src => src.estadoNavigation.nombreEstado))
                 .ForMember(dest => dest.medicionAguas, opt => opt.MapFrom(src => src.medicionAguas))
+                .ForMember(dest => dest.nombreMaquina, opt => opt.MapFrom(src => src.maquinaNavigation.nombreMaquina))
                 .ReverseMap();
             CreateMap<fichaTecnicaProcesos, AddFichaTecnicaProcesosDto>().ReverseMap();
             CreateMap<UpdateFichaTecnicaProcesosDto, fichaTecnicaProcesos>()
@@ -802,7 +803,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForMember(dest => dest.detalleAuditoriaProceso, opt => opt.MapFrom(src => src.detalleAuditoriaProceso))
                 .ForMember(dest => dest.clienteOf, opt => opt.MapFrom(src => src.oFNavigation.clienteOf))
                 .ForMember(dest => dest.productoOf, opt => opt.MapFrom(src => src.oFNavigation.productoOf))
-                .ForMember(dest => dest.nombreMaquina, opt => opt.MapFrom(src => src.maquinaNavigation.nombreCorto))
+                .ForMember(dest => dest.nombreMaquina, opt => opt.MapFrom(src => src.maquinaNavigation.nombreMaquina))
                 .ForMember(dest => dest.nombreAuditor, opt => opt.MapFrom(src => src.auditorNavigation.nombres + " " + src.auditorNavigation.apellidos))
                 .ForMember(dest => dest.nombreOperador, opt => opt.MapFrom(src => src.operadorNavigation.nombres + " " + src.operadorNavigation.apellidos))
                 .ForMember(dest => dest.nombreSupervisor, opt => opt.MapFrom(src => src.supervisorNavigation.nombres + " " + src.supervisorNavigation.apellidos))
