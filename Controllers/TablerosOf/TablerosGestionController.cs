@@ -89,51 +89,38 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         public async Task<ActionResult<IEnumerable<ProcesoOfVistaTableroDto>>> GetprocesoOfArea(int idArea)
         {
             var procesoOf = await _context.procesoOf
-                .OrderBy(p => p.posicion)
+                .AsNoTrackingWithIdentityResolution() // 🚀 Permite a EF Core conectar los cables automáticamente
+                .AsSplitQuery()
                 .Where(f => f.idTableroNavigation.idArea == idArea && f.archivada == false && f.cancelada == false)
                 .Include(u => u.detalleReporte)
-                .ThenInclude(o => o.idOperacionNavigation)
+                    .ThenInclude(o => o.idOperacionNavigation)
                 .Include(u => u.detalleReporte)
-                .ThenInclude(m => m.maquinaNavigation)
+                    .ThenInclude(m => m.maquinaNavigation)
                 .Include(s => s.tarjetaEtiqueta)
-                .ThenInclude(e => e.idEtiquetaNavigation)
-                .Include(f => f.oFNavigation)
+                    .ThenInclude(e => e.idEtiquetaNavigation)
+                .Include(f => f.oFNavigation) // <-- ¡Aquí ya se carga la OF de este proceso!
                 .Include(l => l.idPosturaNavigation)
                 .Include(v => v.idMaterialNavigation)
                 .Include(a => a.asignacion)
-                .ThenInclude(u => u.userNavigation)
+                    .ThenInclude(u => u.userNavigation)
+                .Include(ar => ar.idTableroNavigation)
+                    .ThenInclude(t => t.idAreaNavigation)
+
+                // 1. Cargamos los hijos (Este SÍ funciona perfecto porque los hijos son procesos diferentes al actual)
+                .Include(c => c.corridaCombinadamaestroNavigation)
+                    .ThenInclude(sub => sub.subordinadoNavigation)
+                        .ThenInclude(of => of.oFNavigation)
+
+                // 2. Cargamos el registro subordinado
+                // 🚀 EL ARREGLO: Quitamos los ThenInclude. Como el "subordinado" es el proceso actual, 
+                // EF Core va a rellenar "subordinadoNavigation" automáticamente por detrás.
+                .Include(c => c.corridaCombinadasubordinadoNavigation)
+
+                .OrderBy(p => p.posicion)
                 .ToListAsync();
 
-            foreach (var proceso in procesoOf)
-            {
-                // Cargar subordinados de corridaCombinadamaestroNavigation (lista 1:N)
-                if (proceso.corridaCombinadamaestroNavigation != null)
-                {
-                    foreach (var corrida in proceso.corridaCombinadamaestroNavigation)
-                    {
-                        if (corrida.subordinado != null)
-                        {
-                            var subordinado = await _context.procesoOf
-                                .Include(p => p.oFNavigation)
-                                .FirstOrDefaultAsync(p => p.idProceso == corrida.subordinado);
-
-                            corrida.subordinadoNavigation = subordinado;
-                        }
-                    }
-                }
-
-                // Cargar subordinado de corridaCombinadasubordinadoNavigation (1:1)
-                if (proceso.corridaCombinadasubordinadoNavigation?.subordinado != null)
-                {
-                    var subordinado = await _context.procesoOf
-                        .Include(p => p.oFNavigation)
-                        .FirstOrDefaultAsync(p => p.idProceso == proceso.corridaCombinadasubordinadoNavigation.subordinado);
-
-                    proceso.corridaCombinadasubordinadoNavigation.subordinadoNavigation = subordinado;
-                }
-            }
-
             var procesoOfDto = _mapper.Map<List<ProcesoOfVistaTableroDto>>(procesoOf);
+
             return Ok(procesoOfDto);
         }
 
