@@ -67,6 +67,24 @@ namespace Sistema_Produccion_3_Backend.Controllers.Buscadores.TablerosOf
                 .Include(sm => sm.idSolicitudNavigation)
                 .AsQueryable();
 
+            var queryValesBobina = _context.valeBobina.AsNoTracking()
+                .Include(m => m.idMaterialNavigation)
+                .Include(e => e.estadoNavigation)
+                .AsQueryable();
+
+            var queryFichaTecnicaCliente = _context.fichaTecnicaCliente.AsNoTracking()
+                .Include(f => f.oFNavigation)
+                .AsQueryable();
+
+            var queryFichaTecnicaInterna = _context.fichaTecnicaProcesos.AsNoTracking()
+                .Include(f => f.oFNavigation)
+                .Include(m => m.maquinaNavigation)
+                .AsQueryable();
+
+            var queryCertificadosCalidad = _context.certificadoCalidad.AsNoTracking()
+                .Include(of => of.oFNavigation)
+                .AsQueryable();
+
             // 3. CONSTRUCCIÓN DINÁMICA: Aplicar cada palabra como un filtro obligatorio (AND)
             foreach (var t in terminosBusqueda)
             {
@@ -117,6 +135,42 @@ namespace Sistema_Produccion_3_Backend.Controllers.Buscadores.TablerosOf
                     (u.oFNavigation != null && u.oFNavigation.vendedorOf != null && u.oFNavigation.vendedorOf.ToLower().Contains(terminoActual)) || // 🚀 Vendedor agregado
                     (u.oFNavigation != null && u.oFNavigation.oV != null && u.oFNavigation.oV.ToString().Contains(terminoActual)) ||
                     (u.oFNavigation != null && u.oFNavigation.codArticulo != null && u.oFNavigation.codArticulo.ToLower().Contains(terminoActual)));
+
+                queryValesBobina = queryValesBobina.Where(u =>
+                    (esNumero && u.idVale == numActual) ||
+                    (u.idVale.ToString().Contains(terminoActual)) ||
+                    (u.idMaterial != null && u.idMaterial.ToLower().Contains(terminoActual)) ||
+                    (u.idMaterialNavigation != null && u.idMaterialNavigation.nombreMaterial != null && u.idMaterialNavigation.nombreMaterial.ToLower().Contains(terminoActual)) ||
+                    (u.idMaterialNavigation != null && u.idMaterialNavigation.marca != null && u.idMaterialNavigation.marca.ToLower().Contains(terminoActual)) ||
+                    (u.descripcionBobina != null && u.descripcionBobina.ToLower().Contains(terminoActual)));
+
+                queryFichaTecnicaCliente = queryFichaTecnicaCliente.Where(u =>
+                    (esNumero && u.idFichaCliente == numActual) ||
+                    (u.idFichaCliente.ToString().Contains(terminoActual)) ||
+                    (u.oF != null && u.oF.ToString().Contains(terminoActual)) ||
+                    (u.oFNavigation != null && u.oFNavigation.codArticulo != null && u.oFNavigation.codArticulo.ToLower().Contains(terminoActual)) ||
+                    (u.oFNavigation != null && u.oFNavigation.productoOf != null && u.oFNavigation.productoOf.ToLower().Contains(terminoActual)) ||
+                    (u.oFNavigation != null && u.oFNavigation.clienteOf != null && u.oFNavigation.clienteOf.ToLower().Contains(terminoActual)));
+
+                queryFichaTecnicaInterna = queryFichaTecnicaInterna.Where(u =>
+                    (esNumero && u.idFichaProceso == numActual) ||
+                    (u.idFichaProceso.ToString().Contains(terminoActual)) ||
+                    (u.oF != null && u.oF.ToString().Contains(terminoActual)) ||
+                    (u.idProceso != null && u.idProceso.ToString().Contains(terminoActual)) ||
+                    (u.maquinaNavigation != null && u.maquinaNavigation.nombreMaquina != null && u.maquinaNavigation.nombreMaquina.ToLower().Contains(terminoActual)) ||
+                    (u.oFNavigation != null && u.oFNavigation.clienteOf != null && u.oFNavigation.clienteOf.ToLower().Contains(terminoActual)) ||
+                    (u.oFNavigation != null && u.oFNavigation.codArticulo != null && u.oFNavigation.codArticulo.ToLower().Contains(terminoActual)) ||
+                    (u.oFNavigation != null && u.oFNavigation.productoOf != null && u.oFNavigation.productoOf.ToLower().Contains(terminoActual)));
+
+                queryCertificadosCalidad = queryCertificadosCalidad.Where(u =>
+                    (esNumero && u.idCertificadoCalidad == numActual) ||
+                    (u.idCertificadoCalidad.ToString().Contains(terminoActual)) ||
+                    (u.idFichaCliente != null && u.idFichaCliente.ToString().Contains(terminoActual)) ||
+                    (u.oF != null && u.oF.ToString().Contains(terminoActual)) ||
+                    (u.oFNavigation != null && u.oFNavigation.clienteOf != null && u.oFNavigation.clienteOf.ToLower().Contains(terminoActual)) ||
+                    (u.oFNavigation != null && u.oFNavigation.codArticulo != null && u.oFNavigation.codArticulo.ToLower().Contains(terminoActual)) ||
+                    (u.oFNavigation != null && u.oFNavigation.productoOf != null && u.oFNavigation.productoOf.ToLower().Contains(terminoActual)));
+
             }
 
             // 4. EJECUTAR CONSULTAS CON LÍMITES
@@ -146,11 +200,35 @@ namespace Sistema_Produccion_3_Backend.Controllers.Buscadores.TablerosOf
                 .Take(30)
                 .ToListAsync();
 
+            var valesBobina = await queryValesBobina
+                .OrderByDescending(u => u.idVale) // 🚀 Vales de bobina más recientes
+                .Take(30)
+                .ToListAsync();
+
+            var fichaTecnicaCliente = await queryFichaTecnicaCliente
+                .OrderByDescending(u => u.idFichaCliente) // 🚀 Fichas técnicas de cliente más recientes
+                .Take(30)
+                .ToListAsync();
+
+            var fichaTecnicaInterna = await queryFichaTecnicaInterna
+                .OrderByDescending(u => u.idFichaProceso) // 🚀 Fichas técnicas internas más recientes
+                .Take(30)
+                .ToListAsync();
+
+            var certificadosCalidad = await queryCertificadosCalidad
+                .OrderByDescending(u => u.idCertificadoCalidad) // 🚀 Certificados de calidad más recientes
+                .Take(30)
+                .ToListAsync();
+
             // 5. MAPEO Y RESPUESTA
             var procesosOfDto = _mapper.Map<List<SB_ProcesoOfDto>>(procesosOf);
             var tarjetasOfDto = _mapper.Map<List<SB_TarjetaOfDto>>(tarjetasOf);
             var entregasProductoTerminadoDto = _mapper.Map<List<SB_ProductoTerminadoDto>>(entregasProductoTerminado);
             var solicitudesMaterialesDto = _mapper.Map<List<SB_SolicitudMaterialesOfDto>>(solicitudesMateriales);
+            var valesBobinaDto = _mapper.Map<List<SB_ValeBobinaDto>>(valesBobina);
+            var fichaTecnicaClienteDto = _mapper.Map<List<SB_FichaTecnicaClienteDto>>(fichaTecnicaCliente);
+            var fichaTecnicaInternaDto = _mapper.Map<List<SB_FichaTecnicaProcesosDto>>(fichaTecnicaInterna);
+            var certificadosCalidadDto = _mapper.Map<List<SB_CertificadoCalidadDto>>(certificadosCalidad);
 
             var resultado = new
             {
@@ -158,7 +236,11 @@ namespace Sistema_Produccion_3_Backend.Controllers.Buscadores.TablerosOf
                 TarjetasOf = tarjetasOfDto,
                 //Tableros = tablerosDto,
                 EntregaProductoTerminado = entregasProductoTerminadoDto,
-                SolicitudesMateriales = solicitudesMaterialesDto
+                SolicitudesMateriales = solicitudesMaterialesDto,
+                ValeBobina = valesBobinaDto,
+                FichaTecnicaCliente = fichaTecnicaClienteDto,
+                FichaTecnicaInterna = fichaTecnicaInternaDto,
+                CertificadosCalidad = certificadosCalidadDto
             };
 
             if (!procesosOfDto.Any() && !tarjetasOfDto.Any() && !entregasProductoTerminadoDto.Any() && !solicitudesMaterialesDto.Any())

@@ -1468,6 +1468,7 @@ public partial class base_nuevaContext : DbContext
             entity.HasKey(e => e.oF).HasName("PK_TARJETAOF");
 
             entity.Property(e => e.oF).ValueGeneratedNever();
+            entity.Property(e => e.actualizadoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.archivada).HasDefaultValue(false);
             entity.Property(e => e.cancelada).HasDefaultValue(false);
             entity.Property(e => e.clienteOf).UseCollation("SQL_Latin1_General_CP1_CI_AS");
@@ -1477,14 +1478,19 @@ public partial class base_nuevaContext : DbContext
             entity.Property(e => e.lineaDeNegocio).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.nombreOf).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.productoOf).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.secuenciadoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.seriesOf).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.tipoDeOrden).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.unidadMedida).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.vendedorOf).UseCollation("SQL_Latin1_General_CP1_CI_AS");
 
+            entity.HasOne(d => d.actualizadoPorNavigation).WithMany(p => p.tarjetaOfactualizadoPorNavigation).HasConstraintName("FK_ACTUALIZA_ORDEN");
+
             entity.HasOne(d => d.idEstadoOfNavigation).WithMany(p => p.tarjetaOf).HasConstraintName("FK_TARJETA_ESTADO");
 
             entity.HasOne(d => d.ofOrigenNavigation).WithMany(p => p.InverseofOrigenNavigation).HasConstraintName("FK_REPROCESA_OF");
+
+            entity.HasOne(d => d.secuenciadoPorNavigation).WithMany(p => p.tarjetaOfsecuenciadoPorNavigation).HasConstraintName("FK_SECUENCIA_ORDEN");
 
             entity.HasOne(d => d.tipoComponenteNavigation).WithMany(p => p.tarjetaOf).HasConstraintName("FK_TIPO_COMPONENTE");
         });

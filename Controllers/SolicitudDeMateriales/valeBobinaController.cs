@@ -55,6 +55,18 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales
             return Ok(valeBobinaDto);
         }
 
+        [HttpGet("get/existencia/{loteBobina}")]
+        public async Task<ActionResult<string>> GetExistenciaValeBobina(string loteBobina)
+        {
+            var valeBobina = await _context.valeBobina
+                .FirstOrDefaultAsync(vb => vb.loteBobinaSAP == loteBobina);
+            if (valeBobina == null)
+            {
+                return "false"; // No se encontraron registros
+            }
+            return "true"; // Se encontraron registros
+        }
+
         // POST api/<valeBobinaController>
         [HttpPost("post")]
         public async Task<ActionResult<valeBobina>> PostValeBobina(AddValeBobinaDto addValeBobinaDto)

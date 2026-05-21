@@ -84,6 +84,11 @@ namespace Sistema_Produccion_3_Backend.DTO.TarjetasOF
 
         public string? actualizadoPor { get; set; }
 
+        public string? secuenciadoPor { get; set; }
+
+        // campos relacion a usuario
+        public string? secuenciador { get; set; }
+
         public int? tipoComponente { get; set; }
 
         public int? ofOrigen { get; set; }
