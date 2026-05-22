@@ -103,8 +103,15 @@ public partial class tarjetaOf
 
     public bool? reproceso { get; set; }
 
+    [StringLength(50)]
+    public string secuenciadoPor { get; set; }
+
     [InverseProperty("ofOrigenNavigation")]
     public virtual ICollection<tarjetaOf> InverseofOrigenNavigation { get; set; } = new List<tarjetaOf>();
+
+    [ForeignKey("actualizadoPor")]
+    [InverseProperty("tarjetaOfactualizadoPorNavigation")]
+    public virtual usuario actualizadoPorNavigation { get; set; }
 
     [InverseProperty("oFNavigation")]
     public virtual ICollection<auditoriaProceso> auditoriaProceso { get; set; } = new List<auditoriaProceso>();
@@ -146,6 +153,10 @@ public partial class tarjetaOf
 
     [InverseProperty("oFNavigation")]
     public virtual ICollection<procesoOf> procesoOf { get; set; } = new List<procesoOf>();
+
+    [ForeignKey("secuenciadoPor")]
+    [InverseProperty("tarjetaOfsecuenciadoPorNavigation")]
+    public virtual usuario secuenciadoPorNavigation { get; set; }
 
     [InverseProperty("oFNavigation")]
     public virtual ICollection<solicitudMaterialesOf> solicitudMaterialesOf { get; set; } = new List<solicitudMaterialesOf>();

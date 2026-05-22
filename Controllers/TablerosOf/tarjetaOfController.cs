@@ -63,6 +63,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 .Include(r => r.etiquetaOf)
                     .ThenInclude(o => o.idEtiquetaNavigation)
                 .Include(f => f.ffeTiemposOfGlobal)
+                .Include(se => se.secuenciadoPorNavigation)
                 .ToListAsync();
 
             var tarjetaOfDto = _mapper.Map<List<TarjetaOfDto>>(tarjetasOrdenadas);
@@ -90,6 +91,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 .ThenInclude(o => o.idEtiquetaNavigation)
                 .Include(e => e.idEstadoOfNavigation)
                 .Include(f => f.ffeTiemposOfGlobal)
+                .Include(se => se.secuenciadoPorNavigation)
                 .AsQueryable();
 
             // Aplicar filtros condicionales
@@ -276,6 +278,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 .Include(u => u.idEstadoOfNavigation)
                 .Include(r => r.etiquetaOf)
                 .Include(f => f.ffeTiemposOfGlobal)
+                .Include(se => se.secuenciadoPorNavigation)
                 .FirstOrDefaultAsync(u => u.oF == id);
             var tarjetaOfDto = _mapper.Map<TarjetaOfDto>(tarjetaOf);
             

@@ -109,6 +109,7 @@ using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.SolicitudMaterialOF
 using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.TipoSemielaborados;
 using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.TransferenciaProceso;
 using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.ValeBobina;
+using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.ValeBobina.ValeBobinaCorteEstado;
 using Sistema_Produccion_3_Backend.DTO.Tableros;
 using Sistema_Produccion_3_Backend.DTO.Tableros.Areas;
 using Sistema_Produccion_3_Backend.DTO.Tableros.Posturas;
@@ -141,6 +142,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForMember(dest => dest.finEstimado, opt => opt.MapFrom(src => src.ffeTiemposOfGlobal.Fin_Proyectado))
                 .ForMember(dest => dest.inicioReal, opt => opt.MapFrom(src => src.ffeTiemposOfGlobal.Inicio_Real))
                 .ForMember(dest => dest.finReal, opt => opt.MapFrom(src => src.ffeTiemposOfGlobal.Fin_Real))
+                .ForMember(dest => dest.secuenciador, opt => opt.MapFrom(src => src.secuenciadoPorNavigation.nombres + " " + src.secuenciadoPorNavigation.apellidos))
                 .ReverseMap();
             //.ForPath(src => src.idEstadoOfNavigation, opt => opt.Ignore());
             CreateMap<tarjetaOf, TarjetaBusquedaDto>().ReverseMap();
@@ -1083,6 +1085,11 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             CreateMap<UpdateValeBobinaDto, valeBobina>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
+            CreateMap<valeBobinaCorteEstado, ValeBobinaCorteEstadoDto>().ReverseMap();
+            CreateMap<valeBobinaCorteEstado, AddValeBobinaCorteEstadoDto>().ReverseMap();
+            CreateMap<UpdateValeBobinaCorteEstadoDto, valeBobinaCorteEstado>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
             CreateMap<bobinasAsignadas, BobinasAsignadasDto>()
                 .ReverseMap();
             CreateMap<bobinasAsignadas, AddBobinasAsignadasDto>().ReverseMap();
@@ -1185,6 +1192,32 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                     .ForMember(dest => dest.materialDescripcion, opt => opt.MapFrom(src => src.idSolicitudNavigation.materialDescripcion))
                     .ForMember(dest => dest.oV, opt => opt.MapFrom(src => src.oFNavigation.oV))
                     .ReverseMap();
+
+                CreateMap<fichaTecnicaCliente, SB_FichaTecnicaClienteDto>()
+                    .ForMember(dest => dest.cliente, opt => opt.MapFrom(src => src.oFNavigation.clienteOf))
+                    .ForMember(dest => dest.producto, opt => opt.MapFrom(src => src.oFNavigation.productoOf))
+                    .ForMember(dest => dest.codArticulo, opt => opt.MapFrom(src => src.oFNavigation.codArticulo))
+                    .ReverseMap();
+
+                CreateMap<valeBobina, SB_ValeBobinaDto>()
+                    .ForMember(dest => dest.descripcionMaterial, opt => opt.MapFrom(src => src.idMaterialNavigation.nombreMaterial))
+                    .ForMember(dest => dest.proveedorMaterial, opt => opt.MapFrom(src => src.idMaterialNavigation.marca))
+                    .ReverseMap();
+
+                CreateMap<fichaTecnicaProcesos, SB_FichaTecnicaProcesosDto>()
+                    .ForMember(dest => dest.nombreCliente, opt => opt.MapFrom(src => src.oFNavigation.clienteOf))
+                    .ForMember(dest => dest.codArticulo, opt => opt.MapFrom(src => src.oFNavigation.codArticulo))
+                    .ForMember(dest => dest.nombreProducto, opt => opt.MapFrom(src => src.oFNavigation.productoOf))
+                    .ForMember(dest => dest.nombreMaquina, opt => opt.MapFrom(src => src.maquinaNavigation.nombreMaquina))
+                    .ReverseMap();
+
+                CreateMap<certificadoCalidad, SB_CertificadoCalidadDto>()
+                    .ForMember(dest => dest.cliente, opt => opt.MapFrom(src => src.oFNavigation.clienteOf))
+                    .ForMember(dest => dest.producto, opt => opt.MapFrom(src => src.oFNavigation.productoOf))
+                    .ForMember(dest => dest.codArticulo, opt => opt.MapFrom(src => src.oFNavigation.codArticulo))                  
+                    .ReverseMap();
+
+
 
             // VALIDACION DE ARRANQUE =========================================================================================
             CreateMap<validacionArranque, ValidacionArranqueDto>()

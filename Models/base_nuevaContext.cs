@@ -209,6 +209,8 @@ public partial class base_nuevaContext : DbContext
 
     public virtual DbSet<valeBobina> valeBobina { get; set; }
 
+    public virtual DbSet<valeBobinaCorteEstado> valeBobinaCorteEstado { get; set; }
+
     public virtual DbSet<validacionArranque> validacionArranque { get; set; }
 
     public virtual DbSet<variableUnidadMedida> variableUnidadMedida { get; set; }
@@ -1468,6 +1470,7 @@ public partial class base_nuevaContext : DbContext
             entity.HasKey(e => e.oF).HasName("PK_TARJETAOF");
 
             entity.Property(e => e.oF).ValueGeneratedNever();
+            entity.Property(e => e.actualizadoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.archivada).HasDefaultValue(false);
             entity.Property(e => e.cancelada).HasDefaultValue(false);
             entity.Property(e => e.clienteOf).UseCollation("SQL_Latin1_General_CP1_CI_AS");
@@ -1477,14 +1480,19 @@ public partial class base_nuevaContext : DbContext
             entity.Property(e => e.lineaDeNegocio).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.nombreOf).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.productoOf).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.secuenciadoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.seriesOf).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.tipoDeOrden).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.unidadMedida).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.vendedorOf).UseCollation("SQL_Latin1_General_CP1_CI_AS");
 
+            entity.HasOne(d => d.actualizadoPorNavigation).WithMany(p => p.tarjetaOfactualizadoPorNavigation).HasConstraintName("FK_ACTUALIZA_ORDEN");
+
             entity.HasOne(d => d.idEstadoOfNavigation).WithMany(p => p.tarjetaOf).HasConstraintName("FK_TARJETA_ESTADO");
 
             entity.HasOne(d => d.ofOrigenNavigation).WithMany(p => p.InverseofOrigenNavigation).HasConstraintName("FK_REPROCESA_OF");
+
+            entity.HasOne(d => d.secuenciadoPorNavigation).WithMany(p => p.tarjetaOfsecuenciadoPorNavigation).HasConstraintName("FK_SECUENCIA_ORDEN");
 
             entity.HasOne(d => d.tipoComponenteNavigation).WithMany(p => p.tarjetaOf).HasConstraintName("FK_TIPO_COMPONENTE");
         });
@@ -1607,6 +1615,25 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.idMaterialNavigation).WithMany(p => p.valeBobina).HasConstraintName("FK_IDMATERIAL_VALE");
 
             entity.HasOne(d => d.tipoReporteNavigation).WithMany(p => p.valeBobina).HasConstraintName("FK_TIPO_REPORTE_VALE");
+        });
+
+        modelBuilder.Entity<valeBobinaCorteEstado>(entity =>
+        {
+            entity.HasKey(e => e.idCorteEstado).HasName("PK__valeBobi__B8CEB00C627AF4F3");
+
+            entity.Property(e => e.fechaProcesado).HasDefaultValueSql("(getdate())");
+            entity.Property(e => e.procesadoEnSAP).HasDefaultValue(false);
+            entity.Property(e => e.procesadoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+
+            entity.HasOne(d => d.idDetalleReporteNavigation).WithMany(p => p.valeBobinaCorteEstado)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_DETALLE_CORTE");
+
+            entity.HasOne(d => d.idValeNavigation).WithMany(p => p.valeBobinaCorteEstado)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_VALE_PROCESADO");
+
+            entity.HasOne(d => d.procesadoPorNavigation).WithMany(p => p.valeBobinaCorteEstado).HasConstraintName("FK_USUARIO_PROCESA");
         });
 
         modelBuilder.Entity<validacionArranque>(entity =>

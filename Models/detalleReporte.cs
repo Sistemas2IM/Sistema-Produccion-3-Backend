@@ -151,4 +151,7 @@ public partial class detalleReporte
 
     [InverseProperty("idProduccionNavigation")]
     public virtual ICollection<transferenciaProceso> transferenciaProceso { get; set; } = new List<transferenciaProceso>();
+
+    [InverseProperty("idDetalleReporteNavigation")]
+    public virtual ICollection<valeBobinaCorteEstado> valeBobinaCorteEstado { get; set; } = new List<valeBobinaCorteEstado>();
 }

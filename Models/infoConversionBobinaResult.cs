@@ -13,6 +13,7 @@ namespace Sistema_Produccion_3_Backend.Models
         [StringLength(4000)]
         public string oF { get; set; }
         public int idProceso { get; set; }
+        public int idDetalleReporte { get; set; }
         public int idSolicitud { get; set; }
         [Column("anchoPliego", TypeName = "decimal(20,3)")]
         public decimal? anchoPliego { get; set; }
@@ -21,5 +22,6 @@ namespace Sistema_Produccion_3_Backend.Models
         public int? cantidadProducida { get; set; }
         public int? cantidadNc { get; set; }
         public DateOnly? fecha { get; set; }
+        public bool? procesadoEnSAP { get; set; }
     }
 }

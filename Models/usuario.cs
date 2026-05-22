@@ -129,6 +129,12 @@ public partial class usuario
     [InverseProperty("operadorNavigation")]
     public virtual ICollection<sesionOperador> sesionOperador { get; set; } = new List<sesionOperador>();
 
+    [InverseProperty("actualizadoPorNavigation")]
+    public virtual ICollection<tarjetaOf> tarjetaOfactualizadoPorNavigation { get; set; } = new List<tarjetaOf>();
+
+    [InverseProperty("secuenciadoPorNavigation")]
+    public virtual ICollection<tarjetaOf> tarjetaOfsecuenciadoPorNavigation { get; set; } = new List<tarjetaOf>();
+
     [InverseProperty("enviadoPorNavigation")]
     public virtual ICollection<transferenciaProceso> transferenciaProcesoenviadoPorNavigation { get; set; } = new List<transferenciaProceso>();
 
@@ -140,6 +146,9 @@ public partial class usuario
 
     [InverseProperty("auditorNavigation")]
     public virtual ICollection<turnoAuditoria> turnoAuditoriaauditorNavigation { get; set; } = new List<turnoAuditoria>();
+
+    [InverseProperty("procesadoPorNavigation")]
+    public virtual ICollection<valeBobinaCorteEstado> valeBobinaCorteEstado { get; set; } = new List<valeBobinaCorteEstado>();
 
     [InverseProperty("aprobadoPorNavigation")]
     public virtual ICollection<validacionArranque> validacionArranqueaprobadoPorNavigation { get; set; } = new List<validacionArranque>();
