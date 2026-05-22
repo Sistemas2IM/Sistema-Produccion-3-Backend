@@ -209,6 +209,8 @@ public partial class base_nuevaContext : DbContext
 
     public virtual DbSet<valeBobina> valeBobina { get; set; }
 
+    public virtual DbSet<valeBobinaCorteEstado> valeBobinaCorteEstado { get; set; }
+
     public virtual DbSet<validacionArranque> validacionArranque { get; set; }
 
     public virtual DbSet<variableUnidadMedida> variableUnidadMedida { get; set; }
@@ -1613,6 +1615,25 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.idMaterialNavigation).WithMany(p => p.valeBobina).HasConstraintName("FK_IDMATERIAL_VALE");
 
             entity.HasOne(d => d.tipoReporteNavigation).WithMany(p => p.valeBobina).HasConstraintName("FK_TIPO_REPORTE_VALE");
+        });
+
+        modelBuilder.Entity<valeBobinaCorteEstado>(entity =>
+        {
+            entity.HasKey(e => e.idCorteEstado).HasName("PK__valeBobi__B8CEB00C627AF4F3");
+
+            entity.Property(e => e.fechaProcesado).HasDefaultValueSql("(getdate())");
+            entity.Property(e => e.procesadoEnSAP).HasDefaultValue(false);
+            entity.Property(e => e.procesadoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+
+            entity.HasOne(d => d.idDetalleReporteNavigation).WithMany(p => p.valeBobinaCorteEstado)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_DETALLE_CORTE");
+
+            entity.HasOne(d => d.idValeNavigation).WithMany(p => p.valeBobinaCorteEstado)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_VALE_PROCESADO");
+
+            entity.HasOne(d => d.procesadoPorNavigation).WithMany(p => p.valeBobinaCorteEstado).HasConstraintName("FK_USUARIO_PROCESA");
         });
 
         modelBuilder.Entity<validacionArranque>(entity =>

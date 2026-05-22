@@ -138,7 +138,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Buscadores.TablerosOf
 
                 queryValesBobina = queryValesBobina.Where(u =>
                     (esNumero && u.idVale == numActual) ||
-                    (u.idVale.ToString().Contains(terminoActual)) ||
+                    u.idVale.ToString().Contains(terminoActual) ||
                     (u.idMaterial != null && u.idMaterial.ToLower().Contains(terminoActual)) ||
                     (u.idMaterialNavigation != null && u.idMaterialNavigation.nombreMaterial != null && u.idMaterialNavigation.nombreMaterial.ToLower().Contains(terminoActual)) ||
                     (u.idMaterialNavigation != null && u.idMaterialNavigation.marca != null && u.idMaterialNavigation.marca.ToLower().Contains(terminoActual)) ||

@@ -63,4 +63,7 @@ public partial class valeBobina
     [ForeignKey("tipoReporte")]
     [InverseProperty("valeBobina")]
     public virtual tipoReporte tipoReporteNavigation { get; set; }
+
+    [InverseProperty("idValeNavigation")]
+    public virtual ICollection<valeBobinaCorteEstado> valeBobinaCorteEstado { get; set; } = new List<valeBobinaCorteEstado>();
 }

@@ -147,6 +147,9 @@ public partial class usuario
     [InverseProperty("auditorNavigation")]
     public virtual ICollection<turnoAuditoria> turnoAuditoriaauditorNavigation { get; set; } = new List<turnoAuditoria>();
 
+    [InverseProperty("procesadoPorNavigation")]
+    public virtual ICollection<valeBobinaCorteEstado> valeBobinaCorteEstado { get; set; } = new List<valeBobinaCorteEstado>();
+
     [InverseProperty("aprobadoPorNavigation")]
     public virtual ICollection<validacionArranque> validacionArranqueaprobadoPorNavigation { get; set; } = new List<validacionArranque>();
 

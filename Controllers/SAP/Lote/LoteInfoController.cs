@@ -61,6 +61,7 @@ namespace TuNamespace.Controllers // Asegúrate de ajustar el namespace
                             INNER JOIN ITL1 T4 ON T1.""ItemCode"" = T4.""ItemCode"" AND T1.""SysNumber"" = T4.""SysNumber""
                             WHERE T1.""DistNumber"" = '{safeDistNumber}' 
                               AND T4.""Quantity"" > 0
+                              AND T2.""ItmsGrpCod"" <> 112
                               AND T4.""LogEntry"" = (
                                   SELECT MIN(X.""LogEntry"") 
                                   FROM ITL1 X 

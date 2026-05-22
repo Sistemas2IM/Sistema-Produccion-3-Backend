@@ -109,6 +109,7 @@ using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.SolicitudMaterialOF
 using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.TipoSemielaborados;
 using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.TransferenciaProceso;
 using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.ValeBobina;
+using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.ValeBobina.ValeBobinaCorteEstado;
 using Sistema_Produccion_3_Backend.DTO.Tableros;
 using Sistema_Produccion_3_Backend.DTO.Tableros.Areas;
 using Sistema_Produccion_3_Backend.DTO.Tableros.Posturas;
@@ -1082,6 +1083,11 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
 
             CreateMap<valeBobina, AddValeBobinaDto>().ReverseMap();
             CreateMap<UpdateValeBobinaDto, valeBobina>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            CreateMap<valeBobinaCorteEstado, ValeBobinaCorteEstadoDto>().ReverseMap();
+            CreateMap<valeBobinaCorteEstado, AddValeBobinaCorteEstadoDto>().ReverseMap();
+            CreateMap<UpdateValeBobinaCorteEstadoDto, valeBobinaCorteEstado>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             CreateMap<bobinasAsignadas, BobinasAsignadasDto>()
