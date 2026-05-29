@@ -1193,6 +1193,7 @@ public partial class base_nuevaContext : DbContext
             entity.ToTable(tb =>
                 {
                     tb.HasTrigger("trg_BloquearDetallesFinalizados");
+                    tb.HasTrigger("trg_FixPosicionesDuplicadas");
                     tb.HasTrigger("trg_UpdateEstadoOf");
                     tb.HasTrigger("trg_UpdateTarjetaOf");
                 });

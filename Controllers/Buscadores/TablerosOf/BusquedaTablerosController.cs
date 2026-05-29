@@ -139,6 +139,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Buscadores.TablerosOf
                 queryValesBobina = queryValesBobina.Where(u =>
                     (esNumero && u.idVale == numActual) ||
                     u.idVale.ToString().Contains(terminoActual) ||
+                    (u.loteBobinaSAP != null && u.loteBobinaSAP.ToLower().Contains(terminoActual)) ||
                     (u.idMaterial != null && u.idMaterial.ToLower().Contains(terminoActual)) ||
                     (u.idMaterialNavigation != null && u.idMaterialNavigation.nombreMaterial != null && u.idMaterialNavigation.nombreMaterial.ToLower().Contains(terminoActual)) ||
                     (u.idMaterialNavigation != null && u.idMaterialNavigation.marca != null && u.idMaterialNavigation.marca.ToLower().Contains(terminoActual)) ||
@@ -243,7 +244,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Buscadores.TablerosOf
                 CertificadosCalidad = certificadosCalidadDto
             };
 
-            if (!procesosOfDto.Any() && !tarjetasOfDto.Any() && !entregasProductoTerminadoDto.Any() && !solicitudesMaterialesDto.Any())
+            if (!procesosOfDto.Any() && !tarjetasOfDto.Any() && !entregasProductoTerminadoDto.Any() && !solicitudesMaterialesDto.Any() && !valesBobinaDto.Any() && !fichaTecnicaClienteDto.Any() && !fichaTecnicaInternaDto.Any() && !certificadosCalidadDto.Any())
             {
                 return NotFound($"No se encontraron resultados para el término de búsqueda: {termino}");
             }

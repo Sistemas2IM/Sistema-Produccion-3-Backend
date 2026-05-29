@@ -11,5 +11,7 @@
         public string? proveedorMaterial { get; set; }     
 
         public string? descripcionBobina { get; set; }
+
+        public string? loteBobinaSAP { get; set; }
     }
 }
