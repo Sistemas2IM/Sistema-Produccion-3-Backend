@@ -102,7 +102,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales
         [FromQuery] DateTime? fechaFin = null,    // Rango fecha: Fin
         [FromQuery] int? tipoOperacion = null,
         [FromQuery] string? estado = "",
-        [FromQuery] string? materialDesc = "")
+        [FromQuery] string? materialDesc = "",
+        [FromQuery] string? idsEtiquetas = "")
         {
             // 1. Consulta base con Include
             // Es importante incluir la relación si luego el AutoMapper necesita datos de ahí
@@ -159,6 +160,13 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales
             {
                 var finDelDia = fechaFin.Value.Date.AddDays(1).AddTicks(-1);
                 query = query.Where(s => s.fechaSolicitud <= finDelDia);
+            }
+
+            if (!string.IsNullOrEmpty(idsEtiquetas))
+            {
+                var ids = idsEtiquetas.Split(',').Select(int.Parse).ToList();
+                query = query.Where(p =>
+                    p.etiquetaSolicitud.Any(es => es.idEtiqueta.HasValue && ids.Contains(es.idEtiqueta.Value)));
             }
 
             // 5. Ordenamiento (Opcional, pero recomendado: lo más nuevo primero)
