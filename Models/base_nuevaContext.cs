@@ -797,6 +797,8 @@ public partial class base_nuevaContext : DbContext
         {
             entity.HasKey(e => e.idLote).HasName("PK_LOTEPLIEGO");
 
+            entity.ToTable(tb => tb.HasTrigger("trg_lotePliego_Insert"));
+
             entity.Property(e => e.codigoBobinaSAP).UseCollation("Albanian_100_BIN");
             entity.Property(e => e.creadoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.tira).HasDefaultValue(false);
@@ -1196,6 +1198,7 @@ public partial class base_nuevaContext : DbContext
                     tb.HasTrigger("trg_FixPosicionesDuplicadas");
                     tb.HasTrigger("trg_UpdateEstadoOf");
                     tb.HasTrigger("trg_UpdateTarjetaOf");
+                    tb.HasTrigger("trg_procesoOf_Insert");
                 });
 
             entity.Property(e => e.actualizadoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
@@ -1414,6 +1417,8 @@ public partial class base_nuevaContext : DbContext
         modelBuilder.Entity<solicitudMateriales>(entity =>
         {
             entity.HasKey(e => e.idSolicitud).HasName("PK_SOLICITUDMATERIALES");
+
+            entity.ToTable(tb => tb.HasTrigger("trg_solicitudMateriales_Insert"));
 
             entity.Property(e => e.idSolicitud).ValueGeneratedNever();
             entity.Property(e => e.archivado).HasDefaultValue(false);
