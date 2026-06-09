@@ -26,17 +26,10 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.FichaTecnicaProcesos
         public async Task<ActionResult<IEnumerable<FichaTecnicaProcesosDto>>> GetFichaTecnicaProceso()
         {
             var fichaTecnicaProceso = await _context.fichaTecnicaProcesos
-                .Include(f => f.detalleFichaProcesos)
-                .Include(f => f.formulacionTinta)
-                .ThenInclude(ft => ft.especificacionTintas)
                 .Include(o => o.oFNavigation)
                 .Include(u => u.operadorNavigation)
                 .Include(t => t.formuladorTintaNavigation)
-                .Include(s => s.secuenciaColor)
-                .Include(r => r.registroLamparas)
-                .ThenInclude(v => v.idVariableNavigation)
                 .Include(e => e.estadoNavigation)
-                .Include(m => m.medicionAguas)
                 .Include(ma => ma.maquinaNavigation)
                 .ToListAsync();
 
