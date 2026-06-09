@@ -70,6 +70,7 @@ using Sistema_Produccion_3_Backend.DTO.ProcesoOf.Asignacion;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.BusquedaProcesos;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.LogCambiosProceso;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.MaterialOf;
+using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesoOfSolicitud;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.Acabado;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.AcabadoFlexo;
@@ -373,6 +374,17 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
 
                 CreateMap<UpdateBatchProcesoOfMaquina, procesoOf>()
                     .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+                CreateMap<procesoOf, ProcesoOfSolicitudDto>()
+                .ForMember(dest => dest.idArea, opt => opt.MapFrom(src => src.idTableroNavigation.idArea))       
+                .ForMember(dest => dest.nombreArea, opt => opt.MapFrom(src => src.idTableroNavigation.idAreaNavigation.nombreArea))
+                //.ForMember(dest => )                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+                .ForMember(dest => dest.nombrePostura, opt => opt.MapFrom(src => src.idPosturaNavigation.nombrePostura))
+                .ForMember(dest => dest.lineaNegocio, opt => opt.MapFrom(src => src.oFNavigation.lineaDeNegocio))
+                .ForMember(dest => dest.cantRequerida, opt => opt.MapFrom(src => src.oFNavigation.cantidadOf))
+                .ForMember(dest => dest.tipoOrden, opt => opt.MapFrom(src => src.oFNavigation.tipoDeOrden))
+                .ForMember(dest => dest.unidadMedida, opt => opt.MapFrom(src => src.oFNavigation.unidadMedida))                                     
+                .ReverseMap();
 
 
                 CreateMap<procesoAcabado, ProcesoAcabadoDto>().ReverseMap();
@@ -1195,6 +1207,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
 
                 CreateMap<fichaTecnicaCliente, SB_FichaTecnicaClienteDto>()
                     .ForMember(dest => dest.cliente, opt => opt.MapFrom(src => src.oFNavigation.clienteOf))
+                    .ForMember(dest => dest.vendedor, opt => opt.MapFrom(src => src.oFNavigation.vendedorOf))
                     .ForMember(dest => dest.producto, opt => opt.MapFrom(src => src.oFNavigation.productoOf))
                     .ForMember(dest => dest.codArticulo, opt => opt.MapFrom(src => src.oFNavigation.codArticulo))
                     .ReverseMap();
@@ -1206,6 +1219,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
 
                 CreateMap<fichaTecnicaProcesos, SB_FichaTecnicaProcesosDto>()
                     .ForMember(dest => dest.nombreCliente, opt => opt.MapFrom(src => src.oFNavigation.clienteOf))
+                    .ForMember(dest => dest.vendedor, opt => opt.MapFrom(src => src.oFNavigation.vendedorOf))
                     .ForMember(dest => dest.codArticulo, opt => opt.MapFrom(src => src.oFNavigation.codArticulo))
                     .ForMember(dest => dest.nombreProducto, opt => opt.MapFrom(src => src.oFNavigation.productoOf))
                     .ForMember(dest => dest.nombreMaquina, opt => opt.MapFrom(src => src.maquinaNavigation.nombreMaquina))
@@ -1213,6 +1227,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
 
                 CreateMap<certificadoCalidad, SB_CertificadoCalidadDto>()
                     .ForMember(dest => dest.cliente, opt => opt.MapFrom(src => src.oFNavigation.clienteOf))
+                    .ForMember(dest => dest.vendedor, opt => opt.MapFrom(src => src.oFNavigation.vendedorOf))
                     .ForMember(dest => dest.producto, opt => opt.MapFrom(src => src.oFNavigation.productoOf))
                     .ForMember(dest => dest.codArticulo, opt => opt.MapFrom(src => src.oFNavigation.codArticulo))                  
                     .ReverseMap();

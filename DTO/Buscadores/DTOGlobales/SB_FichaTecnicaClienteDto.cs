@@ -4,7 +4,9 @@
     {
         public int? idFichaCliente { get; set; }
 
-        public int? oF { get; set; }    
+        public int? oF { get; set; }
+
+        public string? vendedor { get; set; }
 
         public string? cliente { get; set; }
 

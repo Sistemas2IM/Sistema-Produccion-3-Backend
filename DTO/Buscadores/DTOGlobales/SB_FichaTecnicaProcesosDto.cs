@@ -6,6 +6,8 @@
 
         public int? oF { get; set; }
 
+        public string? vendedor { get; set; }
+
         public int? idProceso { get; set; } 
 
         public string? nombreMaquina { get; set; }

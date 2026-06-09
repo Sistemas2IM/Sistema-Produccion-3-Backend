@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.BusquedaProcesos;
+using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesoOfSolicitud;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.Acabado;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.AcabadoFlexo;
@@ -1766,6 +1767,32 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
 
             return Ok(resultadosLimpio);
         }
+
+        // GET GENERAL
+        //[HttpGet("get/solicitud/{idSol}")]
+        //public async Task<ActionResult<ProcesoOfSolicitudDto>> GetprocesoOfSolicitud(int idSol)
+        //{
+        //    // 1. Obtener el proceso único de la base de datos
+        //    var procesoOf = await _context.procesoOf           
+        //        .Include(u => u.idTableroNavigation).ThenInclude(a => a.idAreaNavigation)
+        //        .Include(u => u.idTableroNavigation).ThenInclude(u => u.idMaquinaNavigation)         
+        //        .Include(d => d.idPosturaNavigation)
+        //        .Include(c => c.idTableroNavigation)
+        //        .Include(v => v.idMaterialNavigation)
+        //        .Include(f => f.oFNavigation)
+        //        .FirstOrDefaultAsync();
+
+        //    // 2. Validación temprana (si no existe, salimos de inmediato)
+        //    if (procesoOf == null)
+        //    {
+        //        return NotFound();
+        //    }
+      
+        //    // 4. Mapear la entidad principal a tu DTO
+        //    var procesoOfDto = _mapper.Map<ProcesoOfDto>(procesoOf);
+        
+        //    return Ok(procesoOfDto);
+        //}
 
         // PUT: api/procesoOf/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754

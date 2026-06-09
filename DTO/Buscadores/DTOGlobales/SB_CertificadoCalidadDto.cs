@@ -8,6 +8,8 @@
 
         public int? oF { get; set; }
 
+        public string? vendedor { get; set; }
+
         public string? cliente { get; set; }
 
         public string? codArticulo { get; set; }
