@@ -1,4 +1,7 @@
-﻿namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
 {
     public class UpdateProcesoOfDto
     {
@@ -45,6 +48,22 @@
         public bool? archivada { get; set; }
 
         public DateTime? fechaVencimiento { get; set; }
+
+        public string? tipoMaquinaSAP { get; set; }
+
+        public string? idMaquinaSAP { get; set; }
+
+        public int? oV { get; set; }
+
+        public string? serieNumeracion { get; set; }
+
+        public string? tiroRetiro { get; set; }
+
+        public DateTime? fechaActualización { get; set; }
+
+        public string? comentario { get; set; }
+
+        public string? actualizadoPor { get; set; }
 
         public bool? muestra { get; set; }
 

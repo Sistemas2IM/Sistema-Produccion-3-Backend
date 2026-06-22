@@ -42,6 +42,8 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
 
         public decimal? tiempoEstimado { get; set; }
 
+        public string? comentario { get; set; }
+
         public List<TarjetaEtiquetaDto>? tarjetaEtiquetaDto { get; set; }
 
         public string? fsc { get; set; }

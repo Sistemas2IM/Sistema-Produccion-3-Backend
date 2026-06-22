@@ -143,7 +143,15 @@ namespace Sistema_Produccion_3_Backend.Controllers.Buscadores.TablerosOf
                     (u.idMaterial != null && u.idMaterial.ToLower().Contains(terminoActual)) ||
                     (u.idMaterialNavigation != null && u.idMaterialNavigation.nombreMaterial != null && u.idMaterialNavigation.nombreMaterial.ToLower().Contains(terminoActual)) ||
                     (u.idMaterialNavigation != null && u.idMaterialNavigation.marca != null && u.idMaterialNavigation.marca.ToLower().Contains(terminoActual)) ||
-                    (u.descripcionBobina != null && u.descripcionBobina.ToLower().Contains(terminoActual)));
+                    (u.descripcionBobina != null && u.descripcionBobina.ToLower().Contains(terminoActual)) ||
+                    (esNumero && _context.detalleReporte.Any(dr =>
+                        dr.codBobina == u.loteBobinaSAP &&
+                        _context.procesoOf.Any(p =>
+                            p.idProceso == dr.idProceso &&
+                            p.idSolicitudMateriales == numActual
+                        )
+                    ))
+                    );
 
                 queryFichaTecnicaCliente = queryFichaTecnicaCliente.Where(u =>
                     (esNumero && u.idFichaCliente == numActual) ||

@@ -1613,6 +1613,7 @@ public partial class base_nuevaContext : DbContext
 
         modelBuilder.Entity<valeBobina>(entity =>
         {
+            entity.Property(e => e.entregaParcial).HasDefaultValue(true);
             entity.Property(e => e.fechaCreacion).HasDefaultValueSql("(getdate())");
             entity.Property(e => e.idMaterial).UseCollation("SQL_Latin1_General_CP1_CI_AS");
 
