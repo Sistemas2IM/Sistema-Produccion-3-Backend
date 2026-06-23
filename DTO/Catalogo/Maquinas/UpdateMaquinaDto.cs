@@ -40,6 +40,60 @@
 
         public decimal? anchoImpresion { get; set; }
 
+        public string? marcaMaquina { get; set; }
+
+        public string? modeloMaquina { get; set; }
+
+        public string? serieMaquina { get; set; }
+
+        public int? anioFabricacion { get; set; }
+
+        public int? anioInstalacion { get; set; }
+
+        public string? paisOrigen { get; set; }
+
+        public string? estado { get; set; }
+
+        public string? ubicacionFisica { get; set; }
+
+        public string? tipoAlimentacion { get; set; }
+
+        public string? tipoSalida { get; set; }
+
+        public decimal? gramajeMinimo { get; set; }
+
+        public decimal? gramajeMaximo { get; set; }
+
+        public decimal? espesorMinimo { get; set; }
+
+        public decimal? espesorMaximo { get; set; }
+
+        public decimal? resolucionMaxima { get; set; }
+
+        public string? tipoTinta { get; set; }
+
+        public string? tipoSecado { get; set; }
+
+        public bool? registroAutomatico { get; set; }
+
+        public bool? cambioAutomaticoPlanchas { get; set; }
+
+        public decimal? oeeObjetivo { get; set; }
+
+        public decimal? eficienciaObjetivo { get; set; }
+
+        public decimal? tiempoPreparacionEstandar { get; set; }
+
+        public decimal? tiempoCambioTrabajo { get; set; }
+
+        public decimal? tiempoLavado { get; set; }
+
+        public decimal? tiempoCambioPlancha { get; set; }
+
+        public decimal? desperdicioPromedio { get; set; }
+
+        public decimal? produccionDiariaEstimada { get; set; }
+
         public int? familiaId { get; set; }
 
         // USO TIPICO

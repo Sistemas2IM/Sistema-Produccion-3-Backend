@@ -62,6 +62,83 @@ public partial class maquinas
     [Column(TypeName = "numeric(18, 0)")]
     public decimal? anchoImpresion { get; set; }
 
+    [StringLength(100)]
+    public string marcaMaquina { get; set; }
+
+    [StringLength(100)]
+    public string modeloMaquina { get; set; }
+
+    [StringLength(100)]
+    public string serieMaquina { get; set; }
+
+    public int? anioFabricacion { get; set; }
+
+    public int? anioInstalacion { get; set; }
+
+    [StringLength(50)]
+    public string paisOrigen { get; set; }
+
+    [StringLength(50)]
+    public string estado { get; set; }
+
+    [StringLength(255)]
+    public string ubicacionFisica { get; set; }
+
+    [StringLength(100)]
+    public string tipoAlimentacion { get; set; }
+
+    [StringLength(100)]
+    public string tipoSalida { get; set; }
+
+    [Column(TypeName = "numeric(10, 2)")]
+    public decimal? gramajeMinimo { get; set; }
+
+    [Column(TypeName = "numeric(10, 2)")]
+    public decimal? gramajeMaximo { get; set; }
+
+    [Column(TypeName = "numeric(10, 2)")]
+    public decimal? espesorMinimo { get; set; }
+
+    [Column(TypeName = "numeric(10, 2)")]
+    public decimal? espesorMaximo { get; set; }
+
+    [Column(TypeName = "numeric(10, 2)")]
+    public decimal? resolucionMaxima { get; set; }
+
+    [StringLength(100)]
+    public string tipoTinta { get; set; }
+
+    [StringLength(100)]
+    public string tipoSecado { get; set; }
+
+    public bool? registroAutomatico { get; set; }
+
+    public bool? cambioAutomaticoPlanchas { get; set; }
+
+    [Column(TypeName = "numeric(10, 2)")]
+    public decimal? oeeObjetivo { get; set; }
+
+    [Column(TypeName = "numeric(10, 2)")]
+    public decimal? eficienciaObjetivo { get; set; }
+
+    [Column(TypeName = "numeric(10, 2)")]
+    public decimal? tiempoPreparacionEstandar { get; set; }
+
+    [Column(TypeName = "numeric(10, 2)")]
+    public decimal? tiempoCambioTrabajo { get; set; }
+
+    [Column(TypeName = "numeric(10, 2)")]
+    public decimal? tiempoLavado { get; set; }
+
+    [Column(TypeName = "numeric(10, 2)")]
+    public decimal? tiempoCambioPlancha { get; set; }
+
+    [Column(TypeName = "numeric(10, 2)")]
+    public decimal? desperdicioPromedio { get; set; }
+
+    [Column(TypeName = "numeric(10, 2)")]
+    public decimal? produccionDiariaEstimada { get; set; }
+
     [InverseProperty("maquinaNavigation")]
     public virtual ICollection<auditoriaProceso> auditoriaProceso { get; set; } = new List<auditoriaProceso>();
 
@@ -87,6 +164,30 @@ public partial class maquinas
 
     [InverseProperty("idMaquinaNavigation")]
     public virtual ICollection<indisponibilidadMaquinas> indisponibilidadMaquinas { get; set; } = new List<indisponibilidadMaquinas>();
+
+    [InverseProperty("idMaquinaNavigation")]
+    public virtual infoMaquinaBarnizadora infoMaquinaBarnizadora { get; set; }
+
+    [InverseProperty("idMaquinaNavigation")]
+    public virtual infoMaquinaCorteConversion infoMaquinaCorteConversion { get; set; }
+
+    [InverseProperty("idMaquinaNavigation")]
+    public virtual infoMaquinaDigital infoMaquinaDigital { get; set; }
+
+    [InverseProperty("idMaquinaNavigation")]
+    public virtual infoMaquinaFlexografia infoMaquinaFlexografia { get; set; }
+
+    [InverseProperty("idMaquinaNavigation")]
+    public virtual infoMaquinaPegadora infoMaquinaPegadora { get; set; }
+
+    [InverseProperty("idMaquinaNavigation")]
+    public virtual infoMaquinaPrensaOffset infoMaquinaPrensaOffset { get; set; }
+
+    [InverseProperty("idMaquinaNavigation")]
+    public virtual infoMaquinaPreprensa infoMaquinaPreprensa { get; set; }
+
+    [InverseProperty("idMaquinaNavigation")]
+    public virtual infoMaquinaTroqueladora infoMaquinaTroqueladora { get; set; }
 
     [InverseProperty("idMaquinaNavigation")]
     public virtual ICollection<listaMaquina> listaMaquina { get; set; } = new List<listaMaquina>();

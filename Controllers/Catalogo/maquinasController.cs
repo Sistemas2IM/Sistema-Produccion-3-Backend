@@ -7,6 +7,14 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Sistema_Produccion_3_Backend.DTO.Catalogo.Maquinas;
+using Sistema_Produccion_3_Backend.DTO.Catalogo.Maquinas.infoMaquina.infoMaquinaBarnizadora;
+using Sistema_Produccion_3_Backend.DTO.Catalogo.Maquinas.infoMaquina.infoMaquinaCorteConversion;
+using Sistema_Produccion_3_Backend.DTO.Catalogo.Maquinas.infoMaquina.infoMaquinaDigital;
+using Sistema_Produccion_3_Backend.DTO.Catalogo.Maquinas.infoMaquina.infoMaquinaFlexografia;
+using Sistema_Produccion_3_Backend.DTO.Catalogo.Maquinas.infoMaquina.infoMaquinaPegadora;
+using Sistema_Produccion_3_Backend.DTO.Catalogo.Maquinas.infoMaquina.infoMaquinaPrensaOffset;
+using Sistema_Produccion_3_Backend.DTO.Catalogo.Maquinas.infoMaquina.infoMaquinaPreprensa;
+using Sistema_Produccion_3_Backend.DTO.Catalogo.Maquinas.infoMaquina.infoMaquinaTroqueladora;
 using Sistema_Produccion_3_Backend.Models;
 
 namespace Sistema_Produccion_3_Backend.Controllers.Catalogo
@@ -61,6 +69,85 @@ namespace Sistema_Produccion_3_Backend.Controllers.Catalogo
             if (maquinaDto == null)
             {
                 return NotFound("No se encontro la maquina con ID: " + id);
+            }
+
+            switch (maquinaDto.idFamilia)
+            {
+                // prensa offset
+                case 1:
+                    maquinaDto.infoMaquina = _mapper.Map<InfoMaquinaPrensaOffsetDto>(
+                        await _context.infoMaquinaPrensaOffset.FirstOrDefaultAsync(i => i.idMaquina == id));
+                    break;
+
+                // troqueladora
+                case 2:
+                    maquinaDto.infoMaquina = _mapper.Map<InfoMaquinaTroqueladoraDto>(
+                        await _context.infoMaquinaTroqueladora.FirstOrDefaultAsync(i => i.idMaquina == id));
+                    break;
+
+                //pegado
+                case 3:
+                    maquinaDto.infoMaquina = _mapper.Map<InfoMaquinaPegadoraDto>(
+                        await _context.infoMaquinaPegadora.FirstOrDefaultAsync(i => i.idMaquina == id));
+                    break;
+
+                //barniz
+                case 4:
+                    maquinaDto.infoMaquina = _mapper.Map<InfoMaquinaBarnizadoraDto>(
+                        await _context.infoMaquinaBarnizadora.FirstOrDefaultAsync(i => i.idMaquina == id));
+                    break;
+
+                //corte y conver.
+                case 5:
+                    maquinaDto.infoMaquina = _mapper.Map<InfoMaquinaCorteConversionDto>(
+                        await _context.infoMaquinaCorteConversion.FirstOrDefaultAsync(i => i.idMaquina == id));
+                    break;
+
+                // flexo prensa
+                case 8:
+                    maquinaDto.infoMaquina = _mapper.Map<InfoMaquinaFlexografiaDto>(
+                        await _context.infoMaquinaFlexografia.FirstOrDefaultAsync(i => i.idMaquina == id));
+                    break;
+
+                // flexo proceso
+                case 9:
+                    maquinaDto.infoMaquina = _mapper.Map<InfoMaquinaFlexografiaDto>(
+                        await _context.infoMaquinaFlexografia.FirstOrDefaultAsync(i => i.idMaquina == id));
+                    break;
+
+                // preprensa
+                case 10:
+                    maquinaDto.infoMaquina = _mapper.Map<InfoMaquinaPreprensaDto>(
+                        await _context.infoMaquinaPreprensa.FirstOrDefaultAsync(i => i.idMaquina == id));
+                    break;
+
+                // digital
+                case 11:
+                    maquinaDto.infoMaquina = _mapper.Map<InfoMaquinaDigitalDto>(
+                        await _context.infoMaquinaDigital.FirstOrDefaultAsync(i => i.idMaquina == id));
+                    break;
+
+                // flexo conversion
+                case 13:
+                    maquinaDto.infoMaquina = _mapper.Map<InfoMaquinaFlexografiaDto>(
+                        await _context.infoMaquinaFlexografia.FirstOrDefaultAsync(i => i.idMaquina == id));
+                    break;
+
+                // flexo corte
+                case 14:
+                    maquinaDto.infoMaquina = _mapper.Map<InfoMaquinaFlexografiaDto>(
+                        await _context.infoMaquinaFlexografia.FirstOrDefaultAsync(i => i.idMaquina == id));
+                    break;
+
+                // flexo prensa digital
+                case 15:
+                    maquinaDto.infoMaquina = _mapper.Map<InfoMaquinaFlexografiaDto>(
+                        await _context.infoMaquinaFlexografia.FirstOrDefaultAsync(i => i.idMaquina == id));
+                    break;
+
+                default:
+                    maquinaDto.infoMaquina = null;
+                    break;
             }
 
             return Ok(maquinaDto);
@@ -303,10 +390,78 @@ namespace Sistema_Produccion_3_Backend.Controllers.Catalogo
             // 5. Guardar todo en una sola transacción
             _context.maquinas.Add(maquina);
             await _context.SaveChangesAsync();
-            // Al pasar por SaveChangesAsync, EF Core actualiza el objeto 'maquina' y le asigna su nuevo 'idMaquina' real.
 
-            // OPCIÓN A: Devolver el DTO de entrada tal cual.
-            // Nota: El frontend recibirá el nuevo ID en los headers de la respuesta (Location), pero no en el JSON del body.
+            // 6. Evaluar y guardar la información específica de la máquina según la Familia
+            // Verificamos que el payload contenga la información específica
+            if (addMaquinas.infoMaquina != null)
+            {
+                switch (addMaquinas.idFamilia)
+                {
+                    // Prensa offset
+                    case 1:
+                        var infoOffset = _mapper.Map<infoMaquinaPrensaOffset>(addMaquinas.infoMaquina);
+                        infoOffset.idMaquina = maquina.idMaquina; // Asignamos el ID recién creado
+                        _context.infoMaquinaPrensaOffset.Add(infoOffset);
+                        break;
+
+                    // Troqueladora
+                    case 2:
+                        var infoTroq = _mapper.Map<infoMaquinaTroqueladora>(addMaquinas.infoMaquina);
+                        infoTroq.idMaquina = maquina.idMaquina;
+                        _context.infoMaquinaTroqueladora.Add(infoTroq);
+                        break;
+
+                    // Pegado
+                    case 3:
+                        var infoPeg = _mapper.Map<infoMaquinaPegadora>(addMaquinas.infoMaquina);
+                        infoPeg.idMaquina = maquina.idMaquina;
+                        _context.infoMaquinaPegadora.Add(infoPeg);
+                        break;
+
+                    // Barniz
+                    case 4:
+                        var infoBarniz = _mapper.Map<infoMaquinaBarnizadora>(addMaquinas.infoMaquina);
+                        infoBarniz.idMaquina = maquina.idMaquina;
+                        _context.infoMaquinaBarnizadora.Add(infoBarniz);
+                        break;
+
+                    // Corte y conver.
+                    case 5:
+                        var infoCorteConv = _mapper.Map<infoMaquinaCorteConversion>(addMaquinas.infoMaquina);
+                        infoCorteConv.idMaquina = maquina.idMaquina;
+                        _context.infoMaquinaCorteConversion.Add(infoCorteConv);
+                        break;
+
+                    // Flexografía (Agrupamos 8, 9, 13, 14 y 15 porque van a la misma tabla)
+                    case 8:
+                    case 9:
+                    case 13:
+                    case 14:
+                    case 15:
+                        var infoFlexo = _mapper.Map<infoMaquinaFlexografia>(addMaquinas.infoMaquina);
+                        infoFlexo.idMaquina = maquina.idMaquina;
+                        _context.infoMaquinaFlexografia.Add(infoFlexo);
+                        break;
+
+                    // Preprensa
+                    case 10:
+                        var infoPreprensa = _mapper.Map<infoMaquinaPreprensa>(addMaquinas.infoMaquina);
+                        infoPreprensa.idMaquina = maquina.idMaquina;
+                        _context.infoMaquinaPreprensa.Add(infoPreprensa);
+                        break;
+
+                    // Digital
+                    case 11:
+                        var infoDigital = _mapper.Map<infoMaquinaDigital>(addMaquinas.infoMaquina);
+                        infoDigital.idMaquina = maquina.idMaquina;
+                        _context.infoMaquinaDigital.Add(infoDigital);
+                        break;
+                }
+
+                // 7. Guardar la tabla hija en la base de datos
+                await _context.SaveChangesAsync();
+            }
+
             return CreatedAtAction("Getmaquinas", new { id = maquina.idMaquina }, addMaquinas);
         }
 
