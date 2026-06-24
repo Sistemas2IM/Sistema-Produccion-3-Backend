@@ -48,6 +48,10 @@ namespace Sistema_Produccion_3_Backend.DTO.ProductoTerminado
 
         public int? of { get; set; }
 
+        public string? nombreAlterno { get; set; }
+
+        public string? remarks { get; set; }
+
         public DateTime? fechaDespacho { get; set; }
     }
 }

@@ -45,5 +45,7 @@
         public DateTime? fechaDespacho { get; set; }
 
         public string? nombreAlterno { get; set; }
+
+        public string? remarks { get; set; }
     }
 }

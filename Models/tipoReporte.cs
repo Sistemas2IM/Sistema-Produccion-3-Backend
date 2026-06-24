@@ -36,4 +36,7 @@ public partial class tipoReporte
 
     [InverseProperty("tipoReporteNavigation")]
     public virtual ICollection<valeBobina> valeBobina { get; set; } = new List<valeBobina>();
+
+    [InverseProperty("tipoReporteNavigation")]
+    public virtual ICollection<validacionArranque> validacionArranque { get; set; } = new List<validacionArranque>();
 }

@@ -135,7 +135,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.ValidacionArranque.DetalleVal
 
             var existingEntities = await _context.detalleValidacionArranque.Where(e => ids.Contains(e.idDetalleValidacion)).ToListAsync();
 
-            if (existingEntities.Any())
+            // Si la cantidad de encontrados no es igual a la cantidad de solicitados, entonces sí falta alguno.
+            if (existingEntities.Count != ids.Count)
             {
                 return BadRequest("Algunas entidades no existen");
             }
@@ -150,7 +151,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.ValidacionArranque.DetalleVal
                 }
             }
 
-            try { 
+            try
+            {
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException ex)

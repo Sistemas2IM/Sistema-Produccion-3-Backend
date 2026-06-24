@@ -40,6 +40,10 @@ namespace Sistema_Produccion_3_Backend.DTO.ValidacionArranque
 
         public bool? cancelado { get; set; }
 
+        public int? tipoReporte { get; set; }
+
+        public int? estado { get; set; }
+
         public List<DetalleValidacionArranqueDto>? detalleValidacionArranque { get; set; }
     }
 }

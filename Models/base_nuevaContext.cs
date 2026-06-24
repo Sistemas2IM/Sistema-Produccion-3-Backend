@@ -1762,11 +1762,15 @@ public partial class base_nuevaContext : DbContext
             entity.Property(e => e.aprobadoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.archivado).HasDefaultValue(false);
             entity.Property(e => e.cancelado).HasDefaultValue(false);
+            entity.Property(e => e.estado).HasDefaultValue(21);
             entity.Property(e => e.fechaCreacion).HasDefaultValueSql("(getdate())");
             entity.Property(e => e.operador).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.supervisor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.tipoReporte).HasDefaultValue(9);
 
             entity.HasOne(d => d.aprobadoPorNavigation).WithMany(p => p.validacionArranqueaprobadoPorNavigation).HasConstraintName("FK_APROBADOR_ARRANQUE");
+
+            entity.HasOne(d => d.estadoNavigation).WithMany(p => p.validacionArranque).HasConstraintName("FK_ESTADO_VALIDACION");
 
             entity.HasOne(d => d.idProcesoNavigation).WithMany(p => p.validacionArranque).HasConstraintName("FK_PROCESO_ARRANQUE");
 
@@ -1777,6 +1781,8 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.operadorNavigation).WithMany(p => p.validacionArranqueoperadorNavigation).HasConstraintName("FK_OPERADOR_ARRANQUE");
 
             entity.HasOne(d => d.supervisorNavigation).WithMany(p => p.validacionArranquesupervisorNavigation).HasConstraintName("FK_SUPERVISOR_ARRANQUE");
+
+            entity.HasOne(d => d.tipoReporteNavigation).WithMany(p => p.validacionArranque).HasConstraintName("FK_TIPO_VALIDACION");
 
             entity.HasOne(d => d.turnoNavigation).WithMany(p => p.validacionArranque).HasConstraintName("FK_TURNO_ARRANQUE");
         });

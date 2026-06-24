@@ -72,6 +72,9 @@ public partial class entregasProductoTerminado
     [StringLength(250)]
     public string nombreAlterno { get; set; }
 
+    [StringLength(300)]
+    public string remarks { get; set; }
+
     [InverseProperty("idEntregaPtNavigation")]
     public virtual ICollection<detalleEntrega> detalleEntrega { get; set; } = new List<detalleEntrega>();
 
