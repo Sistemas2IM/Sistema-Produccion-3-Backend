@@ -57,6 +57,67 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales
             return Ok(valeBobinaDto);
         }
 
+        // GET: buscador de campos de vale + idSolicitudMaterial
+        [HttpGet("buscar/{termino}")]
+        public async Task<ActionResult<IEnumerable<ValeBobinaDto>>> BuscarValeBobinaGlobal(string termino)
+        {
+            termino = termino.Trim();
+
+            var terminosBusqueda = termino.Split(' ', StringSplitOptions.RemoveEmptyEntries)
+                                          .Where(t => t.Length > 1)
+                                          .ToList();
+
+            if (!terminosBusqueda.Any())
+            {
+                terminosBusqueda.Add(termino);
+            }
+
+            var queryValesBobina = _context.valeBobina
+                .AsNoTracking()
+                .Include(vb => vb.idMaterialNavigation)
+                .Include(vb => vb.estadoNavigation)
+                .AsQueryable();
+
+            foreach (var t in terminosBusqueda)
+            {
+                var terminoActual = t.ToLower();
+                bool esNumero = int.TryParse(terminoActual, out int numActual);
+
+                queryValesBobina = queryValesBobina.Where(u =>
+                    (esNumero && u.idVale == numActual) ||
+                    u.idVale.ToString().Contains(terminoActual) ||
+                    (u.loteBobinaSAP != null && u.loteBobinaSAP.ToLower().Contains(terminoActual)) ||
+                    (u.idMaterial != null && u.idMaterial.ToLower().Contains(terminoActual)) ||
+                    (u.idMaterialNavigation != null && u.idMaterialNavigation.nombreMaterial != null && u.idMaterialNavigation.nombreMaterial.ToLower().Contains(terminoActual)) ||
+                    (u.idMaterialNavigation != null && u.idMaterialNavigation.marca != null && u.idMaterialNavigation.marca.ToLower().Contains(terminoActual)) ||
+                    (u.descripcionBobina != null && u.descripcionBobina.ToLower().Contains(terminoActual)) ||
+                    (u.proveedorBobina != null && u.proveedorBobina.ToLower().Contains(terminoActual)) ||
+
+                    (esNumero && _context.detalleReporte.Any(dr =>
+                        dr.codBobina == u.loteBobinaSAP &&
+                        _context.procesoOf.Any(p =>
+                            p.idProceso == dr.idProceso &&
+                            p.idSolicitudMateriales == numActual
+                        )
+                    ))
+                );
+            }
+
+            var valeBobinas = await queryValesBobina
+                .OrderByDescending(vb => vb.idVale)
+                .Take(50) 
+                .ToListAsync();
+
+            if (!valeBobinas.Any())
+            {
+                return NotFound($"No se encontraron resultados para el término: {termino}");
+            }
+
+            var valeBobinasDto = _mapper.Map<List<ValeBobinaDto>>(valeBobinas);
+
+            return Ok(valeBobinasDto);
+        }
+
         [HttpGet("get/existencia/{loteBobina}")]
         public async Task<ActionResult<string>> GetExistenciaValeBobina(string loteBobina)
         {

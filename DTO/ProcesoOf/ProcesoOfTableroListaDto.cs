@@ -42,6 +42,8 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
 
         public decimal? tiempoEstimado { get; set; }
 
+        public string? comentario { get; set; }
+
         public List<TarjetaEtiquetaDto>? tarjetaEtiquetaDto { get; set; }
 
         public string? fsc { get; set; }
@@ -75,6 +77,10 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
         public bool? corridaCombinada { get; set; }
 
         public bool? bloqueada { get; set; }
+
+        public decimal? tiempoConsumido { get; set; }
+
+        public decimal? tiempoRestante { get; set; }
 
         public List<CorridaCombinadaDto>? subordinadas { get; set; }
 

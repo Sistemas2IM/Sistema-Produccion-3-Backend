@@ -95,6 +95,22 @@ public partial class base_nuevaContext : DbContext
 
     public virtual DbSet<indisponibilidadMaquinas> indisponibilidadMaquinas { get; set; }
 
+    public virtual DbSet<infoMaquinaBarnizadora> infoMaquinaBarnizadora { get; set; }
+
+    public virtual DbSet<infoMaquinaCorteConversion> infoMaquinaCorteConversion { get; set; }
+
+    public virtual DbSet<infoMaquinaDigital> infoMaquinaDigital { get; set; }
+
+    public virtual DbSet<infoMaquinaFlexografia> infoMaquinaFlexografia { get; set; }
+
+    public virtual DbSet<infoMaquinaPegadora> infoMaquinaPegadora { get; set; }
+
+    public virtual DbSet<infoMaquinaPrensaOffset> infoMaquinaPrensaOffset { get; set; }
+
+    public virtual DbSet<infoMaquinaPreprensa> infoMaquinaPreprensa { get; set; }
+
+    public virtual DbSet<infoMaquinaTroqueladora> infoMaquinaTroqueladora { get; set; }
+
     public virtual DbSet<listaDeOperaciones> listaDeOperaciones { get; set; }
 
     public virtual DbSet<listaItem> listaItem { get; set; }
@@ -487,6 +503,8 @@ public partial class base_nuevaContext : DbContext
         {
             entity.HasKey(e => e.idDetalleReporte).HasName("PK_DETALLEREPORTE");
 
+            entity.ToTable(tb => tb.HasTrigger("trg_actualizarEstadoValeBobina"));
+
             entity.Property(e => e.bloqueada).HasDefaultValue(false);
             entity.Property(e => e.cliente).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.descripcion).UseCollation("SQL_Latin1_General_CP1_CI_AS");
@@ -718,6 +736,100 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.idMaquinaNavigation).WithMany(p => p.indisponibilidadMaquinas).HasConstraintName("FK__indisponi__idMaq__7A521F79");
         });
 
+        modelBuilder.Entity<infoMaquinaBarnizadora>(entity =>
+        {
+            entity.HasKey(e => e.idMaquina).HasName("PK__infoMaqu__2FB8F71A4B36AE1D");
+
+            entity.Property(e => e.idMaquina).ValueGeneratedNever();
+            entity.Property(e => e.acuoso).HasDefaultValue(false);
+            entity.Property(e => e.uv).HasDefaultValue(false);
+
+            entity.HasOne(d => d.idMaquinaNavigation).WithOne(p => p.infoMaquinaBarnizadora)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_infoBarnizadora_maquinas");
+        });
+
+        modelBuilder.Entity<infoMaquinaCorteConversion>(entity =>
+        {
+            entity.HasKey(e => e.idMaquina).HasName("PK__infoMaqu__2FB8F71AE5822229");
+
+            entity.Property(e => e.idMaquina).ValueGeneratedNever();
+
+            entity.HasOne(d => d.idMaquinaNavigation).WithOne(p => p.infoMaquinaCorteConversion)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_infoRebobinadora_maquinas");
+        });
+
+        modelBuilder.Entity<infoMaquinaDigital>(entity =>
+        {
+            entity.HasKey(e => e.idMaquina).HasName("PK__infoMaqu__2FB8F71A037AE218");
+
+            entity.Property(e => e.idMaquina).ValueGeneratedNever();
+
+            entity.HasOne(d => d.idMaquinaNavigation).WithOne(p => p.infoMaquinaDigital)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_infoDigital_maquinas");
+        });
+
+        modelBuilder.Entity<infoMaquinaFlexografia>(entity =>
+        {
+            entity.HasKey(e => e.idMaquina).HasName("PK__infoMaqu__2FB8F71A6F90AF75");
+
+            entity.Property(e => e.idMaquina).ValueGeneratedNever();
+            entity.Property(e => e.impresionFrenteyVuelta).HasDefaultValue(false);
+
+            entity.HasOne(d => d.idMaquinaNavigation).WithOne(p => p.infoMaquinaFlexografia)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_infoFlexografia_maquinas");
+        });
+
+        modelBuilder.Entity<infoMaquinaPegadora>(entity =>
+        {
+            entity.HasKey(e => e.idMaquina).HasName("PK__infoMaqu__2FB8F71AEF6FAA62");
+
+            entity.Property(e => e.idMaquina).ValueGeneratedNever();
+
+            entity.HasOne(d => d.idMaquinaNavigation).WithOne(p => p.infoMaquinaPegadora)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_infoPegadora_maquinas");
+        });
+
+        modelBuilder.Entity<infoMaquinaPrensaOffset>(entity =>
+        {
+            entity.HasKey(e => e.idMaquina).HasName("PK__infoMaqu__2FB8F71A4DF1D274");
+
+            entity.Property(e => e.idMaquina).ValueGeneratedNever();
+            entity.Property(e => e.cambioAutomaticoPlanchas).HasDefaultValue(false);
+            entity.Property(e => e.controlDensidad).HasDefaultValue(false);
+            entity.Property(e => e.torreBarnizadora).HasDefaultValue(false);
+
+            entity.HasOne(d => d.idMaquinaNavigation).WithOne(p => p.infoMaquinaPrensaOffset)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_infoOffset_maquinas");
+        });
+
+        modelBuilder.Entity<infoMaquinaPreprensa>(entity =>
+        {
+            entity.HasKey(e => e.idMaquina).HasName("PK__infoMaqu__2FB8F71A5CC32C5E");
+
+            entity.Property(e => e.idMaquina).ValueGeneratedNever();
+
+            entity.HasOne(d => d.idMaquinaNavigation).WithOne(p => p.infoMaquinaPreprensa)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_infoPreprensa_maquinas");
+        });
+
+        modelBuilder.Entity<infoMaquinaTroqueladora>(entity =>
+        {
+            entity.HasKey(e => e.idMaquina).HasName("PK__infoMaqu__2FB8F71A4DACD8AF");
+
+            entity.Property(e => e.idMaquina).ValueGeneratedNever();
+
+            entity.HasOne(d => d.idMaquinaNavigation).WithOne(p => p.infoMaquinaTroqueladora)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_infoTroqueladora_maquinas");
+        });
+
         modelBuilder.Entity<listaDeOperaciones>(entity =>
         {
             entity.HasKey(e => e.idLista).HasName("PK__listaDeO__6C8A0FE5D17F6C83");
@@ -816,8 +928,10 @@ public partial class base_nuevaContext : DbContext
         {
             entity.HasKey(e => e.idMaquina).HasName("PK_MAQUINAS");
 
+            entity.Property(e => e.cambioAutomaticoPlanchas).HasDefaultValue(false);
             entity.Property(e => e.nombreCorto).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.nombreMaquina).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.registroAutomatico).HasDefaultValue(false);
 
             entity.HasOne(d => d.idFamiliaNavigation).WithMany(p => p.maquinas).HasConstraintName("FK_MAQUINAS_FAMILIA");
 
@@ -1613,6 +1727,7 @@ public partial class base_nuevaContext : DbContext
 
         modelBuilder.Entity<valeBobina>(entity =>
         {
+            entity.Property(e => e.entregaParcial).HasDefaultValue(true);
             entity.Property(e => e.fechaCreacion).HasDefaultValueSql("(getdate())");
             entity.Property(e => e.idMaterial).UseCollation("SQL_Latin1_General_CP1_CI_AS");
 
@@ -1649,11 +1764,15 @@ public partial class base_nuevaContext : DbContext
             entity.Property(e => e.aprobadoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.archivado).HasDefaultValue(false);
             entity.Property(e => e.cancelado).HasDefaultValue(false);
+            entity.Property(e => e.estado).HasDefaultValue(21);
             entity.Property(e => e.fechaCreacion).HasDefaultValueSql("(getdate())");
             entity.Property(e => e.operador).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.supervisor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.tipoReporte).HasDefaultValue(9);
 
             entity.HasOne(d => d.aprobadoPorNavigation).WithMany(p => p.validacionArranqueaprobadoPorNavigation).HasConstraintName("FK_APROBADOR_ARRANQUE");
+
+            entity.HasOne(d => d.estadoNavigation).WithMany(p => p.validacionArranque).HasConstraintName("FK_ESTADO_VALIDACION");
 
             entity.HasOne(d => d.idProcesoNavigation).WithMany(p => p.validacionArranque).HasConstraintName("FK_PROCESO_ARRANQUE");
 
@@ -1664,6 +1783,8 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.operadorNavigation).WithMany(p => p.validacionArranqueoperadorNavigation).HasConstraintName("FK_OPERADOR_ARRANQUE");
 
             entity.HasOne(d => d.supervisorNavigation).WithMany(p => p.validacionArranquesupervisorNavigation).HasConstraintName("FK_SUPERVISOR_ARRANQUE");
+
+            entity.HasOne(d => d.tipoReporteNavigation).WithMany(p => p.validacionArranque).HasConstraintName("FK_TIPO_VALIDACION");
 
             entity.HasOne(d => d.turnoNavigation).WithMany(p => p.validacionArranque).HasConstraintName("FK_TURNO_ARRANQUE");
         });

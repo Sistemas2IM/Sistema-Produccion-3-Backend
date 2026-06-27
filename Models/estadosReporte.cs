@@ -40,4 +40,7 @@ public partial class estadosReporte
 
     [InverseProperty("estadoNavigation")]
     public virtual ICollection<valeBobina> valeBobina { get; set; } = new List<valeBobina>();
+
+    [InverseProperty("estadoNavigation")]
+    public virtual ICollection<validacionArranque> validacionArranque { get; set; } = new List<validacionArranque>();
 }

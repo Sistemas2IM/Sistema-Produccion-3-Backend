@@ -183,6 +183,38 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[infoMaquinaBarnizadora]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[infoMaquinaCorteConversion]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[infoMaquinaDigital]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[infoMaquinaFlexografia]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[infoMaquinaPegadora]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[infoMaquinaPrensaOffset]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[infoMaquinaPreprensa]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[infoMaquinaTroqueladora]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[listaDeOperaciones]",
          "ObjectType": 0
       },

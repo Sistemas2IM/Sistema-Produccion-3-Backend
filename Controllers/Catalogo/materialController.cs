@@ -71,7 +71,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Catalogo
 
         // PUT api/<materialController>/5
         [HttpPut("put/{id}")]
-        public async Task<IActionResult> PutMaterial(string id,UpdateMaterialOfDto updateMaterialOf)
+        public async Task<IActionResult> PutMaterial(string id, UpdateMaterialOfDto updateMaterialOf)
         {
             var material = await _context.material.FindAsync(id);
 

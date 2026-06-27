@@ -31,6 +31,14 @@ using Sistema_Produccion_3_Backend.DTO.Catalogo.Empleados;
 using Sistema_Produccion_3_Backend.DTO.Catalogo.FamiliaMaquina;
 using Sistema_Produccion_3_Backend.DTO.Catalogo.Maquinas;
 using Sistema_Produccion_3_Backend.DTO.Catalogo.Maquinas.CatalogoTipo;
+using Sistema_Produccion_3_Backend.DTO.Catalogo.Maquinas.infoMaquina.infoMaquinaBarnizadora;
+using Sistema_Produccion_3_Backend.DTO.Catalogo.Maquinas.infoMaquina.infoMaquinaCorteConversion;
+using Sistema_Produccion_3_Backend.DTO.Catalogo.Maquinas.infoMaquina.infoMaquinaDigital;
+using Sistema_Produccion_3_Backend.DTO.Catalogo.Maquinas.infoMaquina.infoMaquinaFlexografia;
+using Sistema_Produccion_3_Backend.DTO.Catalogo.Maquinas.infoMaquina.infoMaquinaPegadora;
+using Sistema_Produccion_3_Backend.DTO.Catalogo.Maquinas.infoMaquina.infoMaquinaPrensaOffset;
+using Sistema_Produccion_3_Backend.DTO.Catalogo.Maquinas.infoMaquina.infoMaquinaPreprensa;
+using Sistema_Produccion_3_Backend.DTO.Catalogo.Maquinas.infoMaquina.infoMaquinaTroqueladora;
 using Sistema_Produccion_3_Backend.DTO.Catalogo.Turnos;
 using Sistema_Produccion_3_Backend.DTO.CorridaCombinada;
 using Sistema_Produccion_3_Backend.DTO.Etiquetas.Etiqueta;
@@ -593,6 +601,25 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForMember(dest => dest.TiposPapel, opt => opt.MapFrom(src => src.idTipoPapel))
                 .ForMember(dest => dest.TiposAcabado, opt => opt.MapFrom(src => src.idTipoAcabado))
                 .ReverseMap();
+
+            // info maquinas
+            CreateMap<infoMaquinaBarnizadora, InfoMaquinaBarnizadoraDto>().ReverseMap();
+
+            CreateMap<infoMaquinaCorteConversion, InfoMaquinaCorteConversionDto>().ReverseMap();
+
+            CreateMap<infoMaquinaDigital, InfoMaquinaDigitalDto>().ReverseMap();
+
+            CreateMap<infoMaquinaFlexografia, InfoMaquinaFlexografiaDto>().ReverseMap();
+
+            CreateMap<infoMaquinaPegadora, InfoMaquinaPegadoraDto>().ReverseMap();
+
+            CreateMap<infoMaquinaPrensaOffset, InfoMaquinaPrensaOffsetDto>().ReverseMap();
+
+            CreateMap<infoMaquinaPreprensa, InfoMaquinaPreprensaDto>().ReverseMap();
+
+            CreateMap<infoMaquinaTroqueladora, InfoMaquinaTroqueladoraDto>().ReverseMap();
+
+            // -------------------------------------------------------------------------
 
             // ==== USO MAQUINAS
             CreateMap<catalogoTipoAcabado, CatalogoTipoAcabadoDto>().ReverseMap();

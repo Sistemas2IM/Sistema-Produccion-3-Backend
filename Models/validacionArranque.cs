@@ -57,12 +57,20 @@ public partial class validacionArranque
 
     public bool? cancelado { get; set; }
 
+    public int? tipoReporte { get; set; }
+
+    public int? estado { get; set; }
+
     [ForeignKey("aprobadoPor")]
     [InverseProperty("validacionArranqueaprobadoPorNavigation")]
     public virtual usuario aprobadoPorNavigation { get; set; }
 
     [InverseProperty("idValidacionArranqueNavigation")]
     public virtual ICollection<detalleValidacionArranque> detalleValidacionArranque { get; set; } = new List<detalleValidacionArranque>();
+
+    [ForeignKey("estado")]
+    [InverseProperty("validacionArranque")]
+    public virtual estadosReporte estadoNavigation { get; set; }
 
     [ForeignKey("idProceso")]
     [InverseProperty("validacionArranque")]
@@ -83,6 +91,10 @@ public partial class validacionArranque
     [ForeignKey("supervisor")]
     [InverseProperty("validacionArranquesupervisorNavigation")]
     public virtual usuario supervisorNavigation { get; set; }
+
+    [ForeignKey("tipoReporte")]
+    [InverseProperty("validacionArranque")]
+    public virtual tipoReporte tipoReporteNavigation { get; set; }
 
     [ForeignKey("turno")]
     [InverseProperty("validacionArranque")]

@@ -916,7 +916,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 var proceso = procesoWrapper.Proceso;
                 var dto = _mapper.Map<ProcesoOfVistaTableroDto>(proceso);
                 dto.detalleProcesoOf = _mapper.Map<List<DetalleReporteDto>>(procesoWrapper.DetalleReporteOrdenado);
-
+         
                 switch (proceso.tipoMaquinaSAP)
                 {
                     case "impresion":
@@ -1215,6 +1215,17 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             {
                 var proceso = procesoWrapper.Proceso;
                 var dto = _mapper.Map<ProcesoOfTableroListaDto>(proceso);
+
+                // 🚀 CÁLCULO DE TIEMPO CONSUMIDO
+                decimal consumido = procesoWrapper.DetalleReporteOrdenado
+                    .Where(d => d.tiempo != null)
+                    .Sum(d => (decimal)d.tiempo.Value.ToTimeSpan().TotalHours);
+
+                dto.tiempoConsumido = Math.Round(consumido, 2);
+
+                // 🚀 CÁLCULO DE TIEMPO RESTANTE
+                decimal estimado = proceso.tiempoEstimado ?? 0m;
+                dto.tiempoRestante = Math.Round(estimado - (dto.tiempoConsumido ?? 0m), 2);
 
                 // --- VALIDACIÓN PARA detOps ---
                 dto.detOps = proceso.detalleReporte != null && proceso.detalleReporte.Any(d =>

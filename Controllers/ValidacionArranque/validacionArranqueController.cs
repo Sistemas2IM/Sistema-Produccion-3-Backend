@@ -33,6 +33,21 @@ namespace Sistema_Produccion_3_Backend.Controllers.ValidacionArranque
 
             return Ok(validacionArranqueDto);
         }
+
+        // GET: api/<validacionArranqueController>
+        [HttpGet("get/idProceso/{idProceso}")]
+        public async Task<ActionResult<IEnumerable<ValidacionArranqueDto>>> GetValidacionArranqueIdProceso(int idProceso)
+        {
+            var validacionArranque = await _context.validacionArranque
+                .Include(va => va.detalleValidacionArranque)
+                .Where(va => va.idProceso == idProceso)
+                .ToListAsync();
+
+            var validacionArranqueDto = _mapper.Map<List<ValidacionArranqueDto>>(validacionArranque);
+
+            return Ok(validacionArranqueDto);
+        }
+
         // GET api/<validacionArranqueController>/5
         [HttpGet("get/{id}")]
         public async Task<ActionResult<ValidacionArranqueDto>> GetValidacionArranque(int id)

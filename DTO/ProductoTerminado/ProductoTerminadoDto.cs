@@ -57,6 +57,8 @@ namespace Sistema_Produccion_3_Backend.DTO.ProductoTerminado
 
         public string? nombreAlterno { get; set; }
 
+        public string? remarks { get; set; }
+
         public string? codArticulo { get; set; }
 
         public string? articuloOf {  get; set; }
