@@ -149,6 +149,10 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
 
         public bool? esEnsamblaje { get; set; }
 
+        public decimal? tiempoConsumido { get; set; }
+
+        public decimal? tiempoRestante { get; set; }
+
         public DateTime? inicioEstimado { get; set; }
 
         public DateTime? finEstimado { get; set; }

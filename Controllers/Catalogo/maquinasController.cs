@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
@@ -247,30 +248,23 @@ namespace Sistema_Produccion_3_Backend.Controllers.Catalogo
             }
 
             // CAMBIO 2: Mapeamos los datos básicos. 
-            // Al hacer esto sobre una entidad ya rastreada (tracked), EF detecta los cambios solo.
             _mapper.Map(updateMaquinas, maquina);
-
-            // Ya no necesitas esta línea, de hecho con relaciones puede causar problemas:
-            // _context.Entry(maquina).State = EntityState.Modified; 
 
             // CAMBIO 3: Procesar las colecciones (Limpiar y reconstruir)
 
             // --- USOS TÍPICOS ---
-            maquina.idUsoTipico.Clear(); // Le dice a EF: "Borra las relaciones viejas"
+            maquina.idUsoTipico.Clear();
             if (updateMaquinas.IdsUsoTipico != null && updateMaquinas.IdsUsoTipico.Any())
             {
                 foreach (var usoId in updateMaquinas.IdsUsoTipico)
                 {
-                    // OJO AQUÍ: Como hicimos Include, algunos catálogos ya están en la memoria de EF.
-                    // Si intentamos hacer Attach de un Stub nuevo con el mismo ID, EF dará error.
-                    // Por eso, primero buscamos si ya lo tiene en memoria (.Local), si no, creamos el Stub.
                     var trackedEntity = _context.catalogoUsoTipico.Local.FirstOrDefault(e => e.idUsoTipico == usoId);
                     if (trackedEntity == null)
                     {
                         trackedEntity = new catalogoUsoTipico { idUsoTipico = usoId };
                         _context.Attach(trackedEntity);
                     }
-                    maquina.idUsoTipico.Add(trackedEntity); // Agrega la nueva relación
+                    maquina.idUsoTipico.Add(trackedEntity);
                 }
             }
 
@@ -306,6 +300,147 @@ namespace Sistema_Produccion_3_Backend.Controllers.Catalogo
                 }
             }
 
+            // CAMBIO 4: Procesar el objeto dinámico infoMaquina
+            if (updateMaquinas.infoMaquina != null)
+            {
+                var infoJsonString = updateMaquinas.infoMaquina.ToString();
+
+                switch (updateMaquinas.idFamilia)
+                {
+                    // Prensa offset
+                    case 1:
+                        var newOffset = JsonSerializer.Deserialize<infoMaquinaPrensaOffset>(infoJsonString);
+                        var existOffset = await _context.infoMaquinaPrensaOffset.FirstOrDefaultAsync(i => i.idMaquina == id);
+                        if (existOffset != null)
+                        {
+                            newOffset.idMaquina = id;
+                            _context.Entry(existOffset).CurrentValues.SetValues(newOffset);
+                        }
+                        else
+                        {
+                            newOffset.idMaquina = id;
+                            _context.infoMaquinaPrensaOffset.Add(newOffset);
+                        }
+                        break;
+
+                    // Troqueladora
+                    case 2:
+                        var newTroq = JsonSerializer.Deserialize<infoMaquinaTroqueladora>(infoJsonString);
+                        var existTroq = await _context.infoMaquinaTroqueladora.FirstOrDefaultAsync(i => i.idMaquina == id);
+                        if (existTroq != null)
+                        {
+                            newTroq.idMaquina = id;
+                            _context.Entry(existTroq).CurrentValues.SetValues(newTroq);
+                        }
+                        else
+                        {
+                            newTroq.idMaquina = id;
+                            _context.infoMaquinaTroqueladora.Add(newTroq);
+                        }
+                        break;
+
+                    // Pegado
+                    case 3:
+                        var newPeg = JsonSerializer.Deserialize<infoMaquinaPegadora>(infoJsonString);
+                        var existPeg = await _context.infoMaquinaPegadora.FirstOrDefaultAsync(i => i.idMaquina == id);
+                        if (existPeg != null)
+                        {
+                            newPeg.idMaquina = id;
+                            _context.Entry(existPeg).CurrentValues.SetValues(newPeg);
+                        }
+                        else
+                        {
+                            newPeg.idMaquina = id;
+                            _context.infoMaquinaPegadora.Add(newPeg);
+                        }
+                        break;
+
+                    // Barniz
+                    case 4:
+                        var newBarniz = JsonSerializer.Deserialize<infoMaquinaBarnizadora>(infoJsonString);
+                        var existBarniz = await _context.infoMaquinaBarnizadora.FirstOrDefaultAsync(i => i.idMaquina == id);
+                        if (existBarniz != null)
+                        {
+                            newBarniz.idMaquina = id;
+                            _context.Entry(existBarniz).CurrentValues.SetValues(newBarniz);
+                        }
+                        else
+                        {
+                            newBarniz.idMaquina = id;
+                            _context.infoMaquinaBarnizadora.Add(newBarniz);
+                        }
+                        break;
+
+                    // Corte y conver.
+                    case 5:
+                        var newCorte = JsonSerializer.Deserialize<infoMaquinaCorteConversion>(infoJsonString);
+                        var existCorte = await _context.infoMaquinaCorteConversion.FirstOrDefaultAsync(i => i.idMaquina == id);
+                        if (existCorte != null)
+                        {
+                            newCorte.idMaquina = id;
+                            _context.Entry(existCorte).CurrentValues.SetValues(newCorte);
+                        }
+                        else
+                        {
+                            newCorte.idMaquina = id;
+                            _context.infoMaquinaCorteConversion.Add(newCorte);
+                        }
+                        break;
+
+                    // Flexografía (Agrupados)
+                    case 8:
+                    case 9:
+                    case 13:
+                    case 14:
+                    case 15:
+                        var newFlexo = JsonSerializer.Deserialize<infoMaquinaFlexografia>(infoJsonString);
+                        var existFlexo = await _context.infoMaquinaFlexografia.FirstOrDefaultAsync(i => i.idMaquina == id);
+                        if (existFlexo != null)
+                        {
+                            newFlexo.idMaquina = id;
+                            _context.Entry(existFlexo).CurrentValues.SetValues(newFlexo);
+                        }
+                        else
+                        {
+                            newFlexo.idMaquina = id;
+                            _context.infoMaquinaFlexografia.Add(newFlexo);
+                        }
+                        break;
+
+                    // Preprensa
+                    case 10:
+                        var newPreprensa = JsonSerializer.Deserialize<infoMaquinaPreprensa>(infoJsonString);
+                        var existPreprensa = await _context.infoMaquinaPreprensa.FirstOrDefaultAsync(i => i.idMaquina == id);
+                        if (existPreprensa != null)
+                        {
+                            newPreprensa.idMaquina = id;
+                            _context.Entry(existPreprensa).CurrentValues.SetValues(newPreprensa);
+                        }
+                        else
+                        {
+                            newPreprensa.idMaquina = id;
+                            _context.infoMaquinaPreprensa.Add(newPreprensa);
+                        }
+                        break;
+
+                    // Digital
+                    case 11:
+                        var newDigital = JsonSerializer.Deserialize<infoMaquinaDigital>(infoJsonString);
+                        var existDigital = await _context.infoMaquinaDigital.FirstOrDefaultAsync(i => i.idMaquina == id);
+                        if (existDigital != null)
+                        {
+                            newDigital.idMaquina = id;
+                            _context.Entry(existDigital).CurrentValues.SetValues(newDigital);
+                        }
+                        else
+                        {
+                            newDigital.idMaquina = id;
+                            _context.infoMaquinaDigital.Add(newDigital);
+                        }
+                        break;
+                }
+            }
+
             // Guardar todo en la base de datos
             try
             {
@@ -323,7 +458,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Catalogo
                 }
             }
 
-            return Ok(updateMaquinas); // (O devuelve un ResponseDto si aplicaste lo del mensaje anterior)
+            return Ok(updateMaquinas);
         }
 
         // POST: api/maquinas
@@ -399,35 +534,40 @@ namespace Sistema_Produccion_3_Backend.Controllers.Catalogo
                 {
                     // Prensa offset
                     case 1:
-                        var infoOffset = _mapper.Map<infoMaquinaPrensaOffset>(addMaquinas.infoMaquina);
-                        infoOffset.idMaquina = maquina.idMaquina; // Asignamos el ID recién creado
+                        var infoJsonString = addMaquinas.infoMaquina.ToString();
+                        var infoOffset = System.Text.Json.JsonSerializer.Deserialize<infoMaquinaPrensaOffset>(infoJsonString);
+                        infoOffset.idMaquina = maquina.idMaquina;
                         _context.infoMaquinaPrensaOffset.Add(infoOffset);
                         break;
 
                     // Troqueladora
                     case 2:
-                        var infoTroq = _mapper.Map<infoMaquinaTroqueladora>(addMaquinas.infoMaquina);
+                        var infoTroqJsonString = addMaquinas.infoMaquina.ToString();
+                        var infoTroq = System.Text.Json.JsonSerializer.Deserialize<infoMaquinaTroqueladora>(infoTroqJsonString);
                         infoTroq.idMaquina = maquina.idMaquina;
                         _context.infoMaquinaTroqueladora.Add(infoTroq);
                         break;
 
                     // Pegado
                     case 3:
-                        var infoPeg = _mapper.Map<infoMaquinaPegadora>(addMaquinas.infoMaquina);
+                        var infoPegJsonString = addMaquinas.infoMaquina.ToString();
+                        var infoPeg = System.Text.Json.JsonSerializer.Deserialize<infoMaquinaPegadora>(infoPegJsonString);
                         infoPeg.idMaquina = maquina.idMaquina;
                         _context.infoMaquinaPegadora.Add(infoPeg);
                         break;
 
                     // Barniz
                     case 4:
-                        var infoBarniz = _mapper.Map<infoMaquinaBarnizadora>(addMaquinas.infoMaquina);
+                        var infoBarnizJsonString = addMaquinas.infoMaquina.ToString();
+                        var infoBarniz = System.Text.Json.JsonSerializer.Deserialize<infoMaquinaBarnizadora>(infoBarnizJsonString);
                         infoBarniz.idMaquina = maquina.idMaquina;
                         _context.infoMaquinaBarnizadora.Add(infoBarniz);
                         break;
 
                     // Corte y conver.
                     case 5:
-                        var infoCorteConv = _mapper.Map<infoMaquinaCorteConversion>(addMaquinas.infoMaquina);
+                        var infoCorteConvJsonString = addMaquinas.infoMaquina.ToString();
+                        var infoCorteConv = System.Text.Json.JsonSerializer.Deserialize<infoMaquinaCorteConversion>(infoCorteConvJsonString);
                         infoCorteConv.idMaquina = maquina.idMaquina;
                         _context.infoMaquinaCorteConversion.Add(infoCorteConv);
                         break;
@@ -438,21 +578,24 @@ namespace Sistema_Produccion_3_Backend.Controllers.Catalogo
                     case 13:
                     case 14:
                     case 15:
-                        var infoFlexo = _mapper.Map<infoMaquinaFlexografia>(addMaquinas.infoMaquina);
+                        var infoFlexJsonString = addMaquinas.infoMaquina.ToString();
+                        var infoFlexo = System.Text.Json.JsonSerializer.Deserialize<infoMaquinaFlexografia>(infoFlexJsonString);
                         infoFlexo.idMaquina = maquina.idMaquina;
                         _context.infoMaquinaFlexografia.Add(infoFlexo);
                         break;
 
                     // Preprensa
                     case 10:
-                        var infoPreprensa = _mapper.Map<infoMaquinaPreprensa>(addMaquinas.infoMaquina);
+                        var infoPreprensaJsonString = addMaquinas.infoMaquina.ToString();
+                        var infoPreprensa = System.Text.Json.JsonSerializer.Deserialize<infoMaquinaPreprensa>(infoPreprensaJsonString);
                         infoPreprensa.idMaquina = maquina.idMaquina;
                         _context.infoMaquinaPreprensa.Add(infoPreprensa);
                         break;
 
                     // Digital
                     case 11:
-                        var infoDigital = _mapper.Map<infoMaquinaDigital>(addMaquinas.infoMaquina);
+                        var infoDigitalJsonString = addMaquinas.infoMaquina.ToString();
+                        var infoDigital = System.Text.Json.JsonSerializer.Deserialize<infoMaquinaDigital>(infoDigitalJsonString);
                         infoDigital.idMaquina = maquina.idMaquina;
                         _context.infoMaquinaDigital.Add(infoDigital);
                         break;

@@ -503,6 +503,8 @@ public partial class base_nuevaContext : DbContext
         {
             entity.HasKey(e => e.idDetalleReporte).HasName("PK_DETALLEREPORTE");
 
+            entity.ToTable(tb => tb.HasTrigger("trg_actualizarEstadoValeBobina"));
+
             entity.Property(e => e.bloqueada).HasDefaultValue(false);
             entity.Property(e => e.cliente).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.descripcion).UseCollation("SQL_Latin1_General_CP1_CI_AS");
