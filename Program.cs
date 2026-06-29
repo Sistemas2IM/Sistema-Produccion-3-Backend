@@ -18,7 +18,6 @@ using System.Text;
 
 
 var builder = WebApplication.CreateBuilder(args);
-var connectionString = builder.Configuration.GetConnectionString("base_nuevaContext") ?? throw new InvalidOperationException("Connection string 'base_nuevaContext' not found.");
 
 // Add services to the container.
 
