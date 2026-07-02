@@ -103,6 +103,44 @@ namespace Sistema_Produccion_3_Backend.Controllers.ProductoTerminado
             return Ok(siguienteId);
         }
 
+        // get por idArea en usuario
+        [HttpGet("get/area/{idArea}")]
+        public async Task<ActionResult<IEnumerable<ProductoTerminadoDto>>> GetEntregasProductoTerminadoByArea(int idArea)
+        {
+            // 1. Primero buscamos el nombre del área correspondiente a ese ID
+            var nombreArea = await _context.areas
+                .Where(a => a.idArea == idArea)
+                .Select(a => a.nombreArea)
+                .FirstOrDefaultAsync();
+
+            // Si el área no existe, retornamos un BadRequest
+            if (string.IsNullOrEmpty(nombreArea))
+            {
+                return BadRequest($"No existe un área registrada con el id: {idArea}");
+            }
+
+            // 2. Filtramos la tabla de entregas aplicando la regla de administración
+            var entregasProductoTerminado = await _context.entregasProductoTerminado
+                .AsNoTracking() // 🚀 Optimización de memoria
+                .AsSplitQuery() // 🚀 Evita consultas lentas al tener múltiples Includes
+                .Include(p => p.idEstadoReporteNavigation)
+                .Include(sm => sm.idMaquinaNavigation)
+                .Include(o => o.ofNavigation)
+                .Where(u => idArea == 17 || u.areaRecibe == nombreArea || u.areaEntrega == nombreArea) // Regla para Administración (idArea 17)
+                .ToListAsync();
+
+            if (!entregasProductoTerminado.Any())
+            {
+                return NotFound($"No se encontraron documentos de entrega o recepción para el área: {nombreArea}");
+            }
+
+            // 3. Mapeo a DTO y respuesta
+            var productosTerminados = _mapper.Map<List<ProductoTerminadoDto>>(entregasProductoTerminado);
+
+            return Ok(productosTerminados);
+        }
+
+
         // PUT: api/entregaProductoTerminado/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("put/{id}")]

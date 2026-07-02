@@ -51,6 +51,20 @@ namespace Sistema_Produccion_3_Backend.Controllers.CondicionInicial
             return Ok(condicionInicialDto);
         }
 
+        // get por idProceso
+        [HttpGet("get/proceso/{idProceso}")]
+        public async Task<ActionResult<IEnumerable<CondicionInicialDto>>> GetCondicionInicialProceso(int idProceso)
+        {
+            var condicionInicial = await _context.condicionInicial
+                .Include(ci => ci.detalleCondicionInicial)
+                .Where(ci => ci.idProceso == idProceso)
+                .ToListAsync();
+
+            var condicionInicialDto = _mapper.Map<List<CondicionInicialDto>>(condicionInicial);
+
+            return Ok(condicionInicialDto);
+        }
+
         // POST api/<condicionInicialController>
         [HttpPost("post")]
         public async Task<ActionResult<condicionInicial>> PostCondicionInicial(CondicionInicialDto condicionInicialDto)

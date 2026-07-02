@@ -29,7 +29,7 @@ public partial class condicionInicial
     public DateTime? fechaCreacion { get; set; }
 
     [StringLength(250)]
-    public string justificación { get; set; }
+    public string justificacion { get; set; }
 
     public bool? archivada { get; set; }
 

@@ -16,7 +16,7 @@ namespace Sistema_Produccion_3_Backend.DTO.CondicionInicial
 
         public DateTime? fechaCreacion { get; set; }
 
-        public string? justificación { get; set; }
+        public string? justificacion { get; set; }
 
         public bool? archivada { get; set; }
 
