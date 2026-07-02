@@ -59,11 +59,19 @@ public partial class variablesTecnicas
     [StringLength(100)]
     public string valorPorDefecto { get; set; }
 
+    [StringLength(100)]
+    public string valorObjetivo { get; set; }
+
+    public bool? condicionesIniciales { get; set; }
+
     [InverseProperty("idVariableNavigation")]
     public virtual ICollection<detalleAuditoriaProceso> detalleAuditoriaProceso { get; set; } = new List<detalleAuditoriaProceso>();
 
     [InverseProperty("idVariableNavigation")]
     public virtual ICollection<detalleCertificadoCalidad> detalleCertificadoCalidad { get; set; } = new List<detalleCertificadoCalidad>();
+
+    [InverseProperty("idVariableNavigation")]
+    public virtual ICollection<detalleCondicionInicial> detalleCondicionInicial { get; set; } = new List<detalleCondicionInicial>();
 
     [InverseProperty("idVariableNavigation")]
     public virtual ICollection<detalleFichaClientes> detalleFichaClientes { get; set; } = new List<detalleFichaClientes>();

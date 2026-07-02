@@ -33,6 +33,9 @@ public partial class unidadesMedida
     public virtual ICollection<detalleCertificadoCalidad> detalleCertificadoCalidad { get; set; } = new List<detalleCertificadoCalidad>();
 
     [InverseProperty("idUnidadNavigation")]
+    public virtual ICollection<detalleCondicionInicial> detalleCondicionInicial { get; set; } = new List<detalleCondicionInicial>();
+
+    [InverseProperty("idUnidadNavigation")]
     public virtual ICollection<detalleFichaClientes> detalleFichaClientes { get; set; } = new List<detalleFichaClientes>();
 
     [InverseProperty("idUnidadNavigation")]

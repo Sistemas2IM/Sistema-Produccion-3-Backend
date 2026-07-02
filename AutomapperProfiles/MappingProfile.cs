@@ -40,6 +40,9 @@ using Sistema_Produccion_3_Backend.DTO.Catalogo.Maquinas.infoMaquina.infoMaquina
 using Sistema_Produccion_3_Backend.DTO.Catalogo.Maquinas.infoMaquina.infoMaquinaPreprensa;
 using Sistema_Produccion_3_Backend.DTO.Catalogo.Maquinas.infoMaquina.infoMaquinaTroqueladora;
 using Sistema_Produccion_3_Backend.DTO.Catalogo.Turnos;
+using Sistema_Produccion_3_Backend.DTO.CondicionInicial;
+using Sistema_Produccion_3_Backend.DTO.CondicionInicial.DetalleCondicionInicial;
+using Sistema_Produccion_3_Backend.DTO.CondicionInicial.DetalleCondicionInicial.Batch;
 using Sistema_Produccion_3_Backend.DTO.CorridaCombinada;
 using Sistema_Produccion_3_Backend.DTO.Etiquetas.Etiqueta;
 using Sistema_Produccion_3_Backend.DTO.Etiquetas.Etiqueta.BathcEtiqueta;
@@ -1259,8 +1262,6 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                     .ForMember(dest => dest.codArticulo, opt => opt.MapFrom(src => src.oFNavigation.codArticulo))                  
                     .ReverseMap();
 
-
-
             // VALIDACION DE ARRANQUE =========================================================================================
             CreateMap<validacionArranque, ValidacionArranqueDto>()
                 .ForMember(dest => dest.detalleValidacionArranque, opt => opt.MapFrom(src => src.detalleValidacionArranque))
@@ -1276,6 +1277,25 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             CreateMap<detalleValidacionArranque, AddBatchDetalleVArranqueDto>().ReverseMap();
             CreateMap<UpdateBatchDetalleVArranqueDto, detalleValidacionArranque>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            // condicion Inicial =============================================================================================
+            CreateMap<condicionInicial, CondicionInicialDto>()
+                .ForMember(dest => dest.detalleCondicionInicial, opt => opt.MapFrom(src => src.detalleCondicionInicial))
+                .ReverseMap();
+            CreateMap<condicionInicial, AddCondicionInicialDto>().ReverseMap();
+            CreateMap<UpdateCondicionInicialDto, condicionInicial>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            {
+                // detalle condicion inicial
+                CreateMap<detalleCondicionInicial, DetalleCondicionInicialDto>().ReverseMap();
+                CreateMap<detalleCondicionInicial, AddDetalleCondicionInicialDto>().ReverseMap();
+                CreateMap<UpdateDetalleCondicionInicialDto, detalleCondicionInicial>()
+                    .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+                CreateMap<detalleCondicionInicial, AddBatchDetalleCondicionInicialDto>().ReverseMap();
+                CreateMap<detalleCondicionInicial, UpdateBatchDetalleCondicionInicialDto>().ReverseMap();
+            }
         }
     }
 }

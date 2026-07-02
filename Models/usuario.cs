@@ -72,6 +72,12 @@ public partial class usuario
     [InverseProperty("elaboradoPorNavigation")]
     public virtual ICollection<certificadoCalidad> certificadoCalidadelaboradoPorNavigation { get; set; } = new List<certificadoCalidad>();
 
+    [InverseProperty("creadoPorNavigation")]
+    public virtual ICollection<condicionInicial> condicionInicialcreadoPorNavigation { get; set; } = new List<condicionInicial>();
+
+    [InverseProperty("operadorNavigation")]
+    public virtual ICollection<condicionInicial> condicionInicialoperadorNavigation { get; set; } = new List<condicionInicial>();
+
     [InverseProperty("actualizadoPorNavigation")]
     public virtual ICollection<fichaTecnicaCliente> fichaTecnicaClienteactualizadoPorNavigation { get; set; } = new List<fichaTecnicaCliente>();
 
