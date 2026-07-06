@@ -67,13 +67,13 @@ namespace Sistema_Produccion_3_Backend.Controllers.CondicionInicial
 
         // POST api/<condicionInicialController>
         [HttpPost("post")]
-        public async Task<ActionResult<condicionInicial>> PostCondicionInicial(CondicionInicialDto condicionInicialDto)
+        public async Task<ActionResult<condicionInicial>> PostCondicionInicial(AddCondicionInicialDto condicionInicialDto)
         {
             var condicionInicial = _mapper.Map<condicionInicial>(condicionInicialDto);
             _context.condicionInicial.Add(condicionInicial);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetCondicionInicial", new { id = condicionInicial.idCondicionInicial }, condicionInicialDto);
+            return CreatedAtAction("GetCondicionInicial", new { id = condicionInicial.idCondicionInicial }, condicionInicial);
         }
 
         // PUT api/<condicionInicialController>/5

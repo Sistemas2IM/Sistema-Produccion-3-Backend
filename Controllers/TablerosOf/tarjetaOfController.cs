@@ -71,6 +71,123 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             return Ok(tarjetaOfDto);
         }
 
+        // GET: api/tarjetaOf/consolidadas-ov
+        [HttpGet("get/ov-consolidadas")]
+        public async Task<ActionResult<object>> GetTarjetasConsolidadasPorOv()
+        {
+            // 1. Ejecutamos la consulta optimizada
+            var tarjetasOrdenadas = await _context.tarjetaOf
+                .AsNoTracking()
+                .AsSplitQuery()
+                .Where(t =>
+                    t.archivada == false &&
+                    t.oV != null && // 🚀 Filtramos los nulos desde la base de datos
+                    t.oV != 0       // 🚀 Filtramos los ceros desde la base de datos
+                )
+                .OrderBy(t => t.idEstadoOf == 1 ? 0 : 1)
+                .ThenBy(t => t.idEstadoOf == 1 ? -t.oF : t.posicion)
+                .Include(u => u.idEstadoOfNavigation)
+                .Include(r => r.etiquetaOf)
+                    .ThenInclude(o => o.idEtiquetaNavigation)
+                .Include(f => f.ffeTiemposOfGlobal)
+                .Include(se => se.secuenciadoPorNavigation)
+                .ToListAsync();
+
+            // 2. Mapeamos a tu DTO
+            var tarjetaOfDto = _mapper.Map<List<TarjetaOfDto>>(tarjetasOrdenadas);
+
+            // 3. 🚀 CONSOLIDACIÓN POR oV SIMPLIFICADA
+            var consolidadasOV = tarjetaOfDto
+                // Como ya filtramos los nulos arriba, agrupamos directamente por el oV
+                .GroupBy(t => t.oV.ToString())
+                .Select(g => new
+                {
+                    ov = g.Key,
+                    cantidadTarjetas = g.Count(),
+                    tarjetas = g.ToList()
+                })
+                // Ordenamos limpiamente de mayor a menor oV
+                .OrderByDescending(g => g.ov)
+                .ToList();
+
+            return Ok(consolidadasOV);
+        }
+
+        // GET: api/tarjetaOf/consolidadas-ov filtro por ov
+        [HttpGet("get/ov-consolidadas/{ov}")]
+        public async Task<ActionResult<object>> GetTarjetasConsolidadasPorOv(string ov)
+        {
+            // 1. Ejecutamos la consulta optimizada
+            var tarjetasOrdenadas = await _context.tarjetaOf
+                .AsNoTracking()
+                .AsSplitQuery()
+                .Where(t =>
+                    t.archivada == false &&
+                    t.oV != null && // 🚀 Filtramos los nulos desde la base de datos
+                    t.oV != 0       // 🚀 Filtramos los ceros desde la base de datos
+                    && t.oV.ToString() == ov // Filtramos por el oV recibido como parámetro
+                )
+                .OrderBy(t => t.idEstadoOf == 1 ? 0 : 1)
+                .ThenBy(t => t.idEstadoOf == 1 ? -t.oF : t.posicion)
+                .Include(u => u.idEstadoOfNavigation)
+                .Include(r => r.etiquetaOf)
+                    .ThenInclude(o => o.idEtiquetaNavigation)
+                .Include(f => f.ffeTiemposOfGlobal)
+                .Include(se => se.secuenciadoPorNavigation)
+                .ToListAsync();
+
+            // 2. Mapeamos a tu DTO
+            var tarjetaOfDto = _mapper.Map<List<TarjetaOfDto>>(tarjetasOrdenadas);
+
+            // 3. 🚀 CONSOLIDACIÓN POR oV SIMPLIFICADA
+            var consolidadasOV = tarjetaOfDto
+                // Como ya filtramos los nulos arriba, agrupamos directamente por el oV
+                .GroupBy(t => t.oV.ToString())
+                .Select(g => new
+                {
+                    ov = g.Key,
+                    cantidadTarjetas = g.Count(),
+                    tarjetas = g.ToList()
+                })
+                // Ordenamos limpiamente de mayor a menor oV
+                .OrderByDescending(g => g.ov)
+                .ToList();
+
+            return Ok(consolidadasOV);
+        }
+
+        // GET por user, si es el usuario "emenjivar" debe mostrar solo las del area con id 19, si no, mostrar todo
+        // Ejemplo URL: /api/tarjetaOf/get/por-usuario/emenjivar
+        [HttpGet("get/por-usuario/{username}")]
+        public async Task<ActionResult<IEnumerable<TarjetaOfDto>>> GettarjetaOfPorUsuario(string username)
+        {
+            // 1. Limpiamos el nombre del usuario recibido por parámetro
+            string usuarioActual = username?.Trim().ToLower() ?? "";
+            bool esEmenjivar = usuarioActual == "emenjivar";
+
+            // 2. Ejecutamos la consulta
+            var tarjetasOrdenadas = await _context.tarjetaOf
+                .AsNoTracking()
+                .AsSplitQuery()
+                .Where(t =>
+                    t.archivada == false &&
+                    (!esEmenjivar || t.procesoOf.Any(p => p.idTableroNavigation.idArea == 19))
+                )
+                // OrderBy siempre debe ir después del Where
+                .OrderBy(t => t.idEstadoOf == 1 ? 0 : 1)
+                .ThenBy(t => t.idEstadoOf == 1 ? -t.oF : t.posicion)
+                .Include(u => u.idEstadoOfNavigation)
+                .Include(r => r.etiquetaOf)
+                    .ThenInclude(o => o.idEtiquetaNavigation)
+                .Include(f => f.ffeTiemposOfGlobal)
+                .Include(se => se.secuenciadoPorNavigation)
+                .ToListAsync();
+
+            var tarjetaOfDto = _mapper.Map<List<TarjetaOfDto>>(tarjetasOrdenadas);
+
+            return Ok(tarjetaOfDto);
+        }
+
         [HttpGet("get/filtros")]
         public async Task<ActionResult<IEnumerable<TarjetaOfDto>>> GettarjetaOffiltros(
         [FromQuery] DateTime? fechaInicio = null,   // Parámetro opcional para la fecha de inicio del rango
@@ -83,7 +200,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         [FromQuery] string? lineaNegocio = null,    // Parámetro opcional para la línea de negocio
         [FromQuery] string? idsEtiquetas = null,
         [FromQuery] bool mostrarArchivados = false,
-        [FromQuery] bool reproceso = false)
+        [FromQuery] bool reproceso = false,
+        [FromQuery] string? serieOf = null)
         {
             // Consulta base
             var query = _context.tarjetaOf
@@ -151,6 +269,12 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             if (reproceso)
             {
                 query = query.Where(p => p.reproceso == true);
+            }
+
+            // Filtro "like" para serieOf
+            if (!string.IsNullOrEmpty(serieOf))
+            {
+                query = query.Where(p => p.seriesOf.Contains(serieOf));
             }
 
             // Filtro por IDs de etiquetas

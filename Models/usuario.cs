@@ -117,6 +117,9 @@ public partial class usuario
     [InverseProperty("usuario")]
     public virtual ICollection<logCambiosProceso> logCambiosProceso { get; set; } = new List<logCambiosProceso>();
 
+    [InverseProperty("programadoPorNavigation")]
+    public virtual ICollection<logProgramacion> logProgramacion { get; set; } = new List<logProgramacion>();
+
     [InverseProperty("creadoPorNavigation")]
     public virtual ICollection<lotePliego> lotePliego { get; set; } = new List<lotePliego>();
 

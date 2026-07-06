@@ -247,6 +247,14 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[logProgramacion]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[logProgramacionDetalle]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[logSoporteNexo]",
          "ObjectType": 0
       },

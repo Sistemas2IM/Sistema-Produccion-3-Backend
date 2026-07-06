@@ -127,6 +127,10 @@ public partial class base_nuevaContext : DbContext
 
     public virtual DbSet<logCambiosProceso> logCambiosProceso { get; set; }
 
+    public virtual DbSet<logProgramacion> logProgramacion { get; set; }
+
+    public virtual DbSet<logProgramacionDetalle> logProgramacionDetalle { get; set; }
+
     public virtual DbSet<logSoporteNexo> logSoporteNexo { get; set; }
 
     public virtual DbSet<lotePliego> lotePliego { get; set; }
@@ -939,6 +943,37 @@ public partial class base_nuevaContext : DbContext
                 .HasConstraintName("FK_PROCESO");
 
             entity.HasOne(d => d.usuario).WithMany(p => p.logCambiosProceso).HasConstraintName("FK_USUARIO");
+        });
+
+        modelBuilder.Entity<logProgramacion>(entity =>
+        {
+            entity.HasKey(e => e.idLogProgramacion).HasName("PK_LOG_PROGRAMACION");
+
+            entity.Property(e => e.fechaCreacion).HasDefaultValueSql("(getdate())");
+            entity.Property(e => e.programadoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+
+            entity.HasOne(d => d.programadoPorNavigation).WithMany(p => p.logProgramacion).HasConstraintName("FK_SECUENCIADOR_LOG");
+
+            entity.HasOne(d => d.tableroNavigation).WithMany(p => p.logProgramacion)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_TABLERO_SECUENCIA");
+        });
+
+        modelBuilder.Entity<logProgramacionDetalle>(entity =>
+        {
+            entity.HasKey(e => e.idLogProgramacionDetalle).HasName("PK_LOG_DETALLE_PROGRAMACION");
+
+            entity.HasOne(d => d.estadoAnteriorNavigation).WithMany(p => p.logProgramacionDetalleestadoAnteriorNavigation).HasConstraintName("FK_LOG_ESTADO_ANTERIOR_DETALLE");
+
+            entity.HasOne(d => d.estadoNuevoNavigation).WithMany(p => p.logProgramacionDetalleestadoNuevoNavigation).HasConstraintName("FK_LOG_ESTADO_NUEVO_DETALLE");
+
+            entity.HasOne(d => d.idLogProgramacionNavigation).WithMany(p => p.logProgramacionDetalle)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_DETALLE_PROGRAMACION");
+
+            entity.HasOne(d => d.idProcesoNavigation).WithMany(p => p.logProgramacionDetalle)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_PROCESO_SECUENCIADO_LOG");
         });
 
         modelBuilder.Entity<logSoporteNexo>(entity =>
