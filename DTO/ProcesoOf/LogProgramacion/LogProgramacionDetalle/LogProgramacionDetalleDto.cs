@@ -8,6 +8,25 @@
 
         public int? idProceso { get; set; }
 
+        // campos relacion de proceso ----------------
+        public string? cliente { get; set; }
+
+        public string? articulo { get; set; }
+
+        public int? oF { get; set; }
+
+        public string? vendedor { get; set; }
+
+        public DateTime? fechaVenceOf { get; set; }
+
+        public string? serieOf { get; set; }
+
+        /*public int? procesoAnterior { get; set; }
+
+        public int? procesoSiguiente { get; set; }*/
+
+        // ------------------------------------------
+
         public string? accion { get; set; }
 
         public int? estadoAnterior { get; set; }

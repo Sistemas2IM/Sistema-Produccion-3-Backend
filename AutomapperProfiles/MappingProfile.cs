@@ -499,6 +499,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForMember(dest => dest.cantidadOf, opt => opt.MapFrom(src => src.ofNavigation.cantidadOf))
                 .ForMember(dest => dest.nombreCliente, opt => opt.MapFrom(src => src.ofNavigation.clienteOf))
                 .ForMember(dest => dest.fsc, opt => opt.MapFrom(src => src.ofNavigation.fsc))
+                .ForMember(dest => dest.vendedorOf, opt => opt.MapFrom(src => src.ofNavigation.vendedorOf))
                 .ReverseMap();
             CreateMap<entregasProductoTerminado, UltimoProductoTerminadoDto>().ReverseMap(); // Para regresar el ultimo PT + 1
             CreateMap<entregasProductoTerminado, AddProductoTerminadoDto>().ReverseMap();
@@ -1310,7 +1311,14 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             {
                 // detalle log programacion
-                CreateMap<logProgramacionDetalle, LogProgramacionDetalleDto>().ReverseMap();
+                CreateMap<logProgramacionDetalle, LogProgramacionDetalleDto>()
+                    .ForMember(dest => dest.cliente, opt => opt.MapFrom(src => src.idProcesoNavigation != null && src.idProcesoNavigation.oFNavigation != null ? src.idProcesoNavigation.oFNavigation.clienteOf : null))
+                    .ForMember(dest => dest.articulo, opt => opt.MapFrom(src => src.idProcesoNavigation != null && src.idProcesoNavigation.oFNavigation != null ? src.idProcesoNavigation.oFNavigation.productoOf : null))
+                    .ForMember(dest => dest.oF, opt => opt.MapFrom(src => src.idProcesoNavigation != null ? src.idProcesoNavigation.oF : null))
+                    .ForMember(dest => dest.vendedor, opt => opt.MapFrom(src => src.idProcesoNavigation != null && src.idProcesoNavigation.oFNavigation != null ? src.idProcesoNavigation.oFNavigation.vendedorOf : null))
+                    .ForMember(dest => dest.fechaVenceOf, opt => opt.MapFrom(src => src.idProcesoNavigation != null && src.idProcesoNavigation.oFNavigation != null ? src.idProcesoNavigation.oFNavigation.fechaVencimiento : null))
+                    .ForMember(dest => dest.serieOf, opt => opt.MapFrom(src => src.idProcesoNavigation != null && src.idProcesoNavigation.oFNavigation != null ? src.idProcesoNavigation.oFNavigation.seriesOf : null));
+
                 CreateMap<logProgramacionDetalle, AddLogProgramacionDetalleDto>().ReverseMap();
                 CreateMap<UpdateLogProgramacionDetalleDto, logProgramacionDetalle>()
                     .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));

@@ -26,7 +26,11 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         [HttpGet("get")]
         public async Task<ActionResult<IEnumerable<LogProgramacionDetalleDto>>> GetLogProgramacionDetalle()
         {
-            var logProgramacionDetalles = await _context.logProgramacionDetalle.ToListAsync();
+            var logProgramacionDetalles = await _context.logProgramacionDetalle
+                .Include(lpd => lpd.idProcesoNavigation)
+                .ThenInclude(p => p.oFNavigation)
+                .ToListAsync();
+
             var logProgramacionDetallesDto = _mapper.Map<List<LogProgramacionDetalleDto>>(logProgramacionDetalles);
 
             return Ok(logProgramacionDetallesDto);
@@ -36,7 +40,10 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         [HttpGet("get/{id}")]
         public async Task<ActionResult<LogProgramacionDetalleDto>> GetLogProgramacionDetalle(int id)
         {
-            var logProgramacionDetalle = await _context.logProgramacionDetalle.FindAsync(id);
+            var logProgramacionDetalle = await _context.logProgramacionDetalle
+                .Include(lpd => lpd.idProcesoNavigation)
+                .ThenInclude(p => p.oFNavigation)
+                .FirstOrDefaultAsync(lpd => lpd.idLogProgramacionDetalle == id);
 
             if (logProgramacionDetalle == null)
             {

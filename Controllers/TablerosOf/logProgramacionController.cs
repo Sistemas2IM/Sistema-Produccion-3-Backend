@@ -51,6 +51,20 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             return Ok(logProgramacionDto);
         }
 
+        // GET por idTablero
+        [HttpGet("get/tablero/{idTablero}")]
+        public async Task<ActionResult<IEnumerable<LogProgramacionDto>>> GetLogProgramacionDtoByTablero(int idTablero)
+        {
+            var logProgramacion = await _context.logProgramacion
+                .Include(dt => dt.logProgramacionDetalle)
+                .Where(lp => lp.tablero == idTablero)
+                .ToListAsync();
+
+            var logProgramacionDto = _mapper.Map<IEnumerable<LogProgramacionDto>>(logProgramacion);
+
+            return Ok(logProgramacionDto);
+        }
+
         // POST api/<logProgramacionController>
         [HttpPost("post")]
         public async Task<ActionResult<logProgramacion>> PostLogProgramacion(AddLogProgramacionDto logProgramacionDto)
