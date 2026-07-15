@@ -44,6 +44,10 @@ namespace Sistema_Produccion_3_Backend.DTO.Calidad.VariablesTecnicas
 
         public string? valorPorDefecto { get; set; }
 
+        public string? valorObjetivo { get; set; }
+
+        public bool? condicionesIniciales { get; set; }
+
         public List<VariableUnidadMedidaDto>? variableUnidadMedidaDto { get; set; }
     }
 }

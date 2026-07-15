@@ -33,6 +33,9 @@ public partial class tablerosOf
     [InverseProperty("tablerosOf")]
     public virtual maquinas idMaquinaNavigation { get; set; }
 
+    [InverseProperty("tableroNavigation")]
+    public virtual ICollection<logProgramacion> logProgramacion { get; set; } = new List<logProgramacion>();
+
     [InverseProperty("idTableroNavigation")]
     public virtual ICollection<posturasOf> posturasOf { get; set; } = new List<posturasOf>();
 

@@ -25,6 +25,12 @@ public partial class posturasOf
     [InverseProperty("posturasOf")]
     public virtual tablerosOf idTableroNavigation { get; set; }
 
+    [InverseProperty("estadoAnteriorNavigation")]
+    public virtual ICollection<logProgramacionDetalle> logProgramacionDetalleestadoAnteriorNavigation { get; set; } = new List<logProgramacionDetalle>();
+
+    [InverseProperty("estadoNuevoNavigation")]
+    public virtual ICollection<logProgramacionDetalle> logProgramacionDetalleestadoNuevoNavigation { get; set; } = new List<logProgramacionDetalle>();
+
     [InverseProperty("idPosturaNavigation")]
     public virtual ICollection<procesoOf> procesoOf { get; set; } = new List<procesoOf>();
 }

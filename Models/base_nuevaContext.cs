@@ -41,6 +41,8 @@ public partial class base_nuevaContext : DbContext
 
     public virtual DbSet<componenteProduccion> componenteProduccion { get; set; }
 
+    public virtual DbSet<condicionInicial> condicionInicial { get; set; }
+
     public virtual DbSet<corridaCombinada> corridaCombinada { get; set; }
 
     public virtual DbSet<detalleAuditoriaProceso> detalleAuditoriaProceso { get; set; }
@@ -48,6 +50,8 @@ public partial class base_nuevaContext : DbContext
     public virtual DbSet<detalleCertificadoCalidad> detalleCertificadoCalidad { get; set; }
 
     public virtual DbSet<detalleCertificadoCalidad_Log> detalleCertificadoCalidad_Log { get; set; }
+
+    public virtual DbSet<detalleCondicionInicial> detalleCondicionInicial { get; set; }
 
     public virtual DbSet<detalleEntrega> detalleEntrega { get; set; }
 
@@ -122,6 +126,10 @@ public partial class base_nuevaContext : DbContext
     public virtual DbSet<logCambiosOf> logCambiosOf { get; set; }
 
     public virtual DbSet<logCambiosProceso> logCambiosProceso { get; set; }
+
+    public virtual DbSet<logProgramacion> logProgramacion { get; set; }
+
+    public virtual DbSet<logProgramacionDetalle> logProgramacionDetalle { get; set; }
 
     public virtual DbSet<logSoporteNexo> logSoporteNexo { get; set; }
 
@@ -393,6 +401,26 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.tipoSalidaNavigation).WithMany(p => p.componenteProducciontipoSalidaNavigation).HasConstraintName("TIPO_SALIDA_FK");
         });
 
+        modelBuilder.Entity<condicionInicial>(entity =>
+        {
+            entity.HasKey(e => e.idCondicionInicial).HasName("PK_CONDICION_INICIAL");
+
+            entity.Property(e => e.archivada).HasDefaultValue(false);
+            entity.Property(e => e.cancelada).HasDefaultValue(false);
+            entity.Property(e => e.creadoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.fechaCreacion).HasDefaultValueSql("(getdate())");
+            entity.Property(e => e.fechaInicio).HasDefaultValueSql("(getdate())");
+            entity.Property(e => e.operador).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+
+            entity.HasOne(d => d.creadoPorNavigation).WithMany(p => p.condicionInicialcreadoPorNavigation).HasConstraintName("FK_CI_CREADOR");
+
+            entity.HasOne(d => d.idProcesoNavigation).WithMany(p => p.condicionInicial)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_CI_PROCESOS");
+
+            entity.HasOne(d => d.operadorNavigation).WithMany(p => p.condicionInicialoperadorNavigation).HasConstraintName("FK_CI_OPERADOR");
+        });
+
         modelBuilder.Entity<corridaCombinada>(entity =>
         {
             entity.HasKey(e => e.idRelacion).HasName("PK__corridaC__FC68CFD3A8DB3F8F");
@@ -440,6 +468,23 @@ public partial class base_nuevaContext : DbContext
         {
             entity.Property(e => e.fechaLog).HasDefaultValueSql("(getdate())");
             entity.Property(e => e.tipoAccion).HasDefaultValue("UPDATE");
+        });
+
+        modelBuilder.Entity<detalleCondicionInicial>(entity =>
+        {
+            entity.HasKey(e => e.idDetalleCondicionInicial).HasName("PK_CONDICION_INICIAL_DETALLE");
+
+            entity.Property(e => e.fechaCreacion).HasDefaultValueSql("(getdate())");
+
+            entity.HasOne(d => d.idCondicionInicialNavigation).WithMany(p => p.detalleCondicionInicial)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_CID_CONDICION");
+
+            entity.HasOne(d => d.idUnidadNavigation).WithMany(p => p.detalleCondicionInicial).HasConstraintName("FK_CID_UNIDAD");
+
+            entity.HasOne(d => d.idVariableNavigation).WithMany(p => p.detalleCondicionInicial)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_CID_VARIABLE");
         });
 
         modelBuilder.Entity<detalleEntrega>(entity =>
@@ -547,8 +592,10 @@ public partial class base_nuevaContext : DbContext
             entity.HasKey(e => e.idEntregaPt).HasName("PK_ENTREGASPRODUCTOTERMINADO");
 
             entity.Property(e => e.actualizadoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.archivada).HasDefaultValue(false);
             entity.Property(e => e.areaEntrega).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.areaRecibe).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.cancelada).HasDefaultValue(false);
             entity.Property(e => e.creadoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.entregadoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.recibidoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
@@ -898,6 +945,37 @@ public partial class base_nuevaContext : DbContext
                 .HasConstraintName("FK_PROCESO");
 
             entity.HasOne(d => d.usuario).WithMany(p => p.logCambiosProceso).HasConstraintName("FK_USUARIO");
+        });
+
+        modelBuilder.Entity<logProgramacion>(entity =>
+        {
+            entity.HasKey(e => e.idLogProgramacion).HasName("PK_LOG_PROGRAMACION");
+
+            entity.Property(e => e.fechaCreacion).HasDefaultValueSql("(getdate())");
+            entity.Property(e => e.programadoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+
+            entity.HasOne(d => d.programadoPorNavigation).WithMany(p => p.logProgramacion).HasConstraintName("FK_SECUENCIADOR_LOG");
+
+            entity.HasOne(d => d.tableroNavigation).WithMany(p => p.logProgramacion)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_TABLERO_SECUENCIA");
+        });
+
+        modelBuilder.Entity<logProgramacionDetalle>(entity =>
+        {
+            entity.HasKey(e => e.idLogProgramacionDetalle).HasName("PK_LOG_DETALLE_PROGRAMACION");
+
+            entity.HasOne(d => d.estadoAnteriorNavigation).WithMany(p => p.logProgramacionDetalleestadoAnteriorNavigation).HasConstraintName("FK_LOG_ESTADO_ANTERIOR_DETALLE");
+
+            entity.HasOne(d => d.estadoNuevoNavigation).WithMany(p => p.logProgramacionDetalleestadoNuevoNavigation).HasConstraintName("FK_LOG_ESTADO_NUEVO_DETALLE");
+
+            entity.HasOne(d => d.idLogProgramacionNavigation).WithMany(p => p.logProgramacionDetalle)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_DETALLE_PROGRAMACION");
+
+            entity.HasOne(d => d.idProcesoNavigation).WithMany(p => p.logProgramacionDetalle)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_PROCESO_SECUENCIADO_LOG");
         });
 
         modelBuilder.Entity<logSoporteNexo>(entity =>
@@ -1810,6 +1888,7 @@ public partial class base_nuevaContext : DbContext
 
             entity.Property(e => e.activo).HasDefaultValue(true);
             entity.Property(e => e.certificadoCalidad).HasDefaultValue(false);
+            entity.Property(e => e.condicionesIniciales).HasDefaultValue(false);
             entity.Property(e => e.fechaCreacion).HasDefaultValueSql("(getdate())");
             entity.Property(e => e.fichaCliente).HasDefaultValue(false);
             entity.Property(e => e.fichaProceso).HasDefaultValue(false);

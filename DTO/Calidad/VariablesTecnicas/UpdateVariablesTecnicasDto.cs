@@ -38,6 +38,10 @@
 
         public string? tooltip { get; set; }
 
-        public string valorPorDefecto { get; set; }
+        public string? valorPorDefecto { get; set; }
+
+        public string? valorObjetivo { get; set; }
+
+        public bool? condicionesIniciales { get; set; }
     }
 }

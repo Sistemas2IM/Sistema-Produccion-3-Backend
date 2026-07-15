@@ -27,6 +27,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.AuditoriaProceso
         public async Task<ActionResult<IEnumerable<AuditoriaProcesoDto>>> GetAuditoriaProceso()
         {
             var auditoriaProceso = await _context.auditoriaProceso
+                .AsNoTracking()
+                .AsSplitQuery()
                 .Include(a => a.detalleAuditoriaProceso)
                 .Include(of => of.oFNavigation)
                 .Include(ma => ma.maquinaNavigation)
@@ -46,6 +48,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.AuditoriaProceso
         public async Task<ActionResult<AuditoriaProcesoDto>> GetAuditoriaProceso(int id)
         {
             var auditoriaProceso = await _context.auditoriaProceso
+                .AsNoTracking()
+                .AsSplitQuery()
                 .Include(a => a.detalleAuditoriaProceso)
                 .Include(of => of.oFNavigation)
                 .Include(ma => ma.maquinaNavigation)

@@ -40,6 +40,9 @@ using Sistema_Produccion_3_Backend.DTO.Catalogo.Maquinas.infoMaquina.infoMaquina
 using Sistema_Produccion_3_Backend.DTO.Catalogo.Maquinas.infoMaquina.infoMaquinaPreprensa;
 using Sistema_Produccion_3_Backend.DTO.Catalogo.Maquinas.infoMaquina.infoMaquinaTroqueladora;
 using Sistema_Produccion_3_Backend.DTO.Catalogo.Turnos;
+using Sistema_Produccion_3_Backend.DTO.CondicionInicial;
+using Sistema_Produccion_3_Backend.DTO.CondicionInicial.DetalleCondicionInicial;
+using Sistema_Produccion_3_Backend.DTO.CondicionInicial.DetalleCondicionInicial.Batch;
 using Sistema_Produccion_3_Backend.DTO.CorridaCombinada;
 using Sistema_Produccion_3_Backend.DTO.Etiquetas.Etiqueta;
 using Sistema_Produccion_3_Backend.DTO.Etiquetas.Etiqueta.BathcEtiqueta;
@@ -94,6 +97,9 @@ using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.Troquelado;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.SolicitudMateriales;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.UpdateMaquina;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.UpdateSAP;
+using Sistema_Produccion_3_Backend.DTO.ProcesoOf.LogProgramacion;
+using Sistema_Produccion_3_Backend.DTO.ProcesoOf.LogProgramacion.LogProgramacionDetalle;
+using Sistema_Produccion_3_Backend.DTO.ProcesoOf.LogProgramacion.LogProgramacionDetalle.Batch;
 using Sistema_Produccion_3_Backend.DTO.ProductoTerminado;
 using Sistema_Produccion_3_Backend.DTO.ProductoTerminado.DetalleEntrega;
 using Sistema_Produccion_3_Backend.DTO.ProductoTerminado.ListaEmpaque;
@@ -384,14 +390,14 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                     .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
                 CreateMap<procesoOf, ProcesoOfSolicitudDto>()
-                .ForMember(dest => dest.idArea, opt => opt.MapFrom(src => src.idTableroNavigation.idArea))       
+                .ForMember(dest => dest.idArea, opt => opt.MapFrom(src => src.idTableroNavigation.idArea))
                 .ForMember(dest => dest.nombreArea, opt => opt.MapFrom(src => src.idTableroNavigation.idAreaNavigation.nombreArea))
                 //.ForMember(dest => )                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
                 .ForMember(dest => dest.nombrePostura, opt => opt.MapFrom(src => src.idPosturaNavigation.nombrePostura))
                 .ForMember(dest => dest.lineaNegocio, opt => opt.MapFrom(src => src.oFNavigation.lineaDeNegocio))
                 .ForMember(dest => dest.cantRequerida, opt => opt.MapFrom(src => src.oFNavigation.cantidadOf))
                 .ForMember(dest => dest.tipoOrden, opt => opt.MapFrom(src => src.oFNavigation.tipoDeOrden))
-                .ForMember(dest => dest.unidadMedida, opt => opt.MapFrom(src => src.oFNavigation.unidadMedida))                                     
+                .ForMember(dest => dest.unidadMedida, opt => opt.MapFrom(src => src.oFNavigation.unidadMedida))
                 .ReverseMap();
 
 
@@ -493,6 +499,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForMember(dest => dest.cantidadOf, opt => opt.MapFrom(src => src.ofNavigation.cantidadOf))
                 .ForMember(dest => dest.nombreCliente, opt => opt.MapFrom(src => src.ofNavigation.clienteOf))
                 .ForMember(dest => dest.fsc, opt => opt.MapFrom(src => src.ofNavigation.fsc))
+                .ForMember(dest => dest.vendedorOf, opt => opt.MapFrom(src => src.ofNavigation.vendedorOf))
                 .ReverseMap();
             CreateMap<entregasProductoTerminado, UltimoProductoTerminadoDto>().ReverseMap(); // Para regresar el ultimo PT + 1
             CreateMap<entregasProductoTerminado, AddProductoTerminadoDto>().ReverseMap();
@@ -564,7 +571,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                     CreateMap<operaciones, AddOperacionesDto>().ReverseMap();
                     CreateMap<UpdateOperacionesDto, operaciones>()
                         .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
-                 
+
                 }
 
                 CreateMap<auxiliares, AuxiliaresDto>().ReverseMap();
@@ -1198,7 +1205,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             // OF
             CreateMap<ffeTiemposOfGlobal, ffeTiemposOfDto>()
                 .ReverseMap();
-            
+
             // PROCESOS
             CreateMap<ffeTiemposProcesosGlobal, ffeTiemposProcesosDto>()
                 .ReverseMap();
@@ -1207,59 +1214,57 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             CreateMap<logSoporteNexo, LogSoporteNexoDto>().ReverseMap();
 
             // BUSCADOR GLOBAL =========================================================================================
-                CreateMap<tarjetaOf, SB_TarjetaOfDto>().ReverseMap();
+            CreateMap<tarjetaOf, SB_TarjetaOfDto>().ReverseMap();
 
-                CreateMap<procesoOf, SB_ProcesoOfDto>()
-                    .ForMember(dest => dest.nombreTablero, opt => opt.MapFrom(src => src.idTableroNavigation.nombreTablero))
-                    .ForMember(dest => dest.clienteOf, opt => opt.MapFrom(src => src.oFNavigation.clienteOf))
-                    .ForMember(dest => dest.productoOf, opt => opt.MapFrom(src => src.oFNavigation.productoOf))
-                    .ForMember(dest => dest.codArticulo, opt => opt.MapFrom(src => src.oFNavigation.codArticulo))
-                    .ForMember(dest => dest.oV, opt => opt.MapFrom(src => src.oFNavigation.oV))
-                    .ReverseMap();
+            CreateMap<procesoOf, SB_ProcesoOfDto>()
+                .ForMember(dest => dest.nombreTablero, opt => opt.MapFrom(src => src.idTableroNavigation.nombreTablero))
+                .ForMember(dest => dest.clienteOf, opt => opt.MapFrom(src => src.oFNavigation.clienteOf))
+                .ForMember(dest => dest.productoOf, opt => opt.MapFrom(src => src.oFNavigation.productoOf))
+                .ForMember(dest => dest.codArticulo, opt => opt.MapFrom(src => src.oFNavigation.codArticulo))
+                .ForMember(dest => dest.oV, opt => opt.MapFrom(src => src.oFNavigation.oV))
+                .ReverseMap();
 
-                CreateMap<entregasProductoTerminado, SB_ProductoTerminadoDto>()
-                    .ForMember(dest => dest.clienteOf, opt => opt.MapFrom(src => src.ofNavigation.clienteOf))
-                    .ForMember(dest => dest.productoOf, opt => opt.MapFrom(src => src.ofNavigation.productoOf))
-                    .ForMember(dest => dest.codArticulo, opt => opt.MapFrom(src => src.ofNavigation.codArticulo))
-                    .ForMember(dest => dest.oV, opt => opt.MapFrom(src => src.ofNavigation.oV))
-                    .ReverseMap();
+            CreateMap<entregasProductoTerminado, SB_ProductoTerminadoDto>()
+                .ForMember(dest => dest.clienteOf, opt => opt.MapFrom(src => src.ofNavigation.clienteOf))
+                .ForMember(dest => dest.productoOf, opt => opt.MapFrom(src => src.ofNavigation.productoOf))
+                .ForMember(dest => dest.codArticulo, opt => opt.MapFrom(src => src.ofNavigation.codArticulo))
+                .ForMember(dest => dest.oV, opt => opt.MapFrom(src => src.ofNavigation.oV))
+                .ReverseMap();
 
-                 CreateMap<solicitudMaterialesOf, SB_SolicitudMaterialesOfDto>()
-                    .ForMember(dest => dest.clienteOf, opt => opt.MapFrom(src => src.oFNavigation.clienteOf))
-                    .ForMember(dest => dest.productoOf, opt => opt.MapFrom(src => src.oFNavigation.productoOf))
-                    .ForMember(dest => dest.codArticulo, opt => opt.MapFrom(src => src.oFNavigation.codArticulo))
-                    .ForMember(dest => dest.materialDescripcion, opt => opt.MapFrom(src => src.idSolicitudNavigation.materialDescripcion))
-                    .ForMember(dest => dest.oV, opt => opt.MapFrom(src => src.oFNavigation.oV))
-                    .ReverseMap();
+            CreateMap<solicitudMaterialesOf, SB_SolicitudMaterialesOfDto>()
+               .ForMember(dest => dest.clienteOf, opt => opt.MapFrom(src => src.oFNavigation.clienteOf))
+               .ForMember(dest => dest.productoOf, opt => opt.MapFrom(src => src.oFNavigation.productoOf))
+               .ForMember(dest => dest.codArticulo, opt => opt.MapFrom(src => src.oFNavigation.codArticulo))
+               .ForMember(dest => dest.materialDescripcion, opt => opt.MapFrom(src => src.idSolicitudNavigation.materialDescripcion))
+               .ForMember(dest => dest.oV, opt => opt.MapFrom(src => src.oFNavigation.oV))
+               .ReverseMap();
 
-                CreateMap<fichaTecnicaCliente, SB_FichaTecnicaClienteDto>()
-                    .ForMember(dest => dest.cliente, opt => opt.MapFrom(src => src.oFNavigation.clienteOf))
-                    .ForMember(dest => dest.vendedor, opt => opt.MapFrom(src => src.oFNavigation.vendedorOf))
-                    .ForMember(dest => dest.producto, opt => opt.MapFrom(src => src.oFNavigation.productoOf))
-                    .ForMember(dest => dest.codArticulo, opt => opt.MapFrom(src => src.oFNavigation.codArticulo))
-                    .ReverseMap();
+            CreateMap<fichaTecnicaCliente, SB_FichaTecnicaClienteDto>()
+                .ForMember(dest => dest.cliente, opt => opt.MapFrom(src => src.oFNavigation.clienteOf))
+                .ForMember(dest => dest.vendedor, opt => opt.MapFrom(src => src.oFNavigation.vendedorOf))
+                .ForMember(dest => dest.producto, opt => opt.MapFrom(src => src.oFNavigation.productoOf))
+                .ForMember(dest => dest.codArticulo, opt => opt.MapFrom(src => src.oFNavigation.codArticulo))
+                .ReverseMap();
 
-                CreateMap<valeBobina, SB_ValeBobinaDto>()
-                    .ForMember(dest => dest.descripcionMaterial, opt => opt.MapFrom(src => src.idMaterialNavigation.nombreMaterial))
-                    .ForMember(dest => dest.proveedorMaterial, opt => opt.MapFrom(src => src.idMaterialNavigation.marca))
-                    .ReverseMap();
+            CreateMap<valeBobina, SB_ValeBobinaDto>()
+                .ForMember(dest => dest.descripcionMaterial, opt => opt.MapFrom(src => src.idMaterialNavigation.nombreMaterial))
+                .ForMember(dest => dest.proveedorMaterial, opt => opt.MapFrom(src => src.idMaterialNavigation.marca))
+                .ReverseMap();
 
-                CreateMap<fichaTecnicaProcesos, SB_FichaTecnicaProcesosDto>()
-                    .ForMember(dest => dest.nombreCliente, opt => opt.MapFrom(src => src.oFNavigation.clienteOf))
-                    .ForMember(dest => dest.vendedor, opt => opt.MapFrom(src => src.oFNavigation.vendedorOf))
-                    .ForMember(dest => dest.codArticulo, opt => opt.MapFrom(src => src.oFNavigation.codArticulo))
-                    .ForMember(dest => dest.nombreProducto, opt => opt.MapFrom(src => src.oFNavigation.productoOf))
-                    .ForMember(dest => dest.nombreMaquina, opt => opt.MapFrom(src => src.maquinaNavigation.nombreMaquina))
-                    .ReverseMap();
+            CreateMap<fichaTecnicaProcesos, SB_FichaTecnicaProcesosDto>()
+                .ForMember(dest => dest.nombreCliente, opt => opt.MapFrom(src => src.oFNavigation.clienteOf))
+                .ForMember(dest => dest.vendedor, opt => opt.MapFrom(src => src.oFNavigation.vendedorOf))
+                .ForMember(dest => dest.codArticulo, opt => opt.MapFrom(src => src.oFNavigation.codArticulo))
+                .ForMember(dest => dest.nombreProducto, opt => opt.MapFrom(src => src.oFNavigation.productoOf))
+                .ForMember(dest => dest.nombreMaquina, opt => opt.MapFrom(src => src.maquinaNavigation.nombreMaquina))
+                .ReverseMap();
 
-                CreateMap<certificadoCalidad, SB_CertificadoCalidadDto>()
-                    .ForMember(dest => dest.cliente, opt => opt.MapFrom(src => src.oFNavigation.clienteOf))
-                    .ForMember(dest => dest.vendedor, opt => opt.MapFrom(src => src.oFNavigation.vendedorOf))
-                    .ForMember(dest => dest.producto, opt => opt.MapFrom(src => src.oFNavigation.productoOf))
-                    .ForMember(dest => dest.codArticulo, opt => opt.MapFrom(src => src.oFNavigation.codArticulo))                  
-                    .ReverseMap();
-
-
+            CreateMap<certificadoCalidad, SB_CertificadoCalidadDto>()
+                .ForMember(dest => dest.cliente, opt => opt.MapFrom(src => src.oFNavigation.clienteOf))
+                .ForMember(dest => dest.vendedor, opt => opt.MapFrom(src => src.oFNavigation.vendedorOf))
+                .ForMember(dest => dest.producto, opt => opt.MapFrom(src => src.oFNavigation.productoOf))
+                .ForMember(dest => dest.codArticulo, opt => opt.MapFrom(src => src.oFNavigation.codArticulo))
+                .ReverseMap();
 
             // VALIDACION DE ARRANQUE =========================================================================================
             CreateMap<validacionArranque, ValidacionArranqueDto>()
@@ -1276,6 +1281,63 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             CreateMap<detalleValidacionArranque, AddBatchDetalleVArranqueDto>().ReverseMap();
             CreateMap<UpdateBatchDetalleVArranqueDto, detalleValidacionArranque>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            // condicion Inicial =============================================================================================
+            CreateMap<condicionInicial, CondicionInicialDto>()
+                .ForMember(dest => dest.detalleCondicionInicial, opt => opt.MapFrom(src => src.detalleCondicionInicial))
+                .ReverseMap();
+            CreateMap<condicionInicial, AddCondicionInicialDto>().ReverseMap();
+            CreateMap<UpdateCondicionInicialDto, condicionInicial>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            {
+                // detalle condicion inicial
+                CreateMap<detalleCondicionInicial, DetalleCondicionInicialDto>()
+                    .ForMember(dest => dest.etiqueta, etiqueta => etiqueta.MapFrom(src => src.idVariableNavigation.etiqueta))
+                    .ReverseMap();
+                CreateMap<detalleCondicionInicial, AddDetalleCondicionInicialDto>().ReverseMap();
+                CreateMap<UpdateDetalleCondicionInicialDto, detalleCondicionInicial>()
+                    .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+                CreateMap<detalleCondicionInicial, AddBatchDetalleCondicionInicialDto>().ReverseMap();
+                CreateMap<UpdateBatchDetalleCondicionInicialDto, detalleCondicionInicial>()
+                    .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            }
+
+            // Log programacion
+            CreateMap<logProgramacion, LogProgramacionDto>()
+                .ForMember(dest => dest.logProgramacionDetalle, opt => opt.MapFrom(src => src.logProgramacionDetalle))
+                .ForMember(dest => dest.nombreTablero, opt => opt.MapFrom(src => src.tableroNavigation.nombreTablero))
+                .ForMember(dest => dest.nombreProgramadoPor, opt => opt.MapFrom(src => src.programadoPorNavigation.nombres + " " + src.programadoPorNavigation.apellidos))
+                .ReverseMap();
+            CreateMap<logProgramacion, AddLogProgramacionDto>().ReverseMap();
+            CreateMap<UpdateLogProgramacionDto, logProgramacion>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            {
+                // detalle log programacion
+                CreateMap<logProgramacionDetalle, LogProgramacionDetalleDto>()
+                    .ForMember(dest => dest.cliente, opt => opt.MapFrom(src => src.idProcesoNavigation != null && src.idProcesoNavigation.oFNavigation != null ? src.idProcesoNavigation.oFNavigation.clienteOf : null))
+                    .ForMember(dest => dest.articulo, opt => opt.MapFrom(src => src.idProcesoNavigation != null && src.idProcesoNavigation.oFNavigation != null ? src.idProcesoNavigation.oFNavigation.productoOf : null))
+                    .ForMember(dest => dest.oF, opt => opt.MapFrom(src => src.idProcesoNavigation != null ? src.idProcesoNavigation.oF : null))
+                    .ForMember(dest => dest.vendedor, opt => opt.MapFrom(src => src.idProcesoNavigation != null && src.idProcesoNavigation.oFNavigation != null ? src.idProcesoNavigation.oFNavigation.vendedorOf : null))
+                    .ForMember(dest => dest.fechaVenceOf, opt => opt.MapFrom(src => src.idProcesoNavigation != null && src.idProcesoNavigation.oFNavigation != null ? src.idProcesoNavigation.oFNavigation.fechaVencimiento : null))
+                    .ForMember(dest => dest.serieOf, opt => opt.MapFrom(src => src.idProcesoNavigation != null && src.idProcesoNavigation.oFNavigation != null ? src.idProcesoNavigation.oFNavigation.seriesOf : null))
+                    .ForMember(dest => dest.nombreEstadoAnterior, opt => opt.MapFrom(src => src.estadoAnteriorNavigation != null ? src.estadoAnteriorNavigation.nombrePostura : null))
+                    .ForMember(dest => dest.nombreEstadoNuevo, opt => opt.MapFrom(src => src.estadoNuevoNavigation != null ? src.estadoNuevoNavigation.nombrePostura : null))
+                    .ForMember(dest => dest.indicador, opt => opt.MapFrom(src => src.idProcesoNavigation != null ? src.idProcesoNavigation.indicador : null))
+                    .ForMember(dest => dest.corridaCombinada, opt => opt.MapFrom(src => src.idProcesoNavigation != null ? src.idProcesoNavigation.corridaCombinada : null))
+                    .ForMember(dest => dest.tiroRetiro, opt => opt.MapFrom(src => src.idProcesoNavigation != null ? src.idProcesoNavigation.tiroRetiro : null))
+                    .ForMember(dest => dest.indicadorProceso, opt => opt.MapFrom(src => src.idProcesoNavigation != null ? src.idProcesoNavigation.indicadorProceso : null))
+                    .ForMember(dest => dest.reproceso, opt => opt.MapFrom(src => src.idProcesoNavigation != null ? src.idProcesoNavigation.reproceso : null))
+                    .ForMember(dest => dest.correlativoCC, opt => opt.MapFrom(src => src.idProcesoNavigation != null ? src.idProcesoNavigation.correlativoCC : null));
+
+                CreateMap<logProgramacionDetalle, AddLogProgramacionDetalleDto>().ReverseMap();
+                CreateMap<UpdateLogProgramacionDetalleDto, logProgramacionDetalle>()
+                    .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+                CreateMap<logProgramacionDetalle, AddBatchLogProgramacionDetalleDto>().ReverseMap();
+                CreateMap<logProgramacionDetalle, UpdateBatchLogProgramacionDetalleDto>()
+                    .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            }
         }
     }
 }
