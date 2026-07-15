@@ -38,6 +38,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.ProductoTerminado
                 .Include(p => p.idEstadoReporteNavigation)
                 .Include(sm => sm.idMaquinaNavigation)
                 .Include(o => o.ofNavigation)
+                .Where( p => p.archivada == false || p.archivada == null)
                 .ToListAsync();
 
             var productoTerminadoDto = _mapper.Map<List<ProductoTerminadoDto>>(productoTerminado);
@@ -54,6 +55,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.ProductoTerminado
                 .Include(p => p.idEstadoReporteNavigation)
                 .Include(sm => sm.idMaquinaNavigation)
                 .Include(o => o.ofNavigation)
+                .Where(p => p.archivada == false || p.archivada == null)
                 .FirstOrDefaultAsync(u => u.idEntregaPt == id);
 
             if (entregasProductoTerminado == null)
@@ -75,7 +77,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.ProductoTerminado
                 .Include(p => p.idEstadoReporteNavigation)
                 .Include(sm => sm.idMaquinaNavigation)
                 .Include(o => o.ofNavigation)
-                .Where(u => u.of == of)  // Filtra antes de convertir a lista
+                .Where(u => u.of == of && (u.archivada == false || u.archivada == null))  // Filtra antes de convertir a lista
                 .ToListAsync();
 
             if (!entregasProductoTerminado.Any())  // Verifica si la lista está vacía
@@ -92,6 +94,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.ProductoTerminado
         public async Task<ActionResult<int>> GetentregasProductoTerminadoUltimo()
         {
             var ultimoId = await _context.entregasProductoTerminado
+                .Where(u => u.archivada == false || u.archivada == null)
                 .OrderByDescending(u => u.idEntregaPt)
                 .Select(u => u.idEntregaPt)
                 .FirstOrDefaultAsync();

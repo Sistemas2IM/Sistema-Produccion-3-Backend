@@ -47,5 +47,9 @@
         public string? nombreAlterno { get; set; }
 
         public string? remarks { get; set; }
+
+        public bool? archivada { get; set; }
+
+        public bool? cancelada { get; set; }
     }
 }

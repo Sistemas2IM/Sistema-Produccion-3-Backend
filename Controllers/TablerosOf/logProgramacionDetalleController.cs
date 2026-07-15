@@ -29,6 +29,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             var logProgramacionDetalles = await _context.logProgramacionDetalle
                 .Include(lpd => lpd.idProcesoNavigation)
                 .ThenInclude(p => p.oFNavigation)
+                .Include(lpd => lpd.estadoAnteriorNavigation)
+                .Include(lpd => lpd.estadoNuevoNavigation)
                 .ToListAsync();
 
             var logProgramacionDetallesDto = _mapper.Map<List<LogProgramacionDetalleDto>>(logProgramacionDetalles);
@@ -43,6 +45,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             var logProgramacionDetalle = await _context.logProgramacionDetalle
                 .Include(lpd => lpd.idProcesoNavigation)
                 .ThenInclude(p => p.oFNavigation)
+                .Include(lpd => lpd.estadoAnteriorNavigation)
+                .Include(lpd => lpd.estadoNuevoNavigation)
                 .FirstOrDefaultAsync(lpd => lpd.idLogProgramacionDetalle == id);
 
             if (logProgramacionDetalle == null)

@@ -27,6 +27,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.CondicionInicial
         {
             var condicionInicial = await _context.condicionInicial
                 .Include(ci => ci.detalleCondicionInicial)
+                .ThenInclude(dci => dci.idVariableNavigation)
                 .ToListAsync();
 
             var condicionInicialDto = _mapper.Map<List<CondicionInicialDto>>(condicionInicial);
@@ -40,6 +41,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.CondicionInicial
         {
             var condicionInicial = await _context.condicionInicial
                 .Include(ci => ci.detalleCondicionInicial)
+                .ThenInclude(dci => dci.idVariableNavigation)
                 .FirstOrDefaultAsync(ci => ci.idCondicionInicial == id);
 
             if (condicionInicial == null)
@@ -57,6 +59,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.CondicionInicial
         {
             var condicionInicial = await _context.condicionInicial
                 .Include(ci => ci.detalleCondicionInicial)
+                .ThenInclude(dci => dci.idVariableNavigation)
                 .Where(ci => ci.idProceso == idProceso)
                 .ToListAsync();
 

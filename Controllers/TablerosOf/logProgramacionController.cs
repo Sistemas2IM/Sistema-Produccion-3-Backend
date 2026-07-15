@@ -27,6 +27,14 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         {
             var logProgramacion = await _context.logProgramacion
                 .Include(dt => dt.logProgramacionDetalle)
+                .ThenInclude(lpd => lpd.idProcesoNavigation)
+                .ThenInclude(ip => ip.oFNavigation)    
+                .Include(dt => dt.logProgramacionDetalle)
+                .ThenInclude(es => es.estadoAnteriorNavigation)
+                .Include(dt => dt.logProgramacionDetalle)
+                .ThenInclude(es => es.estadoNuevoNavigation)
+                .Include(dt => dt.tableroNavigation)
+                .Include(pr => pr.programadoPorNavigation)
                 .ToListAsync();
 
             var logProgramacionDto = _mapper.Map<IEnumerable<LogProgramacionDto>>(logProgramacion);
@@ -40,6 +48,14 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         {
             var logProgramacion = await _context.logProgramacion
                 .Include(dt => dt.logProgramacionDetalle)
+                .ThenInclude(lpd => lpd.idProcesoNavigation)
+                .ThenInclude(ip => ip.oFNavigation)
+                .Include(dt => dt.logProgramacionDetalle)
+                .ThenInclude(es => es.estadoAnteriorNavigation)
+                .Include(dt => dt.logProgramacionDetalle)
+                .ThenInclude(es => es.estadoNuevoNavigation)
+                .Include(dt => dt.tableroNavigation)
+                .Include(pr => pr.programadoPorNavigation)
                 .FirstOrDefaultAsync(lp => lp.idLogProgramacion == id);
 
             if (logProgramacion == null)
@@ -57,6 +73,10 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         {
             var logProgramacion = await _context.logProgramacion
                 .Include(dt => dt.logProgramacionDetalle)
+                .ThenInclude(lpd => lpd.idProcesoNavigation)
+                .ThenInclude(ip => ip.oFNavigation)
+                .Include(dt => dt.tableroNavigation)
+                .Include(pr => pr.programadoPorNavigation)
                 .Where(lp => lp.tablero == idTablero)
                 .ToListAsync();
 

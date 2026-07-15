@@ -1292,7 +1292,9 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
 
             {
                 // detalle condicion inicial
-                CreateMap<detalleCondicionInicial, DetalleCondicionInicialDto>().ReverseMap();
+                CreateMap<detalleCondicionInicial, DetalleCondicionInicialDto>()
+                    .ForMember(dest => dest.etiqueta, etiqueta => etiqueta.MapFrom(src => src.idVariableNavigation.etiqueta))
+                    .ReverseMap();
                 CreateMap<detalleCondicionInicial, AddDetalleCondicionInicialDto>().ReverseMap();
                 CreateMap<UpdateDetalleCondicionInicialDto, detalleCondicionInicial>()
                     .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
@@ -1305,6 +1307,8 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             // Log programacion
             CreateMap<logProgramacion, LogProgramacionDto>()
                 .ForMember(dest => dest.logProgramacionDetalle, opt => opt.MapFrom(src => src.logProgramacionDetalle))
+                .ForMember(dest => dest.nombreTablero, opt => opt.MapFrom(src => src.tableroNavigation.nombreTablero))
+                .ForMember(dest => dest.nombreProgramadoPor, opt => opt.MapFrom(src => src.programadoPorNavigation.nombres + " " + src.programadoPorNavigation.apellidos))
                 .ReverseMap();
             CreateMap<logProgramacion, AddLogProgramacionDto>().ReverseMap();
             CreateMap<UpdateLogProgramacionDto, logProgramacion>()
@@ -1317,7 +1321,15 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                     .ForMember(dest => dest.oF, opt => opt.MapFrom(src => src.idProcesoNavigation != null ? src.idProcesoNavigation.oF : null))
                     .ForMember(dest => dest.vendedor, opt => opt.MapFrom(src => src.idProcesoNavigation != null && src.idProcesoNavigation.oFNavigation != null ? src.idProcesoNavigation.oFNavigation.vendedorOf : null))
                     .ForMember(dest => dest.fechaVenceOf, opt => opt.MapFrom(src => src.idProcesoNavigation != null && src.idProcesoNavigation.oFNavigation != null ? src.idProcesoNavigation.oFNavigation.fechaVencimiento : null))
-                    .ForMember(dest => dest.serieOf, opt => opt.MapFrom(src => src.idProcesoNavigation != null && src.idProcesoNavigation.oFNavigation != null ? src.idProcesoNavigation.oFNavigation.seriesOf : null));
+                    .ForMember(dest => dest.serieOf, opt => opt.MapFrom(src => src.idProcesoNavigation != null && src.idProcesoNavigation.oFNavigation != null ? src.idProcesoNavigation.oFNavigation.seriesOf : null))
+                    .ForMember(dest => dest.nombreEstadoAnterior, opt => opt.MapFrom(src => src.estadoAnteriorNavigation != null ? src.estadoAnteriorNavigation.nombrePostura : null))
+                    .ForMember(dest => dest.nombreEstadoNuevo, opt => opt.MapFrom(src => src.estadoNuevoNavigation != null ? src.estadoNuevoNavigation.nombrePostura : null))
+                    .ForMember(dest => dest.indicador, opt => opt.MapFrom(src => src.idProcesoNavigation != null ? src.idProcesoNavigation.indicador : null))
+                    .ForMember(dest => dest.corridaCombinada, opt => opt.MapFrom(src => src.idProcesoNavigation != null ? src.idProcesoNavigation.corridaCombinada : null))
+                    .ForMember(dest => dest.tiroRetiro, opt => opt.MapFrom(src => src.idProcesoNavigation != null ? src.idProcesoNavigation.tiroRetiro : null))
+                    .ForMember(dest => dest.indicadorProceso, opt => opt.MapFrom(src => src.idProcesoNavigation != null ? src.idProcesoNavigation.indicadorProceso : null))
+                    .ForMember(dest => dest.reproceso, opt => opt.MapFrom(src => src.idProcesoNavigation != null ? src.idProcesoNavigation.reproceso : null))
+                    .ForMember(dest => dest.correlativoCC, opt => opt.MapFrom(src => src.idProcesoNavigation != null ? src.idProcesoNavigation.correlativoCC : null));
 
                 CreateMap<logProgramacionDetalle, AddLogProgramacionDetalleDto>().ReverseMap();
                 CreateMap<UpdateLogProgramacionDetalleDto, logProgramacionDetalle>()

@@ -21,9 +21,17 @@
 
         public string? serieOf { get; set; }
 
-        /*public int? procesoAnterior { get; set; }
+        public string? indicador { get; set; }
 
-        public int? procesoSiguiente { get; set; }*/
+        public bool? corridaCombinada { get; set; }
+
+        public string? tiroRetiro { get; set; }
+
+        public string? indicadorProceso { get; set; }
+
+        public bool? reproceso { get; set; }
+
+        public string? correlativoCC { get; set; }
 
         // ------------------------------------------
 
@@ -31,7 +39,11 @@
 
         public int? estadoAnterior { get; set; }
 
+        public string? nombreEstadoAnterior { get; set; }
+
         public int? estadoNuevo { get; set; }
+
+        public string? nombreEstadoNuevo { get; set; }
 
         public int? posicionAnterior { get; set; }
 

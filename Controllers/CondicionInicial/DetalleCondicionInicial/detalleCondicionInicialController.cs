@@ -26,7 +26,9 @@ namespace Sistema_Produccion_3_Backend.Controllers.CondicionInicial.DetalleCondi
         [HttpGet("get")]
         public async Task<ActionResult<IEnumerable<DetalleCondicionInicialDto>>> GetDetalleCondicionInicial()
         {
-            var detalleCondicionInicial = await _context.detalleCondicionInicial.ToListAsync();
+            var detalleCondicionInicial = await _context.detalleCondicionInicial
+                .Include(vt => vt.idVariableNavigation)
+                .ToListAsync();
             var detalleCondicionInicialDto = _mapper.Map<List<DetalleCondicionInicialDto>>(detalleCondicionInicial);
 
             return Ok(detalleCondicionInicialDto);
@@ -36,7 +38,9 @@ namespace Sistema_Produccion_3_Backend.Controllers.CondicionInicial.DetalleCondi
         [HttpGet("get/{id}")]
         public async Task<ActionResult<DetalleCondicionInicialDto>> GetDetalleCondicionInicial(int id)
         {
-            var detalleCondicionInicial = await _context.detalleCondicionInicial.FindAsync(id);
+            var detalleCondicionInicial = await _context.detalleCondicionInicial
+                .Include(vt => vt.idVariableNavigation)
+                .FirstOrDefaultAsync(d => d.idDetalleCondicionInicial == id);
             if (detalleCondicionInicial == null)
             {
                 return NotFound();

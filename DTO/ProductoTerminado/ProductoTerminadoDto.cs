@@ -59,6 +59,10 @@ namespace Sistema_Produccion_3_Backend.DTO.ProductoTerminado
 
         public string? remarks { get; set; }
 
+        public bool? archivada { get; set; }
+
+        public bool? cancelada { get; set; }
+
         public string? codArticulo { get; set; }
 
         public string? articuloOf {  get; set; }

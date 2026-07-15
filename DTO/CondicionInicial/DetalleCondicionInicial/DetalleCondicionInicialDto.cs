@@ -25,5 +25,7 @@
         public bool? dentroDeRango { get; set; }
 
         public string? observaciones { get; set; }
+
+        public string? etiqueta { get; set; }
     }
 }

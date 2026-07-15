@@ -592,8 +592,10 @@ public partial class base_nuevaContext : DbContext
             entity.HasKey(e => e.idEntregaPt).HasName("PK_ENTREGASPRODUCTOTERMINADO");
 
             entity.Property(e => e.actualizadoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.archivada).HasDefaultValue(false);
             entity.Property(e => e.areaEntrega).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.areaRecibe).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.cancelada).HasDefaultValue(false);
             entity.Property(e => e.creadoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.entregadoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.recibidoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
