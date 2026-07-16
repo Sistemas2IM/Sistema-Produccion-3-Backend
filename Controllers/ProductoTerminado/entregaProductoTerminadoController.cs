@@ -126,10 +126,11 @@ namespace Sistema_Produccion_3_Backend.Controllers.ProductoTerminado
             var entregasProductoTerminado = await _context.entregasProductoTerminado
                 .AsNoTracking() // 🚀 Optimización de memoria
                 .AsSplitQuery() // 🚀 Evita consultas lentas al tener múltiples Includes
+                .OrderByDescending(f => f.fechaCreacion)
                 .Include(p => p.idEstadoReporteNavigation)
                 .Include(sm => sm.idMaquinaNavigation)
                 .Include(o => o.ofNavigation)
-                .Where(u => idArea == 17 || u.areaRecibe == nombreArea || u.areaEntrega == nombreArea) // Regla para Administración (idArea 17)
+                .Where(u => idArea == 17 || u.areaRecibe == nombreArea || u.areaEntrega == nombreArea && (u.archivada == false || u.archivada == null)) // Regla para Administración (idArea 17)
                 .ToListAsync();
 
             if (!entregasProductoTerminado.Any())
