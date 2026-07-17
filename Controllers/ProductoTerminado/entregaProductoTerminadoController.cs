@@ -127,6 +127,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.ProductoTerminado
                 .AsNoTracking() // 🚀 Optimización de memoria
                 .AsSplitQuery() // 🚀 Evita consultas lentas al tener múltiples Includes
                 .OrderByDescending(f => f.fechaCreacion)
+                .Include(r => r.detalleEntrega)
                 .Include(p => p.idEstadoReporteNavigation)
                 .Include(sm => sm.idMaquinaNavigation)
                 .Include(o => o.ofNavigation)
