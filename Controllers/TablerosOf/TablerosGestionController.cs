@@ -332,12 +332,22 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                             query = query.Where(p => p.oFNavigation.vendedorOf == vendedor);
                             break;
 
-                        // Encargados con acceso completo
-                        case "Eliseo Menjívar":
+                        // Encargados con acceso completo                
                         case "Fátima García":
                         case "Oscar Chavez":
                             // Ven todo excepto oficina y freelance
                             query = query.Where(p => p.oFNavigation.vendedorOf != "Oficina");
+                            break;
+
+                        case "Eliseo Menjívar":
+                            query = query.Where(p => p.oFNavigation.vendedorOf != "Oficina" ||
+                                                     p.oFNavigation.vendedorOf == "Claudia Ruano" ||
+                                                     p.oFNavigation.vendedorOf == "Jenny Gálvez" ||
+                                                     p.oFNavigation.vendedorOf == "Juan Mónico" ||
+                                                     p.oFNavigation.vendedorOf == "Hugo Campos" ||
+                                                     p.oFNavigation.vendedorOf == "Javier Toledo" ||
+                                                     p.oFNavigation.vendedorOf == "Norma Mejía" ||
+                                                     p.oFNavigation.vendedorOf == "Eliseo Menjívar");
                             break;
 
                         // Gerente de ventas con acceso completo
@@ -421,6 +431,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 }
 
                 IQueryable<tarjetaOf> query = _context.tarjetaOf
+                    //hay que optimziar la memoria de la consulta, ya que al traer todo el objeto de la tarjetaOf, se esta trayendo todo el objeto de la OF y eso es mucho peso para la memoria
                     .Include(u => u.idEstadoOfNavigation)
                     .Include(r => r.etiquetaOf)
                     .ThenInclude(o => o.idEtiquetaNavigation);
@@ -441,13 +452,22 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                         break;
 
                     // Encargados con acceso completo
-                    case "Eliseo Menjívar":
                     case "Fátima García":
                     case "Oscar Chavez":
                         // Ven todo excepto oficina y freelance
                         query = query.Where(t => t.vendedorOf != "Oficina" /*&&
                                                t.vendedorOf != "freelance"*/)
                                    .OrderBy(p => p.posicion);
+                        break;
+
+                    case "Eliseo Menjívar":
+                        query = query.Where(p => p.vendedorOf == "Claudia Ruano" ||
+                                                 p.vendedorOf == "Jenny Gálvez" ||
+                                                 p.vendedorOf == "Juan Mónico" ||
+                                                 p.vendedorOf == "Hugo Campos" ||
+                                                 p.vendedorOf == "Javier Toledo" ||
+                                                 p.vendedorOf == "Norma Mejía" ||
+                                                 p.vendedorOf == "Eliseo Menjívar");
                         break;
 
                     // Gerente de ventas con acceso completo
