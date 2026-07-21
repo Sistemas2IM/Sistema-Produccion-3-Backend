@@ -401,6 +401,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             var tarjetaOf = await _context.tarjetaOf
                 .Include(u => u.idEstadoOfNavigation)
                 .Include(r => r.etiquetaOf)
+                    .ThenInclude(o => o.idEtiquetaNavigation)
                 .Include(f => f.ffeTiemposOfGlobal)
                 .Include(se => se.secuenciadoPorNavigation)
                 .FirstOrDefaultAsync(u => u.oF == id);

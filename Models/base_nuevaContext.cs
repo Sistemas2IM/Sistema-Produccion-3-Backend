@@ -131,6 +131,8 @@ public partial class base_nuevaContext : DbContext
 
     public virtual DbSet<logProgramacionDetalle> logProgramacionDetalle { get; set; }
 
+    public virtual DbSet<logSincronizacionOf> logSincronizacionOf { get; set; }
+
     public virtual DbSet<logSoporteNexo> logSoporteNexo { get; set; }
 
     public virtual DbSet<lotePliego> lotePliego { get; set; }
@@ -976,6 +978,11 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.idProcesoNavigation).WithMany(p => p.logProgramacionDetalle)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_PROCESO_SECUENCIADO_LOG");
+        });
+
+        modelBuilder.Entity<logSincronizacionOf>(entity =>
+        {
+            entity.HasKey(e => e.idLog).HasName("PK__logSincr__3C7153CA8F67DC10");
         });
 
         modelBuilder.Entity<logSoporteNexo>(entity =>
