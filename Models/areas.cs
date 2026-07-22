@@ -22,6 +22,9 @@ public partial class areas
     public virtual ICollection<auditoriaProceso> auditoriaProceso { get; set; } = new List<auditoriaProceso>();
 
     [InverseProperty("idAreaNavigation")]
+    public virtual ICollection<auxiliares> auxiliares { get; set; } = new List<auxiliares>();
+
+    [InverseProperty("idAreaNavigation")]
     public virtual ICollection<familliaDeMaquina> familliaDeMaquina { get; set; } = new List<familliaDeMaquina>();
 
     [InverseProperty("tipoProcesoNavigation")]

@@ -326,6 +326,8 @@ public partial class base_nuevaContext : DbContext
             entity.HasKey(e => e.id).HasName("PK__auxiliar__3213E83F5C17182B");
 
             entity.Property(e => e.nombre).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+
+            entity.HasOne(d => d.idAreaNavigation).WithMany(p => p.auxiliares).HasConstraintName("FK_AUXILIAR_AREA");
         });
 
         modelBuilder.Entity<bobinasAsignadas>(entity =>

@@ -103,6 +103,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 .Select(g => new
                 {
                     ov = g.Key,
+                    cliente = g.First().clienteOf,
+                    vendedor = g.First().vendedorOf,
                     cantidadTarjetas = g.Count(),
                     tarjetas = g.ToList()
                 })
@@ -146,6 +148,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 .Select(g => new
                 {
                     ov = g.Key,
+                    cliente = g.First().clienteOf,
+                    vendedor = g.First().vendedorOf,
                     cantidadTarjetas = g.Count(),
                     tarjetas = g.ToList()
                 })

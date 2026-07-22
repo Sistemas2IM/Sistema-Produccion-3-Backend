@@ -3,5 +3,7 @@
     public class AddAuxiliaresDto
     {
         public string? nombre { get; set; }
+
+        public int? idArea { get; set; }
     }
 }
