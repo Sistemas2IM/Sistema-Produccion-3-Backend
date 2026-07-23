@@ -43,5 +43,7 @@
         public string? materialDescripcion { get; set; }
 
         public int? tipoComponente { get; set; }
+
+        public int? idPreliminar { get; set; }
     }
 }

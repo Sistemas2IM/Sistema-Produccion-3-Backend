@@ -167,10 +167,16 @@ public partial class procesoOf
     public virtual ICollection<auditoriaProceso> auditoriaProceso { get; set; } = new List<auditoriaProceso>();
 
     [InverseProperty("idProcesoNavigation")]
+    public virtual ICollection<casoCalidad> casoCalidad { get; set; } = new List<casoCalidad>();
+
+    [InverseProperty("idProcesoNavigation")]
     public virtual ICollection<componenteProduccion> componenteProduccion { get; set; } = new List<componenteProduccion>();
 
     [InverseProperty("idProcesoNavigation")]
     public virtual ICollection<condicionInicial> condicionInicial { get; set; } = new List<condicionInicial>();
+
+    [InverseProperty("idProcesoNavigation")]
+    public virtual ICollection<confirmacionPreliminar> confirmacionPreliminar { get; set; } = new List<confirmacionPreliminar>();
 
     [InverseProperty("maestroNavigation")]
     public virtual ICollection<corridaCombinada> corridaCombinadamaestroNavigation { get; set; } = new List<corridaCombinada>();
