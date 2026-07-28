@@ -134,7 +134,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.CasoCalidad
         }
 
         // GET por idProceso
-        [HttpPost("get/proceso/{idProceso}")]
+        [HttpGet("get/proceso/{idProceso}")]
         public async Task<ActionResult<IEnumerable<CasoCalidadDto>>> GetCasoCalidadByProceso(int idProceso)
         {
             var casoCalidad = await _context.casoCalidad
@@ -198,14 +198,20 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.CasoCalidad
 
         // POST api/<casoCalidadController>
         [HttpPost("post")]
-        public async Task<ActionResult<casoCalidad>> PostCasoCalidad(AddCasoCalidadDto casoCalidadDto)
+        public async Task<ActionResult<CasoCalidadCreateResponseDTO>> PostCasoCalidad(AddCasoCalidadDto casoCalidadDto)
         {
-            var casoCalidad = _mapper.Map<casoCalidad>(casoCalidadDto);
+            var entidad = _mapper.Map<casoCalidad>(casoCalidadDto);
 
-            _context.casoCalidad.Add(casoCalidad);
+            _context.casoCalidad.Add(entidad);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetCasoCalidad", new { id = casoCalidad.idCasoCalidad }, casoCalidad);
+            return CreatedAtAction(nameof(GetCasoCalidad),
+                new { id = entidad.idCasoCalidad },
+                new CasoCalidadCreateResponseDTO
+                {
+                    IdCasoCalidad = entidad.idCasoCalidad,
+                    Message = "Caso de calidad creado correctamente."
+                });
         }
 
         // PUT api/<casoCalidadController>/5

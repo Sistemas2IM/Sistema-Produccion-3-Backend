@@ -1484,6 +1484,12 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForMember(dest => dest.confirmacionPreliminar, opt => opt.MapFrom(src => src.idPreliminarNavigation))
                 .ReverseMap();
 
+            CreateMap<conciliacion, ConciliacionResumenDTO>()
+                .ForMember(dest => dest.nombreResponsable, opt => opt.MapFrom(src =>
+                    src.responsableNavigation.nombres + " " + src.responsableNavigation.apellidos))
+                .ForMember(dest => dest.nombreMotivo, opt => opt.MapFrom(src => src.idMotivoNavigation.nombre))
+                .ForMember(dest => dest.nombreDecision, opt => opt.MapFrom(src => src.idDecisionNavigation.nombre));
+
             CreateMap<conciliacion, AddConciliacionDto>().ReverseMap();
             CreateMap<UpdateConciliacionDto, conciliacion>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));

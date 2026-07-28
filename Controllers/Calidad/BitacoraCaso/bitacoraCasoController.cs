@@ -60,7 +60,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.BitacoraCaso
 
         // POST api/<bitacoraCasoController>
         [HttpPost("post")]
-        public async Task<ActionResult<bitacoraCaso>> PostBitacoraCaso([FromBody] AddBitacoraCasoDto addBitacoraCasoDto)
+        public async Task<ActionResult<BitacoraCasoResponseDTO>> PostBitacoraCaso([FromBody] AddBitacoraCasoDto addBitacoraCasoDto)
         {
             var bitacoraCaso = _mapper.Map<bitacoraCaso>(addBitacoraCasoDto);
 
@@ -68,7 +68,14 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.BitacoraCaso
             await _context.SaveChangesAsync();
 
 
-            return CreatedAtAction(nameof(GetBitacoraCaso), new { id = bitacoraCaso.idEvento }, bitacoraCaso);
+            return CreatedAtAction(nameof(GetBitacoraCaso),
+                new { id = bitacoraCaso.idEvento }, 
+                new BitacoraCasoResponseDTO
+                {
+                    idEvento = bitacoraCaso.idEvento,
+                    Message = "Bitácora de caso creada exitosamente."
+                }
+                );
         }
 
         // PUT api/<bitacoraCasoController>/5

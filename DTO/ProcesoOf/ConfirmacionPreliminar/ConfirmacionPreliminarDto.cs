@@ -1,4 +1,5 @@
 ﻿using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.TransferenciaProceso;
+using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.TransferenciaProceso.Conciliacion;
 
 namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf.ConfirmacionPreliminar
 {
@@ -77,6 +78,9 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf.ConfirmacionPreliminar
         public decimal? saldo { get; set; }
 
         public List<transferenciaProcesoDto> transferenciaProcesos { get; set; }
+
+        // info de la conciliacion
+        public ConciliacionResumenDTO? conciliacion { get; set; }
 
     }
 }

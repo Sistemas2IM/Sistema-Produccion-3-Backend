@@ -57,8 +57,11 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf.ConfirmacionPrelim
         public async Task<ActionResult<ConfirmacionPreliminarDto>> GetConfirmacionPreliminar(int id)
         {
             var confirmacionPreliminar = await _context.confirmacionPreliminar
+                .AsNoTracking()
                 .Include(c => c.oFNavigation)
                 .Include(c => c.idProcesoNavigation)
+                    .ThenInclude(p => p.idTableroNavigation)
+                        .ThenInclude(t => t.idMaquinaNavigation)
                 .Include(c => c.idUnidadNavigation)
                 .Include(c => c.idTurnoNavigation)
                 .Include(c => c.idEstadoNavigation)
@@ -66,8 +69,15 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf.ConfirmacionPrelim
                 .Include(c => c.registradoPorNavigation)
                 .Include(c => c.actualizadoPorNavigation)
                 .Include(c => c.entregadoPorNavigation)
-                .Include(c => c.transferenciaProceso) // Incluir la colección de transferencias
+                .Include(c => c.transferenciaProceso)
+                .Include(c => c.conciliacion)
+                    .ThenInclude(x => x.idMotivoNavigation)
+                .Include(c => c.conciliacion)
+                    .ThenInclude(x => x.idDecisionNavigation)
+                .Include(c => c.conciliacion)
+                    .ThenInclude(x => x.responsableNavigation)
                 .FirstOrDefaultAsync(u => u.idPreliminar == id);
+
             if (confirmacionPreliminar == null)
             {
                 return NotFound();
