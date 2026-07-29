@@ -23,11 +23,14 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf.ConfirmacionPrelim
 
         // GET: api/<confirmacionPreliminarController>
         [HttpGet("get")]
-        public async Task<ActionResult<IEnumerable<ConfirmacionPreliminarDto>>> GetConfirmacionPreliminar()
+        public async Task<ActionResult<IEnumerable<ConfirmacionPreliminarListaDTO>>> GetConfirmacionPreliminar()
         {
             var confirmacionPreliminar = await _context.confirmacionPreliminar
+                .AsNoTracking()
                 .Include(c => c.oFNavigation)
                 .Include(c => c.idProcesoNavigation)
+                    .ThenInclude(p => p.idTableroNavigation)
+                        .ThenInclude(t => t.idMaquinaNavigation)
                 .Include(c => c.idUnidadNavigation)
                 .Include(c => c.idTurnoNavigation)
                 .Include(c => c.idEstadoNavigation)
@@ -35,16 +38,19 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf.ConfirmacionPrelim
                 .Include(c => c.registradoPorNavigation)
                 .Include(c => c.actualizadoPorNavigation)
                 .Include(c => c.entregadoPorNavigation)
-                .Include(c => c.transferenciaProceso) // Incluir la colección de transferencias
+                .Include(c => c.transferenciaProceso)
+                .Include(c => c.conciliacion)
+                .AsSplitQuery()
                 .Where(c => c.archivado == false)
+                .OrderByDescending(c => c.fechaRegistro)
                 .ToListAsync();
 
-            // Mapear y calcular campos calculados
             var confirmacionPreliminarDto = confirmacionPreliminar.Select(c =>
             {
-                var dto = _mapper.Map<ConfirmacionPreliminarDto>(c);
+                var dto = _mapper.Map<ConfirmacionPreliminarListaDTO>(c);
                 dto.totalTransferencias = c.transferenciaProceso?.Count ?? 0;
-                dto.saldo = (dto.cantidadRecibida ?? 0) - dto.totalTransferencias;
+                dto.saldo = (dto.cantidadRecibida ?? 0)
+                          - (c.transferenciaProceso?.Sum(t => (decimal?)t.cantidadConfirmada ?? 0) ?? 0);
                 return dto;
             }).ToList();
 
@@ -188,14 +194,20 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf.ConfirmacionPrelim
 
         // POST api/<confirmacionPreliminarController>
         [HttpPost("post")]
-        public async Task<ActionResult<confirmacionPreliminar>> PostConfirmacionPreliminar(AddConfirmacionPreliminarDto addConfirmacionPreliminarDto)
+        public async Task<ActionResult<ConfirmacionPreliminarCreateResponseDTO>> PostConfirmacionPreliminar(AddConfirmacionPreliminarDto addConfirmacionPreliminarDto)
         {
             var confirmacionPreliminar = _mapper.Map<confirmacionPreliminar>(addConfirmacionPreliminarDto);
 
             _context.confirmacionPreliminar.Add(confirmacionPreliminar);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetConfirmacionPreliminar", new { id = confirmacionPreliminar.idPreliminar }, confirmacionPreliminar);
+            return CreatedAtAction("GetConfirmacionPreliminar", 
+                new { id = confirmacionPreliminar.idPreliminar }, 
+                new ConfirmacionPreliminarCreateResponseDTO
+                {
+                    idPreliminar = confirmacionPreliminar.idPreliminar,
+                    Message = "Se ha creado correctamente el registro de confirmacionPreliminar."
+                });
         }
 
         // PUT api/<confirmacionPreliminarController>/5

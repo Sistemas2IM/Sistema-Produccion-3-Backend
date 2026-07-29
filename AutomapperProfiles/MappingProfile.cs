@@ -1466,6 +1466,24 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForMember(dest => dest.transferenciaProcesos, opt => opt.MapFrom(src => src.transferenciaProceso))
                 .ReverseMap();
 
+            CreateMap<confirmacionPreliminar, ConfirmacionPreliminarListaDTO>()
+                .ForMember(dest => dest.clienteOf, opt => opt.MapFrom(src => src.oFNavigation.clienteOf))
+                .ForMember(dest => dest.nombreProducto, opt => opt.MapFrom(src => src.oFNavigation.productoOf))
+                .ForMember(dest => dest.serieOf, opt => opt.MapFrom(src => src.oFNavigation.seriesOf))
+                .ForMember(dest => dest.idMaquina, opt => opt.MapFrom(src => src.idProcesoNavigation.idTableroNavigation.idMaquinaNavigation.idMaquina))
+                .ForMember(dest => dest.nombreMaquina, opt => opt.MapFrom(src => src.idProcesoNavigation.idTableroNavigation.idMaquinaNavigation.nombreCorto))
+                .ForMember(dest => dest.nombreUnidad, opt => opt.MapFrom(src => src.idUnidadNavigation.nombre))
+                .ForMember(dest => dest.simboloUnidad, opt => opt.MapFrom(src => src.idUnidadNavigation.simbolo))
+                .ForMember(dest => dest.nombreTurno, opt => opt.MapFrom(src => src.idTurnoNavigation.turno))
+                .ForMember(dest => dest.nombreEstado, opt => opt.MapFrom(src => src.idEstadoNavigation.nombreEstado))
+                .ForMember(dest => dest.nombreEntregadoPor, opt => opt.MapFrom(src => src.entregadoPorNavigation.nombres + " " + src.entregadoPorNavigation.apellidos))
+                .ForMember(dest => dest.nombreOperador, opt => opt.MapFrom(src => src.operadorNavigation.nombres + " " + src.operadorNavigation.apellidos))
+                .ForMember(dest => dest.nombreRegistradoPor, opt => opt.MapFrom(src => src.registradoPorNavigation.nombres + " " + src.registradoPorNavigation.apellidos))
+                .ForMember(dest => dest.nombreActualizadoPor, opt => opt.MapFrom(src => src.actualizadoPorNavigation.nombres + " " + src.actualizadoPorNavigation.apellidos))
+                .ForMember(dest => dest.totalTransferencias, opt => opt.Ignore())
+                .ForMember(dest => dest.tieneConciliacion, opt => opt.MapFrom(src => src.conciliacion != null))
+                .ForMember(dest => dest.saldo, opt => opt.Ignore());
+
             CreateMap<confirmacionPreliminar, AddConfirmacionPreliminarDto>().ReverseMap();
             CreateMap<UpdateConfirmacionPreliminarDto, confirmacionPreliminar>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
