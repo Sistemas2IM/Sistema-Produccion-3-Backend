@@ -50,5 +50,9 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf.ConfirmacionPreliminar
         public int totalTransferencias { get; set; }
         public decimal? saldo { get; set; }
         public bool tieneConciliacion { get; set; }
+
+        // Campos de la transferencia, tienen que ser sumados
+        public decimal? cantidadEnviada { get; set; }
+        public decimal? cantidadConfirmada { get; set; }
     }
 }

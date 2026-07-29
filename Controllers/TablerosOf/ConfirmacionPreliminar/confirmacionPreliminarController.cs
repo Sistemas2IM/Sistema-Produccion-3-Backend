@@ -42,15 +42,17 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf.ConfirmacionPrelim
                 .Include(c => c.conciliacion)
                 .AsSplitQuery()
                 .Where(c => c.archivado == false)
-                .OrderByDescending(c => c.fechaRegistro)
+                .OrderByDescending(c => c.idPreliminar)
                 .ToListAsync();
 
             var confirmacionPreliminarDto = confirmacionPreliminar.Select(c =>
             {
                 var dto = _mapper.Map<ConfirmacionPreliminarListaDTO>(c);
                 dto.totalTransferencias = c.transferenciaProceso?.Count ?? 0;
+                dto.cantidadEnviada = c.transferenciaProceso?.Sum(t => (decimal?)t.cantidadEnviada) ?? 0;
+                dto.cantidadConfirmada = c.transferenciaProceso?.Sum(t => (decimal?)t.cantidadConfirmada) ?? 0;
                 dto.saldo = (dto.cantidadRecibida ?? 0)
-                          - (c.transferenciaProceso?.Sum(t => (decimal?)t.cantidadConfirmada ?? 0) ?? 0);
+                          - (c.transferenciaProceso?.Sum(t => (decimal?)t.cantidadEnviada ?? 0) ?? 0);
                 return dto;
             }).ToList();
 
@@ -90,8 +92,11 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf.ConfirmacionPrelim
             }
 
             var confirmacionPreliminarDto = _mapper.Map<ConfirmacionPreliminarDto>(confirmacionPreliminar);
+
             confirmacionPreliminarDto.totalTransferencias = confirmacionPreliminar.transferenciaProceso?.Count ?? 0;
-            confirmacionPreliminarDto.saldo = (confirmacionPreliminarDto.cantidadRecibida ?? 0) - confirmacionPreliminarDto.totalTransferencias;
+
+            confirmacionPreliminarDto.saldo = (confirmacionPreliminarDto.cantidadRecibida ?? 0)
+                - (confirmacionPreliminar.transferenciaProceso?.Sum(t => (decimal?)t.cantidadEnviada) ?? 0);
 
             return Ok(confirmacionPreliminarDto);
         }

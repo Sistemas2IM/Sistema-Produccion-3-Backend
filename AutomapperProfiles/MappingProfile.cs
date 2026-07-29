@@ -1482,6 +1482,8 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForMember(dest => dest.nombreActualizadoPor, opt => opt.MapFrom(src => src.actualizadoPorNavigation.nombres + " " + src.actualizadoPorNavigation.apellidos))
                 .ForMember(dest => dest.totalTransferencias, opt => opt.Ignore())
                 .ForMember(dest => dest.tieneConciliacion, opt => opt.MapFrom(src => src.conciliacion != null))
+                .ForMember(dest => dest.cantidadEnviada, opt => opt.Ignore())
+                .ForMember(dest => dest.cantidadConfirmada, opt => opt.Ignore())
                 .ForMember(dest => dest.saldo, opt => opt.Ignore());
 
             CreateMap<confirmacionPreliminar, AddConfirmacionPreliminarDto>().ReverseMap();
