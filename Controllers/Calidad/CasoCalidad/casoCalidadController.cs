@@ -23,30 +23,14 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.CasoCalidad
 
         // GET: api/<casoCalidadController>
         [HttpGet("get")]
-        public async Task<ActionResult<IEnumerable<CasoCalidadDto>>> GetCasoCalidad()
+        public async Task<ActionResult<IEnumerable<CasoCalidadListaDTO>>> GetCasoCalidad()
         {
-            var casoCalidad = await _context.casoCalidad
-                .OrderByDescending(c => c.idCasoCalidad)
-                .Include(c => c.idTipoCasoNavigation)
-                .Include(c => c.idEstadoNavigation)
-                .Include(c => c.idSeveridadNavigation)
-                .Include(c => c.idCategoriaDefectoNavigation)
-                .Include(c => c.idSubtipoDefectoNavigation)
-                .Include(c => c.oFNavigation)
-                .Include(c => c.idProcesoNavigation)
-                    .ThenInclude(t => t.idTableroNavigation)
-                    .ThenInclude(m => m.idMaquinaNavigation)
-                .Include(c => c.registradoPorNavigation)
-                .Include(c => c.responsableNavigation)
-                .Include(c => c.actualizadoPorNavigation)
-                .Include(c => c.bitacoraCaso)
-                .Include(c => c.casoAccionSolicitada)
+            var casos = await CasosParaLista()
                 .Where(c => c.archivado == false && c.cancelado == false)
+                .OrderByDescending(c => c.idCasoCalidad)
                 .ToListAsync();
 
-            var casoCalidadDto = _mapper.Map<List<CasoCalidadDto>>(casoCalidad);
-
-            return Ok(casoCalidadDto);
+            return Ok(MapearLista(casos));
         }
 
         // GET api/<casoCalidadController>/5
@@ -54,7 +38,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.CasoCalidad
         public async Task<ActionResult<CasoCalidadDto>> GetCasoCalidad(int id)
         {
             var casoCalidad = await _context.casoCalidad
-                .OrderByDescending(c => c.idCasoCalidad)
+                .AsNoTracking()
                 .Include(c => c.idTipoCasoNavigation)
                 .Include(c => c.idEstadoNavigation)
                 .Include(c => c.idSeveridadNavigation)
@@ -68,96 +52,65 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.CasoCalidad
                 .Include(c => c.responsableNavigation)
                 .Include(c => c.actualizadoPorNavigation)
                 .Include(c => c.bitacoraCaso)
+                    .ThenInclude(b => b.idTipoEventoNavigation)
+                .Include(c => c.bitacoraCaso)
+                    .ThenInclude(b => b.estadoAnteriorNavigation)
+                .Include(c => c.bitacoraCaso)
+                    .ThenInclude(b => b.estadoNuevoNavigation)
                 .Include(c => c.casoAccionSolicitada)
-                .Where(c => c.archivado == false && c.cancelado == false)
+                    .ThenInclude(a => a.idAccionNavigation)
+                .Include(c => c.casoAccionSolicitada)
+                    .ThenInclude(a => a.idEstadoNavigation)
+                .AsSplitQuery()
                 .FirstOrDefaultAsync(u => u.idCasoCalidad == id);
+
             if (casoCalidad == null)
             {
                 return NotFound();
             }
+
             var casoCalidadDto = _mapper.Map<CasoCalidadDto>(casoCalidad);
+
             return Ok(casoCalidadDto);
         }
 
         // GET por oF
         [HttpGet("get/of/{of}")]
-        public async Task<ActionResult<IEnumerable<CasoCalidadDto>>> GetCasoCalidadByOF(int of)
+        public async Task<ActionResult<IEnumerable<CasoCalidadListaDTO>>> GetCasoCalidadByOF(int of)
         {
-            var casoCalidad = await _context.casoCalidad
+            var casos = await CasosParaLista()
+                .Where(c => c.oF == of && c.archivado == false && c.cancelado == false)
                 .OrderByDescending(c => c.idCasoCalidad)
-                .Include(c => c.idTipoCasoNavigation)
-                .Include(c => c.idEstadoNavigation)
-                .Include(c => c.idSeveridadNavigation)
-                .Include(c => c.idCategoriaDefectoNavigation)
-                .Include(c => c.idSubtipoDefectoNavigation)
-                .Include(c => c.oFNavigation)
-                .Include(c => c.idProcesoNavigation)
-                    .ThenInclude(t => t.idTableroNavigation)
-                    .ThenInclude(m => m.idMaquinaNavigation)
-                .Include(c => c.registradoPorNavigation)
-                .Include(c => c.responsableNavigation)
-                .Include(c => c.actualizadoPorNavigation)
-                .Include(c => c.bitacoraCaso)
-                .Include(c => c.casoAccionSolicitada)
-                .Where(c => c.oFNavigation.oF == of)
                 .ToListAsync();
 
-            var casoCalidadDto = _mapper.Map<List<CasoCalidadDto>>(casoCalidad);
-
-            return Ok(casoCalidadDto);
+            return Ok(MapearLista(casos));
         }
 
         // GET por oF abiertos
         [HttpGet("get/of/abiertos/{of}")]
-        public async Task<ActionResult<IEnumerable<CasoCalidadDto>>> GetCasoCalidadByOFAbiertos(int of)
+        public async Task<ActionResult<IEnumerable<CasoCalidadListaDTO>>> GetCasoCalidadByOFAbiertos(int of)
         {
-            var casoCalidad = await _context.casoCalidad
+            var casos = await CasosParaLista()
+                .Where(c => c.oF == of
+                         && c.archivado == false
+                         && c.cancelado == false
+                         && c.idEstadoNavigation.nombreEstado == "Abierto")
                 .OrderByDescending(c => c.idCasoCalidad)
-                .Include(c => c.idTipoCasoNavigation)
-                .Include(c => c.idEstadoNavigation)
-                .Include(c => c.idSeveridadNavigation)
-                .Include(c => c.idCategoriaDefectoNavigation)
-                .Include(c => c.idSubtipoDefectoNavigation)
-                .Include(c => c.oFNavigation)
-                .Include(c => c.idProcesoNavigation)
-                    .ThenInclude(t => t.idTableroNavigation)
-                    .ThenInclude(m => m.idMaquinaNavigation)
-                .Include(c => c.registradoPorNavigation)
-                .Include(c => c.responsableNavigation)
-                .Include(c => c.actualizadoPorNavigation)
-                .Include(c => c.bitacoraCaso)
-                .Include(c => c.casoAccionSolicitada)
-                .Where(c => c.oFNavigation.oF == of && c.idEstadoNavigation.nombreEstado == "Abierto")
                 .ToListAsync();
-            var casoCalidadDto = _mapper.Map<List<CasoCalidadDto>>(casoCalidad);
-            return Ok(casoCalidadDto);
+
+            return Ok(MapearLista(casos));
         }
 
         // GET por idProceso
         [HttpGet("get/proceso/{idProceso}")]
-        public async Task<ActionResult<IEnumerable<CasoCalidadDto>>> GetCasoCalidadByProceso(int idProceso)
+        public async Task<ActionResult<IEnumerable<CasoCalidadListaDTO>>> GetCasoCalidadByProceso(int idProceso)
         {
-            var casoCalidad = await _context.casoCalidad
+            var casos = await CasosParaLista()
+                .Where(c => c.idProceso == idProceso && c.archivado == false && c.cancelado == false)
                 .OrderByDescending(c => c.idCasoCalidad)
-                .Include(c => c.idTipoCasoNavigation)
-                .Include(c => c.idEstadoNavigation)
-                .Include(c => c.idSeveridadNavigation)
-                .Include(c => c.idCategoriaDefectoNavigation)
-                .Include(c => c.idSubtipoDefectoNavigation)
-                .Include(c => c.oFNavigation)
-                .Include(c => c.idProcesoNavigation)
-                    .ThenInclude(t => t.idTableroNavigation)
-                    .ThenInclude(m => m.idMaquinaNavigation)
-                .Include(c => c.registradoPorNavigation)
-                .Include(c => c.responsableNavigation)
-                .Include(c => c.actualizadoPorNavigation)
-                .Include(c => c.bitacoraCaso)
-                .Include(c => c.casoAccionSolicitada)
-                .Where(c => c.idProceso == idProceso)
                 .ToListAsync();
 
-            var casoCalidadDto = _mapper.Map<List<CasoCalidadDto>>(casoCalidad);
-            return Ok(casoCalidadDto);
+            return Ok(MapearLista(casos));
         }
 
         // GET agrupado por estado, con los objetos de cada estado, y la cantidad de casos por estado
@@ -251,6 +204,37 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.CasoCalidad
         {
             return (_context.casoCalidad?.Any(e => e.idCasoCalidad == id)).GetValueOrDefault();
         }
+
+        // Consulta base con las relaciones que necesita CasoCalidadListaDto.
+        // Un solo lugar: si mañana falta un Include, se arregla acá y aplica a los 4 listados.
+        private IQueryable<casoCalidad> CasosParaLista() =>
+            _context.casoCalidad
+                .AsNoTracking()
+                .Include(c => c.idTipoCasoNavigation)
+                .Include(c => c.idEstadoNavigation)
+                .Include(c => c.idSeveridadNavigation)
+                .Include(c => c.idCategoriaDefectoNavigation)
+                .Include(c => c.idSubtipoDefectoNavigation)
+                .Include(c => c.oFNavigation)
+                .Include(c => c.idProcesoNavigation)
+                    .ThenInclude(t => t.idTableroNavigation)
+                    .ThenInclude(m => m.idMaquinaNavigation)
+                .Include(c => c.registradoPorNavigation)
+                .Include(c => c.responsableNavigation)
+                .Include(c => c.actualizadoPorNavigation)
+                .Include(c => c.bitacoraCaso)
+                .Include(c => c.casoAccionSolicitada)
+                .AsSplitQuery();
+
+        // Mapeo + los dos contadores
+        private List<CasoCalidadListaDTO> MapearLista(List<casoCalidad> casos) =>
+            casos.Select(c =>
+            {
+                var dto = _mapper.Map<CasoCalidadListaDTO>(c);
+                dto.totalEventos = c.bitacoraCaso?.Count ?? 0;
+                dto.totalAcciones = c.casoAccionSolicitada?.Count ?? 0;
+                return dto;
+            }).ToList();
 
     }
 }

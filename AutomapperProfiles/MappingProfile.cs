@@ -1400,6 +1400,21 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForMember(dest => dest.accionesSolicitadas, opt => opt.MapFrom(src => src.casoAccionSolicitada))
                 .ReverseMap();
 
+            CreateMap<casoCalidad, CasoCalidadListaDTO>()
+                .ForMember(dest => dest.nombreTipoCaso, opt => opt.MapFrom(src => src.idTipoCasoNavigation.nombre))
+                .ForMember(dest => dest.nombreEstado, opt => opt.MapFrom(src => src.idEstadoNavigation.nombreEstado))
+                .ForMember(dest => dest.nombreSeveridad, opt => opt.MapFrom(src => src.idSeveridadNavigation.nombre))
+                .ForMember(dest => dest.nombreCategoria, opt => opt.MapFrom(src => src.idCategoriaDefectoNavigation.nombre))
+                .ForMember(dest => dest.nombreSubtipo, opt => opt.MapFrom(src => src.idSubtipoDefectoNavigation.nombre))
+                .ForMember(dest => dest.clienteOf, opt => opt.MapFrom(src => src.oFNavigation.clienteOf))
+                .ForMember(dest => dest.productoOf, opt => opt.MapFrom(src => src.oFNavigation.productoOf))
+                .ForMember(dest => dest.nombreMaquina, opt => opt.MapFrom(src => src.idProcesoNavigation.idTableroNavigation.idMaquinaNavigation.nombreMaquina))
+                .ForMember(dest => dest.nombreRegistradoPor, opt => opt.MapFrom(src => src.registradoPorNavigation.nombres + " " + src.registradoPorNavigation.apellidos))
+                .ForMember(dest => dest.nombreResponsable, opt => opt.MapFrom(src => src.responsableNavigation.nombres + " " + src.responsableNavigation.apellidos))
+                .ForMember(dest => dest.nombreActualizadoPor, opt => opt.MapFrom(src => src.actualizadoPorNavigation.nombres + " " + src.actualizadoPorNavigation.apellidos))
+                .ForMember(dest => dest.totalEventos, opt => opt.Ignore())
+                .ForMember(dest => dest.totalAcciones, opt => opt.Ignore());
+
             CreateMap<casoCalidad, AddCasoCalidadDto>().ReverseMap();
             CreateMap<UpdateCasoCalidadDto, casoCalidad>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
