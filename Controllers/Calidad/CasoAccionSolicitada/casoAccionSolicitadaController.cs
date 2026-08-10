@@ -55,14 +55,21 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.CasoAccionSolicitada
 
         // POST api/<casoAccionSolicitadaController>
         [HttpPost("post")]
-        public async Task<ActionResult<casoAccionSolicitada>> PostCasoAccion(AddCasoAccionSolicitadaDto addCasoAccionSolicitadaDto)
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        public async Task<ActionResult<casoAccionSolicitadaCreateResponseDTO>> PostCasoAccion(AddCasoAccionSolicitadaDto addCasoAccionSolicitadaDto)
         {
             var casoAccionSolicitada = _mapper.Map<casoAccionSolicitada>(addCasoAccionSolicitadaDto);
 
             _context.casoAccionSolicitada.Add(casoAccionSolicitada);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetCasoAccionSolicitada", new { id = casoAccionSolicitada.idCasoAccion }, casoAccionSolicitada);
+            return CreatedAtAction(nameof(GetCasoAccionSolicitada), 
+                new { id = casoAccionSolicitada.idCasoAccion }, 
+                new casoAccionSolicitadaCreateResponseDTO
+                {
+                    idCasoAccion = casoAccionSolicitada.idCasoAccion,
+                    Message = "Se ha creado correctamente el registro de casoAccionSolicitada."
+                });
         }
 
         // PUT api/<casoAccionSolicitadaController>/5

@@ -111,14 +111,20 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales.Concili
 
         // POST api/<conciliacionController>
         [HttpPost("post")]
-        public async Task<ActionResult<conciliacion>> PostConciliacion(AddConciliacionDto addConciliacionDto)
+        public async Task<ActionResult<ConciliacionCreateResponseDTO>> PostConciliacion(AddConciliacionDto addConciliacionDto)
         {
             var conciliacion = _mapper.Map<conciliacion>(addConciliacionDto);
 
             _context.conciliacion.Add(conciliacion);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetConciliacion", new { id = conciliacion.idConciliacion }, conciliacion);
+            return CreatedAtAction(nameof(GetConciliacion),
+                new { id= conciliacion.idConciliacion},
+                new ConciliacionCreateResponseDTO
+                {
+                    IdConciliacion = conciliacion.idConciliacion,
+                    Message = "Conciliación creada exitosamente."
+                });
         }
 
         // PUT api/<conciliacionController>/5
