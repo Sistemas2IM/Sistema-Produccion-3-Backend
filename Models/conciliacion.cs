@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
+
 namespace Sistema_Produccion_3_Backend.Models;
 
 [Index("idMotivo", Name = "MOTIVO_CONCILIACION_FK")]

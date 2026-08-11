@@ -104,6 +104,10 @@ namespace Sistema_Produccion_3_Backend.DTO.TarjetasOF
 
         public DateTime? finReal { get; set; }
 
+        // historal de vencimiento of, debe ser la ultima fecha de vencimiento registrada en el historial
+
+        public DateTime? fechaVencimientoNueva { get; set; }
+
         //public ffeTiemposOfDto? tiemposOfDto { get; set; }
 
         //public EstadoOfDto? estadoOfDto { get; set; }

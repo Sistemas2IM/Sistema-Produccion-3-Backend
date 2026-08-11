@@ -143,6 +143,9 @@ public partial class tarjetaOf
     [InverseProperty("oFNavigation")]
     public virtual ICollection<fichaTecnicaProcesos> fichaTecnicaProcesos { get; set; } = new List<fichaTecnicaProcesos>();
 
+    [InverseProperty("oFNavigation")]
+    public virtual ICollection<historialVencimientoOf> historialVencimientoOf { get; set; } = new List<historialVencimientoOf>();
+
     [ForeignKey("idEstadoOf")]
     [InverseProperty("tarjetaOf")]
     public virtual estadosOf idEstadoOfNavigation { get; set; }

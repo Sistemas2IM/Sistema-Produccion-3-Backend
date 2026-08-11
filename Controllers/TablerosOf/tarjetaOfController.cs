@@ -64,6 +64,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                     .ThenInclude(o => o.idEtiquetaNavigation)
                 .Include(f => f.ffeTiemposOfGlobal)
                 .Include(se => se.secuenciadoPorNavigation)
+                .Include(h => h.historialVencimientoOf)
                 .ToListAsync();
 
             var tarjetaOfDto = _mapper.Map<List<TarjetaOfDto>>(tarjetasOrdenadas);
@@ -91,6 +92,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                     .ThenInclude(o => o.idEtiquetaNavigation)
                 .Include(f => f.ffeTiemposOfGlobal)
                 .Include(se => se.secuenciadoPorNavigation)
+                .Include(h => h.historialVencimientoOf)
                 .ToListAsync();
 
             // 2. Mapeamos a tu DTO
@@ -136,6 +138,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                     .ThenInclude(o => o.idEtiquetaNavigation)
                 .Include(f => f.ffeTiemposOfGlobal)
                 .Include(se => se.secuenciadoPorNavigation)
+                .Include(h => h.historialVencimientoOf)
                 .ToListAsync();
 
             // 2. Mapeamos a tu DTO
@@ -185,6 +188,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                     .ThenInclude(o => o.idEtiquetaNavigation)
                 .Include(f => f.ffeTiemposOfGlobal)
                 .Include(se => se.secuenciadoPorNavigation)
+                .Include(h => h.historialVencimientoOf)
                 .ToListAsync();
 
             var tarjetaOfDto = _mapper.Map<List<TarjetaOfDto>>(tarjetasOrdenadas);
@@ -214,6 +218,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 .Include(e => e.idEstadoOfNavigation)
                 .Include(f => f.ffeTiemposOfGlobal)
                 .Include(se => se.secuenciadoPorNavigation)
+                .Include(h => h.historialVencimientoOf)
                 .AsQueryable();
 
             // Aplicar filtros condicionales
@@ -408,6 +413,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                     .ThenInclude(o => o.idEtiquetaNavigation)
                 .Include(f => f.ffeTiemposOfGlobal)
                 .Include(se => se.secuenciadoPorNavigation)
+                .Include(h => h.historialVencimientoOf)
                 .FirstOrDefaultAsync(u => u.oF == id);
             var tarjetaOfDto = _mapper.Map<TarjetaOfDto>(tarjetaOf);
             

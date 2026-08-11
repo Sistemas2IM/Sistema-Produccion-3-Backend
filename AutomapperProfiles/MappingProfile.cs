@@ -144,6 +144,7 @@ using Sistema_Produccion_3_Backend.DTO.Tableros.Posturas;
 using Sistema_Produccion_3_Backend.DTO.TarjetasOF;
 using Sistema_Produccion_3_Backend.DTO.TarjetasOF.BusquedaTarjetas;
 using Sistema_Produccion_3_Backend.DTO.TarjetasOF.EstadoOf;
+using Sistema_Produccion_3_Backend.DTO.TarjetasOF.HistorialVencimientoOf;
 using Sistema_Produccion_3_Backend.DTO.TarjetasOF.logCambiosOf;
 using Sistema_Produccion_3_Backend.DTO.TarjetasOF.NotasOf;
 using Sistema_Produccion_3_Backend.DTO.TarjetasOF.Reportes;
@@ -171,6 +172,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForMember(dest => dest.inicioReal, opt => opt.MapFrom(src => src.ffeTiemposOfGlobal.Inicio_Real))
                 .ForMember(dest => dest.finReal, opt => opt.MapFrom(src => src.ffeTiemposOfGlobal.Fin_Real))
                 .ForMember(dest => dest.secuenciador, opt => opt.MapFrom(src => src.secuenciadoPorNavigation.nombres + " " + src.secuenciadoPorNavigation.apellidos))
+                .ForMember(dest => dest.fechaVencimientoNueva, opt => opt.MapFrom(src => src.historialVencimientoOf.OrderByDescending(h => h.fechaVencimientoNueva).FirstOrDefault().fechaVencimientoNueva))
                 .ReverseMap();
             //.ForPath(src => src.idEstadoOfNavigation, opt => opt.Ignore());
             CreateMap<tarjetaOf, TarjetaBusquedaDto>().ReverseMap();
@@ -1534,6 +1536,12 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
 
             // decision conciliacion
             CreateMap<decisionConciliacion, DecisionConciliacionDto>().ReverseMap();
+
+            // HistorialVencimientoOf ============================================================================================
+            CreateMap<historialVencimientoOf, HistorialVencimientoOfDto>().ReverseMap();
+            CreateMap<historialVencimientoOf, AddHistorialVencimientoOfDto>().ReverseMap();
+            CreateMap<UpdateHistorialVencimientoOfDto, historialVencimientoOf>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
         }
     }
 }

@@ -215,6 +215,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[historialVencimientoOf]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[horariosOperativos]",
          "ObjectType": 0
       },

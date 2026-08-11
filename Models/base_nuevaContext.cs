@@ -111,6 +111,8 @@ public partial class base_nuevaContext : DbContext
 
     public virtual DbSet<formulacionTinta> formulacionTinta { get; set; }
 
+    public virtual DbSet<historialVencimientoOf> historialVencimientoOf { get; set; }
+
     public virtual DbSet<horariosOperativos> horariosOperativos { get; set; }
 
     public virtual DbSet<indisponibilidadMaquinas> indisponibilidadMaquinas { get; set; }
@@ -948,6 +950,20 @@ public partial class base_nuevaContext : DbContext
             entity.HasKey(e => e.idFormulacion).HasName("PK_FORMULACION_TINTAS");
 
             entity.HasOne(d => d.idFichaProcesoNavigation).WithMany(p => p.formulacionTinta).HasConstraintName("FK_FICHA_FORMULACION_TINTA");
+        });
+
+        modelBuilder.Entity<historialVencimientoOf>(entity =>
+        {
+            entity.HasKey(e => e.idHistorial).HasName("PK_HISTORIALVENCIMIENTOOF");
+
+            entity.Property(e => e.fechaRegistro).HasDefaultValueSql("(getdate())");
+            entity.Property(e => e.registradoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+
+            entity.HasOne(d => d.oFNavigation).WithMany(p => p.historialVencimientoOf)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_HISTVENC_OF");
+
+            entity.HasOne(d => d.registradoPorNavigation).WithMany(p => p.historialVencimientoOf).HasConstraintName("FK_HISTVENC_REGISTRADO_POR");
         });
 
         modelBuilder.Entity<horariosOperativos>(entity =>

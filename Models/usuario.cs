@@ -120,6 +120,9 @@ public partial class usuario
     [InverseProperty("operadorNavigation")]
     public virtual ICollection<fichaTecnicaProcesos> fichaTecnicaProcesosoperadorNavigation { get; set; } = new List<fichaTecnicaProcesos>();
 
+    [InverseProperty("registradoPorNavigation")]
+    public virtual ICollection<historialVencimientoOf> historialVencimientoOf { get; set; } = new List<historialVencimientoOf>();
+
     [InverseProperty("operadorNavigation")]
     public virtual ICollection<horariosOperativos> horariosOperativos { get; set; } = new List<horariosOperativos>();
 
