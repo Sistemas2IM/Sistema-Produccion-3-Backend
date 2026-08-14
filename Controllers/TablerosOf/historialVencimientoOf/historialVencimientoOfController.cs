@@ -6,22 +6,22 @@ using Microsoft.EntityFrameworkCore;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf.historialVencimientoOf
+namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf.HistorialVencimientoOf
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class historialVencimientoOfController : ControllerBase
+    public class HistorialVencimientoOfController : ControllerBase
     {
         private readonly base_nuevaContext _context;
         private readonly IMapper _mapper;
 
-        public historialVencimientoOfController(base_nuevaContext context, IMapper mapper)
+        public HistorialVencimientoOfController(base_nuevaContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
         }
 
-        // GET: api/<historialVencimientoOfController>
+        // GET: api/<HistorialVencimientoOfController>
         [HttpGet("get")]
         public async Task<ActionResult<IEnumerable<HistorialVencimientoOfDto>>> GetHistorial()
         {
@@ -67,14 +67,13 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf.historialVencimien
 
         // POST api/<historialVencimientoOfController>
         [HttpPost("post")]
-        public async Task<ActionResult<Models.historialVencimientoOf>> PostHistorial(AddHistorialVencimientoOfDto historialDto)
+        public async Task<ActionResult<HistorialVencimientoOfDto>> PostHistorial(HistorialVencimientoOfDto historialDto)
         {
-            var historial = _mapper.Map<Models.historialVencimientoOf>(historialDto);
-            
+            var historial = _mapper.Map<historialVencimientoOf>(historialDto);
             _context.historialVencimientoOf.Add(historial);
-            await _context.SaveChangesAsync();      
-            
-            return CreatedAtAction(nameof(GetHistorialById), new { id = historial.idHistorial }, historial);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction(nameof(GetHistorialById), new { id = historial.idHistorial }, historialDto);
         }
 
     }

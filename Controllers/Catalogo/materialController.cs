@@ -32,7 +32,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Catalogo
 
             return Ok(materialDto);
         }
-
+        
         // GET api/<materialController>/5
         [HttpGet("get/{id}")]
         public async Task<ActionResult<MaterialDto>> GetMaterial(string id)

@@ -17,7 +17,7 @@ public partial class confirmacionPreliminar
     [Key]
     public int idPreliminar { get; set; }
 
-    public int oF { get; set; }
+    public int? oF { get; set; }
 
     public int idProceso { get; set; }
 
