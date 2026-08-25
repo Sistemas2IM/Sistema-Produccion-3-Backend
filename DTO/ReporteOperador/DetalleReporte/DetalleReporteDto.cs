@@ -131,7 +131,5 @@ namespace Sistema_Produccion_3_Backend.DTO.ReporteOperador.DetalleReporte
         public string? descripcionOf { get; set; }
 
         public string? clienteOf { get; set; }
-
-        public TipoCierreDto? tipoCierreDto { get; set; }
     }
 }
