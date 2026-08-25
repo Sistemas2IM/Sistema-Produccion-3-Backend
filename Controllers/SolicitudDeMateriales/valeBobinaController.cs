@@ -169,7 +169,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales
 
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetValeBobina", new { id = valeBobina.idVale }, valeBobina);
+            return Ok(new { message = "Vale de bobina creado exitosamente", idVale = valeBobina.idVale });
         }
 
         // PUT api/<valeBobinaController>/5

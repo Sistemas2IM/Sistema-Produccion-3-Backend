@@ -579,6 +579,26 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             // Mapeamos todos de golpe usando AutoMapper (más limpio y eficiente)
             var dtos = _mapper.Map<List<ListaProcesoOfDto>>(procesos);
 
+            // 🚀 LÓGICA DE LA BANDERA BOOLEANA
+            var idsProcesos = dtos.Select(d => d.idProceso).ToList();
+
+            if (idsProcesos.Any())
+            {
+                // Consultamos a SQL de un solo golpe trayendo solo los IDs únicos que sí existen
+                var idsConConfirmacion = await _context.confirmacionPreliminar
+                    .AsNoTracking()
+                    .Where(c => idsProcesos.Contains(c.idProceso) && c.idEstado == 24)
+                    .Select(c => c.idProceso)
+                    .Distinct() // Si está 3 veces, SQL lo cuenta como 1 sola vez
+                    .ToListAsync();
+
+                // Le encendemos la bandera (true) solo a los que sí aparecieron en la consulta
+                foreach (var dto in dtos)
+                {
+                    dto.tieneConfirmacionPreliminar = idsConConfirmacion.Contains(dto.idProceso);
+                }
+            }
+
             // 4. CARGA POR LOTES DE DETALLES DE MÁQUINA (Batching del Switch)
             var maquinasPorTipo = dtos
                 .Where(d => !string.IsNullOrEmpty(d.tipoMaquinaSAP)) // 🚀 Filtramos los nulos primero

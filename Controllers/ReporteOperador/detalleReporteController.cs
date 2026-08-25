@@ -210,6 +210,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.ReporteOperador
                         detalle.bloqueada = dto.bloqueada;
                         detalle.idTransferencia = dto.idTransferencia;
                         detalle.codBobina = dto.codBobina;
+                        detalle.idPreliminar = dto.idPreliminar;
                     }
 
                     _context.Entry(detalle).State = EntityState.Modified;

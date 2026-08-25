@@ -64,6 +64,9 @@ public partial class confirmacionPreliminar
     [InverseProperty("idPreliminarNavigation")]
     public virtual conciliacion conciliacion { get; set; }
 
+    [InverseProperty("idPreliminarNavigation")]
+    public virtual ICollection<detalleReporte> detalleReporte { get; set; } = new List<detalleReporte>();
+
     [ForeignKey("entregadoPor")]
     [InverseProperty("confirmacionPreliminarentregadoPorNavigation")]
     public virtual usuario entregadoPorNavigation { get; set; }

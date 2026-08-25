@@ -93,5 +93,7 @@
         public int? idTransferencia { get; set; }
 
         public string? codBobina { get; set; }
+
+        public int? idPreliminar { get; set; }
     }
 }

@@ -594,9 +594,7 @@ public partial class base_nuevaContext : DbContext
 
             entity.HasOne(d => d.idUnidadNavigation).WithMany(p => p.confirmacionPreliminar).HasConstraintName("FK_PRELIMINAR_UNIDAD");
 
-            entity.HasOne(d => d.oFNavigation).WithMany(p => p.confirmacionPreliminar)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_PRELIMINAR_OF");
+            entity.HasOne(d => d.oFNavigation).WithMany(p => p.confirmacionPreliminar).HasConstraintName("FK_PRELIMINAR_OF");
 
             entity.HasOne(d => d.operadorNavigation).WithMany(p => p.confirmacionPreliminaroperadorNavigation).HasConstraintName("FK_PRELIMINAR_OPERADOR");
 
@@ -754,6 +752,8 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.idMaterialNavigation).WithMany(p => p.detalleReporte).HasConstraintName("FK_DETALLE_MATERIAL");
 
             entity.HasOne(d => d.idOperacionNavigation).WithMany(p => p.detalleReporte).HasConstraintName("FK_DETALLE_OPERACION");
+
+            entity.HasOne(d => d.idPreliminarNavigation).WithMany(p => p.detalleReporte).HasConstraintName("FK_PRELIMINAR_REPORTE");
 
             entity.HasOne(d => d.idProcesoNavigation).WithMany(p => p.detalleReporte).HasConstraintName("FK_R_PROCESOO");
 
