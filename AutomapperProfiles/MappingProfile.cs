@@ -546,6 +546,19 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForMember(dest => dest.nombreUsuario, opt => opt.MapFrom(src => src.operadorNavigation.nombres + " " + src.operadorNavigation.apellidos))
                 .ForMember(dest => dest.nombreAuxiliar, opt => opt.MapFrom(src => src.auxiliarNavigation.nombre))
                 .ReverseMap();
+
+            CreateMap<reportesDeOperadores, ReporteOperadorListaDto>()
+                .ForMember(dest => dest.estadoReporteDto, opt => opt.MapFrom(src => src.idEstadoReporteNavigation))
+                .ForMember(dest => dest.nombreEstado, opt => opt.MapFrom(src => src.idEstadoReporteNavigation.nombreEstado))
+                .ForMember(dest => dest.tipoReporteDto, opt => opt.MapFrom(src => src.idTipoReporteNavigation))
+                .ForMember(dest => dest.maquinaDto, opt => opt.MapFrom(src => src.idMaquinaNavigation))
+                .ForMember(dest => dest.nombreUsuario, opt => opt.MapFrom(src =>
+                    src.operadorNavigation.nombres + " " + src.operadorNavigation.apellidos))
+                .ForMember(dest => dest.nombreAuxiliar, opt => opt.MapFrom(src => src.auxiliarNavigation.nombre));
+
+            CreateMap<maquinas, MaquinaReporteDto>()
+                .ForMember(dest => dest.nombreFamilia, opt => opt.MapFrom(src => src.idFamiliaNavigation.nombreFamilia));
+
             CreateMap<reportesDeOperadores, AddReporteOperadorDto>().ReverseMap();
             CreateMap<UpdateReporteOperadorDto, reportesDeOperadores>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
