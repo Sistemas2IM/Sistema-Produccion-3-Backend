@@ -1874,9 +1874,7 @@ public partial class base_nuevaContext : DbContext
 
             entity.Property(e => e.activo).HasDefaultValue(true);
 
-            entity.HasOne(d => d.idCategoriaNavigation).WithMany(p => p.subtipoDefecto)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_SUBTIPO_CATEGORIA");
+            entity.HasOne(d => d.idCategoriaNavigation).WithMany(p => p.subtipoDefecto).HasConstraintName("FK_SUBTIPO_CATEGORIA");
         });
 
         modelBuilder.Entity<tablerosOf>(entity =>

@@ -84,8 +84,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.Ov
                 T1.""U_GuiaColor"" AS ""Guia de color"",
                 T1.""U_FormaEmpaque"" AS ""Forma de empaque"",
                 T1.""U_Entrega"" AS ""Entregas""
-            FROM ""RESPALDO_1"".""ORDR"" T0
-            INNER JOIN ""RESPALDO_1"".""RDR1"" T1 ON T0.""DocEntry"" = T1.""DocEntry""
+            FROM ""SBO_IMPRESOSMULTIPLES"".""ORDR"" T0
+            INNER JOIN ""SBO_IMPRESOSMULTIPLES"".""RDR1"" T1 ON T0.""DocEntry"" = T1.""DocEntry""
             WHERE T0.""DocNum"" = '{id}'";
 
                 oRecordSet.DoQuery(queryHana);

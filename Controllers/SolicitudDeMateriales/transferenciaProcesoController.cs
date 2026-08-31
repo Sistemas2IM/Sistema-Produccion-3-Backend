@@ -31,6 +31,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales
             var transferenciaProceso = await _context.transferenciaProceso
                 .Include(t => t.idOrigenNavigation)
                     .ThenInclude(p => p.idTableroNavigation)
+                .OrderByDescending(t => t.idTransferencia)
                 .ToListAsync();
             var transferenciaProcesoDto = _mapper.Map<List<transferenciaProcesoDto>>(transferenciaProceso);
 

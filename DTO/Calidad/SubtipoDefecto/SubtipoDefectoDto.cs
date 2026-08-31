@@ -14,5 +14,7 @@ namespace Sistema_Produccion_3_Backend.DTO.Calidad.SubtipoDefecto
 
         public bool? activo { get; set; }
 
+        public string? severidad { get; set; }
+
     }
 }

@@ -9,5 +9,7 @@
         public string? descripcion { get; set; }
 
         public bool? activo { get; set; }
+
+        public string? severidad { get; set; }
     }
 }

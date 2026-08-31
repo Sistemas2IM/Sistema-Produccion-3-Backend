@@ -14,16 +14,18 @@ public partial class subtipoDefecto
     [Key]
     public int idSubtipo { get; set; }
 
-    public int idCategoria { get; set; }
+    public int? idCategoria { get; set; }
 
-    [Required]
     [StringLength(100)]
     public string nombre { get; set; }
 
     [StringLength(250)]
     public string descripcion { get; set; }
 
-    public bool activo { get; set; }
+    public bool? activo { get; set; }
+
+    [StringLength(10)]
+    public string severidad { get; set; }
 
     [InverseProperty("idSubtipoDefectoNavigation")]
     public virtual ICollection<casoCalidad> casoCalidad { get; set; } = new List<casoCalidad>();
