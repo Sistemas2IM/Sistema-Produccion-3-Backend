@@ -56,6 +56,8 @@ namespace Sistema_Produccion_3_Backend.DTO.ProductoTerminado
 
         public bool? cancelada { get; set; }
 
+        public string? nombreAlternoArticulo { get; set; }
+
         public DateTime? fechaDespacho { get; set; }
     }
 }

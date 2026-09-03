@@ -16,6 +16,8 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf.LogProgramacion
 
         public DateTime? fechaCreacion { get; set; }
 
+        public string? comentario { get; set; }
+
         public List<LogProgramacionDetalleDto>? logProgramacionDetalle { get; set; } = null;
     }
 }

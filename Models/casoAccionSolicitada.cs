@@ -36,6 +36,15 @@ public partial class casoAccionSolicitada
     [StringLength(50)]
     public string actualizadoPor { get; set; }
 
+    [StringLength(50)]
+    public string responsable { get; set; }
+
+    public DateOnly? fechaCompromiso { get; set; }
+
+    [ForeignKey("actualizadoPor")]
+    [InverseProperty("casoAccionSolicitadaactualizadoPorNavigation")]
+    public virtual usuario actualizadoPorNavigation { get; set; }
+
     [ForeignKey("idAccion")]
     [InverseProperty("casoAccionSolicitada")]
     public virtual accionSolicitada idAccionNavigation { get; set; }
@@ -47,6 +56,10 @@ public partial class casoAccionSolicitada
     [ForeignKey("idEstado")]
     [InverseProperty("casoAccionSolicitada")]
     public virtual estadosReporte idEstadoNavigation { get; set; }
+
+    [ForeignKey("responsable")]
+    [InverseProperty("casoAccionSolicitadaresponsableNavigation")]
+    public virtual usuario responsableNavigation { get; set; }
 
     [ForeignKey("tipoReporte")]
     [InverseProperty("casoAccionSolicitada")]

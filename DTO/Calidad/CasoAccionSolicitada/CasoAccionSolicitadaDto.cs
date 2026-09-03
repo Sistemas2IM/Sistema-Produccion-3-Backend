@@ -28,6 +28,10 @@
 
         public string? actualizadoPor { get; set; }
 
+        public string? responsable { get; set; }
+
+        public DateOnly? fechaCompromiso { get; set; }
+
         // relacion
         //public string? nombreActualizadoPor { get; set; }
     }

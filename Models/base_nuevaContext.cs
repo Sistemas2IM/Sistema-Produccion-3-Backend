@@ -81,6 +81,8 @@ public partial class base_nuevaContext : DbContext
 
     public virtual DbSet<detalleValidacionArranque> detalleValidacionArranque { get; set; }
 
+    public virtual DbSet<dictamenCalidad> dictamenCalidad { get; set; }
+
     public virtual DbSet<empleadoCatalogo> empleadoCatalogo { get; set; }
 
     public virtual DbSet<entregasProductoTerminado> entregasProductoTerminado { get; set; }
@@ -375,9 +377,13 @@ public partial class base_nuevaContext : DbContext
 
             entity.HasOne(d => d.estadoNuevoNavigation).WithMany(p => p.bitacoraCasoestadoNuevoNavigation).HasConstraintName("FK_BITACORA_ESTADO_NUEVO");
 
+            entity.HasOne(d => d.idAnexoNavigation).WithMany(p => p.bitacoraCaso).HasConstraintName("FK_BITACORA_EVIDENCIA");
+
             entity.HasOne(d => d.idCasoCalidadNavigation).WithMany(p => p.bitacoraCaso)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_BITACORA_CASO");
+
+            entity.HasOne(d => d.idDictamenNavigation).WithMany(p => p.bitacoraCaso).HasConstraintName("FK_BITACORA_DICTAMEN");
 
             entity.HasOne(d => d.idTipoEventoNavigation).WithMany(p => p.bitacoraCaso)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -404,6 +410,9 @@ public partial class base_nuevaContext : DbContext
 
             entity.Property(e => e.actualizadoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.fechaRegistro).HasDefaultValueSql("(getdate())");
+            entity.Property(e => e.responsable).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+
+            entity.HasOne(d => d.actualizadoPorNavigation).WithMany(p => p.casoAccionSolicitadaactualizadoPorNavigation).HasConstraintName("FK_CASOACCION_ACTALIZADOR_POR");
 
             entity.HasOne(d => d.idAccionNavigation).WithMany(p => p.casoAccionSolicitada)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -416,6 +425,8 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.idEstadoNavigation).WithMany(p => p.casoAccionSolicitada)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_CASOACCION_ESTADO");
+
+            entity.HasOne(d => d.responsableNavigation).WithMany(p => p.casoAccionSolicitadaresponsableNavigation).HasConstraintName("FK_CASOACCION_RESPONSABLE");
 
             entity.HasOne(d => d.tipoReporteNavigation).WithMany(p => p.casoAccionSolicitada)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -771,6 +782,15 @@ public partial class base_nuevaContext : DbContext
             entity.HasKey(e => e.idDetalleValidacion).HasName("PK_DETALLE_ARRANQUE");
 
             entity.HasOne(d => d.idValidacionArranqueNavigation).WithMany(p => p.detalleValidacionArranque).HasConstraintName("FK_ARRANQUE_VALIDACION");
+        });
+
+        modelBuilder.Entity<dictamenCalidad>(entity =>
+        {
+            entity.HasKey(e => e.idDictamen).HasName("PK__dictamen__2069D76222318DA5");
+
+            entity.Property(e => e.activo).HasDefaultValue(true);
+            entity.Property(e => e.aplicaFinal).HasDefaultValue(true);
+            entity.Property(e => e.aplicaPreliminar).HasDefaultValue(true);
         });
 
         modelBuilder.Entity<empleadoCatalogo>(entity =>

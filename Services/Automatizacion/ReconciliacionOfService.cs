@@ -9,17 +9,18 @@ namespace Sistema_Produccion_3_Backend.Services.Automatizacion
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly ILogger<ReconciliacionOfService> _logger;
+        private readonly IHttpClientFactory _httpClientFactory;
 
-        public ReconciliacionOfService(IServiceProvider serviceProvider, ILogger<ReconciliacionOfService> logger)
+        public ReconciliacionOfService(IServiceProvider serviceProvider, ILogger<ReconciliacionOfService> logger, IHttpClientFactory httpClientFactory)
         {
             _serviceProvider = serviceProvider;
             _logger = logger;
+            _httpClientFactory = httpClientFactory;
         }
 
         public override Task StartAsync(CancellationToken cancellationToken)
         {
-            // Pon un punto de interrupción en esta línea 👇
-            _logger.LogWarning("🔥 StartAsync SI fue llamado por .NET Host!");
+            _logger.LogWarning("StartAsync SI fue llamado por .NET Host");
             return base.StartAsync(cancellationToken);
         }
 
@@ -27,7 +28,7 @@ namespace Sistema_Produccion_3_Backend.Services.Automatizacion
         {
             await Task.Yield();
 
-            _logger.LogInformation("🔄 Servicio de Reconciliación OF iniciado.");
+            _logger.LogInformation("Servicio de Reconciliación OF iniciado.");
 
             while (!stoppingToken.IsCancellationRequested)
             {
@@ -160,6 +161,9 @@ namespace Sistema_Produccion_3_Backend.Services.Automatizacion
                                             disc.fechaDeteccion = DateTime.Now;
                                             disc.fechaUltimaRevision = DateTime.Now;
                                             context.logSincronizacionOf.Add(disc);
+
+                                            string urlWebhook = "https://chat.googleapis.com/v1/spaces/AAQAWq4gutM/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=iaQ_VBb50vRosAvy00hxgSIOR0tSnFsBaVvRCiSaw3k";
+                                            await EnviarAlertaDiscrepancia(disc, urlWebhook);
                                         }
                                     }
 
@@ -176,11 +180,11 @@ namespace Sistema_Produccion_3_Backend.Services.Automatizacion
                                     // Guardar cambios en la DB
                                     await context.SaveChangesAsync(stoppingToken);
 
-                                    _logger.LogWarning($"⚠️ Reconciliación OF: {discrepancias.Count} activas. {logsArreglados.Count()} resueltas.");
+                                    _logger.LogWarning($"Reconciliación OF: {discrepancias.Count} activas. {logsArreglados.Count()} resueltas.");
                                 }
                                 else
                                 {
-                                    _logger.LogInformation("✅ Todo en orden. No se encontraron diferencias entre NEXO y SAP para las OFs.");
+                                    _logger.LogInformation("Todo en orden. No se encontraron diferencias entre NEXO y SAP para las OFs.");
                                 }
                             }
                         }
@@ -210,7 +214,59 @@ namespace Sistema_Produccion_3_Backend.Services.Automatizacion
                 }
 
                 // Ejecutar cada 12 horas (Ajusta este tiempo a lo que tu operación necesite)
-                await Task.Delay(TimeSpan.FromMinutes(5), stoppingToken);
+                await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
+            }
+        }
+
+        private async Task EnviarAlertaDiscrepancia(logSincronizacionOf disc, string webhookUrl)
+        {
+            try
+            {
+                var client = _httpClientFactory.CreateClient();
+
+                var payload = new
+                {
+                    text = $"🚨 ALERTA DE RECONCILIACIÓN: OF {disc.oF}",
+                    cardsV2 = new object[] {
+                new {
+                    cardId = $"alerta-reconciliacion-{disc.oF}",
+                    card = new {
+                        header = new {
+                            title = $"⚠️ Descuadre SAP vs NEXO",
+                            subtitle = $"Orden de Fabricación: {disc.oF}",
+                            imageUrl = "https://i.imgur.com/Sm19RjX.png" // Mismo ícono de alerta
+                        },
+                        sections = new object[] {
+                            new {
+                                widgets = new object[] {
+                                    new {
+                                        decoratedText = new {
+                                            topLabel = "ESTADO",
+                                            text = "<font color=\"#FF0000\"><b>Requiere revisión manual</b></font>",
+                                            wrapText = true
+                                        }
+                                    },
+                                    new {
+                                        decoratedText = new {
+                                            topLabel = "CAMPOS CON DIFERENCIAS",
+                                            text = disc.detalleDiferencia,
+                                            wrapText = true
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+                };
+
+                var content = new StringContent(System.Text.Json.JsonSerializer.Serialize(payload), System.Text.Encoding.UTF8, "application/json");
+                await client.PostAsync(webhookUrl, content);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"❌ Error al enviar webhook de discrepancia para la OF {disc.oF}");
             }
         }
     }

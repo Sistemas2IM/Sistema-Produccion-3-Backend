@@ -17,5 +17,9 @@
         public DateTime? fechaActualizacion { get; set; }
 
         public string? actualizadoPor { get; set; }
+
+        public string? responsable { get; set; }
+
+        public DateOnly? fechaCompromiso { get; set; }
     }
 }

@@ -30,6 +30,10 @@ public partial class bitacoraCaso
     [Column(TypeName = "datetime")]
     public DateTime fecha { get; set; }
 
+    public int? idAnexo { get; set; }
+
+    public int? idDictamen { get; set; }
+
     [ForeignKey("estadoAnterior")]
     [InverseProperty("bitacoraCasoestadoAnteriorNavigation")]
     public virtual estadosReporte estadoAnteriorNavigation { get; set; }
@@ -38,9 +42,17 @@ public partial class bitacoraCaso
     [InverseProperty("bitacoraCasoestadoNuevoNavigation")]
     public virtual estadosReporte estadoNuevoNavigation { get; set; }
 
+    [ForeignKey("idAnexo")]
+    [InverseProperty("bitacoraCaso")]
+    public virtual anexos_NEXO idAnexoNavigation { get; set; }
+
     [ForeignKey("idCasoCalidad")]
     [InverseProperty("bitacoraCaso")]
     public virtual casoCalidad idCasoCalidadNavigation { get; set; }
+
+    [ForeignKey("idDictamen")]
+    [InverseProperty("bitacoraCaso")]
+    public virtual dictamenCalidad idDictamenNavigation { get; set; }
 
     [ForeignKey("idTipoEvento")]
     [InverseProperty("bitacoraCaso")]

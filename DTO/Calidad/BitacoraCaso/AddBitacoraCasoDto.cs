@@ -15,5 +15,9 @@
         public string? usuario { get; set; }
 
         public DateTime? fecha { get; set; }
+
+        public int? idAnexo { get; set; }
+
+        public int? idDictamen { get; set; }
     }
 }

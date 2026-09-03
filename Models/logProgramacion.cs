@@ -23,6 +23,9 @@ public partial class logProgramacion
     [Column(TypeName = "datetime")]
     public DateTime? fechaCreacion { get; set; }
 
+    [StringLength(250)]
+    public string comentario { get; set; }
+
     [InverseProperty("idLogProgramacionNavigation")]
     public virtual ICollection<logProgramacionDetalle> logProgramacionDetalle { get; set; } = new List<logProgramacionDetalle>();
 

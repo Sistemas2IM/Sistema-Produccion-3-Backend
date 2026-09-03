@@ -25,7 +25,9 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf.HistorialVencimien
         [HttpGet("get")]
         public async Task<ActionResult<IEnumerable<HistorialVencimientoOfDto>>> GetHistorial()
         {
-            var historial = await _context.historialVencimientoOf.ToListAsync();
+            var historial = await _context.historialVencimientoOf
+                .Include(u => u.registradoPorNavigation)
+                .ToListAsync();
 
             var historialDto = _mapper.Map<List<HistorialVencimientoOfDto>>(historial);
 
@@ -36,7 +38,9 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf.HistorialVencimien
         [HttpGet("get/{id}")]
         public async Task<ActionResult<HistorialVencimientoOfDto>> GetHistorialById(int id)
         {
-            var historial = await _context.historialVencimientoOf.FindAsync(id);
+            var historial = await _context.historialVencimientoOf
+                .Include(u => u.registradoPorNavigation)
+                .FirstOrDefaultAsync(h => h.idHistorial == id);
 
             var historialDto = _mapper.Map<HistorialVencimientoOfDto>(historial);
 
@@ -53,6 +57,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf.HistorialVencimien
         public async Task<ActionResult<IEnumerable<HistorialVencimientoOfDto>>> GetHistorialByOF(int oF)
         {
             var historial = await _context.historialVencimientoOf
+                .Include(u => u.registradoPorNavigation)
                 .Where(h => h.oF == oF)
                 .ToListAsync();
             var historialDto = _mapper.Map<List<HistorialVencimientoOfDto>>(historial);

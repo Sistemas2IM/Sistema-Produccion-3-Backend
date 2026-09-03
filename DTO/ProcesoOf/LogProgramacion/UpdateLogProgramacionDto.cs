@@ -7,5 +7,7 @@
         public string? programadoPor { get; set; }
 
         public DateTime? fechaCreacion { get; set; }
+
+        public string? comentario { get; set; }
     }
 }

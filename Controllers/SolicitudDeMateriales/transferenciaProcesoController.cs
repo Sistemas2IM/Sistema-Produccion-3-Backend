@@ -31,6 +31,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales
             var transferenciaProceso = await _context.transferenciaProceso
                 .Include(t => t.idOrigenNavigation)
                     .ThenInclude(p => p.idTableroNavigation)
+                .Include(t => t.recibidoPorNavigation)
+                .Include(t => t.enviadoPorNavigation)
                 .OrderByDescending(t => t.idTransferencia)
                 .ToListAsync();
             var transferenciaProcesoDto = _mapper.Map<List<transferenciaProcesoDto>>(transferenciaProceso);
@@ -45,6 +47,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales
             var transferenciaProceso = await _context.transferenciaProceso
                 .Include(t => t.idOrigenNavigation)
                     .ThenInclude(p => p.idTableroNavigation)
+                .Include(t => t.recibidoPorNavigation)
+                .Include(t => t.enviadoPorNavigation)
                 .FirstOrDefaultAsync(t => t.idTransferencia == id);
             var transferenciaProcesoDto = _mapper.Map<transferenciaProcesoDto>(transferenciaProceso);
 
@@ -64,6 +68,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales
                 .Include(t => t.idOrigenNavigation) // trae también el procesoOf
                 .Include(t => t.idOrigenNavigation)
                     .ThenInclude(p => p.idTableroNavigation)
+                .Include(t => t.recibidoPorNavigation)
+                .Include(t => t.enviadoPorNavigation)
                 .Where(t => t.estado == "Pendiente" // o el valor de estado pendiente en tu BD
                     && t.idOrigenNavigation.oF == of) // aquí filtras por OF               
                 .ToListAsync();
@@ -87,6 +93,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales
                 .Include(t => t.areaDestinoNavigation)
                 .Include(t => t.idOrigenNavigation)
                     .ThenInclude(p => p.idTableroNavigation)
+                .Include(t => t.recibidoPorNavigation)
+                .Include(t => t.enviadoPorNavigation)
                 .Where(t => t.estado == "Pendiente" // o el valor de estado pendiente en tu BD
                     && t.areaDestinoNavigation.idArea == idArea && t.idOrigenNavigation.oF == oF) // aquí filtras por OF
                 .ToListAsync();
@@ -109,6 +117,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales
                 .Include(t => t.idOrigenNavigation) // trae también el procesoOf
                 .Include(t => t.idOrigenNavigation)
                     .ThenInclude(p => p.idTableroNavigation)
+                .Include(t => t.recibidoPorNavigation)
+                .Include(t => t.enviadoPorNavigation)
                 .Where(t => t.estado == "Pendiente" // o el valor de estado pendiente en tu BD
                     && t.idDestino == id_destino) // aquí filtras por OF
                 .ToListAsync();
@@ -131,6 +141,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales
                 .Include(t => t.idOrigenNavigation) // trae también el procesoOf
                 .Include(t => t.idOrigenNavigation)
                     .ThenInclude(p => p.idTableroNavigation)
+                .Include(t => t.recibidoPorNavigation)
+                .Include(t => t.enviadoPorNavigation)
                 .Where(t => t.idOrigen == id_origen) // aquí filtras por OF
                 .ToListAsync();
 
@@ -151,6 +163,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales
             var transferenciasProcesos = await _context.transferenciaProceso
                 .Include(t => t.idOrigenNavigation)
                     .ThenInclude(p => p.idTableroNavigation)
+                .Include(t => t.recibidoPorNavigation)
+                .Include(t => t.enviadoPorNavigation)
                 .Where(o => o.oFDestino == of)
                 .ToListAsync();
 
@@ -173,6 +187,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales
                 .Include(t => t.idOrigenNavigation) // trae también el procesoOf
                 .Include(t => t.idOrigenNavigation)
                     .ThenInclude(p => p.idTableroNavigation)
+                .Include(t => t.recibidoPorNavigation)
+                .Include(t => t.enviadoPorNavigation)
                 .Where(t => t.estado == "Confirmada" // o el valor de estado pendiente en tu BD
                     && t.idDestino == idDestino) // aquí filtras por OF
                 .ToListAsync();
@@ -193,6 +209,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales
             var transferenciaProceso = await _context.transferenciaProceso
                 .Include(t => t.idOrigenNavigation)
                   .ThenInclude(p => p.idTableroNavigation)
+                .Include(t => t.recibidoPorNavigation)
+                .Include(t => t.enviadoPorNavigation)
                 .Where(t => t.idSolicitudOrigen == idSolicitudOrigen)
                 .ToListAsync();
 

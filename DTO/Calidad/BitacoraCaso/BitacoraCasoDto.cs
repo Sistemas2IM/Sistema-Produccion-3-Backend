@@ -31,5 +31,16 @@ namespace Sistema_Produccion_3_Backend.DTO.Calidad.BitacoraCaso
         //public string? nombreUsuario { get; set; }
 
         public DateTime? fecha { get; set; }
+
+        // relacion
+        public int? idDictamen { get; set; }
+        public string? nombreDictamen { get; set; }
+
+        // relacion
+        public int? idAnexo { get; set; }
+        public string? nombreAnexo { get; set; }
+        public string? rutaAnexo { get; set; }
+
+        public string? tipoAnexo { get; set; }
     }
 }

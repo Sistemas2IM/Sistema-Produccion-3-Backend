@@ -94,6 +94,12 @@
 
         public decimal? produccionDiariaEstimada { get; set; }
 
+        public string? proveedor { get; set; }
+
+        public string? responsableTecnico { get; set; }
+
+        public string? procesoNativo { get; set; }
+
         public int? familiaId { get; set; }
 
         public object? infoMaquina { get; set; }

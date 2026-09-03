@@ -155,6 +155,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[dictamenCalidad]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[empleadoCatalogo]",
          "ObjectType": 0
       },

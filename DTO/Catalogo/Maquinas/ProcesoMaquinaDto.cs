@@ -91,5 +91,11 @@
         public decimal? desperdicioPromedio { get; set; }
 
         public decimal? produccionDiariaEstimada { get; set; }
+
+        public string? proveedor { get; set; }
+
+        public string? responsableTecnico { get; set; }
+
+        public string? procesoNativo { get; set; }
     }
 }

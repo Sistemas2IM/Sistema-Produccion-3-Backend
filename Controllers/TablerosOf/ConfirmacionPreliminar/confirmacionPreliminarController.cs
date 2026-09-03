@@ -31,6 +31,10 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf.ConfirmacionPrelim
                 .Include(c => c.idProcesoNavigation)
                     .ThenInclude(p => p.idTableroNavigation)
                         .ThenInclude(t => t.idMaquinaNavigation)
+                .Include(c => c.idProcesoNavigation)
+                    .ThenInclude(p => p.corridaCombinadamaestroNavigation)
+                .Include(c => c.idProcesoNavigation)
+                    .ThenInclude(p => p.corridaCombinadasubordinadoNavigation)
                 .Include(c => c.idUnidadNavigation)
                 .Include(c => c.idTurnoNavigation)
                 .Include(c => c.idEstadoNavigation)
@@ -44,6 +48,55 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf.ConfirmacionPrelim
                 .Where(c => c.archivado == false)
                 .OrderByDescending(c => c.idPreliminar)
                 .ToListAsync();
+
+            // 1. Extraer los procesos válidos
+            var procesos = confirmacionPreliminar
+                .Where(c => c.idProcesoNavigation != null)
+                .Select(c => c.idProcesoNavigation)
+                .ToList();
+
+            // 2. Extraer todos los IDs de subordinados necesarios de un solo golpe
+            var idsSubordinados = procesos
+                .SelectMany(p => p.corridaCombinadamaestroNavigation?.Select(c => c.subordinado) ?? Enumerable.Empty<int?>())
+                .Union(procesos.Select(p => p.corridaCombinadasubordinadoNavigation?.subordinado))
+                .Where(id => id.HasValue)
+                .Select(id => id.Value)
+                .Distinct()
+                .ToList();
+
+            // 3. Consultar la BD solo 1 vez para traer todos los subordinados
+            var subordinadosDict = new Dictionary<int, procesoOf>();
+            if (idsSubordinados.Any())
+            {
+                subordinadosDict = await _context.procesoOf
+                    .AsNoTracking()
+                    .Include(p => p.oFNavigation)
+                    .Where(p => idsSubordinados.Contains(p.idProceso))
+                    .ToDictionaryAsync(p => p.idProceso);
+            }
+
+            // 4. Asignación en memoria (Instantáneo)
+            foreach (var proceso in procesos)
+            {
+                if (proceso.corridaCombinadamaestroNavigation != null)
+                {
+                    foreach (var corrida in proceso.corridaCombinadamaestroNavigation)
+                    {
+                        if (corrida.subordinado.HasValue && subordinadosDict.TryGetValue(corrida.subordinado.Value, out var sub))
+                        {
+                            corrida.subordinadoNavigation = sub;
+                        }
+                    }
+                }
+
+                if (proceso.corridaCombinadasubordinadoNavigation?.subordinado != null)
+                {
+                    if (subordinadosDict.TryGetValue(proceso.corridaCombinadasubordinadoNavigation.subordinado.Value, out var sub))
+                    {
+                        proceso.corridaCombinadasubordinadoNavigation.subordinadoNavigation = sub;
+                    }
+                }
+            }
 
             var confirmacionPreliminarDto = confirmacionPreliminar.Select(c =>
             {

@@ -14,6 +14,8 @@
 
         public string? registradoPor { get; set; }
 
+        public string? nombreRegistradoPor { get; set; }
+
         public string? comentario { get; set; }
 
         public DateTime fechaRegistro { get; set; }
