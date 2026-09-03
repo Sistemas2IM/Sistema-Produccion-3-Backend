@@ -92,6 +92,15 @@ namespace Sistema_Produccion_3_Backend.DTO.Calidad.CasoCalidad
 
         public bool cancelado { get; set; }
 
+        public int? idCausaRaiz { get; set; }
+        public string? nombreCausaRaiz { get; set; }
+
+        public int? idResolucion { get; set; }
+        public string? nombreResolucion { get; set; }
+
+        public int? areaResponsable { get; set; }
+        public string? nombreAreaResponsable { get; set; }
+
         public List<BitacoraCasoDto>? bitacoraCaso { get; set; }
 
         public List<CasoAccionSolicitadaDto>? accionesSolicitadas { get; set; }

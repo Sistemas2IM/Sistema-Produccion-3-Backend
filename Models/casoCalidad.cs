@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Sistema_Produccion_3_Backend.Models;
 
 [Index("idEstado", Name = "ESTADO_CASO_FK")]
+[Index("idCausaRaiz", Name = "IX_CASO_CAUSA_RAIZ")]
 [Index("oF", "idEstado", Name = "OF_CASO_FK")]
 [Index("idProceso", Name = "PROCESO_CASO_FK")]
 [Index("responsable", Name = "RESPONSABLE_CASO_IDX")]
@@ -75,9 +76,19 @@ public partial class casoCalidad
 
     public bool cancelado { get; set; }
 
+    public int? idCausaRaiz { get; set; }
+
+    public int? idResolucion { get; set; }
+
+    public int? areaResponsable { get; set; }
+
     [ForeignKey("actualizadoPor")]
     [InverseProperty("casoCalidadactualizadoPorNavigation")]
     public virtual usuario actualizadoPorNavigation { get; set; }
+
+    [ForeignKey("areaResponsable")]
+    [InverseProperty("casoCalidad")]
+    public virtual areas areaResponsableNavigation { get; set; }
 
     [InverseProperty("idCasoCalidadNavigation")]
     public virtual ICollection<bitacoraCaso> bitacoraCaso { get; set; } = new List<bitacoraCaso>();
@@ -89,6 +100,10 @@ public partial class casoCalidad
     [InverseProperty("casoCalidad")]
     public virtual categoriaDefecto idCategoriaDefectoNavigation { get; set; }
 
+    [ForeignKey("idCausaRaiz")]
+    [InverseProperty("casoCalidad")]
+    public virtual causaRaizCalidad idCausaRaizNavigation { get; set; }
+
     [ForeignKey("idEstado")]
     [InverseProperty("casoCalidad")]
     public virtual estadosReporte idEstadoNavigation { get; set; }
@@ -96,6 +111,10 @@ public partial class casoCalidad
     [ForeignKey("idProceso")]
     [InverseProperty("casoCalidad")]
     public virtual procesoOf idProcesoNavigation { get; set; }
+
+    [ForeignKey("idResolucion")]
+    [InverseProperty("casoCalidad")]
+    public virtual resolucionCalidad idResolucionNavigation { get; set; }
 
     [ForeignKey("idSeveridad")]
     [InverseProperty("casoCalidad")]

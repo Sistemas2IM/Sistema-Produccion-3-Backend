@@ -65,6 +65,9 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.CasoCalidad
                     .ThenInclude(a => a.idAccionNavigation)
                 .Include(c => c.casoAccionSolicitada)
                     .ThenInclude(a => a.idEstadoNavigation)
+                .Include(c => c.idCausaRaizNavigation)
+                .Include(c => c.idResolucionNavigation)
+                .Include(c => c.areaResponsableNavigation)
                 .AsSplitQuery()
                 .FirstOrDefaultAsync(u => u.idCasoCalidad == id);
 
@@ -129,6 +132,9 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.CasoCalidad
                 .Include(c => c.idCategoriaDefectoNavigation)
                 .Include(c => c.idSubtipoDefectoNavigation)
                 .Include(c => c.oFNavigation)
+                .Include(c => c.idCausaRaizNavigation)
+                .Include(c => c.idResolucionNavigation)
+                .Include(c => c.areaResponsableNavigation)
                 .Include(c => c.idProcesoNavigation)
                     .ThenInclude(t => t.idTableroNavigation)
                     .ThenInclude(m => m.idMaquinaNavigation)

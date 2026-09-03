@@ -24,6 +24,9 @@ public partial class areas
     [InverseProperty("idAreaNavigation")]
     public virtual ICollection<auxiliares> auxiliares { get; set; } = new List<auxiliares>();
 
+    [InverseProperty("areaResponsableNavigation")]
+    public virtual ICollection<casoCalidad> casoCalidad { get; set; } = new List<casoCalidad>();
+
     [InverseProperty("idAreaNavigation")]
     public virtual ICollection<familliaDeMaquina> familliaDeMaquina { get; set; } = new List<familliaDeMaquina>();
 

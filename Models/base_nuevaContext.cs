@@ -45,6 +45,8 @@ public partial class base_nuevaContext : DbContext
 
     public virtual DbSet<categoriaDefecto> categoriaDefecto { get; set; }
 
+    public virtual DbSet<causaRaizCalidad> causaRaizCalidad { get; set; }
+
     public virtual DbSet<certificadoCalidad> certificadoCalidad { get; set; }
 
     public virtual DbSet<certificadoCalidad_Log> certificadoCalidad_Log { get; set; }
@@ -216,6 +218,8 @@ public partial class base_nuevaContext : DbContext
     public virtual DbSet<registroLamparas> registroLamparas { get; set; }
 
     public virtual DbSet<reportesDeOperadores> reportesDeOperadores { get; set; }
+
+    public virtual DbSet<resolucionCalidad> resolucionCalidad { get; set; }
 
     public virtual DbSet<rol> rol { get; set; }
 
@@ -444,13 +448,19 @@ public partial class base_nuevaContext : DbContext
 
             entity.HasOne(d => d.actualizadoPorNavigation).WithMany(p => p.casoCalidadactualizadoPorNavigation).HasConstraintName("FK_CASO_ACTUALIZADO_POR");
 
+            entity.HasOne(d => d.areaResponsableNavigation).WithMany(p => p.casoCalidad).HasConstraintName("FK_CASO_AREA_RESPONSABLE");
+
             entity.HasOne(d => d.idCategoriaDefectoNavigation).WithMany(p => p.casoCalidad).HasConstraintName("FK_CASO_CATEGORIA_DEFECTO");
+
+            entity.HasOne(d => d.idCausaRaizNavigation).WithMany(p => p.casoCalidad).HasConstraintName("FK_CASO_CAUSA_RAIZ");
 
             entity.HasOne(d => d.idEstadoNavigation).WithMany(p => p.casoCalidad)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_CASO_ESTADO");
 
             entity.HasOne(d => d.idProcesoNavigation).WithMany(p => p.casoCalidad).HasConstraintName("FK_CASO_PROCESO");
+
+            entity.HasOne(d => d.idResolucionNavigation).WithMany(p => p.casoCalidad).HasConstraintName("FK_CASO_RESOLUCION");
 
             entity.HasOne(d => d.idSeveridadNavigation).WithMany(p => p.casoCalidad).HasConstraintName("FK_CASO_SEVERIDAD");
 
@@ -497,6 +507,13 @@ public partial class base_nuevaContext : DbContext
         modelBuilder.Entity<categoriaDefecto>(entity =>
         {
             entity.HasKey(e => e.idCategoria).HasName("PK_CATEGORIADEFECTO");
+
+            entity.Property(e => e.activo).HasDefaultValue(true);
+        });
+
+        modelBuilder.Entity<causaRaizCalidad>(entity =>
+        {
+            entity.HasKey(e => e.idCausaRaiz).HasName("PK__causaRai__EFF716B5DA0B69F5");
 
             entity.Property(e => e.activo).HasDefaultValue(true);
         });
@@ -1794,6 +1811,14 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.idTipoReporteNavigation).WithMany(p => p.reportesDeOperadores).HasConstraintName("FK_REPORTES_TIPO");
 
             entity.HasOne(d => d.operadorNavigation).WithMany(p => p.reportesDeOperadores).HasConstraintName("FK_REPORTES_OPERADOR");
+        });
+
+        modelBuilder.Entity<resolucionCalidad>(entity =>
+        {
+            entity.HasKey(e => e.idResolucion).HasName("PK__resoluci__86A78317391F22BF");
+
+            entity.Property(e => e.activo).HasDefaultValue(true);
+            entity.Property(e => e.implicaCosto).HasDefaultValue(true);
         });
 
         modelBuilder.Entity<rol>(entity =>

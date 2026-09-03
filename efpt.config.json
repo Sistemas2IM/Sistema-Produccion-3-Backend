@@ -83,6 +83,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[causaRaizCalidad]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[certificadoCalidad]",
          "ObjectType": 0
       },
@@ -436,6 +440,10 @@
       },
       {
          "Name": "[dbo].[reportesDeOperadores]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[resolucionCalidad]",
          "ObjectType": 0
       },
       {

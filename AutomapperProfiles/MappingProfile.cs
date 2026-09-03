@@ -10,6 +10,7 @@ using Sistema_Produccion_3_Backend.DTO.Calidad.BitacoraCaso;
 using Sistema_Produccion_3_Backend.DTO.Calidad.CasoAccionSolicitada;
 using Sistema_Produccion_3_Backend.DTO.Calidad.CasoCalidad;
 using Sistema_Produccion_3_Backend.DTO.Calidad.CategoriaDefecto;
+using Sistema_Produccion_3_Backend.DTO.Calidad.CausaRaizCalidad;
 using Sistema_Produccion_3_Backend.DTO.Calidad.CertificadoCalidad;
 using Sistema_Produccion_3_Backend.DTO.Calidad.CertificadoCalidad.DetalleCertificadoCalidad;
 using Sistema_Produccion_3_Backend.DTO.Calidad.CertificadoCalidad.DetalleCertificadoCalidad.Batch;
@@ -26,6 +27,7 @@ using Sistema_Produccion_3_Backend.DTO.Calidad.MedicionAguas;
 using Sistema_Produccion_3_Backend.DTO.Calidad.MedicionAguas.Batch;
 using Sistema_Produccion_3_Backend.DTO.Calidad.RegistroLamparas;
 using Sistema_Produccion_3_Backend.DTO.Calidad.RegistroLamparas.Batch;
+using Sistema_Produccion_3_Backend.DTO.Calidad.ResolucionCalidad;
 using Sistema_Produccion_3_Backend.DTO.Calidad.SecuenciaColor;
 using Sistema_Produccion_3_Backend.DTO.Calidad.SecuenciaColor.Batch;
 using Sistema_Produccion_3_Backend.DTO.Calidad.SeveridadCaso;
@@ -1409,6 +1411,9 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForMember(dest => dest.nombreSeveridad, opt => opt.MapFrom(src => src.idSeveridadNavigation.nombre))
                 .ForMember(dest => dest.nombreCategoria, opt => opt.MapFrom(src => src.idCategoriaDefectoNavigation.nombre))
                 .ForMember(dest => dest.nombreSubtipo, opt => opt.MapFrom(src => src.idSubtipoDefectoNavigation.nombre))
+                .ForMember(dest => dest.nombreCausaRaiz, opt => opt.MapFrom(src => src.idCausaRaizNavigation.nombre))
+                .ForMember(dest => dest.nombreResolucion, opt => opt.MapFrom(src => src.idResolucionNavigation.nombre))
+                .ForMember(dest => dest.nombreAreaResponsable, opt => opt.MapFrom(src => src.areaResponsableNavigation.nombreArea))
 
                 // OF
                 .ForMember(dest => dest.clienteOf, opt => opt.MapFrom(src => src.oFNavigation.clienteOf))
@@ -1571,6 +1576,12 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
 
             // Dictamen Calidad
             CreateMap<dictamenCalidad, DictamenCalidadDto>().ReverseMap();
+
+            // Resolucion Calidad
+            CreateMap<resolucionCalidad, ResolucionCalidadDto>().ReverseMap();
+
+            // Causa Raiz Calidad
+            CreateMap<causaRaizCalidad, CausaRaizCalidadDto>().ReverseMap();
         }
     }
 }
