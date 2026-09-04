@@ -23,6 +23,8 @@ namespace Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.TransferenciaPr
 
         public string? enviadoPor { get; set; }
 
+        public string? nombreEnviadoPor { get; set; }
+
         public int? cantidadEnviada { get; set; }
 
         public int? idDestino { get; set; }
@@ -30,6 +32,8 @@ namespace Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.TransferenciaPr
         public DateTime? fechaRecepcion { get; set; }
 
         public string? recibidoPor { get; set; }
+
+        public string? nombreRecibidoPor { get; set; }
 
         public int? cantidadConfirmada { get; set; }
 
@@ -50,5 +54,7 @@ namespace Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.TransferenciaPr
         public string? materialDescripcion { get; set; }
 
         public int? tipoComponente { get; set; }
+
+        public int? idPreliminar { get; set; }
     }
 }

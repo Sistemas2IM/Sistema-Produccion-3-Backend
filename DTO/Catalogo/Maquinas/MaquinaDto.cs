@@ -99,6 +99,12 @@ namespace Sistema_Produccion_3_Backend.DTO.Catalogo.Maquinas
 
         public decimal? produccionDiariaEstimada { get; set; }
 
+        public string? proveedor { get; set; }
+
+        public string? responsableTecnico { get; set; }
+
+        public string? procesoNativo { get; set; }
+
         public string? familiaNombre { get; set; }
 
         // Area desde familia maquina

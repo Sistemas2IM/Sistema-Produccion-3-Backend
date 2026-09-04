@@ -1,13 +1,20 @@
 ﻿using AutoMapper;
 using Sistema_Produccion_3_Backend.DTO.AnexosNEXO;
 using Sistema_Produccion_3_Backend.DTO.Buscadores.DTOGlobales;
+using Sistema_Produccion_3_Backend.DTO.Calidad.AccionSolicitada;
 using Sistema_Produccion_3_Backend.DTO.Calidad.AuditoriaProceso;
 using Sistema_Produccion_3_Backend.DTO.Calidad.AuditoriaProceso.Batch;
 using Sistema_Produccion_3_Backend.DTO.Calidad.AuditoriaProceso.DetalleAuditoriaProceso;
 using Sistema_Produccion_3_Backend.DTO.Calidad.AuditoriaProceso.DetalleAuditoriaProceso.Batch;
+using Sistema_Produccion_3_Backend.DTO.Calidad.BitacoraCaso;
+using Sistema_Produccion_3_Backend.DTO.Calidad.CasoAccionSolicitada;
+using Sistema_Produccion_3_Backend.DTO.Calidad.CasoCalidad;
+using Sistema_Produccion_3_Backend.DTO.Calidad.CategoriaDefecto;
+using Sistema_Produccion_3_Backend.DTO.Calidad.CausaRaizCalidad;
 using Sistema_Produccion_3_Backend.DTO.Calidad.CertificadoCalidad;
 using Sistema_Produccion_3_Backend.DTO.Calidad.CertificadoCalidad.DetalleCertificadoCalidad;
 using Sistema_Produccion_3_Backend.DTO.Calidad.CertificadoCalidad.DetalleCertificadoCalidad.Batch;
+using Sistema_Produccion_3_Backend.DTO.Calidad.DictamenCalidad;
 using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnicaCliente;
 using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnicaCliente.DetalleFichaClientes;
 using Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnicaCliente.DetalleFichaClientes.Batch;
@@ -20,8 +27,13 @@ using Sistema_Produccion_3_Backend.DTO.Calidad.MedicionAguas;
 using Sistema_Produccion_3_Backend.DTO.Calidad.MedicionAguas.Batch;
 using Sistema_Produccion_3_Backend.DTO.Calidad.RegistroLamparas;
 using Sistema_Produccion_3_Backend.DTO.Calidad.RegistroLamparas.Batch;
+using Sistema_Produccion_3_Backend.DTO.Calidad.ResolucionCalidad;
 using Sistema_Produccion_3_Backend.DTO.Calidad.SecuenciaColor;
 using Sistema_Produccion_3_Backend.DTO.Calidad.SecuenciaColor.Batch;
+using Sistema_Produccion_3_Backend.DTO.Calidad.SeveridadCaso;
+using Sistema_Produccion_3_Backend.DTO.Calidad.SubtipoDefecto;
+using Sistema_Produccion_3_Backend.DTO.Calidad.TipoCaso;
+using Sistema_Produccion_3_Backend.DTO.Calidad.TipoEventoBitacora;
 using Sistema_Produccion_3_Backend.DTO.Calidad.TurnoAuditoria;
 using Sistema_Produccion_3_Backend.DTO.Calidad.TurnoAuditoria.Batch;
 using Sistema_Produccion_3_Backend.DTO.Calidad.UnidadesMedida;
@@ -79,7 +91,11 @@ using Sistema_Produccion_3_Backend.DTO.PermisosUsuario.Rol;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.Asignacion;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.BusquedaProcesos;
+using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ConfirmacionPreliminar;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.LogCambiosProceso;
+using Sistema_Produccion_3_Backend.DTO.ProcesoOf.LogProgramacion;
+using Sistema_Produccion_3_Backend.DTO.ProcesoOf.LogProgramacion.LogProgramacionDetalle;
+using Sistema_Produccion_3_Backend.DTO.ProcesoOf.LogProgramacion.LogProgramacionDetalle.Batch;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.MaterialOf;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesoOfSolicitud;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas;
@@ -97,9 +113,6 @@ using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.Troquelado;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.SolicitudMateriales;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.UpdateMaquina;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.UpdateSAP;
-using Sistema_Produccion_3_Backend.DTO.ProcesoOf.LogProgramacion;
-using Sistema_Produccion_3_Backend.DTO.ProcesoOf.LogProgramacion.LogProgramacionDetalle;
-using Sistema_Produccion_3_Backend.DTO.ProcesoOf.LogProgramacion.LogProgramacionDetalle.Batch;
 using Sistema_Produccion_3_Backend.DTO.ProductoTerminado;
 using Sistema_Produccion_3_Backend.DTO.ProductoTerminado.DetalleEntrega;
 using Sistema_Produccion_3_Backend.DTO.ProductoTerminado.ListaEmpaque;
@@ -123,6 +136,9 @@ using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.SolicitudMateriales
 using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.SolicitudMaterialOF;
 using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.TipoSemielaborados;
 using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.TransferenciaProceso;
+using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.TransferenciaProceso.Conciliacion;
+using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.TransferenciaProceso.Conciliacion.DecisionConciliacion;
+using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.TransferenciaProceso.Conciliacion.MotivoConciliacion;
 using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.ValeBobina;
 using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.ValeBobina.ValeBobinaCorteEstado;
 using Sistema_Produccion_3_Backend.DTO.Tableros;
@@ -131,6 +147,7 @@ using Sistema_Produccion_3_Backend.DTO.Tableros.Posturas;
 using Sistema_Produccion_3_Backend.DTO.TarjetasOF;
 using Sistema_Produccion_3_Backend.DTO.TarjetasOF.BusquedaTarjetas;
 using Sistema_Produccion_3_Backend.DTO.TarjetasOF.EstadoOf;
+using Sistema_Produccion_3_Backend.DTO.TarjetasOF.HistorialVencimientoOf;
 using Sistema_Produccion_3_Backend.DTO.TarjetasOF.logCambiosOf;
 using Sistema_Produccion_3_Backend.DTO.TarjetasOF.NotasOf;
 using Sistema_Produccion_3_Backend.DTO.TarjetasOF.Reportes;
@@ -158,6 +175,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForMember(dest => dest.inicioReal, opt => opt.MapFrom(src => src.ffeTiemposOfGlobal.Inicio_Real))
                 .ForMember(dest => dest.finReal, opt => opt.MapFrom(src => src.ffeTiemposOfGlobal.Fin_Real))
                 .ForMember(dest => dest.secuenciador, opt => opt.MapFrom(src => src.secuenciadoPorNavigation.nombres + " " + src.secuenciadoPorNavigation.apellidos))
+                .ForMember(dest => dest.fechaVencimientoNueva, opt => opt.MapFrom(src => src.historialVencimientoOf.OrderByDescending(h => h.fechaVencimientoNueva).FirstOrDefault().fechaVencimientoNueva))
                 .ReverseMap();
             //.ForPath(src => src.idEstadoOfNavigation, opt => opt.Ignore());
             CreateMap<tarjetaOf, TarjetaBusquedaDto>().ReverseMap();
@@ -533,6 +551,19 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForMember(dest => dest.nombreUsuario, opt => opt.MapFrom(src => src.operadorNavigation.nombres + " " + src.operadorNavigation.apellidos))
                 .ForMember(dest => dest.nombreAuxiliar, opt => opt.MapFrom(src => src.auxiliarNavigation.nombre))
                 .ReverseMap();
+
+            CreateMap<reportesDeOperadores, ReporteOperadorListaDto>()
+                .ForMember(dest => dest.estadoReporteDto, opt => opt.MapFrom(src => src.idEstadoReporteNavigation))
+                .ForMember(dest => dest.nombreEstado, opt => opt.MapFrom(src => src.idEstadoReporteNavigation.nombreEstado))
+                .ForMember(dest => dest.tipoReporteDto, opt => opt.MapFrom(src => src.idTipoReporteNavigation))
+                .ForMember(dest => dest.maquinaDto, opt => opt.MapFrom(src => src.idMaquinaNavigation))
+                .ForMember(dest => dest.nombreUsuario, opt => opt.MapFrom(src =>
+                    src.operadorNavigation.nombres + " " + src.operadorNavigation.apellidos))
+                .ForMember(dest => dest.nombreAuxiliar, opt => opt.MapFrom(src => src.auxiliarNavigation.nombre));
+
+            CreateMap<maquinas, MaquinaReporteDto>()
+                .ForMember(dest => dest.nombreFamilia, opt => opt.MapFrom(src => src.idFamiliaNavigation.nombreFamilia));
+
             CreateMap<reportesDeOperadores, AddReporteOperadorDto>().ReverseMap();
             CreateMap<UpdateReporteOperadorDto, reportesDeOperadores>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
@@ -653,6 +684,10 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ReverseMap();
 
             CreateMap<usuario, UsuarioDisenoDto>().ReverseMap();
+
+            CreateMap<usuario, UsuarioDiseñoCargaDto>()
+                .ForMember(dest => dest.cargo, opt => opt.MapFrom(src => src.idCargoNavigation.nombreCargo))
+                .ReverseMap();
 
             CreateMap<usuario, OperadoresDto>()
                 .ForMember(dest => dest.nombreArea, opt => opt.MapFrom(src => src.idAreaNavigation.nombreArea))
@@ -1113,6 +1148,8 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
 
             CreateMap<transferenciaProceso, transferenciaProcesoDto>()
                 .ForMember(dest => dest.nombreTablero, opt => opt.MapFrom(src => src.idOrigenNavigation.idTableroNavigation.nombreTablero))
+                .ForMember(dest => dest.nombreEnviadoPor, opt => opt.MapFrom(src => src.enviadoPorNavigation.nombres + " " + src.enviadoPorNavigation.apellidos))
+                .ForMember(dest => dest.nombreRecibidoPor, opt => opt.MapFrom(src => src.recibidoPorNavigation.nombres + " " + src.recibidoPorNavigation.apellidos))
                 .ReverseMap();
             CreateMap<transferenciaProceso, AddTransferenciaProcesoDto>().ReverseMap();
             CreateMap<UpdateTransferenciaProcesoDto, transferenciaProceso>()
@@ -1338,6 +1375,213 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 CreateMap<logProgramacionDetalle, UpdateBatchLogProgramacionDetalleDto>()
                     .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             }
+
+            // bitacoraCaso ==============================================================================================
+            CreateMap<bitacoraCaso, BitacoraCasoDto>()
+                .ForMember(dest => dest.nombreTipoEvento, opt => opt.MapFrom(src => src.idTipoEventoNavigation != null ? src.idTipoEventoNavigation.nombre : null))
+                .ForMember(dest => dest.nombreEstadoAnterior, opt => opt.MapFrom(src => src.estadoAnteriorNavigation != null ? src.estadoAnteriorNavigation.nombreEstado : null))
+                .ForMember(dest => dest.nombreEstadoNuevo, opt => opt.MapFrom(src => src.estadoNuevoNavigation != null ? src.estadoNuevoNavigation.nombreEstado : null))
+                .ForMember(dest => dest.nombreDictamen, opt => opt.MapFrom(src => src.idDictamenNavigation != null ? src.idDictamenNavigation.nombre : null))
+                .ForMember(dest => dest.nombreAnexo, opt => opt.MapFrom(src => src.idAnexoNavigation != null ? src.idAnexoNavigation.NombreArchivo : null))
+                .ForMember(dest => dest.rutaAnexo, opt => opt.MapFrom(src => src.idAnexoNavigation != null ? src.idAnexoNavigation.RutaArchivo : null))
+                .ForMember(dest => dest.tipoAnexo, opt => opt.MapFrom(src => src.idAnexoNavigation != null ? src.idAnexoNavigation.TipoEntidad : null))
+                //.ForMember(dest => dest.nombreUsuario, opt => opt.MapFrom(src => src.usuarioNavigation != null ? src.usuarioNavigation.nombres + " " + src.usuarioNavigation.apellidos : null))
+                .ReverseMap();
+
+            CreateMap<bitacoraCaso, AddBitacoraCasoDto>().ReverseMap();
+            CreateMap<UpdateBitacoraCasoDto, bitacoraCaso>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            // casoAccionSolicitada ========================================================================================
+            CreateMap<casoAccionSolicitada, CasoAccionSolicitadaDto>()
+                .ForMember(dest => dest.nombreAccion, opt => opt.MapFrom(src => src.idAccionNavigation != null ? src.idAccionNavigation.nombre : null))
+                .ForMember(dest => dest.nombreEstado, opt => opt.MapFrom(src => src.idEstadoNavigation != null ? src.idEstadoNavigation.nombreEstado : null))
+                //.ForMember(dest => dest.colorEstado, opt => opt.MapFrom(src => src.idEstadoNavigation != null ? src.idEstadoNavigation.color : null))
+                //.ForMember(dest => dest.nombreActualizadoPor, opt => opt.MapFrom(src => src.actualizadoPorNavigation != null ? src.actualizadoPorNavigation.nombres + " " + src.actualizadoPorNavigation.apellidos : null))
+                .ReverseMap();
+
+            CreateMap<casoAccionSolicitada, AddCasoAccionSolicitadaDto>().ReverseMap();
+            CreateMap<UpdateCasoAccionSolicitadaDto, casoAccionSolicitada>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            // casoCalidad ============================================================================================
+            CreateMap<casoCalidad, CasoCalidadDto>()
+                .ForMember(dest => dest.nombreTipoCaso, opt => opt.MapFrom(src => src.idTipoCasoNavigation.nombre))
+                .ForMember(dest => dest.nombreEstado, opt => opt.MapFrom(src => src.idEstadoNavigation.nombreEstado))
+                .ForMember(dest => dest.nombreSeveridad, opt => opt.MapFrom(src => src.idSeveridadNavigation.nombre))
+                .ForMember(dest => dest.nombreCategoria, opt => opt.MapFrom(src => src.idCategoriaDefectoNavigation.nombre))
+                .ForMember(dest => dest.nombreSubtipo, opt => opt.MapFrom(src => src.idSubtipoDefectoNavigation.nombre))
+                .ForMember(dest => dest.nombreCausaRaiz, opt => opt.MapFrom(src => src.idCausaRaizNavigation.nombre))
+                .ForMember(dest => dest.nombreResolucion, opt => opt.MapFrom(src => src.idResolucionNavigation.nombre))
+                .ForMember(dest => dest.nombreAreaResponsable, opt => opt.MapFrom(src => src.areaResponsableNavigation.nombreArea))
+
+                // OF
+                .ForMember(dest => dest.clienteOf, opt => opt.MapFrom(src => src.oFNavigation.clienteOf))
+                .ForMember(dest => dest.productoOf, opt => opt.MapFrom(src => src.oFNavigation.productoOf))
+
+                // ProcesoOf
+                .ForMember(dest => dest.nombreMaquina, opt => opt.MapFrom(src => src.idProcesoNavigation.idTableroNavigation.idMaquinaNavigation.nombreMaquina))
+                //.ForMember(dest => dest.proceso, opt => opt.MapFrom(src => src.idProcesoNavigation.proceso))
+
+                //.ForMember(dest => dest.nombreOperador, opt => opt.MapFrom(src => src.)
+                .ForMember(dest => dest.nombreRegistradoPor, opt => opt.MapFrom(src => src.registradoPorNavigation.nombres + " " + src.registradoPorNavigation.apellidos))
+                .ForMember(dest => dest.nombreResponsable, opt => opt.MapFrom(src => src.responsableNavigation.nombres + " " + src.responsableNavigation.apellidos))
+                .ForMember(dest => dest.nombreActualizadoPor, opt => opt.MapFrom(src => src.actualizadoPorNavigation.nombres + " " + src.actualizadoPorNavigation.apellidos))
+                .ForMember(dest => dest.bitacoraCaso, opt => opt.MapFrom(src => src.bitacoraCaso))
+                .ForMember(dest => dest.accionesSolicitadas, opt => opt.MapFrom(src => src.casoAccionSolicitada))
+                .ReverseMap();
+
+            CreateMap<casoCalidad, CasoCalidadListaDTO>()
+                .ForMember(dest => dest.nombreTipoCaso, opt => opt.MapFrom(src => src.idTipoCasoNavigation.nombre))
+                .ForMember(dest => dest.nombreEstado, opt => opt.MapFrom(src => src.idEstadoNavigation.nombreEstado))
+                .ForMember(dest => dest.nombreSeveridad, opt => opt.MapFrom(src => src.idSeveridadNavigation.nombre))
+                .ForMember(dest => dest.nombreCategoria, opt => opt.MapFrom(src => src.idCategoriaDefectoNavigation.nombre))
+                .ForMember(dest => dest.nombreSubtipo, opt => opt.MapFrom(src => src.idSubtipoDefectoNavigation.nombre))
+                .ForMember(dest => dest.clienteOf, opt => opt.MapFrom(src => src.oFNavigation.clienteOf))
+                .ForMember(dest => dest.productoOf, opt => opt.MapFrom(src => src.oFNavigation.productoOf))
+                .ForMember(dest => dest.nombreMaquina, opt => opt.MapFrom(src => src.idProcesoNavigation.idTableroNavigation.idMaquinaNavigation.nombreMaquina))
+                .ForMember(dest => dest.nombreRegistradoPor, opt => opt.MapFrom(src => src.registradoPorNavigation.nombres + " " + src.registradoPorNavigation.apellidos))
+                .ForMember(dest => dest.nombreResponsable, opt => opt.MapFrom(src => src.responsableNavigation.nombres + " " + src.responsableNavigation.apellidos))
+                .ForMember(dest => dest.nombreActualizadoPor, opt => opt.MapFrom(src => src.actualizadoPorNavigation.nombres + " " + src.actualizadoPorNavigation.apellidos))
+                .ForMember(dest => dest.totalEventos, opt => opt.Ignore())
+                .ForMember(dest => dest.totalAcciones, opt => opt.Ignore());
+
+            CreateMap<casoCalidad, AddCasoCalidadDto>().ReverseMap();
+            CreateMap<UpdateCasoCalidadDto, casoCalidad>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            // tipoEventoBitacora ============================================================================================
+            CreateMap<tipoEventoBitacora, TipoEventoBitacoraDto>().ReverseMap();
+            CreateMap<tipoEventoBitacora, AddTipoEventoBitacoraDto>().ReverseMap();
+            CreateMap<UpdateTipoEventoBitacoraDto, tipoEventoBitacora>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            // SubtipoDefecto ============================================================================================
+            CreateMap<subtipoDefecto, SubtipoDefectoDto>()
+                .ReverseMap();
+
+            CreateMap<subtipoDefecto, AddSubtipoDefectoDto>().ReverseMap();
+            CreateMap<UpdateSubtipoDefectoDto, subtipoDefecto>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            // categoriaDefecto ============================================================================================
+            CreateMap<categoriaDefecto, CategoriaDefectoDto>()
+                .ForMember(dest => dest.subtipoDefecto, opt => opt.MapFrom(src => src.subtipoDefecto))
+                .ReverseMap();
+
+            CreateMap<categoriaDefecto, AddCategoriaDefectoDto>().ReverseMap();
+            CreateMap<UpdateCategoriaDefectoDto, categoriaDefecto>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            // severidadCaso ============================================================================================
+            CreateMap<severidadCaso, SeveridadCasoDto>()
+                .ReverseMap();
+            CreateMap<severidadCaso, AddSeveridadCasoDto>().ReverseMap();
+            CreateMap<UpdateSeveridadCasoDto, severidadCaso>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            // accionSolicitada ============================================================================================
+            CreateMap<accionSolicitada, AccionSolicitadaDto>()
+                .ReverseMap();
+            CreateMap<accionSolicitada, AddAccionSolicitadaDto>().ReverseMap();
+            CreateMap<UpdateAccionSolicitadaDto, accionSolicitada>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            // tipoCaso ===================================================================================================
+            CreateMap<tipoCaso, TipoCasoDto>()
+                .ReverseMap();
+            CreateMap<tipoCaso, AddTipoCasoDto>().ReverseMap();
+            CreateMap<UpdateTipoCasoDto, tipoCaso>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            // Confirmacion Preliminar ============================================================================================
+            CreateMap<confirmacionPreliminar, ConfirmacionPreliminarDto>()
+                .ForMember(dest => dest.clienteOf, opt => opt.MapFrom(src => src.oFNavigation.clienteOf))
+                .ForMember(dest => dest.nombreProducto, opt => opt.MapFrom(src => src.oFNavigation.productoOf))
+                .ForMember(dest => dest.serieOf, opt => opt.MapFrom(src => src.oFNavigation.seriesOf))
+                .ForMember(dest => dest.nombreEstado, opt => opt.MapFrom(src => src.idEstadoNavigation.nombreEstado))
+                .ForMember(dest => dest.nombreTurno, opt => opt.MapFrom(src => src.idTurnoNavigation.turno))
+                .ForMember(dest => dest.nombreUnidad, opt => opt.MapFrom(src => src.idUnidadNavigation.nombre))
+                .ForMember(dest => dest.simboloUnidad, opt => opt.MapFrom(src => src.idUnidadNavigation.simbolo))  
+                .ForMember(dest => dest.idMaquina, opt => opt.MapFrom(src => src.idProcesoNavigation.idTableroNavigation.idMaquinaNavigation.idMaquina))
+                .ForMember(dest => dest.nombreMaquina, opt => opt.MapFrom(src => src.idProcesoNavigation.idTableroNavigation.idMaquinaNavigation.nombreMaquina))
+                .ForMember(dest => dest.nombreOperador, opt => opt.MapFrom(src => src.operadorNavigation.nombres + " " + src.operadorNavigation.apellidos))
+                .ForMember(dest => dest.nombreEntregadoPor, opt => opt.MapFrom(src => src.entregadoPorNavigation.nombres + " " + src.entregadoPorNavigation.apellidos))
+                .ForMember(dest => dest.nombreRegistradoPor, opt => opt.MapFrom(src => src.registradoPorNavigation.nombres + " " + src.registradoPorNavigation.apellidos))
+                .ForMember(dest => dest.nombreActualizadoPor, opt => opt.MapFrom(src => src.actualizadoPorNavigation.nombres + " " + src.actualizadoPorNavigation.apellidos))
+                .ForMember(dest => dest.transferenciaProcesos, opt => opt.MapFrom(src => src.transferenciaProceso))
+                .ReverseMap();
+
+            CreateMap<confirmacionPreliminar, ConfirmacionPreliminarListaDTO>()
+                .ForMember(dest => dest.clienteOf, opt => opt.MapFrom(src => src.oFNavigation.clienteOf))
+                .ForMember(dest => dest.nombreProducto, opt => opt.MapFrom(src => src.oFNavigation.productoOf))
+                .ForMember(dest => dest.serieOf, opt => opt.MapFrom(src => src.oFNavigation.seriesOf))
+                .ForMember(dest => dest.idMaquina, opt => opt.MapFrom(src => src.idProcesoNavigation.idTableroNavigation.idMaquinaNavigation.idMaquina))
+                .ForMember(dest => dest.nombreMaquina, opt => opt.MapFrom(src => src.idProcesoNavigation.idTableroNavigation.idMaquinaNavigation.nombreCorto))
+                .ForMember(dest => dest.nombreUnidad, opt => opt.MapFrom(src => src.idUnidadNavigation.nombre))
+                .ForMember(dest => dest.simboloUnidad, opt => opt.MapFrom(src => src.idUnidadNavigation.simbolo))
+                .ForMember(dest => dest.nombreTurno, opt => opt.MapFrom(src => src.idTurnoNavigation.turno))
+                .ForMember(dest => dest.nombreEstado, opt => opt.MapFrom(src => src.idEstadoNavigation.nombreEstado))
+                .ForMember(dest => dest.nombreEntregadoPor, opt => opt.MapFrom(src => src.entregadoPorNavigation.nombres + " " + src.entregadoPorNavigation.apellidos))
+                .ForMember(dest => dest.nombreOperador, opt => opt.MapFrom(src => src.operadorNavigation.nombres + " " + src.operadorNavigation.apellidos))
+                .ForMember(dest => dest.nombreRegistradoPor, opt => opt.MapFrom(src => src.registradoPorNavigation.nombres + " " + src.registradoPorNavigation.apellidos))
+                .ForMember(dest => dest.nombreActualizadoPor, opt => opt.MapFrom(src => src.actualizadoPorNavigation.nombres + " " + src.actualizadoPorNavigation.apellidos))
+                .ForMember(dest => dest.totalTransferencias, opt => opt.Ignore())
+                .ForMember(dest => dest.tieneConciliacion, opt => opt.MapFrom(src => src.conciliacion != null))
+                .ForMember(dest => dest.cantidadEnviada, opt => opt.Ignore())
+                .ForMember(dest => dest.cantidadConfirmada, opt => opt.Ignore())
+                .ForMember(dest => dest.saldo, opt => opt.Ignore());
+
+            CreateMap<confirmacionPreliminar, AddConfirmacionPreliminarDto>().ReverseMap();
+            CreateMap<UpdateConfirmacionPreliminarDto, confirmacionPreliminar>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            // ConciliacionDto ============================================================================================
+            CreateMap<conciliacion, ConciliacionDto>()
+                .ForMember(dest => dest.cantidadRecibida, opt => opt.MapFrom(src => src.idPreliminarNavigation.cantidadRecibida))
+                .ForMember(dest => dest.idProceso, opt => opt.MapFrom(src => src.idPreliminarNavigation.idProceso))
+                .ForMember(dest => dest.maquina, opt => opt.MapFrom(src => src.idPreliminarNavigation.idProcesoNavigation.idTableroNavigation.idMaquinaNavigation.nombreMaquina))
+                .ForMember(dest => dest.oF, opt => opt.MapFrom(src => src.idPreliminarNavigation.idProcesoNavigation.oF))
+                .ForMember(dest => dest.operador, opt => opt.MapFrom(src => src.idPreliminarNavigation.operador))
+                .ForMember(dest => dest.nombreOperador, opt => opt.MapFrom(src => src.idPreliminarNavigation.operadorNavigation.nombres + " " + src.idPreliminarNavigation.operadorNavigation.apellidos))
+                .ForMember(dest => dest.motivoConciliacion, opt => opt.MapFrom(src => src.idMotivoNavigation))
+                .ForMember(dest => dest.decisionConciliacion, opt => opt.MapFrom(src => src.idDecisionNavigation))
+                .ForMember(dest => dest.nombreResponsable, opt => opt.MapFrom(src => src.responsableNavigation.nombres + " " + src.responsableNavigation.apellidos))
+                .ForMember(dest => dest.confirmacionPreliminar, opt => opt.MapFrom(src => src.idPreliminarNavigation))
+                .ReverseMap();
+
+            CreateMap<conciliacion, ConciliacionResumenDTO>()
+                .ForMember(dest => dest.nombreResponsable, opt => opt.MapFrom(src =>
+                    src.responsableNavigation.nombres + " " + src.responsableNavigation.apellidos))
+                .ForMember(dest => dest.nombreMotivo, opt => opt.MapFrom(src => src.idMotivoNavigation.nombre))
+                .ForMember(dest => dest.nombreDecision, opt => opt.MapFrom(src => src.idDecisionNavigation.nombre));
+
+            CreateMap<conciliacion, AddConciliacionDto>().ReverseMap();
+            CreateMap<UpdateConciliacionDto, conciliacion>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            //motivo conciliacion
+            CreateMap<motivoConciliacion, MotivoConciliacionDto>().ReverseMap();
+
+            // decision conciliacion
+            CreateMap<decisionConciliacion, DecisionConciliacionDto>().ReverseMap();
+
+            // HistorialVencimientoOf ============================================================================================
+            CreateMap<historialVencimientoOf, HistorialVencimientoOfDto>()
+                .ForMember(dest => dest.nombreRegistradoPor, opt => opt.MapFrom(src => src.registradoPorNavigation.nombres + " " + src.registradoPorNavigation.apellidos))
+                .ReverseMap();
+            CreateMap<historialVencimientoOf, AddHistorialVencimientoOfDto>().ReverseMap();
+            CreateMap<UpdateHistorialVencimientoOfDto, historialVencimientoOf>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            // Dictamen Calidad
+            CreateMap<dictamenCalidad, DictamenCalidadDto>().ReverseMap();
+
+            // Resolucion Calidad
+            CreateMap<resolucionCalidad, ResolucionCalidadDto>().ReverseMap();
+
+            // Causa Raiz Calidad
+            CreateMap<causaRaizCalidad, CausaRaizCalidadDto>().ReverseMap();
         }
     }
 }

@@ -38,8 +38,9 @@ builder.Services.AddMemoryCache();
 
 // Configuración de HttpClient para llamadas HTTP
 builder.Services.AddHttpClient();
+builder.Services.AddHostedService<ReconciliacionOfService>();
+builder.Services.AddHostedService<TiemposEstimadosService>();
 builder.Services.AddHostedService<VigilanteVencimientosService>();
-
 // AUTOMAPPER
 builder.Services.AddAutoMapper(cfg => cfg.AddProfile<MappingProfile>());
 

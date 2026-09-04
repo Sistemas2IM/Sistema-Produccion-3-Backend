@@ -35,4 +35,7 @@ public partial class anexos_NEXO
 
     [StringLength(500)]
     public string Descripcion { get; set; }
+
+    [InverseProperty("idAnexoNavigation")]
+    public virtual ICollection<bitacoraCaso> bitacoraCaso { get; set; } = new List<bitacoraCaso>();
 }

@@ -22,6 +22,21 @@ public partial class estadosReporte
     [InverseProperty("estadoNavigation")]
     public virtual ICollection<auditoriaProceso> auditoriaProceso { get; set; } = new List<auditoriaProceso>();
 
+    [InverseProperty("estadoAnteriorNavigation")]
+    public virtual ICollection<bitacoraCaso> bitacoraCasoestadoAnteriorNavigation { get; set; } = new List<bitacoraCaso>();
+
+    [InverseProperty("estadoNuevoNavigation")]
+    public virtual ICollection<bitacoraCaso> bitacoraCasoestadoNuevoNavigation { get; set; } = new List<bitacoraCaso>();
+
+    [InverseProperty("idEstadoNavigation")]
+    public virtual ICollection<casoAccionSolicitada> casoAccionSolicitada { get; set; } = new List<casoAccionSolicitada>();
+
+    [InverseProperty("idEstadoNavigation")]
+    public virtual ICollection<casoCalidad> casoCalidad { get; set; } = new List<casoCalidad>();
+
+    [InverseProperty("idEstadoNavigation")]
+    public virtual ICollection<confirmacionPreliminar> confirmacionPreliminar { get; set; } = new List<confirmacionPreliminar>();
+
     [InverseProperty("idEstadoReporteNavigation")]
     public virtual ICollection<entregasProductoTerminado> entregasProductoTerminado { get; set; } = new List<entregasProductoTerminado>();
 

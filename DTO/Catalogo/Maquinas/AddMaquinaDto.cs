@@ -94,13 +94,19 @@
 
         public decimal? produccionDiariaEstimada { get; set; }
 
+        public string? proveedor { get; set; }
+
+        public string? responsableTecnico { get; set; }
+
+        public string? procesoNativo { get; set; }
+
         public int? familiaId { get; set; }
 
         public object? infoMaquina { get; set; }
 
         // USO TIPICO
-        public List<int> IdsUsoTipico { get; set; } = new List<int>();
-        public List<int> IdsTipoPapel { get; set; } = new List<int>();
-        public List<int> IdsTipoAcabado { get; set; } = new List<int>();
+        public List<int>? IdsUsoTipico { get; set; }
+        public List<int>? IdsTipoPapel { get; set; }
+        public List<int>? IdsTipoAcabado { get; set; }
     }
 }

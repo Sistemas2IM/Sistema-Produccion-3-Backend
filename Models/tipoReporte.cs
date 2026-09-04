@@ -20,6 +20,15 @@ public partial class tipoReporte
     public virtual ICollection<auditoriaProceso> auditoriaProceso { get; set; } = new List<auditoriaProceso>();
 
     [InverseProperty("tipoReporteNavigation")]
+    public virtual ICollection<casoAccionSolicitada> casoAccionSolicitada { get; set; } = new List<casoAccionSolicitada>();
+
+    [InverseProperty("tipoReporteNavigation")]
+    public virtual ICollection<casoCalidad> casoCalidad { get; set; } = new List<casoCalidad>();
+
+    [InverseProperty("tipoReporteNavigation")]
+    public virtual ICollection<confirmacionPreliminar> confirmacionPreliminar { get; set; } = new List<confirmacionPreliminar>();
+
+    [InverseProperty("tipoReporteNavigation")]
     public virtual ICollection<estadosReporte> estadosReporte { get; set; } = new List<estadosReporte>();
 
     [InverseProperty("tipoReporteNavigation")]

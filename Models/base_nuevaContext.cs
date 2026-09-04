@@ -13,6 +13,8 @@ public partial class base_nuevaContext : DbContext
     {
     }
 
+    public virtual DbSet<accionSolicitada> accionSolicitada { get; set; }
+
     public virtual DbSet<anexos_NEXO> anexos_NEXO { get; set; }
 
     public virtual DbSet<areas> areas { get; set; }
@@ -25,9 +27,15 @@ public partial class base_nuevaContext : DbContext
 
     public virtual DbSet<auxiliares> auxiliares { get; set; }
 
+    public virtual DbSet<bitacoraCaso> bitacoraCaso { get; set; }
+
     public virtual DbSet<bobinasAsignadas> bobinasAsignadas { get; set; }
 
     public virtual DbSet<cargo> cargo { get; set; }
+
+    public virtual DbSet<casoAccionSolicitada> casoAccionSolicitada { get; set; }
+
+    public virtual DbSet<casoCalidad> casoCalidad { get; set; }
 
     public virtual DbSet<catalogoTipoAcabado> catalogoTipoAcabado { get; set; }
 
@@ -35,15 +43,25 @@ public partial class base_nuevaContext : DbContext
 
     public virtual DbSet<catalogoUsoTipico> catalogoUsoTipico { get; set; }
 
+    public virtual DbSet<categoriaDefecto> categoriaDefecto { get; set; }
+
+    public virtual DbSet<causaRaizCalidad> causaRaizCalidad { get; set; }
+
     public virtual DbSet<certificadoCalidad> certificadoCalidad { get; set; }
 
     public virtual DbSet<certificadoCalidad_Log> certificadoCalidad_Log { get; set; }
 
     public virtual DbSet<componenteProduccion> componenteProduccion { get; set; }
 
+    public virtual DbSet<conciliacion> conciliacion { get; set; }
+
     public virtual DbSet<condicionInicial> condicionInicial { get; set; }
 
+    public virtual DbSet<confirmacionPreliminar> confirmacionPreliminar { get; set; }
+
     public virtual DbSet<corridaCombinada> corridaCombinada { get; set; }
+
+    public virtual DbSet<decisionConciliacion> decisionConciliacion { get; set; }
 
     public virtual DbSet<detalleAuditoriaProceso> detalleAuditoriaProceso { get; set; }
 
@@ -64,6 +82,8 @@ public partial class base_nuevaContext : DbContext
     public virtual DbSet<detalleReporte> detalleReporte { get; set; }
 
     public virtual DbSet<detalleValidacionArranque> detalleValidacionArranque { get; set; }
+
+    public virtual DbSet<dictamenCalidad> dictamenCalidad { get; set; }
 
     public virtual DbSet<empleadoCatalogo> empleadoCatalogo { get; set; }
 
@@ -94,6 +114,8 @@ public partial class base_nuevaContext : DbContext
     public virtual DbSet<fichaTecnicaProcesos> fichaTecnicaProcesos { get; set; }
 
     public virtual DbSet<formulacionTinta> formulacionTinta { get; set; }
+
+    public virtual DbSet<historialVencimientoOf> historialVencimientoOf { get; set; }
 
     public virtual DbSet<horariosOperativos> horariosOperativos { get; set; }
 
@@ -131,6 +153,8 @@ public partial class base_nuevaContext : DbContext
 
     public virtual DbSet<logProgramacionDetalle> logProgramacionDetalle { get; set; }
 
+    public virtual DbSet<logSincronizacionOf> logSincronizacionOf { get; set; }
+
     public virtual DbSet<logSoporteNexo> logSoporteNexo { get; set; }
 
     public virtual DbSet<lotePliego> lotePliego { get; set; }
@@ -144,6 +168,8 @@ public partial class base_nuevaContext : DbContext
     public virtual DbSet<menu> menu { get; set; }
 
     public virtual DbSet<modulo> modulo { get; set; }
+
+    public virtual DbSet<motivoConciliacion> motivoConciliacion { get; set; }
 
     public virtual DbSet<notasOf> notasOf { get; set; }
 
@@ -193,6 +219,8 @@ public partial class base_nuevaContext : DbContext
 
     public virtual DbSet<reportesDeOperadores> reportesDeOperadores { get; set; }
 
+    public virtual DbSet<resolucionCalidad> resolucionCalidad { get; set; }
+
     public virtual DbSet<rol> rol { get; set; }
 
     public virtual DbSet<seccionDocumento> seccionDocumento { get; set; }
@@ -201,11 +229,15 @@ public partial class base_nuevaContext : DbContext
 
     public virtual DbSet<sesionOperador> sesionOperador { get; set; }
 
+    public virtual DbSet<severidadCaso> severidadCaso { get; set; }
+
     public virtual DbSet<solicitudMateriales> solicitudMateriales { get; set; }
 
     public virtual DbSet<solicitudMaterialesOf> solicitudMaterialesOf { get; set; }
 
     public virtual DbSet<subModulo> subModulo { get; set; }
+
+    public virtual DbSet<subtipoDefecto> subtipoDefecto { get; set; }
 
     public virtual DbSet<tablerosOf> tablerosOf { get; set; }
 
@@ -213,7 +245,11 @@ public partial class base_nuevaContext : DbContext
 
     public virtual DbSet<tarjetaOf> tarjetaOf { get; set; }
 
+    public virtual DbSet<tipoCaso> tipoCaso { get; set; }
+
     public virtual DbSet<tipoComponente> tipoComponente { get; set; }
+
+    public virtual DbSet<tipoEventoBitacora> tipoEventoBitacora { get; set; }
 
     public virtual DbSet<tipoReporte> tipoReporte { get; set; }
 
@@ -243,6 +279,13 @@ public partial class base_nuevaContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<accionSolicitada>(entity =>
+        {
+            entity.HasKey(e => e.idAccion).HasName("PK_ACCIONSOLICITADA");
+
+            entity.Property(e => e.activo).HasDefaultValue(true);
+        });
+
         modelBuilder.Entity<anexos_NEXO>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__anexos_N__3214EC076FC81350");
@@ -324,6 +367,31 @@ public partial class base_nuevaContext : DbContext
             entity.HasKey(e => e.id).HasName("PK__auxiliar__3213E83F5C17182B");
 
             entity.Property(e => e.nombre).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+
+            entity.HasOne(d => d.idAreaNavigation).WithMany(p => p.auxiliares).HasConstraintName("FK_AUXILIAR_AREA");
+        });
+
+        modelBuilder.Entity<bitacoraCaso>(entity =>
+        {
+            entity.HasKey(e => e.idEvento).HasName("PK_BITACORACASO");
+
+            entity.Property(e => e.fecha).HasDefaultValueSql("(getdate())");
+
+            entity.HasOne(d => d.estadoAnteriorNavigation).WithMany(p => p.bitacoraCasoestadoAnteriorNavigation).HasConstraintName("FK_BITACORA_ESTADO_ANTERIOR");
+
+            entity.HasOne(d => d.estadoNuevoNavigation).WithMany(p => p.bitacoraCasoestadoNuevoNavigation).HasConstraintName("FK_BITACORA_ESTADO_NUEVO");
+
+            entity.HasOne(d => d.idAnexoNavigation).WithMany(p => p.bitacoraCaso).HasConstraintName("FK_BITACORA_EVIDENCIA");
+
+            entity.HasOne(d => d.idCasoCalidadNavigation).WithMany(p => p.bitacoraCaso)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_BITACORA_CASO");
+
+            entity.HasOne(d => d.idDictamenNavigation).WithMany(p => p.bitacoraCaso).HasConstraintName("FK_BITACORA_DICTAMEN");
+
+            entity.HasOne(d => d.idTipoEventoNavigation).WithMany(p => p.bitacoraCaso)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_BITACORA_TIPO_EVENTO");
         });
 
         modelBuilder.Entity<bobinasAsignadas>(entity =>
@@ -338,6 +406,81 @@ public partial class base_nuevaContext : DbContext
 
             entity.Property(e => e.descripcion).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.nombreCargo).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+        });
+
+        modelBuilder.Entity<casoAccionSolicitada>(entity =>
+        {
+            entity.HasKey(e => e.idCasoAccion).HasName("PK_CASOACCIONSOLICITADA");
+
+            entity.Property(e => e.actualizadoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.fechaRegistro).HasDefaultValueSql("(getdate())");
+            entity.Property(e => e.responsable).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+
+            entity.HasOne(d => d.actualizadoPorNavigation).WithMany(p => p.casoAccionSolicitadaactualizadoPorNavigation).HasConstraintName("FK_CASOACCION_ACTALIZADOR_POR");
+
+            entity.HasOne(d => d.idAccionNavigation).WithMany(p => p.casoAccionSolicitada)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_CASOACCION_ACCION");
+
+            entity.HasOne(d => d.idCasoCalidadNavigation).WithMany(p => p.casoAccionSolicitada)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_CASOACCION_CASO");
+
+            entity.HasOne(d => d.idEstadoNavigation).WithMany(p => p.casoAccionSolicitada)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_CASOACCION_ESTADO");
+
+            entity.HasOne(d => d.responsableNavigation).WithMany(p => p.casoAccionSolicitadaresponsableNavigation).HasConstraintName("FK_CASOACCION_RESPONSABLE");
+
+            entity.HasOne(d => d.tipoReporteNavigation).WithMany(p => p.casoAccionSolicitada)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_CASOACCION_TIPO_REPORTE");
+        });
+
+        modelBuilder.Entity<casoCalidad>(entity =>
+        {
+            entity.HasKey(e => e.idCasoCalidad).HasName("PK_CASO_CALIDAD");
+
+            entity.Property(e => e.actualizadoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.fechaRegistro).HasDefaultValueSql("(getdate())");
+            entity.Property(e => e.registradoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.responsable).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+
+            entity.HasOne(d => d.actualizadoPorNavigation).WithMany(p => p.casoCalidadactualizadoPorNavigation).HasConstraintName("FK_CASO_ACTUALIZADO_POR");
+
+            entity.HasOne(d => d.areaResponsableNavigation).WithMany(p => p.casoCalidad).HasConstraintName("FK_CASO_AREA_RESPONSABLE");
+
+            entity.HasOne(d => d.idCategoriaDefectoNavigation).WithMany(p => p.casoCalidad).HasConstraintName("FK_CASO_CATEGORIA_DEFECTO");
+
+            entity.HasOne(d => d.idCausaRaizNavigation).WithMany(p => p.casoCalidad).HasConstraintName("FK_CASO_CAUSA_RAIZ");
+
+            entity.HasOne(d => d.idEstadoNavigation).WithMany(p => p.casoCalidad)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_CASO_ESTADO");
+
+            entity.HasOne(d => d.idProcesoNavigation).WithMany(p => p.casoCalidad).HasConstraintName("FK_CASO_PROCESO");
+
+            entity.HasOne(d => d.idResolucionNavigation).WithMany(p => p.casoCalidad).HasConstraintName("FK_CASO_RESOLUCION");
+
+            entity.HasOne(d => d.idSeveridadNavigation).WithMany(p => p.casoCalidad).HasConstraintName("FK_CASO_SEVERIDAD");
+
+            entity.HasOne(d => d.idSubtipoDefectoNavigation).WithMany(p => p.casoCalidad).HasConstraintName("FK_CASO_SUBTIPO_DEFECTO");
+
+            entity.HasOne(d => d.idTipoCasoNavigation).WithMany(p => p.casoCalidad)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_CASO_TIPO");
+
+            entity.HasOne(d => d.oFNavigation).WithMany(p => p.casoCalidad)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_CASO_OF");
+
+            entity.HasOne(d => d.registradoPorNavigation).WithMany(p => p.casoCalidadregistradoPorNavigation).HasConstraintName("FK_CASO_REGISTRADO_POR");
+
+            entity.HasOne(d => d.responsableNavigation).WithMany(p => p.casoCalidadresponsableNavigation).HasConstraintName("FK_CASO_RESPONSABLE");
+
+            entity.HasOne(d => d.tipoReporteNavigation).WithMany(p => p.casoCalidad)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_CASO_TIPO_REPORTE");
         });
 
         modelBuilder.Entity<catalogoTipoAcabado>(entity =>
@@ -357,6 +500,20 @@ public partial class base_nuevaContext : DbContext
         modelBuilder.Entity<catalogoUsoTipico>(entity =>
         {
             entity.HasKey(e => e.idUsoTipico).HasName("PK__Cat_UsoT__A1331DE6556F4B0E");
+
+            entity.Property(e => e.activo).HasDefaultValue(true);
+        });
+
+        modelBuilder.Entity<categoriaDefecto>(entity =>
+        {
+            entity.HasKey(e => e.idCategoria).HasName("PK_CATEGORIADEFECTO");
+
+            entity.Property(e => e.activo).HasDefaultValue(true);
+        });
+
+        modelBuilder.Entity<causaRaizCalidad>(entity =>
+        {
+            entity.HasKey(e => e.idCausaRaiz).HasName("PK__causaRai__EFF716B5DA0B69F5");
 
             entity.Property(e => e.activo).HasDefaultValue(true);
         });
@@ -401,6 +558,24 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.tipoSalidaNavigation).WithMany(p => p.componenteProducciontipoSalidaNavigation).HasConstraintName("TIPO_SALIDA_FK");
         });
 
+        modelBuilder.Entity<conciliacion>(entity =>
+        {
+            entity.HasKey(e => e.idConciliacion).HasName("PK_CONCILIACION");
+
+            entity.Property(e => e.fechaConciliacion).HasDefaultValueSql("(getdate())");
+            entity.Property(e => e.responsable).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+
+            entity.HasOne(d => d.idDecisionNavigation).WithMany(p => p.conciliacion).HasConstraintName("FK_CONCILIACION_DECISION");
+
+            entity.HasOne(d => d.idMotivoNavigation).WithMany(p => p.conciliacion).HasConstraintName("FK_CONCILIACION_MOTIVO");
+
+            entity.HasOne(d => d.idPreliminarNavigation).WithOne(p => p.conciliacion)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_CONCILIACION_PRELIMINAR");
+
+            entity.HasOne(d => d.responsableNavigation).WithMany(p => p.conciliacion).HasConstraintName("FK_CONCILIACION_RESPONSABLE");
+        });
+
         modelBuilder.Entity<condicionInicial>(entity =>
         {
             entity.HasKey(e => e.idCondicionInicial).HasName("PK_CONDICION_INICIAL");
@@ -421,6 +596,43 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.operadorNavigation).WithMany(p => p.condicionInicialoperadorNavigation).HasConstraintName("FK_CI_OPERADOR");
         });
 
+        modelBuilder.Entity<confirmacionPreliminar>(entity =>
+        {
+            entity.HasKey(e => e.idPreliminar).HasName("PK_CONFIRMACION_PRELIMINAR");
+
+            entity.Property(e => e.actualizadoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.entregadoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.fechaRegistro).HasDefaultValueSql("(getdate())");
+            entity.Property(e => e.operador).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.registradoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+
+            entity.HasOne(d => d.actualizadoPorNavigation).WithMany(p => p.confirmacionPreliminaractualizadoPorNavigation).HasConstraintName("FK_PRELIMINAR_ACTUALIZADO_POR");
+
+            entity.HasOne(d => d.entregadoPorNavigation).WithMany(p => p.confirmacionPreliminarentregadoPorNavigation).HasConstraintName("FK_PRELIMINAR_ENTREGADO_POR");
+
+            entity.HasOne(d => d.idEstadoNavigation).WithMany(p => p.confirmacionPreliminar)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_PRELIMINAR_ESTADO");
+
+            entity.HasOne(d => d.idProcesoNavigation).WithMany(p => p.confirmacionPreliminar)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_PRELIMINAR_PROCESO");
+
+            entity.HasOne(d => d.idTurnoNavigation).WithMany(p => p.confirmacionPreliminar).HasConstraintName("FK_PRELIMINAR_TURNO");
+
+            entity.HasOne(d => d.idUnidadNavigation).WithMany(p => p.confirmacionPreliminar).HasConstraintName("FK_PRELIMINAR_UNIDAD");
+
+            entity.HasOne(d => d.oFNavigation).WithMany(p => p.confirmacionPreliminar).HasConstraintName("FK_PRELIMINAR_OF");
+
+            entity.HasOne(d => d.operadorNavigation).WithMany(p => p.confirmacionPreliminaroperadorNavigation).HasConstraintName("FK_PRELIMINAR_OPERADOR");
+
+            entity.HasOne(d => d.registradoPorNavigation).WithMany(p => p.confirmacionPreliminarregistradoPorNavigation).HasConstraintName("FK_PRELIMINAR_REGISTRADO_POR");
+
+            entity.HasOne(d => d.tipoReporteNavigation).WithMany(p => p.confirmacionPreliminar)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_PRELIMINAR_TIPO_REPORTE");
+        });
+
         modelBuilder.Entity<corridaCombinada>(entity =>
         {
             entity.HasKey(e => e.idRelacion).HasName("PK__corridaC__FC68CFD3A8DB3F8F");
@@ -430,6 +642,13 @@ public partial class base_nuevaContext : DbContext
                 .HasConstraintName("FK_MAESTRO");
 
             entity.HasOne(d => d.subordinadoNavigation).WithOne(p => p.corridaCombinadasubordinadoNavigation).HasConstraintName("FK_SUBORDINADO");
+        });
+
+        modelBuilder.Entity<decisionConciliacion>(entity =>
+        {
+            entity.HasKey(e => e.idDecision).HasName("PK_DECICION_CONCILIACION");
+
+            entity.Property(e => e.activo).HasDefaultValue(true);
         });
 
         modelBuilder.Entity<detalleAuditoriaProceso>(entity =>
@@ -562,6 +781,8 @@ public partial class base_nuevaContext : DbContext
 
             entity.HasOne(d => d.idOperacionNavigation).WithMany(p => p.detalleReporte).HasConstraintName("FK_DETALLE_OPERACION");
 
+            entity.HasOne(d => d.idPreliminarNavigation).WithMany(p => p.detalleReporte).HasConstraintName("FK_PRELIMINAR_REPORTE");
+
             entity.HasOne(d => d.idProcesoNavigation).WithMany(p => p.detalleReporte).HasConstraintName("FK_R_PROCESOO");
 
             entity.HasOne(d => d.idReporteNavigation).WithMany(p => p.detalleReporte).HasConstraintName("FK_DETALLE_REPORTE");
@@ -578,6 +799,15 @@ public partial class base_nuevaContext : DbContext
             entity.HasKey(e => e.idDetalleValidacion).HasName("PK_DETALLE_ARRANQUE");
 
             entity.HasOne(d => d.idValidacionArranqueNavigation).WithMany(p => p.detalleValidacionArranque).HasConstraintName("FK_ARRANQUE_VALIDACION");
+        });
+
+        modelBuilder.Entity<dictamenCalidad>(entity =>
+        {
+            entity.HasKey(e => e.idDictamen).HasName("PK__dictamen__2069D76222318DA5");
+
+            entity.Property(e => e.activo).HasDefaultValue(true);
+            entity.Property(e => e.aplicaFinal).HasDefaultValue(true);
+            entity.Property(e => e.aplicaPreliminar).HasDefaultValue(true);
         });
 
         modelBuilder.Entity<empleadoCatalogo>(entity =>
@@ -757,6 +987,20 @@ public partial class base_nuevaContext : DbContext
             entity.HasKey(e => e.idFormulacion).HasName("PK_FORMULACION_TINTAS");
 
             entity.HasOne(d => d.idFichaProcesoNavigation).WithMany(p => p.formulacionTinta).HasConstraintName("FK_FICHA_FORMULACION_TINTA");
+        });
+
+        modelBuilder.Entity<historialVencimientoOf>(entity =>
+        {
+            entity.HasKey(e => e.idHistorial).HasName("PK_HISTORIALVENCIMIENTOOF");
+
+            entity.Property(e => e.fechaRegistro).HasDefaultValueSql("(getdate())");
+            entity.Property(e => e.registradoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+
+            entity.HasOne(d => d.oFNavigation).WithMany(p => p.historialVencimientoOf)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_HISTVENC_OF");
+
+            entity.HasOne(d => d.registradoPorNavigation).WithMany(p => p.historialVencimientoOf).HasConstraintName("FK_HISTVENC_REGISTRADO_POR");
         });
 
         modelBuilder.Entity<horariosOperativos>(entity =>
@@ -978,6 +1222,11 @@ public partial class base_nuevaContext : DbContext
                 .HasConstraintName("FK_PROCESO_SECUENCIADO_LOG");
         });
 
+        modelBuilder.Entity<logSincronizacionOf>(entity =>
+        {
+            entity.HasKey(e => e.idLog).HasName("PK__logSincr__3C7153CA8F67DC10");
+        });
+
         modelBuilder.Entity<logSoporteNexo>(entity =>
         {
             entity.HasKey(e => e.idLogSoporte).HasName("PK__soporteN__9F6864CB3A873920");
@@ -1092,6 +1341,13 @@ public partial class base_nuevaContext : DbContext
             entity.Property(e => e.nombreModulo).UseCollation("SQL_Latin1_General_CP1_CI_AS");
 
             entity.HasOne(d => d.idMenuNavigation).WithMany(p => p.modulo).HasConstraintName("FK_MODULO_MENU");
+        });
+
+        modelBuilder.Entity<motivoConciliacion>(entity =>
+        {
+            entity.HasKey(e => e.idMotivo).HasName("PK_MOTIVO_CONCILIACION");
+
+            entity.Property(e => e.activo).HasDefaultValue(true);
         });
 
         modelBuilder.Entity<notasOf>(entity =>
@@ -1557,6 +1813,14 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.operadorNavigation).WithMany(p => p.reportesDeOperadores).HasConstraintName("FK_REPORTES_OPERADOR");
         });
 
+        modelBuilder.Entity<resolucionCalidad>(entity =>
+        {
+            entity.HasKey(e => e.idResolucion).HasName("PK__resoluci__86A78317391F22BF");
+
+            entity.Property(e => e.activo).HasDefaultValue(true);
+            entity.Property(e => e.implicaCosto).HasDefaultValue(true);
+        });
+
         modelBuilder.Entity<rol>(entity =>
         {
             entity.HasKey(e => e.idRol).HasName("PK_ROL");
@@ -1606,6 +1870,13 @@ public partial class base_nuevaContext : DbContext
                 .HasConstraintName("FK_OPERADOR");
         });
 
+        modelBuilder.Entity<severidadCaso>(entity =>
+        {
+            entity.HasKey(e => e.idSeveridad).HasName("PK_SEVERIDADCASO");
+
+            entity.Property(e => e.activo).HasDefaultValue(true);
+        });
+
         modelBuilder.Entity<solicitudMateriales>(entity =>
         {
             entity.HasKey(e => e.idSolicitud).HasName("PK_SOLICITUDMATERIALES");
@@ -1640,6 +1911,15 @@ public partial class base_nuevaContext : DbContext
             entity.Property(e => e.nombreSubModulo).UseCollation("SQL_Latin1_General_CP1_CI_AS");
 
             entity.HasOne(d => d.idModuloNavigation).WithMany(p => p.subModulo).HasConstraintName("FK_SUBMODUL_MODULO");
+        });
+
+        modelBuilder.Entity<subtipoDefecto>(entity =>
+        {
+            entity.HasKey(e => e.idSubtipo).HasName("PK_SUBTIPODEFECTO");
+
+            entity.Property(e => e.activo).HasDefaultValue(true);
+
+            entity.HasOne(d => d.idCategoriaNavigation).WithMany(p => p.subtipoDefecto).HasConstraintName("FK_SUBTIPO_CATEGORIA");
         });
 
         modelBuilder.Entity<tablerosOf>(entity =>
@@ -1695,11 +1975,25 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.tipoComponenteNavigation).WithMany(p => p.tarjetaOf).HasConstraintName("FK_TIPO_COMPONENTE");
         });
 
+        modelBuilder.Entity<tipoCaso>(entity =>
+        {
+            entity.HasKey(e => e.idTipoCaso).HasName("PK_TIPOCASO");
+
+            entity.Property(e => e.activo).HasDefaultValue(true);
+        });
+
         modelBuilder.Entity<tipoComponente>(entity =>
         {
             entity.HasKey(e => e.idTipoComponente).HasName("PK__tipoSemi__0B0DCD4FF7950C92");
 
             entity.HasOne(d => d.unidadBaseNavigation).WithMany(p => p.tipoComponente).HasConstraintName("UNIDAD_BASE_FK");
+        });
+
+        modelBuilder.Entity<tipoEventoBitacora>(entity =>
+        {
+            entity.HasKey(e => e.idTipoEvento).HasName("PK_TIPOEVENTOBITACORA");
+
+            entity.Property(e => e.activo).HasDefaultValue(true);
         });
 
         modelBuilder.Entity<tipoReporte>(entity =>
@@ -1727,6 +2021,8 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.idLoteNavigation).WithMany(p => p.transferenciaProceso).HasConstraintName("FK_TRANSFER_LOTEPLIEG");
 
             entity.HasOne(d => d.idOrigenNavigation).WithMany(p => p.transferenciaProcesoidOrigenNavigation).HasConstraintName("FK_TRANSFER_ID_ORIGEN_OF");
+
+            entity.HasOne(d => d.idPreliminarNavigation).WithMany(p => p.transferenciaProceso).HasConstraintName("FK_TRANSFER_PRELIMINAR");
 
             entity.HasOne(d => d.idProduccionNavigation).WithMany(p => p.transferenciaProceso).HasConstraintName("FK_PRODUCCION_ORIGEN");
 

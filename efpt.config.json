@@ -19,6 +19,10 @@
    "T4TemplatePath": null,
    "Tables": [
       {
+         "Name": "[dbo].[accionSolicitada]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[anexos_NEXO]",
          "ObjectType": 0
       },
@@ -43,11 +47,23 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[bitacoraCaso]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[bobinasAsignadas]",
          "ObjectType": 0
       },
       {
          "Name": "[dbo].[cargo]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[casoAccionSolicitada]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[casoCalidad]",
          "ObjectType": 0
       },
       {
@@ -63,6 +79,14 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[categoriaDefecto]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[causaRaizCalidad]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[certificadoCalidad]",
          "ObjectType": 0
       },
@@ -75,11 +99,23 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[conciliacion]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[condicionInicial]",
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[confirmacionPreliminar]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[corridaCombinada]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[decisionConciliacion]",
          "ObjectType": 0
       },
       {
@@ -120,6 +156,10 @@
       },
       {
          "Name": "[dbo].[detalleValidacionArranque]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[dictamenCalidad]",
          "ObjectType": 0
       },
       {
@@ -180,6 +220,10 @@
       },
       {
          "Name": "[dbo].[formulacionTinta]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[historialVencimientoOf]",
          "ObjectType": 0
       },
       {
@@ -255,6 +299,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[logSincronizacionOf]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[logSoporteNexo]",
          "ObjectType": 0
       },
@@ -292,6 +340,10 @@
       },
       {
          "Name": "[dbo].[modulo]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[motivoConciliacion]",
          "ObjectType": 0
       },
       {
@@ -391,6 +443,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[resolucionCalidad]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[rol]",
          "ObjectType": 0
       },
@@ -407,6 +463,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[severidadCaso]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[solicitudMateriales]",
          "ObjectType": 0
       },
@@ -416,6 +476,10 @@
       },
       {
          "Name": "[dbo].[subModulo]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[subtipoDefecto]",
          "ObjectType": 0
       },
       {
@@ -431,7 +495,15 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[tipoCaso]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[tipoComponente]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[tipoEventoBitacora]",
          "ObjectType": 0
       },
       {

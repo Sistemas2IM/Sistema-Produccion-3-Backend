@@ -79,6 +79,9 @@ public partial class entregasProductoTerminado
 
     public bool? cancelada { get; set; }
 
+    [StringLength(250)]
+    public string nombreAlternoArticulo { get; set; }
+
     [InverseProperty("idEntregaPtNavigation")]
     public virtual ICollection<detalleEntrega> detalleEntrega { get; set; } = new List<detalleEntrega>();
 

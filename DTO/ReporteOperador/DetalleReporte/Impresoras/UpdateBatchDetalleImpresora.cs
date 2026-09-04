@@ -98,5 +98,7 @@ namespace Sistema_Produccion_3_Backend.DTO.ReporteOperador.DetalleReporte.Impres
         public int? idTransferencia { get; set; }
 
         public string? codBobina { get; set; }
+
+        public int? idPreliminar { get; set; }
     }
 }

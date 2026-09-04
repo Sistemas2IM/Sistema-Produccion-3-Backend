@@ -121,6 +121,8 @@ public partial class detalleReporte
     [StringLength(50)]
     public string codBobina { get; set; }
 
+    public int? idPreliminar { get; set; }
+
     [ForeignKey("idMaterial")]
     [InverseProperty("detalleReporte")]
     public virtual material idMaterialNavigation { get; set; }
@@ -128,6 +130,10 @@ public partial class detalleReporte
     [ForeignKey("idOperacion")]
     [InverseProperty("detalleReporte")]
     public virtual operaciones idOperacionNavigation { get; set; }
+
+    [ForeignKey("idPreliminar")]
+    [InverseProperty("detalleReporte")]
+    public virtual confirmacionPreliminar idPreliminarNavigation { get; set; }
 
     [ForeignKey("idProceso")]
     [InverseProperty("detalleReporte")]

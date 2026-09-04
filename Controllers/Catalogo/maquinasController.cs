@@ -250,53 +250,70 @@ namespace Sistema_Produccion_3_Backend.Controllers.Catalogo
             // CAMBIO 2: Mapeamos los datos básicos. 
             _mapper.Map(updateMaquinas, maquina);
 
-            // CAMBIO 3: Procesar las colecciones (Limpiar y reconstruir)
+            // CAMBIO 3: Procesar las colecciones (Sincronización inteligente)
 
             // --- USOS TÍPICOS ---
-            maquina.idUsoTipico.Clear();
-            if (updateMaquinas.IdsUsoTipico != null && updateMaquinas.IdsUsoTipico.Any())
+            if (updateMaquinas.IdsUsoTipico != null)
             {
-                foreach (var usoId in updateMaquinas.IdsUsoTipico)
+                var actuales = maquina.idUsoTipico.Select(e => e.idUsoTipico).ToList();
+                var aRemover = actuales.Except(updateMaquinas.IdsUsoTipico).ToList();
+                var aAgregar = updateMaquinas.IdsUsoTipico.Except(actuales).ToList();
+
+                // 1. Remover solo los que ya no vienen en el DTO
+                foreach (var usoId in aRemover)
                 {
-                    var trackedEntity = _context.catalogoUsoTipico.Local.FirstOrDefault(e => e.idUsoTipico == usoId);
-                    if (trackedEntity == null)
-                    {
-                        trackedEntity = new catalogoUsoTipico { idUsoTipico = usoId };
-                        _context.Attach(trackedEntity);
-                    }
-                    maquina.idUsoTipico.Add(trackedEntity);
+                    var item = maquina.idUsoTipico.First(e => e.idUsoTipico == usoId);
+                    maquina.idUsoTipico.Remove(item);
+                }
+
+                // 2. Agregar únicamente los que faltan
+                foreach (var usoId in aAgregar)
+                {
+                    var stub = new catalogoUsoTipico { idUsoTipico = usoId };
+                    _context.Attach(stub);
+                    maquina.idUsoTipico.Add(stub);
                 }
             }
 
             // --- TIPOS DE PAPEL ---
-            maquina.idTipoPapel.Clear();
-            if (updateMaquinas.IdsTipoPapel != null && updateMaquinas.IdsTipoPapel.Any())
+            if (updateMaquinas.IdsTipoPapel != null)
             {
-                foreach (var papelId in updateMaquinas.IdsTipoPapel)
+                var actuales = maquina.idTipoPapel.Select(e => e.idTipoPapel).ToList();
+                var aRemover = actuales.Except(updateMaquinas.IdsTipoPapel).ToList();
+                var aAgregar = updateMaquinas.IdsTipoPapel.Except(actuales).ToList();
+
+                foreach (var papelId in aRemover)
                 {
-                    var trackedEntity = _context.catalogoTipoPapel.Local.FirstOrDefault(e => e.idTipoPapel == papelId);
-                    if (trackedEntity == null)
-                    {
-                        trackedEntity = new catalogoTipoPapel { idTipoPapel = papelId };
-                        _context.Attach(trackedEntity);
-                    }
-                    maquina.idTipoPapel.Add(trackedEntity);
+                    var item = maquina.idTipoPapel.First(e => e.idTipoPapel == papelId);
+                    maquina.idTipoPapel.Remove(item);
+                }
+
+                foreach (var papelId in aAgregar)
+                {
+                    var stub = new catalogoTipoPapel { idTipoPapel = papelId };
+                    _context.Attach(stub);
+                    maquina.idTipoPapel.Add(stub);
                 }
             }
 
             // --- TIPOS DE ACABADO ---
-            maquina.idTipoAcabado.Clear();
-            if (updateMaquinas.IdsTipoAcabado != null && updateMaquinas.IdsTipoAcabado.Any())
+            if (updateMaquinas.IdsTipoAcabado != null)
             {
-                foreach (var acabadoId in updateMaquinas.IdsTipoAcabado)
+                var actuales = maquina.idTipoAcabado.Select(e => e.idTipoAcabado).ToList();
+                var aRemover = actuales.Except(updateMaquinas.IdsTipoAcabado).ToList();
+                var aAgregar = updateMaquinas.IdsTipoAcabado.Except(actuales).ToList();
+
+                foreach (var acabadoId in aRemover)
                 {
-                    var trackedEntity = _context.catalogoTipoAcabado.Local.FirstOrDefault(e => e.idTipoAcabado == acabadoId);
-                    if (trackedEntity == null)
-                    {
-                        trackedEntity = new catalogoTipoAcabado { idTipoAcabado = acabadoId };
-                        _context.Attach(trackedEntity);
-                    }
-                    maquina.idTipoAcabado.Add(trackedEntity);
+                    var item = maquina.idTipoAcabado.First(e => e.idTipoAcabado == acabadoId);
+                    maquina.idTipoAcabado.Remove(item);
+                }
+
+                foreach (var acabadoId in aAgregar)
+                {
+                    var stub = new catalogoTipoAcabado { idTipoAcabado = acabadoId };
+                    _context.Attach(stub);
+                    maquina.idTipoAcabado.Add(stub);
                 }
             }
 

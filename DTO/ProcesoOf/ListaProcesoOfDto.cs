@@ -140,6 +140,8 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
 
         public DateTime? finEstimado { get; set; }
 
+        public bool tieneConfirmacionPreliminar { get; set; }
+
         public List<AsignacionDto>? asignacionDto { get; set; }
 
         public ProcesoPosturasOfDto? PosturasOfDto { get; set; }

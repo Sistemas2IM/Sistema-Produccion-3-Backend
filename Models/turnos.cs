@@ -20,6 +20,9 @@ public partial class turnos
 
     public TimeOnly? horaFinal { get; set; }
 
+    [InverseProperty("idTurnoNavigation")]
+    public virtual ICollection<confirmacionPreliminar> confirmacionPreliminar { get; set; } = new List<confirmacionPreliminar>();
+
     [InverseProperty("turnoNavigation")]
     public virtual ICollection<turnoAuditoria> turnoAuditoria { get; set; } = new List<turnoAuditoria>();
 }

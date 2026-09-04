@@ -51,5 +51,7 @@
         public bool? archivada { get; set; }
 
         public bool? cancelada { get; set; }
+
+        public string? nombreAlternoArticulo { get; set; }
     }
 }

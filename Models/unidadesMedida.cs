@@ -30,6 +30,9 @@ public partial class unidadesMedida
     public decimal? factorConversion { get; set; }
 
     [InverseProperty("idUnidadNavigation")]
+    public virtual ICollection<confirmacionPreliminar> confirmacionPreliminar { get; set; } = new List<confirmacionPreliminar>();
+
+    [InverseProperty("idUnidadNavigation")]
     public virtual ICollection<detalleCertificadoCalidad> detalleCertificadoCalidad { get; set; } = new List<detalleCertificadoCalidad>();
 
     [InverseProperty("idUnidadNavigation")]

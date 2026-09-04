@@ -48,10 +48,24 @@ namespace Sistema_Produccion_3_Backend.Controllers.LoginAuth
         {
             var usuarios = await _context.usuario
                 .Where(u => u.idCargo == 2)
-                .OrderByDescending(f => f.fechaDeCreacion)               
+                .Select(u => new
+                {
+                    UsuarioBase = u,
+                    CantidadProcesos = u.asignacion.Count(),
+
+                    TotalHoras = u.asignacion.Sum(a => a.idProcesoNavigation.tiempoEstimado ?? 0)
+                })
+                .OrderByDescending(f => f.UsuarioBase.fechaDeCreacion)               
                 .ToListAsync();
 
-            var usuariosDto = _mapper.Map<List<UsuarioDisenoDto>>(usuarios);
+            var usuariosDto = usuarios.Select(uc =>
+            {
+                var dto = _mapper.Map<UsuarioDisenoDto>(uc.UsuarioBase);
+                dto.cantidadProcesos = uc.CantidadProcesos;
+                dto.horasTotales = uc.TotalHoras;
+
+                return dto;
+            }).ToList();
 
             return Ok(usuariosDto);
         }

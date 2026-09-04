@@ -11,6 +11,10 @@ namespace Sistema_Produccion_3_Backend.DTO.PermisosUsuario.Diseño
         public string? nombres { get; set; }
 
         public string? apellidos { get; set; }
-      
+
+        // calculados
+        public int cantidadProcesos { get; set; }
+        public decimal horasTotales { get; set; }
+
     }
 }

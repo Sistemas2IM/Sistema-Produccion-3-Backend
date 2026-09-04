@@ -67,7 +67,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             return Ok(logProgramacionDto);
         }
 
-        // GET por idTablero
+        // GET por idTablero - solo los ultimos 50 registros de logProgramacion para un tablero específico
         [HttpGet("get/tablero/{idTablero}")]
         public async Task<ActionResult<IEnumerable<LogProgramacionDto>>> GetLogProgramacionDtoByTablero(int idTablero)
         {
@@ -78,6 +78,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 .Include(dt => dt.tableroNavigation)
                 .Include(pr => pr.programadoPorNavigation)
                 .Where(lp => lp.tablero == idTablero)
+                .OrderByDescending(lp => lp.idLogProgramacion)
+                .Take(50)
                 .ToListAsync();
 
             var logProgramacionDto = _mapper.Map<IEnumerable<LogProgramacionDto>>(logProgramacion);

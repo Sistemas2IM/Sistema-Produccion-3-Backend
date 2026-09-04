@@ -139,6 +139,15 @@ public partial class maquinas
     [Column(TypeName = "numeric(10, 2)")]
     public decimal? produccionDiariaEstimada { get; set; }
 
+    [StringLength(50)]
+    public string proveedor { get; set; }
+
+    [StringLength(50)]
+    public string responsableTecnico { get; set; }
+
+    [StringLength(50)]
+    public string procesoNativo { get; set; }
+
     [InverseProperty("maquinaNavigation")]
     public virtual ICollection<auditoriaProceso> auditoriaProceso { get; set; } = new List<auditoriaProceso>();
 

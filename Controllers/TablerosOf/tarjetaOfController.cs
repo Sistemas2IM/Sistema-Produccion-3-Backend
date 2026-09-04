@@ -64,6 +64,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                     .ThenInclude(o => o.idEtiquetaNavigation)
                 .Include(f => f.ffeTiemposOfGlobal)
                 .Include(se => se.secuenciadoPorNavigation)
+                .Include(h => h.historialVencimientoOf)
                 .ToListAsync();
 
             var tarjetaOfDto = _mapper.Map<List<TarjetaOfDto>>(tarjetasOrdenadas);
@@ -91,6 +92,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                     .ThenInclude(o => o.idEtiquetaNavigation)
                 .Include(f => f.ffeTiemposOfGlobal)
                 .Include(se => se.secuenciadoPorNavigation)
+                .Include(h => h.historialVencimientoOf)
                 .ToListAsync();
 
             // 2. Mapeamos a tu DTO
@@ -103,6 +105,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 .Select(g => new
                 {
                     ov = g.Key,
+                    cliente = g.First().clienteOf,
+                    vendedor = g.First().vendedorOf,
                     cantidadTarjetas = g.Count(),
                     tarjetas = g.ToList()
                 })
@@ -134,6 +138,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                     .ThenInclude(o => o.idEtiquetaNavigation)
                 .Include(f => f.ffeTiemposOfGlobal)
                 .Include(se => se.secuenciadoPorNavigation)
+                .Include(h => h.historialVencimientoOf)
                 .ToListAsync();
 
             // 2. Mapeamos a tu DTO
@@ -146,6 +151,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 .Select(g => new
                 {
                     ov = g.Key,
+                    cliente = g.First().clienteOf,
+                    vendedor = g.First().vendedorOf,
                     cantidadTarjetas = g.Count(),
                     tarjetas = g.ToList()
                 })
@@ -181,6 +188,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                     .ThenInclude(o => o.idEtiquetaNavigation)
                 .Include(f => f.ffeTiemposOfGlobal)
                 .Include(se => se.secuenciadoPorNavigation)
+                .Include(h => h.historialVencimientoOf)
                 .ToListAsync();
 
             var tarjetaOfDto = _mapper.Map<List<TarjetaOfDto>>(tarjetasOrdenadas);
@@ -210,6 +218,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 .Include(e => e.idEstadoOfNavigation)
                 .Include(f => f.ffeTiemposOfGlobal)
                 .Include(se => se.secuenciadoPorNavigation)
+                .Include(h => h.historialVencimientoOf)
                 .AsQueryable();
 
             // Aplicar filtros condicionales
@@ -401,8 +410,10 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             var tarjetaOf = await _context.tarjetaOf
                 .Include(u => u.idEstadoOfNavigation)
                 .Include(r => r.etiquetaOf)
+                    .ThenInclude(o => o.idEtiquetaNavigation)
                 .Include(f => f.ffeTiemposOfGlobal)
                 .Include(se => se.secuenciadoPorNavigation)
+                .Include(h => h.historialVencimientoOf)
                 .FirstOrDefaultAsync(u => u.oF == id);
             var tarjetaOfDto = _mapper.Map<TarjetaOfDto>(tarjetaOf);
             
@@ -469,9 +480,29 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
 
             // 2. Capturamos el estado ANTES
             int idEstadoAnterior = (int)tarjetaOf.idEstadoOf;
+            DateTime? fechaAnterior = tarjetaOf.fechaVencimiento;
 
             // 3. Verificamos si el DTO trae un nuevo estado
             bool idEstadoVinoEnDto = updateTarjetaOf.idEstadoOf.HasValue;
+
+            // 🚀 LÓGICA DE HISTORIAL DE FECHAS (Origen NEXO)
+            if (updateTarjetaOf.fechaVencimiento.HasValue && fechaAnterior?.Date != updateTarjetaOf.fechaVencimiento.Value.Date)
+            {
+                var nuevoHistorial = new historialVencimientoOf
+                {
+                    oF = tarjetaOf.oF,
+                    // GetValueOrDefault() extrae la fecha o pone una por defecto si era null
+                    fechaVencimientoAnterior = fechaAnterior.GetValueOrDefault(),
+                    // .Value extrae la fecha exacta de forma segura (porque ya validamos el .HasValue en el if)
+                    fechaVencimientoNueva = updateTarjetaOf.fechaVencimiento.Value,
+                    origen = "NEXO",
+                    registradoPor = "desarrollo",
+                    comentario = "Fecha actualizada desde la plataforma NEXO",
+                    fechaRegistro = DateTime.Now
+                };
+
+                _context.historialVencimientoOf.Add(nuevoHistorial);
+            }
 
             // 4. Mapeamos
             _mapper.Map(updateTarjetaOf, tarjetaOf);
@@ -491,7 +522,14 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             }
             catch (DbUpdateConcurrencyException)
             {
-                // ... tu lógica de concurrencia ...
+                if (!_context.tarjetaOf.Any(e => e.oF == id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
             }
 
             // === INICIO DE LA INTEGRACIÓN CONDICISqlException: The UPDATE statement conflicted with the FOREIGN KEY SAME TABLE constraint "FK_REPROCESA_OF". The conflict occurred in database "NEXO_DB", table "dbo.tarjetaOf", column 'oF'.ONAL ===

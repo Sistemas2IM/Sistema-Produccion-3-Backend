@@ -131,14 +131,45 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales
         }
 
         // POST api/<valeBobinaController>
+        //[HttpPost("post")]
+        //public async Task<ActionResult<valeBobina>> PostValeBobina(AddValeBobinaDto addValeBobinaDto)
+        //{
+        //    var valeBobina = _mapper.Map<valeBobina>(addValeBobinaDto);
+        //    _context.valeBobina.Add(valeBobina);
+        //    await _context.SaveChangesAsync();
+
+        //    return CreatedAtAction("GetValeBobina", new { id = valeBobina.idVale }, valeBobina);
+        //}
+
+        // POST api/<valeBobinaController>
         [HttpPost("post")]
         public async Task<ActionResult<valeBobina>> PostValeBobina(AddValeBobinaDto addValeBobinaDto)
         {
+            // 1. Verificamos si el material ya existe en la base de datos
+            var materialExiste = await _context.material.FindAsync(addValeBobinaDto.idMaterial);
+
+            // 2. Si no existe, lo creamos "al vuelo"
+            if (materialExiste == null)
+            {
+                var nuevoMaterial = new material
+                {
+                    idMaterial = addValeBobinaDto.idMaterial,
+                    nombreMaterial = addValeBobinaDto.descripcionBobina
+                };
+
+                _context.material.Add(nuevoMaterial);
+
+                // Guardamos el material primero para que la llave foránea se registre
+                await _context.SaveChangesAsync();
+            }
+
+            // 3. Continuamos con el flujo normal de guardar el vale
             var valeBobina = _mapper.Map<valeBobina>(addValeBobinaDto);
             _context.valeBobina.Add(valeBobina);
+
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetValeBobina", new { id = valeBobina.idVale }, valeBobina);
+            return Ok(new { message = "Vale de bobina creado exitosamente", idVale = valeBobina.idVale });
         }
 
         // PUT api/<valeBobinaController>/5

@@ -58,7 +58,7 @@ namespace Sistema_Produccion_3_Backend.DTO.ReporteOperador
 
         public EstadoReporteDto? estadoReporteDto { get; set; }
 
-        public MaquinaDto? maquinaDto { get; set; }
+        public MaquinaReporteDto? maquinaDto { get; set; }
 
         public TipoReporteDto? tipoReporteDto { get; set; }
     }

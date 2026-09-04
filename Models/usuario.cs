@@ -67,16 +67,46 @@ public partial class usuario
     public virtual ICollection<auditoriaProceso> auditoriaProcesosupervisorNavigation { get; set; } = new List<auditoriaProceso>();
 
     [InverseProperty("actualizadoPorNavigation")]
+    public virtual ICollection<casoAccionSolicitada> casoAccionSolicitadaactualizadoPorNavigation { get; set; } = new List<casoAccionSolicitada>();
+
+    [InverseProperty("responsableNavigation")]
+    public virtual ICollection<casoAccionSolicitada> casoAccionSolicitadaresponsableNavigation { get; set; } = new List<casoAccionSolicitada>();
+
+    [InverseProperty("actualizadoPorNavigation")]
+    public virtual ICollection<casoCalidad> casoCalidadactualizadoPorNavigation { get; set; } = new List<casoCalidad>();
+
+    [InverseProperty("registradoPorNavigation")]
+    public virtual ICollection<casoCalidad> casoCalidadregistradoPorNavigation { get; set; } = new List<casoCalidad>();
+
+    [InverseProperty("responsableNavigation")]
+    public virtual ICollection<casoCalidad> casoCalidadresponsableNavigation { get; set; } = new List<casoCalidad>();
+
+    [InverseProperty("actualizadoPorNavigation")]
     public virtual ICollection<certificadoCalidad> certificadoCalidadactualizadoPorNavigation { get; set; } = new List<certificadoCalidad>();
 
     [InverseProperty("elaboradoPorNavigation")]
     public virtual ICollection<certificadoCalidad> certificadoCalidadelaboradoPorNavigation { get; set; } = new List<certificadoCalidad>();
+
+    [InverseProperty("responsableNavigation")]
+    public virtual ICollection<conciliacion> conciliacion { get; set; } = new List<conciliacion>();
 
     [InverseProperty("creadoPorNavigation")]
     public virtual ICollection<condicionInicial> condicionInicialcreadoPorNavigation { get; set; } = new List<condicionInicial>();
 
     [InverseProperty("operadorNavigation")]
     public virtual ICollection<condicionInicial> condicionInicialoperadorNavigation { get; set; } = new List<condicionInicial>();
+
+    [InverseProperty("actualizadoPorNavigation")]
+    public virtual ICollection<confirmacionPreliminar> confirmacionPreliminaractualizadoPorNavigation { get; set; } = new List<confirmacionPreliminar>();
+
+    [InverseProperty("entregadoPorNavigation")]
+    public virtual ICollection<confirmacionPreliminar> confirmacionPreliminarentregadoPorNavigation { get; set; } = new List<confirmacionPreliminar>();
+
+    [InverseProperty("operadorNavigation")]
+    public virtual ICollection<confirmacionPreliminar> confirmacionPreliminaroperadorNavigation { get; set; } = new List<confirmacionPreliminar>();
+
+    [InverseProperty("registradoPorNavigation")]
+    public virtual ICollection<confirmacionPreliminar> confirmacionPreliminarregistradoPorNavigation { get; set; } = new List<confirmacionPreliminar>();
 
     [InverseProperty("actualizadoPorNavigation")]
     public virtual ICollection<fichaTecnicaCliente> fichaTecnicaClienteactualizadoPorNavigation { get; set; } = new List<fichaTecnicaCliente>();
@@ -95,6 +125,9 @@ public partial class usuario
 
     [InverseProperty("operadorNavigation")]
     public virtual ICollection<fichaTecnicaProcesos> fichaTecnicaProcesosoperadorNavigation { get; set; } = new List<fichaTecnicaProcesos>();
+
+    [InverseProperty("registradoPorNavigation")]
+    public virtual ICollection<historialVencimientoOf> historialVencimientoOf { get; set; } = new List<historialVencimientoOf>();
 
     [InverseProperty("operadorNavigation")]
     public virtual ICollection<horariosOperativos> horariosOperativos { get; set; } = new List<horariosOperativos>();

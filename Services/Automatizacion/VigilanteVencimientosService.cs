@@ -35,6 +35,8 @@ namespace Sistema_Produccion_3_Backend.Services.Automatizacion
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            await Task.Yield();
+
             _logger.LogInformation("👁️ Vigilante de Vencimientos iniciado.");
 
             while (!stoppingToken.IsCancellationRequested)
