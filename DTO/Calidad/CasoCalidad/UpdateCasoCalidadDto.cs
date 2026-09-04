@@ -47,5 +47,11 @@
         public bool archivado { get; set; }
 
         public bool cancelado { get; set; }
+
+        public int? idCausaRaiz { get; set; }
+
+        public int? idResolucion { get; set; }
+
+        public int? areaResponsable { get; set; }
     }
 }

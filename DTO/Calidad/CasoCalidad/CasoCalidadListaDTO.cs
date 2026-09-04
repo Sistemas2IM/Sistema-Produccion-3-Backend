@@ -55,6 +55,12 @@ namespace Sistema_Produccion_3_Backend.DTO.Calidad.CasoCalidad
         public bool archivado { get; set; }
         public bool cancelado { get; set; }
 
+        public int? idCausaRaiz { get; set; }
+
+        public int? idResolucion { get; set; }
+
+        public int? areaResponsable { get; set; }
+
         // Contadores en lugar de las colecciones
         public int totalEventos { get; set; }
         public int totalAcciones { get; set; }
