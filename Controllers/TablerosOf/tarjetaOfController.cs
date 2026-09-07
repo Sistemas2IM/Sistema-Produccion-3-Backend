@@ -496,7 +496,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                     // .Value extrae la fecha exacta de forma segura (porque ya validamos el .HasValue en el if)
                     fechaVencimientoNueva = updateTarjetaOf.fechaVencimiento.Value,
                     origen = "NEXO",
-                    registradoPor = "desarrollo",
+                    //registradoPor = "",
                     comentario = "Fecha actualizada desde la plataforma NEXO",
                     fechaRegistro = DateTime.Now
                 };

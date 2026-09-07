@@ -104,8 +104,8 @@ namespace Sistema_Produccion_3_Backend.Services.Automatizacion
                                         // --- LÓGICA DE COMPARACIÓN ---
                                         List<string> diferencias = new List<string>();
 
-                                        if (local.oV != ovSap) diferencias.Add($"OV: NEXO({local.oV}) vs SAP({ovSap})");
-                                        if ((local.nombreOf ?? "") != nombreOfSap) diferencias.Add($"Nombre: NEXO({local.nombreOf}) vs SAP({nombreOfSap})");
+                                        if (local.oV != ovSap) diferencias.Add($"OV|{local.oV}|{ovSap}");
+                                        if ((local.nombreOf ?? "") != nombreOfSap) diferencias.Add($"Nombre|{local.nombreOf}|{nombreOfSap}");
                                         if ((local.codArticulo ?? "") != codArtSap) diferencias.Add($"Cód. Artículo: NEXO({local.codArticulo}) vs SAP({codArtSap})");
                                         if ((local.productoOf ?? "") != productoOfSap) diferencias.Add($"Producto: NEXO({local.productoOf}) vs SAP({productoOfSap})");
                                         if ((local.lineaDeNegocio ?? "") != lNegocioSap) diferencias.Add($"Línea Negocio: NEXO({local.lineaDeNegocio}) vs SAP({lNegocioSap})");
@@ -119,6 +119,15 @@ namespace Sistema_Produccion_3_Backend.Services.Automatizacion
                                         if ((local.razonSocial ?? "") != razonSocialSap) diferencias.Add($"Razón Social: NEXO({local.razonSocial}) vs SAP({razonSocialSap})");
                                         if (local.fechaVencimiento?.Date != fechaEntregaSap?.Date) diferencias.Add($"Fecha Entrega: NEXO({local.fechaVencimiento?.ToString("yyyy-MM-dd")}) vs SAP({fechaEntregaSap?.ToString("yyyy-MM-dd")})");
 
+                                        string descNexo = local.descipcionOf ?? "";
+                                        double similitudDesc = CalcularSimilitud(descNexo, descripcionOfSap);
+
+                                        // Tolerancia: Solo es diferencia si la similitud baja del 95%)
+                                        if (similitudDesc < 95.0)
+                                        {
+                                            diferencias.Add($"Descripción ({similitudDesc:F1}% similar)|{descNexo}|{descripcionOfSap}");
+                                        }
+
                                         // --- REGISTRAR EL ERROR ---
                                         if (diferencias.Any())
                                         {
@@ -127,7 +136,7 @@ namespace Sistema_Produccion_3_Backend.Services.Automatizacion
                                                 oF = local.oF,
                                                 fechaDeteccion = DateTime.Now,
                                                 fechaUltimaRevision = DateTime.Now,
-                                                detalleDiferencia = string.Join(" | ", diferencias),
+                                                detalleDiferencia = string.Join("\n", diferencias),
                                                 estado = "Descuadrado"
                                             });
                                         }
@@ -162,7 +171,7 @@ namespace Sistema_Produccion_3_Backend.Services.Automatizacion
                                             disc.fechaUltimaRevision = DateTime.Now;
                                             context.logSincronizacionOf.Add(disc);
 
-                                            string urlWebhook = "https://chat.googleapis.com/v1/spaces/AAQAWq4gutM/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=iaQ_VBb50vRosAvy00hxgSIOR0tSnFsBaVvRCiSaw3k";
+                                            string urlWebhook = "";
                                             await EnviarAlertaDiscrepancia(disc, urlWebhook);
                                         }
                                     }
@@ -220,9 +229,34 @@ namespace Sistema_Produccion_3_Backend.Services.Automatizacion
 
         private async Task EnviarAlertaDiscrepancia(logSincronizacionOf disc, string webhookUrl)
         {
+            if (string.IsNullOrWhiteSpace(webhookUrl)) return;
+
             try
             {
                 var client = _httpClientFactory.CreateClient();
+
+                // Parsear las diferencias para construir los widgets dinámicamente
+                var widgetsDiferencias = new List<object>();
+                var lineas = disc.detalleDiferencia.Split('\n', StringSplitOptions.RemoveEmptyEntries);
+
+                foreach (var linea in lineas)
+                {
+                    var partes = linea.Split('|');
+                    if (partes.Length == 3)
+                    {
+                        widgetsDiferencias.Add(new
+                        {
+                            columns = new
+                            {
+                                columnItems = new object[]
+                                {
+                            new { horizontalSizeStyle = "FILL_AVAILABLE_SPACE", widgets = new object[] { new { decoratedText = new { topLabel = $"NEXO: {partes[0]}", text = partes[1], wrapText = true } } } },
+                            new { horizontalSizeStyle = "FILL_AVAILABLE_SPACE", widgets = new object[] { new { decoratedText = new { topLabel = $"SAP: {partes[0]}", text = $"<font color=\"#FF0000\">{partes[2]}</font>", wrapText = true } } } }
+                                }
+                            }
+                        });
+                    }
+                }
 
                 var payload = new
                 {
@@ -232,28 +266,14 @@ namespace Sistema_Produccion_3_Backend.Services.Automatizacion
                     cardId = $"alerta-reconciliacion-{disc.oF}",
                     card = new {
                         header = new {
-                            title = $"⚠️ Descuadre SAP vs NEXO",
+                            title = $"⚠️ Descuadre Detectado",
                             subtitle = $"Orden de Fabricación: {disc.oF}",
-                            imageUrl = "https://i.imgur.com/Sm19RjX.png" // Mismo ícono de alerta
+                            imageUrl = "https://i.imgur.com/Sm19RjX.png"
                         },
                         sections = new object[] {
                             new {
-                                widgets = new object[] {
-                                    new {
-                                        decoratedText = new {
-                                            topLabel = "ESTADO",
-                                            text = "<font color=\"#FF0000\"><b>Requiere revisión manual</b></font>",
-                                            wrapText = true
-                                        }
-                                    },
-                                    new {
-                                        decoratedText = new {
-                                            topLabel = "CAMPOS CON DIFERENCIAS",
-                                            text = disc.detalleDiferencia,
-                                            wrapText = true
-                                        }
-                                    }
-                                }
+                                header = "<b>DIFERENCIAS ENCONTRADAS</b>",
+                                widgets = widgetsDiferencias
                             }
                         }
                     }
@@ -266,8 +286,32 @@ namespace Sistema_Produccion_3_Backend.Services.Automatizacion
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"❌ Error al enviar webhook de discrepancia para la OF {disc.oF}");
+                _logger.LogError(ex, $"❌ Error al enviar webhook para la OF {disc.oF}");
             }
+        }
+
+        private double CalcularSimilitud(string source, string target)
+        {
+            if (string.IsNullOrEmpty(source) && string.IsNullOrEmpty(target)) return 100.0;
+            if (string.IsNullOrEmpty(source) || string.IsNullOrEmpty(target)) return 0.0;
+
+            int n = source.Length, m = target.Length;
+            int[,] d = new int[n + 1, m + 1];
+
+            for (int i = 0; i <= n; d[i, 0] = i++) { }
+            for (int j = 0; j <= m; d[0, j] = j++) { }
+
+            for (int i = 1; i <= n; i++)
+            {
+                for (int j = 1; j <= m; j++)
+                {
+                    int cost = (target[j - 1] == source[i - 1]) ? 0 : 1;
+                    d[i, j] = Math.Min(Math.Min(d[i - 1, j] + 1, d[i, j - 1] + 1), d[i - 1, j - 1] + cost);
+                }
+            }
+
+            int maxLen = Math.Max(n, m);
+            return (1.0 - ((double)d[n, m] / maxLen)) * 100.0;
         }
     }
 }

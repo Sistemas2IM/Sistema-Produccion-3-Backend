@@ -148,6 +148,7 @@ using Sistema_Produccion_3_Backend.DTO.TarjetasOF;
 using Sistema_Produccion_3_Backend.DTO.TarjetasOF.BusquedaTarjetas;
 using Sistema_Produccion_3_Backend.DTO.TarjetasOF.EstadoOf;
 using Sistema_Produccion_3_Backend.DTO.TarjetasOF.HistorialVencimientoOf;
+using Sistema_Produccion_3_Backend.DTO.TarjetasOF.HistorialVencimientoOf.MotivoCambioFechaOf;
 using Sistema_Produccion_3_Backend.DTO.TarjetasOF.logCambiosOf;
 using Sistema_Produccion_3_Backend.DTO.TarjetasOF.NotasOf;
 using Sistema_Produccion_3_Backend.DTO.TarjetasOF.Reportes;
@@ -176,6 +177,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForMember(dest => dest.finReal, opt => opt.MapFrom(src => src.ffeTiemposOfGlobal.Fin_Real))
                 .ForMember(dest => dest.secuenciador, opt => opt.MapFrom(src => src.secuenciadoPorNavigation.nombres + " " + src.secuenciadoPorNavigation.apellidos))
                 .ForMember(dest => dest.fechaVencimientoNueva, opt => opt.MapFrom(src => src.historialVencimientoOf.OrderByDescending(h => h.fechaVencimientoNueva).FirstOrDefault().fechaVencimientoNueva))
+                .ForMember(dest => dest.fechaVencimientoAnterior, opt => opt.MapFrom(src => src.historialVencimientoOf.OrderByDescending(h => h.fechaVencimientoAnterior).FirstOrDefault().fechaVencimientoAnterior))
                 .ReverseMap();
             //.ForPath(src => src.idEstadoOfNavigation, opt => opt.Ignore());
             CreateMap<tarjetaOf, TarjetaBusquedaDto>().ReverseMap();
@@ -245,6 +247,8 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForMember(dest => dest.serie, opt => opt.MapFrom(src => src.oFNavigation.seriesOf))
                 .ForMember(dest => dest.inicioEstimado, opt => opt.MapFrom(src => src.ffeTiemposProcesosGlobal.Inicio_Estimado))
                 .ForMember(dest => dest.finEstimado, opt => opt.MapFrom(src => src.ffeTiemposProcesosGlobal.Fin_Proyectado))
+                .ForMember(dest => dest.fechaVencimientoAnterior, opt => opt.MapFrom(src => src.oFNavigation.historialVencimientoOf.OrderByDescending(h => h.fechaVencimientoAnterior).FirstOrDefault().fechaVencimientoAnterior))
+                .ForMember(dest => dest.fechaVencimientoNueva, opt => opt.MapFrom(src => src.oFNavigation.historialVencimientoOf.OrderByDescending(h => h.fechaVencimientoNueva).FirstOrDefault().fechaVencimientoNueva))
                 .ForMember(dest => dest.fechaVencimiento, opt => opt.MapFrom(src =>
                         src.corridaCombinada == true
                             ? src.fechaVencimiento
@@ -279,6 +283,8 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForMember(dest => dest.inicioEstimado, opt => opt.MapFrom(src => src.ffeTiemposProcesosGlobal.Inicio_Estimado))
                 .ForMember(dest => dest.finEstimado, opt => opt.MapFrom(src => src.ffeTiemposProcesosGlobal.Fin_Proyectado))
                 .ForMember(dest => dest.componentes, opt => opt.MapFrom(src => src.componenteProduccion))
+                .ForMember(dest => dest.fechaVencimientoAnterior, opt => opt.MapFrom(src => src.oFNavigation.historialVencimientoOf.OrderByDescending(h => h.fechaVencimientoAnterior).FirstOrDefault().fechaVencimientoAnterior))
+                .ForMember(dest => dest.fechaVencimientoNueva, opt => opt.MapFrom(src => src.oFNavigation.historialVencimientoOf.OrderByDescending(h => h.fechaVencimientoNueva).FirstOrDefault().fechaVencimientoNueva))
                 .ForMember(dest => dest.fechaVencimiento, opt => opt.MapFrom(src =>
                         src.corridaCombinada == true
                             ? src.fechaVencimiento
@@ -309,6 +315,8 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                .ForMember(dest => dest.fsc, opt => opt.MapFrom(src => src.oFNavigation.fsc))
                .ForMember(dest => dest.asignacionDto, opt => opt.MapFrom(src => src.asignacion))
                .ForMember(dest => dest.serie, opt => opt.MapFrom(src => src.oFNavigation.seriesOf))
+               .ForMember(dest => dest.fechaVencimientoAnterior, opt => opt.MapFrom(src => src.oFNavigation.historialVencimientoOf.OrderByDescending(h => h.fechaVencimientoAnterior).FirstOrDefault().fechaVencimientoAnterior))
+               .ForMember(dest => dest.fechaVencimientoNueva, opt => opt.MapFrom(src => src.oFNavigation.historialVencimientoOf.OrderByDescending(h => h.fechaVencimientoNueva).FirstOrDefault().fechaVencimientoNueva))
                .ForMember(dest => dest.fechaVencimiento, opt => opt.MapFrom(src =>
                        src.corridaCombinada == true
                            ? src.fechaVencimiento
@@ -338,6 +346,8 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForMember(dest => dest.inicioEstimado, opt => opt.MapFrom(src => src.ffeTiemposProcesosGlobal.Inicio_Estimado))
                 .ForMember(dest => dest.finEstimado, opt => opt.MapFrom(src => src.ffeTiemposProcesosGlobal.Fin_Proyectado))
                 .ForMember(dest => dest.componentes, opt => opt.MapFrom(src => src.componenteProduccion))
+                .ForMember(dest => dest.fechaVencimientoAnterior, opt => opt.MapFrom(src => src.oFNavigation.historialVencimientoOf.OrderByDescending(h => h.fechaVencimientoAnterior).FirstOrDefault().fechaVencimientoAnterior))
+                .ForMember(dest => dest.fechaVencimientoNueva, opt => opt.MapFrom(src => src.oFNavigation.historialVencimientoOf.OrderByDescending(h => h.fechaVencimientoNueva).FirstOrDefault().fechaVencimientoNueva))
                 .ForMember(dest => dest.fechaVencimiento, opt => opt.MapFrom(src =>
                         src.corridaCombinada == true
                             ? src.fechaVencimiento
@@ -385,6 +395,8 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                     .ForMember(dest => dest.serie, opt => opt.MapFrom(src => src.oFNavigation.seriesOf))
                     .ForMember(dest => dest.inicioEstimado, opt => opt.MapFrom(src => src.ffeTiemposProcesosGlobal.Inicio_Estimado))
                     .ForMember(dest => dest.finEstimado, opt => opt.MapFrom(src => src.ffeTiemposProcesosGlobal.Fin_Proyectado))
+                    .ForMember(dest => dest.fechaVencimientoAnterior, opt => opt.MapFrom(src => src.oFNavigation.historialVencimientoOf.OrderByDescending(h => h.fechaVencimientoAnterior).FirstOrDefault().fechaVencimientoAnterior))
+                    .ForMember(dest => dest.fechaVencimientoNueva, opt => opt.MapFrom(src => src.oFNavigation.historialVencimientoOf.OrderByDescending(h => h.fechaVencimientoNueva).FirstOrDefault().fechaVencimientoNueva))
                     .ForMember(dest => dest.fechaVencimiento, opt => opt.MapFrom(src =>
                         src.corridaCombinada == true
                             ? src.fechaVencimiento
@@ -1569,6 +1581,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             // HistorialVencimientoOf ============================================================================================
             CreateMap<historialVencimientoOf, HistorialVencimientoOfDto>()
                 .ForMember(dest => dest.nombreRegistradoPor, opt => opt.MapFrom(src => src.registradoPorNavigation.nombres + " " + src.registradoPorNavigation.apellidos))
+                .ForMember(dest => dest.nombreMotivoCambio, opt => opt.MapFrom(src => src.motivoCambioNavigation != null ? src.motivoCambioNavigation.nombre : null))
                 .ReverseMap();
             CreateMap<historialVencimientoOf, AddHistorialVencimientoOfDto>().ReverseMap();
             CreateMap<UpdateHistorialVencimientoOfDto, historialVencimientoOf>()
@@ -1582,6 +1595,9 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
 
             // Causa Raiz Calidad
             CreateMap<causaRaizCalidad, CausaRaizCalidadDto>().ReverseMap();
+
+            // Motivo Cambio Fecha OF
+            CreateMap<motivoCambioFechaOf, MotivoCambioFechaOfDto>().ReverseMap();
         }
     }
 }

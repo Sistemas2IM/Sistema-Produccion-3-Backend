@@ -140,6 +140,10 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
 
         public DateTime? finEstimado { get; set; }
 
+        public DateTime? fechaVencimientoAnterior { get; set; }
+
+        public DateTime? fechaVencimientoNueva { get; set; }
+
         public bool tieneConfirmacionPreliminar { get; set; }
 
         public List<AsignacionDto>? asignacionDto { get; set; }

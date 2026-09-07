@@ -19,5 +19,9 @@
         public string? comentario { get; set; }
 
         public DateTime fechaRegistro { get; set; }
+
+        public int? motivoCambio { get; set; }
+
+        public string? nombreMotivoCambio { get; set; }
     }
 }

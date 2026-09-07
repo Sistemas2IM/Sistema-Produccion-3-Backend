@@ -27,6 +27,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf.HistorialVencimien
         {
             var historial = await _context.historialVencimientoOf
                 .Include(u => u.registradoPorNavigation)
+                .Include(u => u.motivoCambioNavigation)
                 .ToListAsync();
 
             var historialDto = _mapper.Map<List<HistorialVencimientoOfDto>>(historial);
@@ -40,6 +41,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf.HistorialVencimien
         {
             var historial = await _context.historialVencimientoOf
                 .Include(u => u.registradoPorNavigation)
+                .Include(u => u.motivoCambioNavigation)
                 .FirstOrDefaultAsync(h => h.idHistorial == id);
 
             var historialDto = _mapper.Map<HistorialVencimientoOfDto>(historial);
@@ -58,6 +60,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf.HistorialVencimien
         {
             var historial = await _context.historialVencimientoOf
                 .Include(u => u.registradoPorNavigation)
+                .Include(u => u.motivoCambioNavigation)
                 .Where(h => h.oF == oF)
                 .ToListAsync();
             var historialDto = _mapper.Map<List<HistorialVencimientoOfDto>>(historial);

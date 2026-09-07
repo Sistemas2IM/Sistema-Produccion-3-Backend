@@ -82,6 +82,10 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
 
         public decimal? tiempoRestante { get; set; }
 
+        public DateTime? fechaVencimientoAnterior { get; set; }
+
+        public DateTime? fechaVencimientoNueva { get; set; }
+
         public List<CorridaCombinadaDto>? subordinadas { get; set; }
 
         public string? correlativoCC { get; set; }

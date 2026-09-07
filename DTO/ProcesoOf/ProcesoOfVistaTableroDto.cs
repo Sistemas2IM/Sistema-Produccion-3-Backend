@@ -157,6 +157,10 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
 
         public DateTime? finEstimado { get; set; }
 
+        public DateTime? fechaVencimientoAnterior { get; set; }
+
+        public DateTime? fechaVencimientoNueva { get; set; }
+
         public List<DetalleReporteDto>? detalleProcesoOf { get; set; }
 
         public List<TarjetaEtiquetaDto>? tarjetaEtiquetaDto { get; set; }

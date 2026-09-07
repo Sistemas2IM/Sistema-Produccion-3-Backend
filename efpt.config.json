@@ -343,6 +343,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[motivoCambioFechaOf]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[motivoConciliacion]",
          "ObjectType": 0
       },
