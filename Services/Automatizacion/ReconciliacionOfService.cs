@@ -106,29 +106,31 @@ namespace Sistema_Produccion_3_Backend.Services.Automatizacion
 
                                         if (local.oV != ovSap) diferencias.Add($"OV|{local.oV}|{ovSap}");
                                         if ((local.nombreOf ?? "") != nombreOfSap) diferencias.Add($"Nombre|{local.nombreOf}|{nombreOfSap}");
-                                        if ((local.codArticulo ?? "") != codArtSap) diferencias.Add($"Cód. Artículo: NEXO({local.codArticulo}) vs SAP({codArtSap})");
-                                        if ((local.productoOf ?? "") != productoOfSap) diferencias.Add($"Producto: NEXO({local.productoOf}) vs SAP({productoOfSap})");
-                                        if ((local.lineaDeNegocio ?? "") != lNegocioSap) diferencias.Add($"Línea Negocio: NEXO({local.lineaDeNegocio}) vs SAP({lNegocioSap})");
-                                        if ((local.clienteOf ?? "") != clienteOfSap) diferencias.Add($"Cliente: NEXO({local.clienteOf}) vs SAP({clienteOfSap})");
-                                        if ((local.descipcionOf ?? "") != descripcionOfSap) diferencias.Add($"Descripción: NEXO({local.descipcionOf}) vs SAP({descripcionOfSap})");
-                                        if ((local.vendedorOf ?? "") != vendedorOfSap) diferencias.Add($"Vendedor: NEXO({local.vendedorOf}) vs SAP({vendedorOfSap})");
-                                        if (local.cantidadOf != cantidadSap) diferencias.Add($"Cantidad: NEXO({local.cantidadOf}) vs SAP({cantidadSap})");
-                                        if ((local.tipoDeOrden ?? "") != tipoOrdenSap) diferencias.Add($"Tipo Orden: NEXO({local.tipoDeOrden}) vs SAP({tipoOrdenSap})");
-                                        if ((local.unidadMedida ?? "") != unidadSap) diferencias.Add($"Unidad: NEXO({local.unidadMedida}) vs SAP({unidadSap})");
-                                        if ((local.seriesOf ?? "") != serieFixSap) diferencias.Add($"Serie: NEXO({local.seriesOf}) vs SAP({serieFixSap})");
-                                        if ((local.razonSocial ?? "") != razonSocialSap) diferencias.Add($"Razón Social: NEXO({local.razonSocial}) vs SAP({razonSocialSap})");
-                                        if (local.fechaVencimiento?.Date != fechaEntregaSap?.Date) diferencias.Add($"Fecha Entrega: NEXO({local.fechaVencimiento?.ToString("yyyy-MM-dd")}) vs SAP({fechaEntregaSap?.ToString("yyyy-MM-dd")})");
+                                        if ((local.codArticulo ?? "") != codArtSap) diferencias.Add($"Cód. Artículo|{local.codArticulo}|{codArtSap}");
+                                        if ((local.productoOf ?? "") != productoOfSap) diferencias.Add($"Producto|{local.productoOf}|{productoOfSap}");
+                                        if ((local.lineaDeNegocio ?? "") != lNegocioSap) diferencias.Add($"Línea Negocio|{local.lineaDeNegocio}|{lNegocioSap}");
+                                        if ((local.clienteOf ?? "") != clienteOfSap) diferencias.Add($"Cliente|{local.clienteOf}|{clienteOfSap}");
+                                        if ((local.vendedorOf ?? "") != vendedorOfSap) diferencias.Add($"Vendedor|{local.vendedorOf}|{vendedorOfSap}");
+                                        if (local.cantidadOf != cantidadSap) diferencias.Add($"Cantidad|{local.cantidadOf}|{cantidadSap}");
+                                        if ((local.tipoDeOrden ?? "") != tipoOrdenSap) diferencias.Add($"Tipo Orden|{local.tipoDeOrden}|{tipoOrdenSap}");
+                                        if ((local.unidadMedida ?? "") != unidadSap) diferencias.Add($"Unidad|{local.unidadMedida}|{unidadSap}");
+                                        if ((local.seriesOf ?? "") != serieFixSap) diferencias.Add($"Serie|{local.seriesOf}|{serieFixSap}");
+                                        if ((local.razonSocial ?? "") != razonSocialSap) diferencias.Add($"Razón Social|{local.razonSocial}|{razonSocialSap}");
+                                        if (local.fechaVencimiento?.Date != fechaEntregaSap?.Date) diferencias.Add($"Fecha Entrega|{local.fechaVencimiento?.ToString("yyyy-MM-dd")}|{fechaEntregaSap?.ToString("yyyy-MM-dd")}");
 
+                                        // 🚀 Lógica de similitud para Descripción con el formato correcto de barras
                                         string descNexo = local.descipcionOf ?? "";
                                         double similitudDesc = CalcularSimilitud(descNexo, descripcionOfSap);
 
-                                        // Tolerancia: Solo es diferencia si la similitud baja del 95%)
                                         if (similitudDesc < 95.0)
                                         {
-                                            diferencias.Add($"Descripción ({similitudDesc:F1}% similar)|{descNexo}|{descripcionOfSap}");
+                                            // Extraemos únicamente las líneas que sufrieron cambios
+                                            var (textoDiferenteNexo, textoDiferenteSap) = ExtraerLineasDiferentes(descNexo, descripcionOfSap);
+
+                                            diferencias.Add($"Descripción ({similitudDesc:F1}% similar)[SEP]{textoDiferenteNexo}[SEP]{textoDiferenteSap}");
                                         }
 
-                                        // --- REGISTRAR EL ERROR ---
+                                        // EN TU BACKGROUND SERVICE (Lógica de comparación)
                                         if (diferencias.Any())
                                         {
                                             discrepancias.Add(new logSincronizacionOf
@@ -136,7 +138,8 @@ namespace Sistema_Produccion_3_Backend.Services.Automatizacion
                                                 oF = local.oF,
                                                 fechaDeteccion = DateTime.Now,
                                                 fechaUltimaRevision = DateTime.Now,
-                                                detalleDiferencia = string.Join("\n", diferencias),
+                                                // 🚀 USA "[NEXT]" PARA QUE LOS SALTos DE LÍNEA DE LA DESCRIPCIÓN NO ROMPAN EL TEXTO
+                                                detalleDiferencia = string.Join("[NEXT]", diferencias),
                                                 estado = "Descuadrado"
                                             });
                                         }
@@ -171,7 +174,7 @@ namespace Sistema_Produccion_3_Backend.Services.Automatizacion
                                             disc.fechaUltimaRevision = DateTime.Now;
                                             context.logSincronizacionOf.Add(disc);
 
-                                            string urlWebhook = "";
+                                            string urlWebhook = "https://chat.googleapis.com/v1/spaces/AAQAWq4gutM/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=iaQ_VBb50vRosAvy00hxgSIOR0tSnFsBaVvRCiSaw3k";
                                             await EnviarAlertaDiscrepancia(disc, urlWebhook);
                                         }
                                     }
@@ -235,28 +238,45 @@ namespace Sistema_Produccion_3_Backend.Services.Automatizacion
             {
                 var client = _httpClientFactory.CreateClient();
 
-                // Parsear las diferencias para construir los widgets dinámicamente
-                var widgetsDiferencias = new List<object>();
-                var lineas = disc.detalleDiferencia.Split('\n', StringSplitOptions.RemoveEmptyEntries);
+                var widgetsResumen = new List<object>();
+                var widgetsNexo = new List<object>();
+                var widgetsSap = new List<object>();
+
+                // 1. Separamos líneas soportando el nuevo formato y el viejo
+                var lineas = disc.detalleDiferencia.Split(new[] { "[NEXT]", "||" }, StringSplitOptions.RemoveEmptyEntries);
 
                 foreach (var linea in lineas)
                 {
-                    var partes = linea.Split('|');
-                    if (partes.Length == 3)
+                    // 2. Detectamos si usa el delimitador nuevo o el viejo
+                    string[] separador = linea.Contains("[SEP]") ? new[] { "[SEP]" } : new[] { "|" };
+
+                    // IMPORTANTE: 'None' evita que las columnas vacías desaparezcan
+                    var partes = linea.Split(separador, StringSplitOptions.None);
+
+                    if (partes.Length >= 3)
                     {
-                        widgetsDiferencias.Add(new
-                        {
-                            columns = new
-                            {
-                                columnItems = new object[]
-                                {
-                            new { horizontalSizeStyle = "FILL_AVAILABLE_SPACE", widgets = new object[] { new { decoratedText = new { topLabel = $"NEXO: {partes[0]}", text = partes[1], wrapText = true } } } },
-                            new { horizontalSizeStyle = "FILL_AVAILABLE_SPACE", widgets = new object[] { new { decoratedText = new { topLabel = $"SAP: {partes[0]}", text = $"<font color=\"#FF0000\">{partes[2]}</font>", wrapText = true } } } }
-                                }
-                            }
-                        });
+                        string campo = partes[0].Trim();
+                        string valNexo = string.IsNullOrWhiteSpace(partes[1]) ? "<i>(Vacío)</i>" : partes[1].Trim().Replace("\n", "<br>");
+
+                        // Si la descripción tiene caracteres raros, los unimos de nuevo para no perder texto
+                        string valSapRaw = string.Join(" ", partes.Skip(2)).Trim();
+                        string valSap = string.IsNullOrWhiteSpace(valSapRaw) ? "<i>(Vacío)</i>" : valSapRaw.Replace("\n", "<br>");
+
+                        widgetsResumen.Add(new { decoratedText = new { text = $"• {campo}" } });
+                        widgetsNexo.Add(new { decoratedText = new { topLabel = campo, text = valNexo, wrapText = true } });
+                        widgetsSap.Add(new { decoratedText = new { topLabel = campo, text = $"<font color=\"#d32f2f\">{valSap}</font>", wrapText = true } });
+                    }
+                    else
+                    {
+                        widgetsResumen.Add(new { decoratedText = new { text = linea.Trim(), wrapText = true } });
                     }
                 }
+
+                var sectionsList = new List<object>();
+                sectionsList.Add(new { header = "<b>📋 CAMPOS CON DIFERENCIAS</b>", widgets = widgetsResumen });
+
+                if (widgetsNexo.Any()) sectionsList.Add(new { header = "<font color=\"#1976d2\"><b>🔵 REGISTRADO EN NEXO</b></font>", widgets = widgetsNexo });
+                if (widgetsSap.Any()) sectionsList.Add(new { header = "<font color=\"#f57c00\"><b>🟠 REGISTRADO EN SAP</b></font>", widgets = widgetsSap });
 
                 var payload = new
                 {
@@ -265,17 +285,8 @@ namespace Sistema_Produccion_3_Backend.Services.Automatizacion
                 new {
                     cardId = $"alerta-reconciliacion-{disc.oF}",
                     card = new {
-                        header = new {
-                            title = $"⚠️ Descuadre Detectado",
-                            subtitle = $"Orden de Fabricación: {disc.oF}",
-                            imageUrl = "https://i.imgur.com/Sm19RjX.png"
-                        },
-                        sections = new object[] {
-                            new {
-                                header = "<b>DIFERENCIAS ENCONTRADAS</b>",
-                                widgets = widgetsDiferencias
-                            }
-                        }
+                        header = new { title = $"⚠️ Descuadre Detectado", subtitle = $"Orden de Fabricación: {disc.oF}" },
+                        sections = sectionsList.ToArray()
                     }
                 }
             }
@@ -312,6 +323,30 @@ namespace Sistema_Produccion_3_Backend.Services.Automatizacion
 
             int maxLen = Math.Max(n, m);
             return (1.0 - ((double)d[n, m] / maxLen)) * 100.0;
+        }
+
+        private (string, string) ExtraerLineasDiferentes(string textoNexo, string textoSap)
+        {
+            if (string.IsNullOrWhiteSpace(textoNexo)) return ("", textoSap);
+            if (string.IsNullOrWhiteSpace(textoSap)) return (textoNexo, "");
+
+            var separadores = new[] { '\r', '\n' };
+
+            // Separamos y limpiamos las líneas de ambos textos
+            var lineasNexo = textoNexo.Split(separadores, StringSplitOptions.RemoveEmptyEntries).Select(l => l.Trim()).ToList();
+            var lineasSap = textoSap.Split(separadores, StringSplitOptions.RemoveEmptyEntries).Select(l => l.Trim()).ToList();
+
+            // Filtramos cruzado: sacamos solo lo que NO existe en el otro sistema
+            var soloNexo = lineasNexo.Except(lineasSap).ToList();
+            var soloSap = lineasSap.Except(lineasNexo).ToList();
+
+            // Fallback: Si el texto era de una sola línea o la diferencia es un solo carácter invisible, mandamos el texto completo
+            if (!soloNexo.Any() && !soloSap.Any())
+            {
+                return (textoNexo, textoSap);
+            }
+
+            return (string.Join("\n", soloNexo), string.Join("\n", soloSap));
         }
     }
 }

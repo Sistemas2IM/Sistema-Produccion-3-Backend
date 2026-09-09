@@ -480,30 +480,10 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
 
             // 2. Capturamos el estado ANTES
             int idEstadoAnterior = (int)tarjetaOf.idEstadoOf;
-            DateTime? fechaAnterior = tarjetaOf.fechaVencimiento;
 
             // 3. Verificamos si el DTO trae un nuevo estado
             bool idEstadoVinoEnDto = updateTarjetaOf.idEstadoOf.HasValue;
-
-            // 🚀 LÓGICA DE HISTORIAL DE FECHAS (Origen NEXO)
-            if (updateTarjetaOf.fechaVencimiento.HasValue && fechaAnterior?.Date != updateTarjetaOf.fechaVencimiento.Value.Date)
-            {
-                var nuevoHistorial = new historialVencimientoOf
-                {
-                    oF = tarjetaOf.oF,
-                    // GetValueOrDefault() extrae la fecha o pone una por defecto si era null
-                    fechaVencimientoAnterior = fechaAnterior.GetValueOrDefault(),
-                    // .Value extrae la fecha exacta de forma segura (porque ya validamos el .HasValue en el if)
-                    fechaVencimientoNueva = updateTarjetaOf.fechaVencimiento.Value,
-                    origen = "NEXO",
-                    //registradoPor = "",
-                    comentario = "Fecha actualizada desde la plataforma NEXO",
-                    fechaRegistro = DateTime.Now
-                };
-
-                _context.historialVencimientoOf.Add(nuevoHistorial);
-            }
-
+            
             // 4. Mapeamos
             _mapper.Map(updateTarjetaOf, tarjetaOf);
 

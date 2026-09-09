@@ -483,6 +483,8 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.tipoReporteNavigation).WithMany(p => p.casoCalidad)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_CASO_TIPO_REPORTE");
+
+            entity.HasOne(d => d.unidadMedidaNavigation).WithMany(p => p.casoCalidad).HasConstraintName("FK_CASO_UNIDA_MEDIDA");
         });
 
         modelBuilder.Entity<catalogoTipoAcabado>(entity =>
