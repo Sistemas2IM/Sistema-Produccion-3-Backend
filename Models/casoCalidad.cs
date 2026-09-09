@@ -82,6 +82,12 @@ public partial class casoCalidad
 
     public int? areaResponsable { get; set; }
 
+    public int? cantidadDespachada { get; set; }
+
+    public int? cantidadProduccion { get; set; }
+
+    public int? unidadMedida { get; set; }
+
     [ForeignKey("actualizadoPor")]
     [InverseProperty("casoCalidadactualizadoPorNavigation")]
     public virtual usuario actualizadoPorNavigation { get; set; }
@@ -143,4 +149,8 @@ public partial class casoCalidad
     [ForeignKey("tipoReporte")]
     [InverseProperty("casoCalidad")]
     public virtual tipoReporte tipoReporteNavigation { get; set; }
+
+    [ForeignKey("unidadMedida")]
+    [InverseProperty("casoCalidad")]
+    public virtual unidadesMedida unidadMedidaNavigation { get; set; }
 }

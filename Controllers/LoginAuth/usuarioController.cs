@@ -136,6 +136,28 @@ namespace Sistema_Produccion_3_Backend.Controllers.LoginAuth
             return Ok(usuarioDto);
         }
 
+        [HttpPut("put/{user}")]
+        public async Task<IActionResult> UpdateUsuario(string user, UpdateUsuarioDto updateUsuarioDto)
+        {
+            var usuario = await _context.usuario.FirstOrDefaultAsync(u => u.user == user);
+            if (usuario == null)
+            {
+                return NotFound();
+            }
+
+            _mapper.Map(updateUsuarioDto, usuario);
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException) when (!usuarioExists(user))
+            {
+                return NotFound();
+            }
+
+            return NoContent();
+        }
 
         private bool usuarioExists(string id)
         {

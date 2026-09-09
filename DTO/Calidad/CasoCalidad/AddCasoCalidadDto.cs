@@ -53,5 +53,11 @@
         public int? idResolucion { get; set; }
 
         public int? areaResponsable { get; set; }
+
+        public int? cantidadDespachada { get; set; }
+
+        public int? cantidadProduccion { get; set; }
+
+        public int? unidadMedida { get; set; }
     }
 }

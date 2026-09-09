@@ -169,6 +169,8 @@ public partial class base_nuevaContext : DbContext
 
     public virtual DbSet<modulo> modulo { get; set; }
 
+    public virtual DbSet<motivoCambioFechaOf> motivoCambioFechaOf { get; set; }
+
     public virtual DbSet<motivoConciliacion> motivoConciliacion { get; set; }
 
     public virtual DbSet<notasOf> notasOf { get; set; }
@@ -481,6 +483,8 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.tipoReporteNavigation).WithMany(p => p.casoCalidad)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_CASO_TIPO_REPORTE");
+
+            entity.HasOne(d => d.unidadMedidaNavigation).WithMany(p => p.casoCalidad).HasConstraintName("FK_CASO_UNIDA_MEDIDA");
         });
 
         modelBuilder.Entity<catalogoTipoAcabado>(entity =>
@@ -996,6 +1000,8 @@ public partial class base_nuevaContext : DbContext
             entity.Property(e => e.fechaRegistro).HasDefaultValueSql("(getdate())");
             entity.Property(e => e.registradoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
 
+            entity.HasOne(d => d.motivoCambioNavigation).WithMany(p => p.historialVencimientoOf).HasConstraintName("FK_HISTVENC_MOTIVO_CAMBIO");
+
             entity.HasOne(d => d.oFNavigation).WithMany(p => p.historialVencimientoOf)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_HISTVENC_OF");
@@ -1341,6 +1347,13 @@ public partial class base_nuevaContext : DbContext
             entity.Property(e => e.nombreModulo).UseCollation("SQL_Latin1_General_CP1_CI_AS");
 
             entity.HasOne(d => d.idMenuNavigation).WithMany(p => p.modulo).HasConstraintName("FK_MODULO_MENU");
+        });
+
+        modelBuilder.Entity<motivoCambioFechaOf>(entity =>
+        {
+            entity.HasKey(e => e.idMotivo).HasName("PK__motivoCa__93FD404870EA92B0");
+
+            entity.Property(e => e.activo).HasDefaultValue(true);
         });
 
         modelBuilder.Entity<motivoConciliacion>(entity =>

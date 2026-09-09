@@ -47,10 +47,14 @@ namespace Sistema_Produccion_3_Backend.DTO.Calidad.CasoCalidad
         // relaciones Of
         public string? clienteOf { get; set; }
         public string? productoOf { get; set; }
-
-        public int? idProceso { get; set; }
+        public string? descripcionOf { get; set; }
 
         // relaciones ProcesoOf
+        public int? idProceso { get; set; }
+        public string? tipoMaquinaSAP { get; set; }
+        public string? idMaterial { get; set; }
+        public string? nombreMaterial { get; set; }
+        public object? detalleProceso { get; set; }
         public string? nombreMaquina { get; set; }
         //public string? proceso { get; set; }
 
@@ -100,6 +104,17 @@ namespace Sistema_Produccion_3_Backend.DTO.Calidad.CasoCalidad
 
         public int? areaResponsable { get; set; }
         public string? nombreAreaResponsable { get; set; }
+
+        public int? cantidadDespachada { get; set; }
+
+        public int? cantidadProduccion { get; set; }
+
+        public int? unidadMedida { get; set; }
+
+        public string? nombreUnidad { get; set; }
+
+        public string? simboloUnidad { get; set; }
+
 
         public List<BitacoraCasoDto>? bitacoraCaso { get; set; }
 

@@ -32,6 +32,12 @@ namespace Sistema_Produccion_3_Backend.Services
             {
                 return new AuthResponse { result = false, message = "Contraseña incorrecta" };
             }
+            // Usuario inactivo: credenciales válidas, pero sin acceso
+            if (userFound.status != true)
+            {
+                return new AuthResponse { result = false, message = "El usuario se encuentra inactivo. Contacte al administrador." };
+            }
+
 
             string token = GenerateToken(userFound.user);
             string refreshToken = GenerateRefreshToken();

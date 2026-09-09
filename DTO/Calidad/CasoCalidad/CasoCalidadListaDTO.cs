@@ -61,6 +61,16 @@ namespace Sistema_Produccion_3_Backend.DTO.Calidad.CasoCalidad
 
         public int? areaResponsable { get; set; }
 
+        public int? cantidadDespachada { get; set; }
+
+        public int? cantidadProduccion { get; set; }
+
+        public int? unidadMedida { get; set; }
+
+        public string? nombreUnidad { get; set; }
+
+        public string? simboloUnidad { get; set; }
+
         // Contadores en lugar de las colecciones
         public int totalEventos { get; set; }
         public int totalAcciones { get; set; }

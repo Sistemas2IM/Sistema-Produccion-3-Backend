@@ -29,6 +29,9 @@ public partial class unidadesMedida
     [Column(TypeName = "decimal(18, 6)")]
     public decimal? factorConversion { get; set; }
 
+    [InverseProperty("unidadMedidaNavigation")]
+    public virtual ICollection<casoCalidad> casoCalidad { get; set; } = new List<casoCalidad>();
+
     [InverseProperty("idUnidadNavigation")]
     public virtual ICollection<confirmacionPreliminar> confirmacionPreliminar { get; set; } = new List<confirmacionPreliminar>();
 

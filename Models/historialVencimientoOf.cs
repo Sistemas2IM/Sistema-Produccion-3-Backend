@@ -35,6 +35,12 @@ public partial class historialVencimientoOf
     [Column(TypeName = "datetime")]
     public DateTime fechaRegistro { get; set; }
 
+    public int? motivoCambio { get; set; }
+
+    [ForeignKey("motivoCambio")]
+    [InverseProperty("historialVencimientoOf")]
+    public virtual motivoCambioFechaOf motivoCambioNavigation { get; set; }
+
     [ForeignKey("oF")]
     [InverseProperty("historialVencimientoOf")]
     public virtual tarjetaOf oFNavigation { get; set; }

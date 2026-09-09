@@ -134,6 +134,10 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas
 
         public DateTime? finEstimado { get; set; }
 
+        public DateTime? fechaVencimientoAnterior { get; set; }
+
+        public DateTime? fechaVencimientoNueva { get; set; }
+
         public PosturasOfDto? posturasOfDto { get; set; }
 
         public MaterialDto? materialDto { get; set; }
