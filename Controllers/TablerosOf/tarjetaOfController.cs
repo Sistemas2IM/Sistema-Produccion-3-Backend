@@ -69,6 +69,26 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
 
             var tarjetaOfDto = _mapper.Map<List<TarjetaOfDto>>(tarjetasOrdenadas);
 
+            var idsOf = tarjetaOfDto.Select(t => t.oF).ToList();
+
+            if (idsOf.Any())
+            {
+                var conteoDiferencias = await _context.logSincronizacionOf
+                    .AsNoTracking()
+                    .Where(l => idsOf.Contains(l.oF)) // Agrega && l.estado == "Descuadrado" si solo quieres contar activos
+                    .GroupBy(l => l.oF)
+                    .Select(g => new {
+                        oF = g.Key,
+                        cantidad = g.Count()
+                    })
+                    .ToDictionaryAsync(x => x.oF, x => x.cantidad);
+
+                foreach (var dto in tarjetaOfDto)
+                {
+                    dto.cantidadDiferenciasSap = conteoDiferencias.GetValueOrDefault(dto.oF, 0);
+                }
+            }
+
             return Ok(tarjetaOfDto);
         }
 

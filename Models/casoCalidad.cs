@@ -47,7 +47,7 @@ public partial class casoCalidad
 
     public int? idProceso { get; set; }
 
-    [StringLength(100)]
+    [StringLength(50)]
     public string operador { get; set; }
 
     [StringLength(50)]
@@ -137,6 +137,10 @@ public partial class casoCalidad
     [ForeignKey("oF")]
     [InverseProperty("casoCalidad")]
     public virtual tarjetaOf oFNavigation { get; set; }
+
+    [ForeignKey("operador")]
+    [InverseProperty("casoCalidadoperadorNavigation")]
+    public virtual usuario operadorNavigation { get; set; }
 
     [ForeignKey("registradoPor")]
     [InverseProperty("casoCalidadregistradoPorNavigation")]

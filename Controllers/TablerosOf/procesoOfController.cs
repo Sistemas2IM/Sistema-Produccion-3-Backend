@@ -1249,6 +1249,22 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 }
             }
 
+            // 🚀 CONSULTAR TRANSFERENCIAS PENDIENTES EN BLOQUE
+            var idsProcesos = procesos.Select(p => p.Proceso.idProceso).Distinct().ToList();
+            var procesosConTransferencias = new HashSet<int>();
+
+            if (idsProcesos.Any())
+            {
+                var destinosPendientes = await _context.transferenciaProceso
+                    .AsNoTracking()
+                    .Where(t => t.estado == "Pendiente" && t.idDestino.HasValue && idsProcesos.Contains(t.idDestino.Value))
+                    .Select(t => t.idDestino.Value)
+                    .Distinct()
+                    .ToListAsync();
+
+                procesosConTransferencias = new HashSet<int>(destinosPendientes);
+            }
+
             // 3. MAPEO A DTOs
             var dtos = new List<ProcesoOfTableroListaDto>();
             foreach (var procesoWrapper in procesos)
@@ -1272,6 +1288,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                     d.idOperacionNavigation != null &&
                     d.idOperacionNavigation.tipoOperacion == "Producción" // Ajusta según tu DB
                 );
+
+                dto.tieneTransferenciaPendiente = procesosConTransferencias.Contains(proceso.idProceso);
 
                 dtos.Add(dto);
             }

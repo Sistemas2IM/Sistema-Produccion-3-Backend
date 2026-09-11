@@ -75,6 +75,9 @@ public partial class usuario
     [InverseProperty("actualizadoPorNavigation")]
     public virtual ICollection<casoCalidad> casoCalidadactualizadoPorNavigation { get; set; } = new List<casoCalidad>();
 
+    [InverseProperty("operadorNavigation")]
+    public virtual ICollection<casoCalidad> casoCalidadoperadorNavigation { get; set; } = new List<casoCalidad>();
+
     [InverseProperty("registradoPorNavigation")]
     public virtual ICollection<casoCalidad> casoCalidadregistradoPorNavigation { get; set; } = new List<casoCalidad>();
 

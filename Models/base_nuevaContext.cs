@@ -445,6 +445,7 @@ public partial class base_nuevaContext : DbContext
 
             entity.Property(e => e.actualizadoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.fechaRegistro).HasDefaultValueSql("(getdate())");
+            entity.Property(e => e.operador).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.registradoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.responsable).UseCollation("SQL_Latin1_General_CP1_CI_AS");
 
@@ -475,6 +476,8 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.oFNavigation).WithMany(p => p.casoCalidad)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_CASO_OF");
+
+            entity.HasOne(d => d.operadorNavigation).WithMany(p => p.casoCalidadoperadorNavigation).HasConstraintName("FK_CASO_OPERADOR");
 
             entity.HasOne(d => d.registradoPorNavigation).WithMany(p => p.casoCalidadregistradoPorNavigation).HasConstraintName("FK_CASO_REGISTRADO_POR");
 

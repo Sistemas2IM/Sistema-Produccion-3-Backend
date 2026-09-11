@@ -62,7 +62,7 @@ namespace Sistema_Produccion_3_Backend.DTO.Calidad.CasoCalidad
 
         // relacion
 
-        //public string? nombreOperador { get; set; }
+        public string? nombreOperador { get; set; }
 
         public string? registradoPor { get; set; }
 

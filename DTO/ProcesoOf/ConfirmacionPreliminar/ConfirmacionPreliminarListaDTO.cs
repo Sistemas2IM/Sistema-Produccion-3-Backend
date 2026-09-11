@@ -54,5 +54,8 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf.ConfirmacionPreliminar
         // Campos de la transferencia, tienen que ser sumados
         public decimal? cantidadEnviada { get; set; }
         public decimal? cantidadConfirmada { get; set; }
+
+        public bool transferenciaDisponible { get; set; }
+        public int cantidadTransferenciasPendientes { get; set; }
     }
 }

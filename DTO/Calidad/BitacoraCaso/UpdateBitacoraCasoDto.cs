@@ -19,5 +19,7 @@
         public int? idAnexo { get; set; }
 
         public int? idDictamen { get; set; }
+
+        public string? acciones { get; set; }
     }
 }
