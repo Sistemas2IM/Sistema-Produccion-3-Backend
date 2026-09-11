@@ -9,5 +9,7 @@
         public string? email { get; set; }
 
         public int? codEmpleado { get; set; }
+
+        public bool? status { get; set; }
     }
 }

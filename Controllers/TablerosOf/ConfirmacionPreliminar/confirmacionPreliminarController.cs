@@ -98,14 +98,40 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf.ConfirmacionPrelim
                 }
             }
 
+            // 🚀 5. CONSULTAR TRANSFERENCIAS PENDIENTES EN BLOQUE
+            // Como idProceso no es nulo, lo seleccionamos directamente
+            var idsProcesos = procesos.Select(p => p.idProceso).Distinct().ToList();
+            var conteoTransferenciasPendientes = new Dictionary<int, int>();
+
+            if (idsProcesos.Any())
+            {
+                conteoTransferenciasPendientes = await _context.transferenciaProceso
+                    .AsNoTracking()
+                    .Where(t => t.estado == "Pendiente" && t.idDestino.HasValue && idsProcesos.Contains(t.idDestino.Value))
+                    .GroupBy(t => t.idDestino.Value)
+                    .Select(g => new {
+                        idDestino = g.Key,
+                        cantidad = g.Count()
+                    })
+                    .ToDictionaryAsync(x => x.idDestino, x => x.cantidad);
+            }
+
+            // 6. Mapeo al DTO final
             var confirmacionPreliminarDto = confirmacionPreliminar.Select(c =>
             {
                 var dto = _mapper.Map<ConfirmacionPreliminarListaDTO>(c);
                 dto.totalTransferencias = c.transferenciaProceso?.Count ?? 0;
                 dto.cantidadEnviada = c.transferenciaProceso?.Sum(t => (decimal?)t.cantidadEnviada) ?? 0;
                 dto.cantidadConfirmada = c.transferenciaProceso?.Sum(t => (decimal?)t.cantidadConfirmada) ?? 0;
-                dto.saldo = (dto.cantidadRecibida ?? 0)
-                          - (c.transferenciaProceso?.Sum(t => (decimal?)t.cantidadEnviada ?? 0) ?? 0);
+                dto.saldo = (dto.cantidadRecibida ?? 0) - (c.transferenciaProceso?.Sum(t => (decimal?)t.cantidadEnviada ?? 0) ?? 0);
+
+                // 🚀 1. Buscamos el ID en el diccionario (si no existe, devuelve 0 por defecto)
+                int pendientes = conteoTransferenciasPendientes.GetValueOrDefault(c.idProceso, 0);
+
+                // 🚀 2. Asignamos los dos campos nuevos simultáneamente
+                dto.cantidadTransferenciasPendientes = pendientes;
+                dto.transferenciaDisponible = pendientes > 0;
+
                 return dto;
             }).ToList();
 

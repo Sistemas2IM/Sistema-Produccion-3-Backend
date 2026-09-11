@@ -2,6 +2,7 @@
 using Sistema_Produccion_3_Backend.Services.SAP.HANA;
 using System.Runtime.InteropServices;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 
 namespace Sistema_Produccion_3_Backend.Services.Automatizacion
 {
@@ -102,6 +103,7 @@ namespace Sistema_Produccion_3_Backend.Services.Automatizacion
                                         decimal? cantidadSap = decimal.TryParse(cantidadOfSapStr, out decimal cantParsed) ? cantParsed : null;
 
                                         // --- LÓGICA DE COMPARACIÓN ---
+                                        // --- LÓGICA DE COMPARACIÓN ---
                                         List<string> diferencias = new List<string>();
 
                                         if (local.oV != ovSap) diferencias.Add($"OV|{local.oV}|{ovSap}");
@@ -112,7 +114,20 @@ namespace Sistema_Produccion_3_Backend.Services.Automatizacion
                                         if ((local.clienteOf ?? "") != clienteOfSap) diferencias.Add($"Cliente|{local.clienteOf}|{clienteOfSap}");
                                         if ((local.vendedorOf ?? "") != vendedorOfSap) diferencias.Add($"Vendedor|{local.vendedorOf}|{vendedorOfSap}");
                                         if (local.cantidadOf != cantidadSap) diferencias.Add($"Cantidad|{local.cantidadOf}|{cantidadSap}");
-                                        if ((local.tipoDeOrden ?? "") != tipoOrdenSap) diferencias.Add($"Tipo Orden|{local.tipoDeOrden}|{tipoOrdenSap}");
+
+                                        // 🚀 Comparación ignorando tildes y mayúsculas/minúsculas
+                                        bool tipoOrdenDiferente = string.Compare(
+                                            local.tipoDeOrden ?? "",
+                                            tipoOrdenSap ?? "",
+                                            CultureInfo.InvariantCulture,
+                                            CompareOptions.IgnoreNonSpace | CompareOptions.IgnoreCase
+                                        ) != 0;
+
+                                        if (tipoOrdenDiferente)
+                                        {
+                                            diferencias.Add($"Tipo Orden|{local.tipoDeOrden}|{tipoOrdenSap}");
+                                        }
+
                                         if ((local.unidadMedida ?? "") != unidadSap) diferencias.Add($"Unidad|{local.unidadMedida}|{unidadSap}");
                                         if ((local.seriesOf ?? "") != serieFixSap) diferencias.Add($"Serie|{local.seriesOf}|{serieFixSap}");
                                         if ((local.razonSocial ?? "") != razonSocialSap) diferencias.Add($"Razón Social|{local.razonSocial}|{razonSocialSap}");
@@ -174,7 +189,7 @@ namespace Sistema_Produccion_3_Backend.Services.Automatizacion
                                             disc.fechaUltimaRevision = DateTime.Now;
                                             context.logSincronizacionOf.Add(disc);
 
-                                            string urlWebhook = "https://chat.googleapis.com/v1/spaces/AAQAWq4gutM/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=iaQ_VBb50vRosAvy00hxgSIOR0tSnFsBaVvRCiSaw3k";
+                                            string urlWebhook = "";
                                             await EnviarAlertaDiscrepancia(disc, urlWebhook);
                                         }
                                     }

@@ -145,6 +145,8 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
 
         public bool? esEnsamblaje { get; set; }
 
+        public bool? tieneTransferencia { get; set; }
+
         public DateTime? inicioEstimado { get; set; }
 
         public DateTime? finEstimado { get; set; }

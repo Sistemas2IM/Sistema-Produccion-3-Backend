@@ -34,6 +34,8 @@ public partial class bitacoraCaso
 
     public int? idDictamen { get; set; }
 
+    public string acciones { get; set; }
+
     [ForeignKey("estadoAnterior")]
     [InverseProperty("bitacoraCasoestadoAnteriorNavigation")]
     public virtual estadosReporte estadoAnteriorNavigation { get; set; }

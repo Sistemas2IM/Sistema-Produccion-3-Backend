@@ -95,6 +95,9 @@ namespace Sistema_Produccion_3_Backend.DTO.TarjetasOF
 
         public bool? reproceso { get; set; }
 
+        // diferencias
+        public int cantidadDiferenciasSap { get; set; }
+
         // Tiempo estimado
         public DateTime? inicioEstimado { get; set; }
 

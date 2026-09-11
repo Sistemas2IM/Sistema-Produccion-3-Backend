@@ -96,6 +96,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.CasoCalidad
                     .Include(c => c.idResolucionNavigation)
                     .Include(c => c.areaResponsableNavigation)
                     .Include(c => c.unidadMedidaNavigation)
+                    .Include(c => c.operadorNavigation)
                     .AsSplitQuery()
                     .FirstOrDefaultAsync(u => u.idCasoCalidad == id);
 
@@ -234,6 +235,22 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.CasoCalidad
                 })
                 .ToList();
             return Ok(result);
+        }
+
+        // por liena de negocio segun la OF
+        [HttpGet("get/lineaNegocio/{linea}")]
+        public async Task<ActionResult<IEnumerable<CasoCalidadListaDTO>>> GetCasoCalidadLineaNegocio(string linea)
+        {
+            var casos = await CasosParaLista()
+                .Where(c => c.archivado == false
+                         && c.cancelado == false
+                         && c.oFNavigation != null
+                         && c.oFNavigation.lineaDeNegocio == linea)
+                .OrderByDescending(c => c.idCasoCalidad)
+                .Include(c => c.unidadMedidaNavigation)
+                .ToListAsync();
+
+            return Ok(MapearLista(casos));
         }
 
         // POST api/<casoCalidadController>
