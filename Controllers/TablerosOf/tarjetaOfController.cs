@@ -445,6 +445,76 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             return Ok(tarjetaOfDto);
         }
 
+        [HttpGet("get/diferenciasSap/of/{of}")]
+        public async Task<ActionResult> GetLogPorOf(int of)
+        {
+            var logs = await _context.logSincronizacionOf
+                .AsNoTracking()
+                .Where(l => l.oF == of)
+                .OrderByDescending(l => l.fechaDeteccion)
+                .ToListAsync();
+
+            // 2. Mapeamos "al vuelo" aplicando la misma lógica del Webhook
+            var logsEstructurados = logs.Select(l =>
+            {
+                var diferenciasEstructuradas = new List<object>();
+
+                if (!string.IsNullOrWhiteSpace(l.detalleDiferencia))
+                {
+                    // Si el texto ya usa [NEXT], usamos solo ese. Si no, usamos el viejo ||
+                    string[] separadorLineas = l.detalleDiferencia.Contains("[NEXT]")
+                        ? new[] { "[NEXT]" }
+                        : new[] { "||" };
+
+                    var lineas = l.detalleDiferencia.Split(separadorLineas, StringSplitOptions.RemoveEmptyEntries);
+
+                    foreach (var linea in lineas)
+                    {
+                        string[] separador = linea.Contains("[SEP]") ? new[] { "[SEP]" } : new[] { "|" };
+                        var partes = linea.Split(separador, StringSplitOptions.None);
+
+                        if (partes.Length >= 3)
+                        {
+                            string campo = partes[0].Trim();
+                            string valNexo = string.IsNullOrWhiteSpace(partes[1]) ? "(Vacío)" : partes[1].Trim();
+
+                            string valSapRaw = string.Join(" ", partes.Skip(2)).Trim();
+                            string valSap = string.IsNullOrWhiteSpace(valSapRaw) ? "(Vacío)" : valSapRaw;
+
+                            diferenciasEstructuradas.Add(new
+                            {
+                                tipo = "estructurado",
+                                campo = campo,
+                                nexo = valNexo,
+                                sap = valSap
+                            });
+                        }
+                        else
+                        {
+                            diferenciasEstructuradas.Add(new
+                            {
+                                tipo = "texto_plano",
+                                texto = linea.Trim()
+                            });
+                        }
+                    }
+                }
+
+                // Devolvemos la estructura de la tabla fusionada con nuestra nueva lista parseada
+                return new
+                {
+                    l.idLog,
+                    l.oF,
+                    l.fechaDeteccion,
+                    l.fechaUltimaRevision,
+                    l.estado,
+                    diferencias = diferenciasEstructuradas
+                };
+            });
+
+            return Ok(logsEstructurados);
+        }
+
         // PUT: api/tarjetaOf/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         //[HttpPut("put/{id}")]

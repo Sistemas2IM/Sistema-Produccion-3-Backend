@@ -7,6 +7,7 @@ using Sistema_Produccion_3_Backend.DTO.Calidad.AuditoriaProceso.Batch;
 using Sistema_Produccion_3_Backend.DTO.Calidad.AuditoriaProceso.DetalleAuditoriaProceso;
 using Sistema_Produccion_3_Backend.DTO.Calidad.AuditoriaProceso.DetalleAuditoriaProceso.Batch;
 using Sistema_Produccion_3_Backend.DTO.Calidad.BitacoraCaso;
+using Sistema_Produccion_3_Backend.DTO.Calidad.BitacoraCaso.BitacoraEvidencia;
 using Sistema_Produccion_3_Backend.DTO.Calidad.CasoAccionSolicitada;
 using Sistema_Produccion_3_Backend.DTO.Calidad.CasoCalidad;
 using Sistema_Produccion_3_Backend.DTO.Calidad.CategoriaDefecto;
@@ -1404,15 +1405,21 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForMember(dest => dest.nombreEstadoAnterior, opt => opt.MapFrom(src => src.estadoAnteriorNavigation != null ? src.estadoAnteriorNavigation.nombreEstado : null))
                 .ForMember(dest => dest.nombreEstadoNuevo, opt => opt.MapFrom(src => src.estadoNuevoNavigation != null ? src.estadoNuevoNavigation.nombreEstado : null))
                 .ForMember(dest => dest.nombreDictamen, opt => opt.MapFrom(src => src.idDictamenNavigation != null ? src.idDictamenNavigation.nombre : null))
-                .ForMember(dest => dest.nombreAnexo, opt => opt.MapFrom(src => src.idAnexoNavigation != null ? src.idAnexoNavigation.NombreArchivo : null))
-                .ForMember(dest => dest.rutaAnexo, opt => opt.MapFrom(src => src.idAnexoNavigation != null ? src.idAnexoNavigation.RutaArchivo : null))
-                .ForMember(dest => dest.tipoAnexo, opt => opt.MapFrom(src => src.idAnexoNavigation != null ? src.idAnexoNavigation.TipoEntidad : null))
+                .ForMember(dest => dest.evidencias, opt => opt.MapFrom(src => src.idAnexo))
                 //.ForMember(dest => dest.nombreUsuario, opt => opt.MapFrom(src => src.usuarioNavigation != null ? src.usuarioNavigation.nombres + " " + src.usuarioNavigation.apellidos : null))
                 .ReverseMap();
 
             CreateMap<bitacoraCaso, AddBitacoraCasoDto>().ReverseMap();
             CreateMap<UpdateBitacoraCasoDto, bitacoraCaso>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            // bitacoraEvidencia ========================================================================================
+            CreateMap<anexos_NEXO, BitacoraEvidenciaObjetoDto>()
+                    .ForMember(dest => dest.idAnexo, opt => opt.MapFrom(src => src.Id))
+                    .ForMember(dest => dest.nombreAnexo, opt => opt.MapFrom(src => src.NombreArchivo))
+                    .ForMember(dest => dest.rutaAnexo, opt => opt.MapFrom(src => src.RutaArchivo))
+                    .ForMember(dest => dest.tipoAnexo, opt => opt.MapFrom(src => src.TipoEntidad))
+                    .ReverseMap();
 
             // casoAccionSolicitada ========================================================================================
             CreateMap<casoAccionSolicitada, CasoAccionSolicitadaDto>()

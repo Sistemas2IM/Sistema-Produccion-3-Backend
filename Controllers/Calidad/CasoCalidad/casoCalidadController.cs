@@ -86,8 +86,6 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.CasoCalidad
                         .ThenInclude(b => b.estadoNuevoNavigation)
                     .Include(c => c.bitacoraCaso)
                         .ThenInclude(b => b.idDictamenNavigation)
-                    .Include(c => c.bitacoraCaso)
-                        .ThenInclude(b => b.idAnexoNavigation)
                     .Include(c => c.casoAccionSolicitada)
                         .ThenInclude(a => a.idAccionNavigation)
                     .Include(c => c.casoAccionSolicitada)
@@ -217,8 +215,6 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.CasoCalidad
                     .ThenInclude(b => b.idTipoEventoNavigation)
                 .Include(c => c.bitacoraCaso)
                     .ThenInclude(b => b.idDictamenNavigation)
-                .Include(c => c.bitacoraCaso)
-                    .ThenInclude(b => b.idAnexoNavigation)
                 .Include(c => c.casoAccionSolicitada)
                 .Include(c => c.unidadMedidaNavigation)
                 .Where(c => c.archivado == false && c.cancelado == false)
@@ -330,8 +326,6 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.CasoCalidad
                     .ThenInclude(b => b.idTipoEventoNavigation)
                 .Include(c => c.bitacoraCaso)
                     .ThenInclude(b => b.idDictamenNavigation)
-                .Include(c => c.bitacoraCaso)
-                    .ThenInclude(b => b.idAnexoNavigation)
                 .Include(c => c.casoAccionSolicitada)
                 .AsSplitQuery();
 

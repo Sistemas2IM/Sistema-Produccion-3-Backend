@@ -383,8 +383,6 @@ public partial class base_nuevaContext : DbContext
 
             entity.HasOne(d => d.estadoNuevoNavigation).WithMany(p => p.bitacoraCasoestadoNuevoNavigation).HasConstraintName("FK_BITACORA_ESTADO_NUEVO");
 
-            entity.HasOne(d => d.idAnexoNavigation).WithMany(p => p.bitacoraCaso).HasConstraintName("FK_BITACORA_EVIDENCIA");
-
             entity.HasOne(d => d.idCasoCalidadNavigation).WithMany(p => p.bitacoraCaso)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_BITACORA_CASO");
@@ -394,6 +392,22 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.idTipoEventoNavigation).WithMany(p => p.bitacoraCaso)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_BITACORA_TIPO_EVENTO");
+
+            entity.HasMany(d => d.idAnexo).WithMany(p => p.idBitacora)
+                .UsingEntity<Dictionary<string, object>>(
+                    "bitacoraEvidencia",
+                    r => r.HasOne<anexos_NEXO>().WithMany()
+                        .HasForeignKey("idAnexo")
+                        .OnDelete(DeleteBehavior.ClientSetNull)
+                        .HasConstraintName("FK_ANEXO_BITACORA"),
+                    l => l.HasOne<bitacoraCaso>().WithMany()
+                        .HasForeignKey("idBitacora")
+                        .OnDelete(DeleteBehavior.ClientSetNull)
+                        .HasConstraintName("FK_BITACORA_ANEXO"),
+                    j =>
+                    {
+                        j.HasKey("idBitacora", "idAnexo");
+                    });
         });
 
         modelBuilder.Entity<bobinasAsignadas>(entity =>

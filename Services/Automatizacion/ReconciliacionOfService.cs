@@ -241,7 +241,7 @@ namespace Sistema_Produccion_3_Backend.Services.Automatizacion
                 }
 
                 // Ejecutar cada 12 horas (Ajusta este tiempo a lo que tu operación necesite)
-                await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
+                await Task.Delay(TimeSpan.FromMinutes(30), stoppingToken);
             }
         }
 
