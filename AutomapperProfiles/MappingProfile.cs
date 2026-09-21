@@ -1449,6 +1449,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForMember(dest => dest.tipoMaquinaSAP, opt => opt.MapFrom(src => src.idProcesoNavigation.tipoMaquinaSAP))
                 .ForMember(dest => dest.idMaterial, opt => opt.MapFrom(src => src.idProcesoNavigation.idMaterial))
                 .ForMember(dest => dest.nombreMaterial, opt => opt.MapFrom(src => src.idProcesoNavigation.idMaterialNavigation.nombreMaterial))
+                .ForMember(dest => dest.lineaDeNegocio, opt => opt.MapFrom(src => src.oFNavigation.lineaDeNegocio))
                 .ForMember(dest => dest.detalleProceso, opt => opt.MapFrom(src =>
                     (object)src.idProcesoNavigation.procesoImpresora ??
                     (object)src.idProcesoNavigation.procesoAcabado ??
@@ -1488,12 +1489,13 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForMember(dest => dest.productoOf, opt => opt.MapFrom(src => src.oFNavigation.productoOf))
                 .ForMember(dest => dest.nombreMaquina, opt => opt.MapFrom(src => src.idProcesoNavigation.idTableroNavigation.idMaquinaNavigation.nombreMaquina))
                 .ForMember(dest => dest.nombreRegistradoPor, opt => opt.MapFrom(src => src.registradoPorNavigation.nombres + " " + src.registradoPorNavigation.apellidos))
-                .ForMember(dest => dest.nombreResponsable, opt => opt.MapFrom(src => src.responsableNavigation.nombres + " " + src.responsableNavigation.apellidos))
+                .ForMember(dest => dest.nombreResponsable, opt => opt.MapFrom(src => src.responsableNavigation.nombres + " " + src.responsableNavigation.apellidos)) 
                 .ForMember(dest => dest.nombreActualizadoPor, opt => opt.MapFrom(src => src.actualizadoPorNavigation.nombres + " " + src.actualizadoPorNavigation.apellidos))
                 .ForMember(dest => dest.totalEventos, opt => opt.Ignore())
                 .ForMember(dest => dest.totalAcciones, opt => opt.Ignore())
                 .ForMember(dest => dest.nombreUnidad, opt => opt.MapFrom(src => src.unidadMedidaNavigation.nombre))
-                .ForMember(dest => dest.simboloUnidad, opt => opt.MapFrom(src => src.unidadMedidaNavigation.simbolo));
+                .ForMember(dest => dest.simboloUnidad, opt => opt.MapFrom(src => src.unidadMedidaNavigation.simbolo))
+                .ForMember(dest => dest.lineaDeNegocio, opt => opt.MapFrom(src => src.oFNavigation.lineaDeNegocio));
 
             CreateMap<casoCalidad, AddCasoCalidadDto>().ReverseMap();
             CreateMap<UpdateCasoCalidadDto, casoCalidad>()

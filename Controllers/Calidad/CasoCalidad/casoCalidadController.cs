@@ -13,6 +13,9 @@ using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.Preprensa;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.Serigrafia;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesosMaquinas.Troquelado;
 using Sistema_Produccion_3_Backend.Models;
+using Sistema_Produccion_3_Backend.Controllers.GoogleChat;
+using System.Net.Http;
+using System.Text.Json;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -24,11 +27,15 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.CasoCalidad
     {
         private readonly base_nuevaContext _context;
         private readonly IMapper _mapper;
+        private readonly IHttpClientFactory _httpClientFactory;
+        private readonly rechazosReclamosWebhook _rechazos;
 
-        public casoCalidadController(base_nuevaContext context, IMapper mapper)
+        public casoCalidadController(base_nuevaContext context, IMapper mapper, IHttpClientFactory httpClientFactory, rechazosReclamosWebhook rechazos)
         {
             _context = context;
             _mapper = mapper;
+            _httpClientFactory = httpClientFactory;
+            _rechazos = rechazos;
         }
 
         // GET: api/<casoCalidadController>
@@ -86,6 +93,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.CasoCalidad
                         .ThenInclude(b => b.estadoNuevoNavigation)
                     .Include(c => c.bitacoraCaso)
                         .ThenInclude(b => b.idDictamenNavigation)
+                    .Include(c => c.bitacoraCaso)
+                        .ThenInclude(b => b.idAnexo)
                     .Include(c => c.casoAccionSolicitada)
                         .ThenInclude(a => a.idAccionNavigation)
                     .Include(c => c.casoAccionSolicitada)
@@ -255,8 +264,16 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.CasoCalidad
         {
             var entidad = _mapper.Map<casoCalidad>(casoCalidadDto);
 
+            // Aseguramos que tenga fecha de registro para la tarjeta
+            if (entidad.fechaRegistro == default) entidad.fechaRegistro = DateTime.Now;
+
             _context.casoCalidad.Add(entidad);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(); // Aquí se genera el idCasoCalidad
+
+            // 🚀 NOTIFICACIÓN DE APERTURA (CREA EL HILO)
+            // Cambia esta URL por la de tu espacio o sácala de tu appsettings
+            string webhookUrl = "https://chat.googleapis.com/v1/spaces/AAQAWq4gutM/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=dbANIoQRXrWv4t2fN_BuC3hvi_rHWUxtwuIch6m50PY";
+            await _rechazos.EnviarNotificacionCasoCalidad(entidad, "Apertura", webhookUrl);
 
             return CreatedAtAction(nameof(GetCasoCalidad),
                 new { id = entidad.idCasoCalidad },
@@ -279,11 +296,19 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.CasoCalidad
             }
 
             _mapper.Map(updateCasoCalidadDto, casoCalidad);
+
+            // Aseguramos actualizar la fecha para la tarjeta de seguimiento
+            casoCalidad.fechaActualizacion = DateTime.Now;
+
             _context.Entry(casoCalidad).State = EntityState.Modified;
 
             try
             {
                 await _context.SaveChangesAsync();
+
+                // 🚀 NOTIFICACIÓN DE SEGUIMIENTO (RESPONDE EN EL HILO)
+                string webhookUrl = "https://chat.googleapis.com/v1/spaces/AAQAWq4gutM/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=dbANIoQRXrWv4t2fN_BuC3hvi_rHWUxtwuIch6m50PY";
+                await _rechazos.EnviarNotificacionCasoCalidad(casoCalidad, "Seguimiento", webhookUrl);
             }
             catch (DbUpdateConcurrencyException)
             {
