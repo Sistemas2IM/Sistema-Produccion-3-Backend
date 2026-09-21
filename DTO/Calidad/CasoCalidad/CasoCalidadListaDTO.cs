@@ -71,6 +71,8 @@ namespace Sistema_Produccion_3_Backend.DTO.Calidad.CasoCalidad
 
         public string? simboloUnidad { get; set; }
 
+        public string? lineaDeNegocio { get; set; }
+
         // Contadores en lugar de las colecciones
         public int totalEventos { get; set; }
         public int totalAcciones { get; set; }

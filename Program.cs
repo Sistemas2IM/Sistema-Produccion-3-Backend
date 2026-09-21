@@ -14,6 +14,7 @@ using Sistema_Produccion_3_Backend.Services.Automatizacion;
 using Sistema_Produccion_3_Backend.Services.RequestLock;
 using Sistema_Produccion_3_Backend.Validators.Auth;
 using Sistema_Produccion_3_Backend.Validators.ProductoTerminado;
+using Sistema_Produccion_3_Backend.Controllers.GoogleChat;
 using System.Text;
 
 
@@ -41,6 +42,7 @@ builder.Services.AddHttpClient();
 builder.Services.AddHostedService<ReconciliacionOfService>();
 builder.Services.AddHostedService<TiemposEstimadosService>();
 builder.Services.AddHostedService<VigilanteVencimientosService>();
+builder.Services.AddScoped<rechazosReclamosWebhook>();
 // AUTOMAPPER
 builder.Services.AddAutoMapper(cfg => cfg.AddProfile<MappingProfile>());
 

@@ -51,6 +51,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[bitacoraEvidencia]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[bobinasAsignadas]",
          "ObjectType": 0
       },

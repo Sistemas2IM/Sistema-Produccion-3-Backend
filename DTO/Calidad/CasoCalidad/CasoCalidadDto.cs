@@ -115,6 +115,7 @@ namespace Sistema_Produccion_3_Backend.DTO.Calidad.CasoCalidad
 
         public string? simboloUnidad { get; set; }
 
+        public string? lineaDeNegocio { get; set; }
 
         public List<BitacoraCasoDto>? bitacoraCaso { get; set; }
 

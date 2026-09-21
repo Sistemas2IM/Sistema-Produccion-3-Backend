@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Sistema_Produccion_3_Backend.DTO.Calidad.BitacoraCaso.BitacoraEvidencia;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Sistema_Produccion_3_Backend.DTO.Calidad.BitacoraCaso
@@ -43,6 +44,6 @@ namespace Sistema_Produccion_3_Backend.DTO.Calidad.BitacoraCaso
         public string? nombreAnexo { get; set; }
         public string? rutaAnexo { get; set; }
 
-        public string? tipoAnexo { get; set; }
+        public List<BitacoraEvidenciaObjetoDto>? evidencias { get; set; }
     }
 }
