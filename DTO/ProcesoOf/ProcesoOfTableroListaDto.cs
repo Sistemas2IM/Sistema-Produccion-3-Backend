@@ -84,8 +84,6 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
 
         public bool? tieneTransferenciaPendiente { get; set; }
 
-        public bool? tieneTransferenciaExistente { get; set; }
-
         public DateTime? fechaVencimientoAnterior { get; set; }
 
         public DateTime? fechaVencimientoNueva { get; set; }

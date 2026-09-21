@@ -1258,6 +1258,12 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             if (idsProcesos.Any())
             {
                 // 1. Las pendientes (Destinos) que ya tenías
+            // 🚀 CONSULTAR TRANSFERENCIAS PENDIENTES EN BLOQUE
+            var idsProcesos = procesos.Select(p => p.Proceso.idProceso).Distinct().ToList();
+            var procesosConTransferencias = new HashSet<int>();
+
+            if (idsProcesos.Any())
+            {
                 var destinosPendientes = await _context.transferenciaProceso
                     .AsNoTracking()
                     .Where(t => t.estado == "Pendiente" && t.idDestino.HasValue && idsProcesos.Contains(t.idDestino.Value))
@@ -1278,6 +1284,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 procesosConTransferenciaExistente = new HashSet<int>(origenesExistentes);
             }
 
+
+            }
 
             // 3. MAPEO A DTOs
             var dtos = new List<ProcesoOfTableroListaDto>();

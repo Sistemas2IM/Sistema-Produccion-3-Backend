@@ -189,8 +189,32 @@ namespace Sistema_Produccion_3_Backend.Services.Automatizacion
                                             disc.fechaUltimaRevision = DateTime.Now;
                                             context.logSincronizacionOf.Add(disc);
 
-                                            string urlWebhook = "";
-                                            await EnviarAlertaDiscrepancia(disc, urlWebhook);
+                                            string urlWebhookOffset = "https://chat.googleapis.com/v1/spaces/AAQAcyo_Bds/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=VDp369j32Q8rsHYsIIqOadsUhqtV5cGfQqSQRhBy0Kw";
+                                            string urlWebhookFlexo = "https://chat.googleapis.com/v1/spaces/AAQAmuIgng8/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=jl3fY-gXIJyrcAuhVxW2xMHd8biS2EeljElNS39CV1Y";
+                                            string urlDestino = "";
+
+                                            string linea = "";
+                                            if (dictLocales.TryGetValue(disc.oF, out var localOf))
+                                            {
+                                                linea = localOf.lineaDeNegocio?.Trim().ToUpperInvariant() ?? "";
+                                            }
+
+                                            // 🚀 ENRUTAMIENTO
+                                            if (linea == "FLEXO")
+                                            {
+                                                urlDestino = urlWebhookFlexo;
+                                            }
+                                            else if (linea == "OFFSET")
+                                            {
+                                                urlDestino = urlWebhookOffset;
+                                            }
+                                            else
+                                            {
+                                                // Opcional: URL por defecto si viene DIGITAL, PROMO, o vacío
+                                                urlDestino = urlWebhookOffset;
+                                            }
+
+                                            await EnviarAlertaDiscrepancia(disc, urlDestino);
                                         }
                                     }
 
@@ -239,9 +263,8 @@ namespace Sistema_Produccion_3_Backend.Services.Automatizacion
                     GC.Collect();
                     GC.WaitForPendingFinalizers();
                 }
-
-                // Ejecutar cada 12 horas (Ajusta este tiempo a lo que tu operación necesite)
-                await Task.Delay(TimeSpan.FromMinutes(30), stoppingToken);
+          
+                await Task.Delay(TimeSpan.FromHours(1), stoppingToken);
             }
         }
 

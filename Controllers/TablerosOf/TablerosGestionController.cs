@@ -329,6 +329,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                         case "Hugo Campos":
                         case "Javier Toledo":
                         case "Xiomara Cruz":
+                        case "Norma Mejía":
                             query = query.Where(p => p.oFNavigation.vendedorOf == vendedor);
                             break;
 
@@ -446,6 +447,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                     case "Hugo Campos":
                     case "Javier Toledo":
                     case "Xiomara Cruz":
+                    case "Norma Mejía":
                         query = query.Where(t => t.vendedorOf == vendedor /*&&
                                                t.idEstadoOfNavigation.nombreEstado == "En proceso"*/)
                                    .OrderBy(p => p.posicion);
@@ -561,6 +563,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                     case "Hugo Campos":
                     case "Javier Toledo":
                     case "Xiomara Cruz":
+                    case "Norma Mejía":
                         query = query.Where(t => t.vendedorOf == vendedor);
                         break;
 
