@@ -1254,14 +1254,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
 
             var procesosConTransferencias = new HashSet<int>();
             var procesosConTransferenciaExistente = new HashSet<int>(); // 🚀 Nuevo conjunto
-
-            if (idsProcesos.Any())
-            {
-                // 1. Las pendientes (Destinos) que ya tenías
-            // 🚀 CONSULTAR TRANSFERENCIAS PENDIENTES EN BLOQUE
-            var idsProcesos = procesos.Select(p => p.Proceso.idProceso).Distinct().ToList();
-            var procesosConTransferencias = new HashSet<int>();
-
+       
             if (idsProcesos.Any())
             {
                 var destinosPendientes = await _context.transferenciaProceso
@@ -1272,19 +1265,6 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                     .ToListAsync();
 
                 procesosConTransferencias = new HashSet<int>(destinosPendientes);
-
-                // 🚀 2. Las existentes directas (Orígenes) para tu nuevo campo
-                var origenesExistentes = await _context.transferenciaProceso
-                    .AsNoTracking()
-                    .Where(t => t.idDestino.HasValue && idsProcesos.Contains(t.idDestino.Value))
-                    .Select(t => t.idDestino.Value)
-                    .Distinct()
-                    .ToListAsync();
-
-                procesosConTransferenciaExistente = new HashSet<int>(origenesExistentes);
-            }
-
-
             }
 
             // 3. MAPEO A DTOs
@@ -1311,8 +1291,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                     d.idOperacionNavigation.tipoOperacion == "Producción" // Ajusta según tu DB
                 );
 
-                dto.tieneTransferenciaPendiente = procesosConTransferencias.Contains(proceso.idProceso);
-                dto.tieneTransferenciaExistente = procesosConTransferenciaExistente.Contains(proceso.idProceso);
+                dto.tieneTransferenciaPendiente = procesosConTransferencias.Contains(proceso.idProceso);              
 
                 dtos.Add(dto);
             }

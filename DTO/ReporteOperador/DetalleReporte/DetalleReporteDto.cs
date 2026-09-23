@@ -128,7 +128,7 @@ namespace Sistema_Produccion_3_Backend.DTO.ReporteOperador.DetalleReporte
 
         public string? numOf { get; set; }
 
-        public string? descripcionOf { get; set; }
+        public string? articuloOf { get; set; }
 
         public string? clienteOf { get; set; }
     }
