@@ -39,11 +39,6 @@ namespace Sistema_Produccion_3_Backend.DTO.Calidad.BitacoraCaso
 
         public string? acciones { get; set; }
 
-        // relacion
-        public int? idAnexo { get; set; }
-        public string? nombreAnexo { get; set; }
-        public string? rutaAnexo { get; set; }
-
         public List<BitacoraEvidenciaObjetoDto>? evidencias { get; set; }
     }
 }

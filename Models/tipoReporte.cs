@@ -34,6 +34,12 @@ public partial class tipoReporte
     [InverseProperty("tipoReporteNavigation")]
     public virtual ICollection<fichaTecnicaProcesos> fichaTecnicaProcesos { get; set; } = new List<fichaTecnicaProcesos>();
 
+    [InverseProperty("tipoDocumentoNavigation")]
+    public virtual ICollection<flagDocumento> flagDocumento { get; set; } = new List<flagDocumento>();
+
+    [InverseProperty("tipoDocumentoNavigation")]
+    public virtual ICollection<flagTipoDocumento> flagTipoDocumento { get; set; } = new List<flagTipoDocumento>();
+
     [InverseProperty("idTipoReporteNavigation")]
     public virtual ICollection<reportesDeOperadores> reportesDeOperadores { get; set; } = new List<reportesDeOperadores>();
 

@@ -56,10 +56,6 @@
 
         public string? ubicacionFisica { get; set; }
 
-        public string? tipoAlimentacion { get; set; }
-
-        public string? tipoSalida { get; set; }
-
         public decimal? gramajeMinimo { get; set; }
 
         public decimal? gramajeMaximo { get; set; }
@@ -99,6 +95,10 @@
         public string? responsableTecnico { get; set; }
 
         public string? procesoNativo { get; set; }
+
+        public int? idUnidadAlimentacion { get; set; }
+
+        public int? idUnidadSalida { get; set; }
 
         public int? familiaId { get; set; }
 

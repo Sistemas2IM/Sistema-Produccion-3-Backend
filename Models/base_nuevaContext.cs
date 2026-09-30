@@ -37,6 +37,8 @@ public partial class base_nuevaContext : DbContext
 
     public virtual DbSet<casoCalidad> casoCalidad { get; set; }
 
+    public virtual DbSet<catalogoFlag> catalogoFlag { get; set; }
+
     public virtual DbSet<catalogoTipoAcabado> catalogoTipoAcabado { get; set; }
 
     public virtual DbSet<catalogoTipoPapel> catalogoTipoPapel { get; set; }
@@ -112,6 +114,10 @@ public partial class base_nuevaContext : DbContext
     public virtual DbSet<fichaTecnicaCliente_Log> fichaTecnicaCliente_Log { get; set; }
 
     public virtual DbSet<fichaTecnicaProcesos> fichaTecnicaProcesos { get; set; }
+
+    public virtual DbSet<flagDocumento> flagDocumento { get; set; }
+
+    public virtual DbSet<flagTipoDocumento> flagTipoDocumento { get; set; }
 
     public virtual DbSet<formulacionTinta> formulacionTinta { get; set; }
 
@@ -240,6 +246,8 @@ public partial class base_nuevaContext : DbContext
     public virtual DbSet<subModulo> subModulo { get; set; }
 
     public virtual DbSet<subtipoDefecto> subtipoDefecto { get; set; }
+
+    public virtual DbSet<tableroFlag> tableroFlag { get; set; }
 
     public virtual DbSet<tablerosOf> tablerosOf { get; set; }
 
@@ -502,6 +510,14 @@ public partial class base_nuevaContext : DbContext
                 .HasConstraintName("FK_CASO_TIPO_REPORTE");
 
             entity.HasOne(d => d.unidadMedidaNavigation).WithMany(p => p.casoCalidad).HasConstraintName("FK_CASO_UNIDA_MEDIDA");
+        });
+
+        modelBuilder.Entity<catalogoFlag>(entity =>
+        {
+            entity.HasKey(e => e.idFlag).HasName("PK_CATALOGO_FLAG");
+
+            entity.Property(e => e.activo).HasDefaultValue(true);
+            entity.Property(e => e.permiteQuitarManual).HasDefaultValue(true);
         });
 
         modelBuilder.Entity<catalogoTipoAcabado>(entity =>
@@ -1003,6 +1019,53 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.tipoReporteNavigation).WithMany(p => p.fichaTecnicaProcesos).HasConstraintName("FK_TIPO_REPORTE_FICHA");
         });
 
+        modelBuilder.Entity<flagDocumento>(entity =>
+        {
+            entity.HasKey(e => e.idFlagDocumento).HasName("PK_FLAG_DOCUMENTO");
+
+            entity.HasIndex(e => new { e.tipoDocumento, e.idDocumento, e.idFlag, e.idFlagOrigen }, "flagDocumento_activaUnica_UX")
+                .IsUnique()
+                .HasFilter("([activa]=(1))");
+
+            entity.HasIndex(e => e.idFlagOrigen, "flagDocumento_idFlagOrigen_IX").HasFilter("([idFlagOrigen] IS NOT NULL)");
+
+            entity.HasIndex(e => e.idFlagRaiz, "flagDocumento_idFlagRaiz_IX").HasFilter("([idFlagRaiz] IS NOT NULL)");
+
+            entity.Property(e => e.activa).HasDefaultValue(true);
+            entity.Property(e => e.fechaRegistro).HasDefaultValueSql("(getdate())");
+            entity.Property(e => e.registradoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.removidoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+
+            entity.HasOne(d => d.idFlagNavigation).WithMany(p => p.flagDocumento)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_FLAGDOC_FLAG");
+
+            entity.HasOne(d => d.idFlagOrigenNavigation).WithMany(p => p.InverseidFlagOrigenNavigation).HasConstraintName("FK_FLAGDOC_ORIGEN");
+
+            entity.HasOne(d => d.idFlagRaizNavigation).WithMany(p => p.InverseidFlagRaizNavigation).HasConstraintName("FK_FLAGDOC_RAIZ");
+
+            entity.HasOne(d => d.registradoPorNavigation).WithMany(p => p.flagDocumentoregistradoPorNavigation).HasConstraintName("FK_FLAGDOC_REGISTRADO_POR");
+
+            entity.HasOne(d => d.removidoPorNavigation).WithMany(p => p.flagDocumentoremovidoPorNavigation).HasConstraintName("FK_FLAGDOC_REMOVIDO_POR");
+
+            entity.HasOne(d => d.tipoDocumentoNavigation).WithMany(p => p.flagDocumento)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_FLAGDOC_TIPO_DOCUMENTO");
+        });
+
+        modelBuilder.Entity<flagTipoDocumento>(entity =>
+        {
+            entity.HasKey(e => new { e.idFlag, e.tipoDocumento }).HasName("PK_FLAG_TIPO_DOCUMENTO");
+
+            entity.HasOne(d => d.idFlagNavigation).WithMany(p => p.flagTipoDocumento)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_FLAGTIPODOC_FLAG");
+
+            entity.HasOne(d => d.tipoDocumentoNavigation).WithMany(p => p.flagTipoDocumento)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_FLAGTIPODOC_TIPO_DOCUMENTO");
+        });
+
         modelBuilder.Entity<formulacionTinta>(entity =>
         {
             entity.HasKey(e => e.idFormulacion).HasName("PK_FORMULACION_TINTAS");
@@ -1285,7 +1348,11 @@ public partial class base_nuevaContext : DbContext
 
             entity.HasOne(d => d.idFamiliaNavigation).WithMany(p => p.maquinas).HasConstraintName("FK_MAQUINAS_FAMILIA");
 
-            entity.HasOne(d => d.idUnidadNavigation).WithMany(p => p.maquinas).HasConstraintName("FK_UNIDAD_MEDIDA");
+            entity.HasOne(d => d.idUnidadNavigation).WithMany(p => p.maquinasidUnidadNavigation).HasConstraintName("FK_UNIDAD_MEDIDA");
+
+            entity.HasOne(d => d.idUnidadAlimentacionNavigation).WithMany(p => p.maquinasidUnidadAlimentacionNavigation).HasConstraintName("FK_MAQUINA_UNIDAD_ALIMENTACION");
+
+            entity.HasOne(d => d.idUnidadSalidaNavigation).WithMany(p => p.maquinasidUnidadSalidaNavigation).HasConstraintName("FK_MAQUINA_UNIDAD_SALIDA");
 
             entity.HasMany(d => d.idTipoAcabado).WithMany(p => p.idMaquina)
                 .UsingEntity<Dictionary<string, object>>(
@@ -1950,6 +2017,19 @@ public partial class base_nuevaContext : DbContext
             entity.Property(e => e.activo).HasDefaultValue(true);
 
             entity.HasOne(d => d.idCategoriaNavigation).WithMany(p => p.subtipoDefecto).HasConstraintName("FK_SUBTIPO_CATEGORIA");
+        });
+
+        modelBuilder.Entity<tableroFlag>(entity =>
+        {
+            entity.HasKey(e => new { e.idTablero, e.idFlag }).HasName("PK_TABLERO_FLAG");
+
+            entity.HasOne(d => d.idFlagNavigation).WithMany(p => p.tableroFlag)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_TABLEROFLAG_FLAG");
+
+            entity.HasOne(d => d.idTableroNavigation).WithMany(p => p.tableroFlag)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_TABLEROFLAG_TABLERO");
         });
 
         modelBuilder.Entity<tablerosOf>(entity =>

@@ -50,8 +50,14 @@ public partial class unidadesMedida
     [InverseProperty("unidadMedidaNavigation")]
     public virtual ICollection<lotePliego> lotePliego { get; set; } = new List<lotePliego>();
 
+    [InverseProperty("idUnidadAlimentacionNavigation")]
+    public virtual ICollection<maquinas> maquinasidUnidadAlimentacionNavigation { get; set; } = new List<maquinas>();
+
     [InverseProperty("idUnidadNavigation")]
-    public virtual ICollection<maquinas> maquinas { get; set; } = new List<maquinas>();
+    public virtual ICollection<maquinas> maquinasidUnidadNavigation { get; set; } = new List<maquinas>();
+
+    [InverseProperty("idUnidadSalidaNavigation")]
+    public virtual ICollection<maquinas> maquinasidUnidadSalidaNavigation { get; set; } = new List<maquinas>();
 
     [InverseProperty("unidadBaseNavigation")]
     public virtual ICollection<tipoComponente> tipoComponente { get; set; } = new List<tipoComponente>();

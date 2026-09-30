@@ -41,4 +41,7 @@ public partial class tablerosOf
 
     [InverseProperty("idTableroNavigation")]
     public virtual ICollection<procesoOf> procesoOf { get; set; } = new List<procesoOf>();
+
+    [InverseProperty("idTableroNavigation")]
+    public virtual ICollection<tableroFlag> tableroFlag { get; set; } = new List<tableroFlag>();
 }

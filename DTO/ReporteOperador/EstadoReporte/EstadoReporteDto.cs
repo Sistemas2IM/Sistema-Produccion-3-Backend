@@ -9,5 +9,7 @@ namespace Sistema_Produccion_3_Backend.DTO.ReporteOperador.EstadoReporte
         public string? nombreEstado { get; set; }
 
         public int? tipoReporte { get; set; }
+
+        public string? nombreTipoReporte { get; set; }
     }
 }

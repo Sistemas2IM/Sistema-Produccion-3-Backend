@@ -255,8 +255,15 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForMember(dest => dest.serie, opt => opt.MapFrom(src => src.oFNavigation.seriesOf))
                 .ForMember(dest => dest.inicioEstimado, opt => opt.MapFrom(src => src.ffeTiemposProcesosGlobal.Inicio_Estimado))
                 .ForMember(dest => dest.finEstimado, opt => opt.MapFrom(src => src.ffeTiemposProcesosGlobal.Fin_Proyectado))
-                .ForMember(dest => dest.fechaVencimientoAnterior, opt => opt.MapFrom(src => src.oFNavigation.historialVencimientoOf.OrderByDescending(h => h.fechaVencimientoAnterior).FirstOrDefault().fechaVencimientoAnterior))
-                .ForMember(dest => dest.fechaVencimientoNueva, opt => opt.MapFrom(src => src.oFNavigation.historialVencimientoOf.OrderByDescending(h => h.fechaVencimientoNueva).FirstOrDefault().fechaVencimientoNueva))
+                .ForMember(dest => dest.fechaVencimientoNueva, opt => opt.MapFrom(src =>
+                    src.oFNavigation.historialVencimientoOf
+                       .OrderByDescending(h => h.idHistorial) // Ordenamos por el ID de creación
+                       .FirstOrDefault().fechaVencimientoNueva))
+
+                .ForMember(dest => dest.fechaVencimientoAnterior, opt => opt.MapFrom(src =>
+                    src.oFNavigation.historialVencimientoOf
+                       .OrderByDescending(h => h.idHistorial)
+                       .FirstOrDefault().fechaVencimientoAnterior))
                 .ForMember(dest => dest.fechaVencimiento, opt => opt.MapFrom(src =>
                         src.corridaCombinada == true
                             ? src.fechaVencimiento
@@ -291,8 +298,15 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForMember(dest => dest.inicioEstimado, opt => opt.MapFrom(src => src.ffeTiemposProcesosGlobal.Inicio_Estimado))
                 .ForMember(dest => dest.finEstimado, opt => opt.MapFrom(src => src.ffeTiemposProcesosGlobal.Fin_Proyectado))
                 .ForMember(dest => dest.componentes, opt => opt.MapFrom(src => src.componenteProduccion))
-                .ForMember(dest => dest.fechaVencimientoAnterior, opt => opt.MapFrom(src => src.oFNavigation.historialVencimientoOf.OrderByDescending(h => h.fechaVencimientoAnterior).FirstOrDefault().fechaVencimientoAnterior))
-                .ForMember(dest => dest.fechaVencimientoNueva, opt => opt.MapFrom(src => src.oFNavigation.historialVencimientoOf.OrderByDescending(h => h.fechaVencimientoNueva).FirstOrDefault().fechaVencimientoNueva))
+                .ForMember(dest => dest.fechaVencimientoNueva, opt => opt.MapFrom(src =>
+                     src.oFNavigation.historialVencimientoOf
+                        .OrderByDescending(h => h.idHistorial) // Ordenamos por el ID de creación
+                        .FirstOrDefault().fechaVencimientoNueva))
+
+                .ForMember(dest => dest.fechaVencimientoAnterior, opt => opt.MapFrom(src =>
+                     src.oFNavigation.historialVencimientoOf
+                        .OrderByDescending(h => h.idHistorial)
+                        .FirstOrDefault().fechaVencimientoAnterior))
                 .ForMember(dest => dest.fechaVencimiento, opt => opt.MapFrom(src =>
                         src.corridaCombinada == true
                             ? src.fechaVencimiento
@@ -323,8 +337,15 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                .ForMember(dest => dest.fsc, opt => opt.MapFrom(src => src.oFNavigation.fsc))
                .ForMember(dest => dest.asignacionDto, opt => opt.MapFrom(src => src.asignacion))
                .ForMember(dest => dest.serie, opt => opt.MapFrom(src => src.oFNavigation.seriesOf))
-               .ForMember(dest => dest.fechaVencimientoAnterior, opt => opt.MapFrom(src => src.oFNavigation.historialVencimientoOf.OrderByDescending(h => h.fechaVencimientoAnterior).FirstOrDefault().fechaVencimientoAnterior))
-               .ForMember(dest => dest.fechaVencimientoNueva, opt => opt.MapFrom(src => src.oFNavigation.historialVencimientoOf.OrderByDescending(h => h.fechaVencimientoNueva).FirstOrDefault().fechaVencimientoNueva))
+               .ForMember(dest => dest.fechaVencimientoNueva, opt => opt.MapFrom(src =>
+                     src.oFNavigation.historialVencimientoOf
+                        .OrderByDescending(h => h.idHistorial) // Ordenamos por el ID de creación
+                        .FirstOrDefault().fechaVencimientoNueva))
+
+               .ForMember(dest => dest.fechaVencimientoAnterior, opt => opt.MapFrom(src =>
+                     src.oFNavigation.historialVencimientoOf
+                        .OrderByDescending(h => h.idHistorial)
+                        .FirstOrDefault().fechaVencimientoAnterior))
                .ForMember(dest => dest.fechaVencimiento, opt => opt.MapFrom(src =>
                        src.corridaCombinada == true
                            ? src.fechaVencimiento
@@ -354,8 +375,15 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForMember(dest => dest.inicioEstimado, opt => opt.MapFrom(src => src.ffeTiemposProcesosGlobal.Inicio_Estimado))
                 .ForMember(dest => dest.finEstimado, opt => opt.MapFrom(src => src.ffeTiemposProcesosGlobal.Fin_Proyectado))
                 .ForMember(dest => dest.componentes, opt => opt.MapFrom(src => src.componenteProduccion))
-                .ForMember(dest => dest.fechaVencimientoAnterior, opt => opt.MapFrom(src => src.oFNavigation.historialVencimientoOf.OrderByDescending(h => h.fechaVencimientoAnterior).FirstOrDefault().fechaVencimientoAnterior))
-                .ForMember(dest => dest.fechaVencimientoNueva, opt => opt.MapFrom(src => src.oFNavigation.historialVencimientoOf.OrderByDescending(h => h.fechaVencimientoNueva).FirstOrDefault().fechaVencimientoNueva))
+                 .ForMember(dest => dest.fechaVencimientoNueva, opt => opt.MapFrom(src =>
+                     src.oFNavigation.historialVencimientoOf
+                        .OrderByDescending(h => h.idHistorial) // Ordenamos por el ID de creación
+                        .FirstOrDefault().fechaVencimientoNueva))
+
+                 .ForMember(dest => dest.fechaVencimientoAnterior, opt => opt.MapFrom(src =>
+                     src.oFNavigation.historialVencimientoOf
+                        .OrderByDescending(h => h.idHistorial)
+                        .FirstOrDefault().fechaVencimientoAnterior))
                 .ForMember(dest => dest.fechaVencimiento, opt => opt.MapFrom(src =>
                         src.corridaCombinada == true
                             ? src.fechaVencimiento
@@ -403,8 +431,15 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                     .ForMember(dest => dest.serie, opt => opt.MapFrom(src => src.oFNavigation.seriesOf))
                     .ForMember(dest => dest.inicioEstimado, opt => opt.MapFrom(src => src.ffeTiemposProcesosGlobal.Inicio_Estimado))
                     .ForMember(dest => dest.finEstimado, opt => opt.MapFrom(src => src.ffeTiemposProcesosGlobal.Fin_Proyectado))
-                    .ForMember(dest => dest.fechaVencimientoAnterior, opt => opt.MapFrom(src => src.oFNavigation.historialVencimientoOf.OrderByDescending(h => h.fechaVencimientoAnterior).FirstOrDefault().fechaVencimientoAnterior))
-                    .ForMember(dest => dest.fechaVencimientoNueva, opt => opt.MapFrom(src => src.oFNavigation.historialVencimientoOf.OrderByDescending(h => h.fechaVencimientoNueva).FirstOrDefault().fechaVencimientoNueva))
+                     .ForMember(dest => dest.fechaVencimientoNueva, opt => opt.MapFrom(src =>
+                         src.oFNavigation.historialVencimientoOf
+                            .OrderByDescending(h => h.idHistorial) // Ordenamos por el ID de creación
+                            .FirstOrDefault().fechaVencimientoNueva))
+
+                     .ForMember(dest => dest.fechaVencimientoAnterior, opt => opt.MapFrom(src =>
+                         src.oFNavigation.historialVencimientoOf
+                            .OrderByDescending(h => h.idHistorial)
+                            .FirstOrDefault().fechaVencimientoAnterior))
                     .ForMember(dest => dest.fechaVencimiento, opt => opt.MapFrom(src =>
                         src.corridaCombinada == true
                             ? src.fechaVencimiento
@@ -630,7 +665,10 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 CreateMap<UpdateAuxiliaresDto, auxiliares>().ReverseMap();
             }
 
-            CreateMap<estadosReporte, EstadoReporteDto>().ReverseMap();
+            CreateMap<estadosReporte, EstadoReporteDto>()
+                .ForMember(dest => dest.nombreTipoReporte, opt => opt.MapFrom(src => src.tipoReporteNavigation.nombreTipoReporte))
+                .ReverseMap();
+
             CreateMap<tipoReporte, TipoReporteDto>().ReverseMap();
             CreateMap<material, MaterialDto>().ReverseMap();
 
@@ -855,6 +893,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForMember(dest => dest.nombreEstado, opt => opt.MapFrom(src => src.estadoNavigation.nombreEstado))
                 .ForMember(dest => dest.medicionAguas, opt => opt.MapFrom(src => src.medicionAguas))
                 .ForMember(dest => dest.nombreMaquina, opt => opt.MapFrom(src => src.maquinaNavigation.nombreMaquina))
+                .ForMember(dest => dest.nombreCreadoPor, opt => opt.MapFrom(src => src.creadoPorNavigation.nombres + " " + src.creadoPorNavigation.apellidos))
                 .ReverseMap();
             CreateMap<fichaTecnicaProcesos, AddFichaTecnicaProcesosDto>().ReverseMap();
             CreateMap<UpdateFichaTecnicaProcesosDto, fichaTecnicaProcesos>()

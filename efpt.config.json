@@ -71,6 +71,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[catalogoFlag]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[catalogoTipoAcabado]",
          "ObjectType": 0
       },
@@ -220,6 +224,14 @@
       },
       {
          "Name": "[dbo].[fichaTecnicaProcesos]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[flagDocumento]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[flagTipoDocumento]",
          "ObjectType": 0
       },
       {
@@ -488,6 +500,10 @@
       },
       {
          "Name": "[dbo].[subtipoDefecto]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[tableroFlag]",
          "ObjectType": 0
       },
       {

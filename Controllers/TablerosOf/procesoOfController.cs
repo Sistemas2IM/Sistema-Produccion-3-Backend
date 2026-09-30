@@ -1697,11 +1697,13 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         }
 
         [HttpGet("get/lista/solicitudMateriales/{id}")]
-        public async Task<ActionResult<ProcesoOfDto>> GetprocesoOfsolicitudMaterialesLista(int id)
+        // Nota: Cambié ActionResult<ProcesoOfDto> a ActionResult<List<ProcesoOfDto>> porque devuelves una lista
+        public async Task<ActionResult<List<ProcesoOfDto>>> GetprocesoOfsolicitudMaterialesLista(int id)
         {
             // Procesos normales ligados a una OF
             var procesosNormales = await _context.procesoOf
                 .Where(o => o.idSolicitudMateriales == id && o.archivada == false && o.idSolicitudMateriales != null)
+                .Include(u => u.detalleReporte).ThenInclude(o => o.idOperacionNavigation)
                 .Include(u => u.idTableroNavigation)
                 .ThenInclude(a => a.idAreaNavigation)
                 .Include(d => d.idPosturaNavigation)
@@ -1716,9 +1718,20 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 .Include(f => f.ffeTiemposProcesosGlobal)
                 .Include(o => o.oFNavigation)
                     .ThenInclude(h => h.historialVencimientoOf)
-                .ToListAsync();         
+                .ToListAsync();
 
-            var dtos = _mapper.Map<List<ProcesoOfDto>>(procesosNormales);           
+            // AutoMapper se encarga de mapear tanto la clase padre como las listas hijas (detalleReporte)
+            var dtos = _mapper.Map<List<ProcesoOfDto>>(procesosNormales);
+
+            // Iteramos sobre la lista de DTOs para ordenar los detalles de cada uno
+            foreach (var dto in dtos)
+            {
+                if (dto.detalleProcesoOf != null && dto.detalleProcesoOf.Any())
+                {
+                    // Ordenamos y volvemos a asignar la lista ya ordenada
+                    dto.detalleProcesoOf = dto.detalleProcesoOf.OrderBy(r => r.idDetalleReporte).ToList();
+                }
+            }
 
             return Ok(dtos);
         }

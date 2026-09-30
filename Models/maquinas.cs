@@ -84,12 +84,6 @@ public partial class maquinas
     [StringLength(255)]
     public string ubicacionFisica { get; set; }
 
-    [StringLength(100)]
-    public string tipoAlimentacion { get; set; }
-
-    [StringLength(100)]
-    public string tipoSalida { get; set; }
-
     [Column(TypeName = "numeric(10, 2)")]
     public decimal? gramajeMinimo { get; set; }
 
@@ -148,6 +142,10 @@ public partial class maquinas
     [StringLength(50)]
     public string procesoNativo { get; set; }
 
+    public int? idUnidadAlimentacion { get; set; }
+
+    public int? idUnidadSalida { get; set; }
+
     [InverseProperty("maquinaNavigation")]
     public virtual ICollection<auditoriaProceso> auditoriaProceso { get; set; } = new List<auditoriaProceso>();
 
@@ -167,9 +165,17 @@ public partial class maquinas
     [InverseProperty("maquinas")]
     public virtual familliaDeMaquina idFamiliaNavigation { get; set; }
 
+    [ForeignKey("idUnidadAlimentacion")]
+    [InverseProperty("maquinasidUnidadAlimentacionNavigation")]
+    public virtual unidadesMedida idUnidadAlimentacionNavigation { get; set; }
+
     [ForeignKey("idUnidad")]
-    [InverseProperty("maquinas")]
+    [InverseProperty("maquinasidUnidadNavigation")]
     public virtual unidadesMedida idUnidadNavigation { get; set; }
+
+    [ForeignKey("idUnidadSalida")]
+    [InverseProperty("maquinasidUnidadSalidaNavigation")]
+    public virtual unidadesMedida idUnidadSalidaNavigation { get; set; }
 
     [InverseProperty("idMaquinaNavigation")]
     public virtual ICollection<indisponibilidadMaquinas> indisponibilidadMaquinas { get; set; } = new List<indisponibilidadMaquinas>();

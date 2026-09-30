@@ -61,10 +61,6 @@ namespace Sistema_Produccion_3_Backend.DTO.Catalogo.Maquinas
 
         public string? ubicacionFisica { get; set; }
 
-        public string? tipoAlimentacion { get; set; }
-
-        public string? tipoSalida { get; set; }
-
         public decimal? gramajeMinimo { get; set; }
 
         public decimal? gramajeMaximo { get; set; }
@@ -104,6 +100,10 @@ namespace Sistema_Produccion_3_Backend.DTO.Catalogo.Maquinas
         public string? responsableTecnico { get; set; }
 
         public string? procesoNativo { get; set; }
+
+        public int? idUnidadAlimentacion { get; set; }
+
+        public int? idUnidadSalida { get; set; }
 
         public string? familiaNombre { get; set; }
 

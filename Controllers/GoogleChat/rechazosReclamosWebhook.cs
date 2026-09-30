@@ -62,7 +62,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.GoogleChat
                     string descLimpia = caso.descripcion.Replace("\n", "<br>");
                     widgetsDetalles.Add(new { decoratedText = new { topLabel = "Descripción del Caso", text = descLimpia, wrapText = true } });
                 }
-
+                   
                 widgetsDetalles.Add(new { decoratedText = new { topLabel = "Registrado Por", text = caso.registradoPor ?? "<i>No especificado</i>" } });
                 widgetsDetalles.Add(new { decoratedText = new { topLabel = "Responsable Asignado", text = caso.responsable ?? "<i>Sin asignar</i>" } });
 

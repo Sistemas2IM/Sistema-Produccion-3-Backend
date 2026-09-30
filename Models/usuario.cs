@@ -130,6 +130,12 @@ public partial class usuario
     public virtual ICollection<fichaTecnicaProcesos> fichaTecnicaProcesosoperadorNavigation { get; set; } = new List<fichaTecnicaProcesos>();
 
     [InverseProperty("registradoPorNavigation")]
+    public virtual ICollection<flagDocumento> flagDocumentoregistradoPorNavigation { get; set; } = new List<flagDocumento>();
+
+    [InverseProperty("removidoPorNavigation")]
+    public virtual ICollection<flagDocumento> flagDocumentoremovidoPorNavigation { get; set; } = new List<flagDocumento>();
+
+    [InverseProperty("registradoPorNavigation")]
     public virtual ICollection<historialVencimientoOf> historialVencimientoOf { get; set; } = new List<historialVencimientoOf>();
 
     [InverseProperty("operadorNavigation")]

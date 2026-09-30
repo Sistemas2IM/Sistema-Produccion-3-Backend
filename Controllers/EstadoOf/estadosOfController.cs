@@ -63,7 +63,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.EstadoOf
             {
                 return NotFound($"No se encontro el estado con el ID");
             }
-
+            
             _mapper.Map(updateEstadosOf, estadoOf);
             _context.Entry(estadoOf).State = EntityState.Modified;
 

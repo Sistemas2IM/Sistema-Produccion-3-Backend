@@ -41,6 +41,8 @@ namespace Sistema_Produccion_3_Backend.DTO.Calidad.FichaTecnicaProcesos
 
         public string? creadoPor { get; set; }
 
+        public string? nombreCreadoPor { get; set; }
+
         public DateOnly? fechaFormulacion { get; set; }
 
         public string? formuladorTinta { get; set; }
