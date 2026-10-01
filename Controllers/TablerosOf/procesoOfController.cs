@@ -1264,6 +1264,14 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                     .Distinct()
                     .ToListAsync();
 
+                var destinosExistentes = await _context.transferenciaProceso
+                    .AsNoTracking()
+                    .Where(t => t.idDestino.HasValue && idsProcesos.Contains(t.idDestino.Value))
+                    .Select(t => t.idDestino.Value)
+                    .Distinct()
+                    .ToListAsync();
+
+                procesosConTransferenciaExistente = new HashSet<int>(destinosExistentes); // 🚀 Nuevo conjunto
                 procesosConTransferencias = new HashSet<int>(destinosPendientes);
             }
 
@@ -1291,7 +1299,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                     d.idOperacionNavigation.tipoOperacion == "Producción" // Ajusta según tu DB
                 );
 
-                dto.tieneTransferenciaPendiente = procesosConTransferencias.Contains(proceso.idProceso);              
+                dto.tieneTransferenciaPendiente = procesosConTransferencias.Contains(proceso.idProceso);            
+                dto.tieneTransferenciaExistente = procesosConTransferenciaExistente.Contains(proceso.idProceso); // 🚀 Nuevo campo
 
                 dtos.Add(dto);
             }
