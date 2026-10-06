@@ -264,16 +264,30 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.CasoCalidad
         {
             var entidad = _mapper.Map<casoCalidad>(casoCalidadDto);
 
-            // Aseguramos que tenga fecha de registro para la tarjeta
             if (entidad.fechaRegistro == default) entidad.fechaRegistro = DateTime.Now;
 
             _context.casoCalidad.Add(entidad);
-            await _context.SaveChangesAsync(); // Aquí se genera el idCasoCalidad
+            await _context.SaveChangesAsync();
 
-            // 🚀 NOTIFICACIÓN DE APERTURA (CREA EL HILO)
-            // Cambia esta URL por la de tu espacio o sácala de tu appsettings
-            string webhookUrl = "https://chat.googleapis.com/v1/spaces/AAQAWq4gutM/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=dbANIoQRXrWv4t2fN_BuC3hvi_rHWUxtwuIch6m50PY";
-            await _rechazos.EnviarNotificacionCasoCalidad(entidad, "Apertura", webhookUrl);
+            // 1. Cargamos las navegaciones requeridas
+            var casoCompleto = await _context.casoCalidad
+                .Include(c => c.idTipoCasoNavigation)
+                .Include(c => c.registradoPorNavigation)
+                .FirstOrDefaultAsync(c => c.idCasoCalidad == entidad.idCasoCalidad);
+
+            // 🚀 2. OBTENEMOS VENDEDOR Y LÍNEA DE NEGOCIO EN UNA SOLA CONSULTA
+            var infoTarjeta = await _context.tarjetaOf
+                .Where(t => t.oF == entidad.oF)
+                .Select(t => new { t.vendedorOf, t.lineaDeNegocio })
+                .FirstOrDefaultAsync();
+
+            // 🚀 3. ENVIAMOS PASANDO AMBOS VALORES
+            await _rechazos.EnviarNotificacionCasoCalidad(
+                casoCompleto ?? entidad,
+                "Apertura",
+                infoTarjeta?.vendedorOf,
+                infoTarjeta?.lineaDeNegocio
+            );
 
             return CreatedAtAction(nameof(GetCasoCalidad),
                 new { id = entidad.idCasoCalidad },
@@ -306,9 +320,14 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.CasoCalidad
             {
                 await _context.SaveChangesAsync();
 
-                // 🚀 NOTIFICACIÓN DE SEGUIMIENTO (RESPONDE EN EL HILO)
-                string webhookUrl = "https://chat.googleapis.com/v1/spaces/AAQAWq4gutM/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=dbANIoQRXrWv4t2fN_BuC3hvi_rHWUxtwuIch6m50PY";
-                await _rechazos.EnviarNotificacionCasoCalidad(casoCalidad, "Seguimiento", webhookUrl);
+                // 🚀 1. CARGAMOS NAVEGACIONES (Para que la tarjeta traiga nombres completos de TipoCaso y Usuario)
+                var casoCompleto = await _context.casoCalidad
+                    .Include(c => c.idTipoCasoNavigation)
+                    .Include(c => c.registradoPorNavigation)
+                    .FirstOrDefaultAsync(c => c.idCasoCalidad == id);
+
+                // 🚀 2. NOTIFICACIÓN DE SEGUIMIENTO (Pasamos 'null' en el vendedor para enviar SOLO A CALIDAD)
+                await _rechazos.EnviarNotificacionCasoCalidad(casoCompleto ?? casoCalidad, "Seguimiento", null, null);
             }
             catch (DbUpdateConcurrencyException)
             {
