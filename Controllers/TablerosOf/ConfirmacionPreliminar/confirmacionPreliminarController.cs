@@ -126,7 +126,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf.ConfirmacionPrelim
                 dto.saldo = (dto.cantidadRecibida ?? 0) - (c.transferenciaProceso?.Sum(t => (decimal?)t.cantidadEnviada ?? 0) ?? 0);
 
                 // 🚀 1. Buscamos el ID en el diccionario (si no existe, devuelve 0 por defecto)
-                int pendientes = conteoTransferenciasPendientes.GetValueOrDefault(c.idProceso, 0);
+                int pendientes = conteoTransferenciasPendientes.GetValueOrDefault(c.idProceso ?? 0, 0);
 
                 // 🚀 2. Asignamos los dos campos nuevos simultáneamente
                 dto.cantidadTransferenciasPendientes = pendientes;

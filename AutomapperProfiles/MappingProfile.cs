@@ -1445,7 +1445,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForMember(dest => dest.nombreEstadoNuevo, opt => opt.MapFrom(src => src.estadoNuevoNavigation != null ? src.estadoNuevoNavigation.nombreEstado : null))
                 .ForMember(dest => dest.nombreDictamen, opt => opt.MapFrom(src => src.idDictamenNavigation != null ? src.idDictamenNavigation.nombre : null))
                 .ForMember(dest => dest.evidencias, opt => opt.MapFrom(src => src.idAnexo))
-                //.ForMember(dest => dest.nombreUsuario, opt => opt.MapFrom(src => src.usuarioNavigation != null ? src.usuarioNavigation.nombres + " " + src.usuarioNavigation.apellidos : null))
+                .ForMember(dest => dest.nombreUsuario, opt => opt.MapFrom(src => src.usuarioNavigation != null ? src.usuarioNavigation.nombres + " " + src.usuarioNavigation.apellidos : null))
                 .ReverseMap();
 
             CreateMap<bitacoraCaso, AddBitacoraCasoDto>().ReverseMap();

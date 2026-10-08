@@ -26,6 +26,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.FichaTecnicaProcesos
         public async Task<ActionResult<IEnumerable<FichaTecnicaProcesosDto>>> GetFichaTecnicaProceso()
         {
             var fichaTecnicaProceso = await _context.fichaTecnicaProcesos
+                .OrderByDescending(f => f.fechaCreacion)
                 .Include(o => o.oFNavigation)
                 .Include(u => u.operadorNavigation)
                 .Include(t => t.formuladorTintaNavigation)
@@ -73,6 +74,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.FichaTecnicaProcesos
         public async Task<ActionResult<FichaTecnicaProcesosDto>> GetFichaTecnicaProcesoOfArticulo(int of, string codArticulo)
         {
             var fichaTecnicaProceso = await _context.fichaTecnicaProcesos
+                .OrderByDescending(f => f.fechaCreacion)
                 .Include(f => f.detalleFichaProcesos)
                 .Include(f => f.formulacionTinta)
                 .ThenInclude(ft => ft.especificacionTintas)

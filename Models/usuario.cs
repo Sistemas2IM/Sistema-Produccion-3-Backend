@@ -66,6 +66,9 @@ public partial class usuario
     [InverseProperty("supervisorNavigation")]
     public virtual ICollection<auditoriaProceso> auditoriaProcesosupervisorNavigation { get; set; } = new List<auditoriaProceso>();
 
+    [InverseProperty("usuarioNavigation")]
+    public virtual ICollection<bitacoraCaso> bitacoraCaso { get; set; } = new List<bitacoraCaso>();
+
     [InverseProperty("actualizadoPorNavigation")]
     public virtual ICollection<casoAccionSolicitada> casoAccionSolicitadaactualizadoPorNavigation { get; set; } = new List<casoAccionSolicitada>();
 

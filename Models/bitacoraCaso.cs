@@ -54,6 +54,10 @@ public partial class bitacoraCaso
     [InverseProperty("bitacoraCaso")]
     public virtual tipoEventoBitacora idTipoEventoNavigation { get; set; }
 
+    [ForeignKey("usuario")]
+    [InverseProperty("bitacoraCaso")]
+    public virtual usuario usuarioNavigation { get; set; }
+
     [ForeignKey("idBitacora")]
     [InverseProperty("idBitacora")]
     public virtual ICollection<anexos_NEXO> idAnexo { get; set; } = new List<anexos_NEXO>();
