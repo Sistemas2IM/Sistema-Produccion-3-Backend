@@ -28,6 +28,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.CasoAccionSolicitada
             var casoAccionSolicitada = await _context.casoAccionSolicitada
                 .Include(t => t.idAccionNavigation)
                 .Include(t => t.idEstadoNavigation)
+                .Include(t => t.responsableNavigation)
                 .ToListAsync();
 
             var casoAccionSolicitadaDto = _mapper.Map<List<CasoAccionSolicitadaDto>>(casoAccionSolicitada);
@@ -42,6 +43,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.CasoAccionSolicitada
             var casoAccionSolicitada = await _context.casoAccionSolicitada
                 .Include(t => t.idAccionNavigation)
                 .Include(t => t.idEstadoNavigation)
+                .Include(t => t.responsableNavigation)
                 .FirstOrDefaultAsync(u => u.idCasoAccion == id);
 
             if (casoAccionSolicitada == null)
