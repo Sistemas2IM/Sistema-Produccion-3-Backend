@@ -30,6 +30,8 @@
 
         public string? responsable { get; set; }
 
+        public string? nombreResponsable { get; set; }
+
         public DateOnly? fechaCompromiso { get; set; }
 
         // relacion

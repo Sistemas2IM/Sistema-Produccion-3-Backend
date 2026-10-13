@@ -2,7 +2,7 @@
 {
     public class UpdateConciliacionDto
     {
-        public int idPreliminar { get; set; }
+        public int? idPreliminar { get; set; }
 
         public decimal? cantidadPreliminar { get; set; }
 
@@ -22,8 +22,8 @@
 
         public DateTime? fechaConciliacion { get; set; }
 
-        public bool cancelado { get; set; }
+        public bool? cancelado { get; set; }
 
-        public bool archivado { get; set; }
+        public bool? archivado { get; set; }
     }
 }

@@ -63,6 +63,7 @@ using Sistema_Produccion_3_Backend.DTO.Etiquetas.EtiquetaOf;
 using Sistema_Produccion_3_Backend.DTO.Etiquetas.EtiquetaOf.BatchEtiquetaOf;
 using Sistema_Produccion_3_Backend.DTO.Etiquetas.TarjetaEtiqueta;
 using Sistema_Produccion_3_Backend.DTO.Etiquetas.TarjetaEtiqueta.BatchTarjetaEtiqueta;
+using Sistema_Produccion_3_Backend.DTO.Flags.FlagDocumento;
 using Sistema_Produccion_3_Backend.DTO.GoogleChat.SoporteNexo;
 using Sistema_Produccion_3_Backend.DTO.Horarios.HorariosOperativos;
 using Sistema_Produccion_3_Backend.DTO.Horarios.HorariosOperativos.Batch;
@@ -1445,7 +1446,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForMember(dest => dest.nombreEstadoNuevo, opt => opt.MapFrom(src => src.estadoNuevoNavigation != null ? src.estadoNuevoNavigation.nombreEstado : null))
                 .ForMember(dest => dest.nombreDictamen, opt => opt.MapFrom(src => src.idDictamenNavigation != null ? src.idDictamenNavigation.nombre : null))
                 .ForMember(dest => dest.evidencias, opt => opt.MapFrom(src => src.idAnexo))
-                //.ForMember(dest => dest.nombreUsuario, opt => opt.MapFrom(src => src.usuarioNavigation != null ? src.usuarioNavigation.nombres + " " + src.usuarioNavigation.apellidos : null))
+                .ForMember(dest => dest.nombreUsuario, opt => opt.MapFrom(src => src.usuarioNavigation != null ? src.usuarioNavigation.nombres + " " + src.usuarioNavigation.apellidos : null))
                 .ReverseMap();
 
             CreateMap<bitacoraCaso, AddBitacoraCasoDto>().ReverseMap();
@@ -1464,6 +1465,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             CreateMap<casoAccionSolicitada, CasoAccionSolicitadaDto>()
                 .ForMember(dest => dest.nombreAccion, opt => opt.MapFrom(src => src.idAccionNavigation != null ? src.idAccionNavigation.nombre : null))
                 .ForMember(dest => dest.nombreEstado, opt => opt.MapFrom(src => src.idEstadoNavigation != null ? src.idEstadoNavigation.nombreEstado : null))
+                .ForMember(dest => dest.nombreResponsable, opt => opt.MapFrom(src => src.responsableNavigation != null ? src.responsableNavigation.nombres + " " + src.responsableNavigation.apellidos : null))
                 //.ForMember(dest => dest.colorEstado, opt => opt.MapFrom(src => src.idEstadoNavigation != null ? src.idEstadoNavigation.color : null))
                 //.ForMember(dest => dest.nombreActualizadoPor, opt => opt.MapFrom(src => src.actualizadoPorNavigation != null ? src.actualizadoPorNavigation.nombres + " " + src.actualizadoPorNavigation.apellidos : null))
                 .ReverseMap();
@@ -1676,6 +1678,12 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
 
             // Motivo Cambio Fecha OF
             CreateMap<motivoCambioFechaOf, MotivoCambioFechaOfDto>().ReverseMap();
+
+            // FLAGS
+            CreateMap<flagDocumento, FlagDocumentoDto>().ReverseMap();
+            CreateMap<UpdateFlagDocumentoDto, flagDocumento>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
         }
     }
 }

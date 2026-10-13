@@ -129,8 +129,9 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales.Concili
 
         // PUT api/<conciliacionController>/5
         [HttpPut("put/{id}")]
-       public async Task<IActionResult> PutConciliacion(int id, UpdateConciliacionDto updateConciliacionDto)
+        public async Task<IActionResult> PutConciliacion(int id, UpdateConciliacionDto updateConciliacionDto)
         {
+            // 1. EF Core trae la entidad y comienza a rastrear sus cambios
             var conciliacion = await _context.conciliacion.FindAsync(id);
 
             if (conciliacion == null)
@@ -138,11 +139,15 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales.Concili
                 return NotFound();
             }
 
+            // 2. AutoMapper aplica SOLO los campos que no sean nulos
             _mapper.Map(updateConciliacionDto, conciliacion);
-            _context.Entry(conciliacion).State = EntityState.Modified;
 
             try
             {
+
+                // Revisa el contenido de 'camposConFechaMinima' en la ventana Local/Watch
+
+                // 3. EF Core detecta inteligentemente qué cambió y guarda solo eso
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)

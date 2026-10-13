@@ -19,10 +19,10 @@ public partial class confirmacionPreliminar
 
     public int? oF { get; set; }
 
-    public int idProceso { get; set; }
+    public int? idProceso { get; set; }
 
     [Column(TypeName = "numeric(18, 2)")]
-    public decimal cantidadRecibida { get; set; }
+    public decimal? cantidadRecibida { get; set; }
 
     public int? idUnidad { get; set; }
 
@@ -31,9 +31,9 @@ public partial class confirmacionPreliminar
     [StringLength(250)]
     public string observaciones { get; set; }
 
-    public int idEstado { get; set; }
+    public int? idEstado { get; set; }
 
-    public int tipoReporte { get; set; }
+    public int? tipoReporte { get; set; }
 
     [StringLength(50)]
     public string entregadoPor { get; set; }
@@ -45,7 +45,7 @@ public partial class confirmacionPreliminar
     public string registradoPor { get; set; }
 
     [Column(TypeName = "datetime")]
-    public DateTime fechaRegistro { get; set; }
+    public DateTime? fechaRegistro { get; set; }
 
     [Column(TypeName = "datetime")]
     public DateTime? fechaActualizacion { get; set; }
@@ -53,9 +53,9 @@ public partial class confirmacionPreliminar
     [StringLength(50)]
     public string actualizadoPor { get; set; }
 
-    public bool cancelado { get; set; }
+    public bool? cancelado { get; set; }
 
-    public bool archivado { get; set; }
+    public bool? archivado { get; set; }
 
     [ForeignKey("actualizadoPor")]
     [InverseProperty("confirmacionPreliminaractualizadoPorNavigation")]

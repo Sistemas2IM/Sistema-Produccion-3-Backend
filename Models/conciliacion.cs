@@ -15,19 +15,19 @@ public partial class conciliacion
     [Key]
     public int idConciliacion { get; set; }
 
-    public int idPreliminar { get; set; }
+    public int? idPreliminar { get; set; }
 
     [Column(TypeName = "numeric(18, 2)")]
-    public decimal cantidadPreliminar { get; set; }
+    public decimal? cantidadPreliminar { get; set; }
 
     [Column(TypeName = "numeric(18, 2)")]
-    public decimal cantidadTransferidaTotal { get; set; }
+    public decimal? cantidadTransferidaTotal { get; set; }
 
     [Column(TypeName = "numeric(18, 2)")]
     public decimal? cantidadConfirmadaGenerada { get; set; }
 
     [Column(TypeName = "numeric(18, 2)")]
-    public decimal diferencia { get; set; }
+    public decimal? diferencia { get; set; }
 
     public int? idMotivo { get; set; }
 
@@ -39,7 +39,7 @@ public partial class conciliacion
     public string responsable { get; set; }
 
     [Column(TypeName = "datetime")]
-    public DateTime fechaConciliacion { get; set; }
+    public DateTime? fechaConciliacion { get; set; }
 
     public bool cancelado { get; set; }
 

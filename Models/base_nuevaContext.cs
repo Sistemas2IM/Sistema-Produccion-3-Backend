@@ -386,6 +386,7 @@ public partial class base_nuevaContext : DbContext
             entity.HasKey(e => e.idEvento).HasName("PK_BITACORACASO");
 
             entity.Property(e => e.fecha).HasDefaultValueSql("(getdate())");
+            entity.Property(e => e.usuario).UseCollation("SQL_Latin1_General_CP1_CI_AS");
 
             entity.HasOne(d => d.estadoAnteriorNavigation).WithMany(p => p.bitacoraCasoestadoAnteriorNavigation).HasConstraintName("FK_BITACORA_ESTADO_ANTERIOR");
 
@@ -400,6 +401,8 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.idTipoEventoNavigation).WithMany(p => p.bitacoraCaso)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_BITACORA_TIPO_EVENTO");
+
+            entity.HasOne(d => d.usuarioNavigation).WithMany(p => p.bitacoraCaso).HasConstraintName("FK_BITACORA_USUARIO");
 
             entity.HasMany(d => d.idAnexo).WithMany(p => p.idBitacora)
                 .UsingEntity<Dictionary<string, object>>(
@@ -606,9 +609,7 @@ public partial class base_nuevaContext : DbContext
 
             entity.HasOne(d => d.idMotivoNavigation).WithMany(p => p.conciliacion).HasConstraintName("FK_CONCILIACION_MOTIVO");
 
-            entity.HasOne(d => d.idPreliminarNavigation).WithOne(p => p.conciliacion)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_CONCILIACION_PRELIMINAR");
+            entity.HasOne(d => d.idPreliminarNavigation).WithOne(p => p.conciliacion).HasConstraintName("FK_CONCILIACION_PRELIMINAR");
 
             entity.HasOne(d => d.responsableNavigation).WithMany(p => p.conciliacion).HasConstraintName("FK_CONCILIACION_RESPONSABLE");
         });
@@ -638,6 +639,8 @@ public partial class base_nuevaContext : DbContext
             entity.HasKey(e => e.idPreliminar).HasName("PK_CONFIRMACION_PRELIMINAR");
 
             entity.Property(e => e.actualizadoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.archivado).HasDefaultValue(false);
+            entity.Property(e => e.cancelado).HasDefaultValue(false);
             entity.Property(e => e.entregadoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
             entity.Property(e => e.fechaRegistro).HasDefaultValueSql("(getdate())");
             entity.Property(e => e.operador).UseCollation("SQL_Latin1_General_CP1_CI_AS");
@@ -647,13 +650,9 @@ public partial class base_nuevaContext : DbContext
 
             entity.HasOne(d => d.entregadoPorNavigation).WithMany(p => p.confirmacionPreliminarentregadoPorNavigation).HasConstraintName("FK_PRELIMINAR_ENTREGADO_POR");
 
-            entity.HasOne(d => d.idEstadoNavigation).WithMany(p => p.confirmacionPreliminar)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_PRELIMINAR_ESTADO");
+            entity.HasOne(d => d.idEstadoNavigation).WithMany(p => p.confirmacionPreliminar).HasConstraintName("FK_PRELIMINAR_ESTADO");
 
-            entity.HasOne(d => d.idProcesoNavigation).WithMany(p => p.confirmacionPreliminar)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_PRELIMINAR_PROCESO");
+            entity.HasOne(d => d.idProcesoNavigation).WithMany(p => p.confirmacionPreliminar).HasConstraintName("FK_PRELIMINAR_PROCESO");
 
             entity.HasOne(d => d.idTurnoNavigation).WithMany(p => p.confirmacionPreliminar).HasConstraintName("FK_PRELIMINAR_TURNO");
 
@@ -665,9 +664,7 @@ public partial class base_nuevaContext : DbContext
 
             entity.HasOne(d => d.registradoPorNavigation).WithMany(p => p.confirmacionPreliminarregistradoPorNavigation).HasConstraintName("FK_PRELIMINAR_REGISTRADO_POR");
 
-            entity.HasOne(d => d.tipoReporteNavigation).WithMany(p => p.confirmacionPreliminar)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_PRELIMINAR_TIPO_REPORTE");
+            entity.HasOne(d => d.tipoReporteNavigation).WithMany(p => p.confirmacionPreliminar).HasConstraintName("FK_PRELIMINAR_TIPO_REPORTE");
         });
 
         modelBuilder.Entity<corridaCombinada>(entity =>

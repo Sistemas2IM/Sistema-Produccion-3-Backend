@@ -189,8 +189,8 @@ namespace Sistema_Produccion_3_Backend.Services.Automatizacion
                                             disc.fechaUltimaRevision = DateTime.Now;
                                             context.logSincronizacionOf.Add(disc);
 
-                                            string urlWebhookOffset = "https://chat.googleapis.com/v1/spaces/AAQAcyo_Bds/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=VDp369j32Q8rsHYsIIqOadsUhqtV5cGfQqSQRhBy0Kw";
-                                            string urlWebhookFlexo = "https://chat.googleapis.com/v1/spaces/AAQAmuIgng8/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=jl3fY-gXIJyrcAuhVxW2xMHd8biS2EeljElNS39CV1Y";
+                                            string urlWebhookOffset = "";
+                                            string urlWebhookFlexo = "";
                                             string urlDestino = "";
 
                                             string linea = "";

@@ -26,12 +26,14 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.FichaTecnicaProcesos
         public async Task<ActionResult<IEnumerable<FichaTecnicaProcesosDto>>> GetFichaTecnicaProceso()
         {
             var fichaTecnicaProceso = await _context.fichaTecnicaProcesos
+                .OrderByDescending(f => f.fechaCreacion)
                 .Include(o => o.oFNavigation)
                 .Include(u => u.operadorNavigation)
                 .Include(t => t.formuladorTintaNavigation)
                 .Include(e => e.estadoNavigation)
                 .Include(ma => ma.maquinaNavigation)
                 .Include(u => u.creadoPorNavigation)
+                .Where(f => f.archivado == false && f.cancelado == false)
                 .ToListAsync();
 
             var fichaTecnicaProcesoDto = _mapper.Map<List<FichaTecnicaProcesosDto>>(fichaTecnicaProceso);
@@ -73,6 +75,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.FichaTecnicaProcesos
         public async Task<ActionResult<FichaTecnicaProcesosDto>> GetFichaTecnicaProcesoOfArticulo(int of, string codArticulo)
         {
             var fichaTecnicaProceso = await _context.fichaTecnicaProcesos
+                .OrderByDescending(f => f.fechaCreacion)
                 .Include(f => f.detalleFichaProcesos)
                 .Include(f => f.formulacionTinta)
                 .ThenInclude(ft => ft.especificacionTintas)
@@ -86,6 +89,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.FichaTecnicaProcesos
                 .Include(m => m.medicionAguas)
                 .Include(ma => ma.maquinaNavigation)
                 .Include(u => u.creadoPorNavigation)
+                .Where(f => f.archivado == false && f.cancelado == false)
                 .FirstOrDefaultAsync(f => f.oFNavigation.oF == of && f.oFNavigation.codArticulo == codArticulo);
 
             if (fichaTecnicaProceso == null)

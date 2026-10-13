@@ -30,7 +30,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.BitacoraCaso
                 .Include(te => te.estadoAnteriorNavigation)
                 .Include(te => te.estadoNuevoNavigation)
                 .Include(te => te.idDictamenNavigation)
-                //.Include(te => te.usuarioNavigation)
+                .Include(te => te.usuarioNavigation)
                 .ToListAsync();
 
             var bitacoraCasoDto = _mapper.Map<List<BitacoraCasoDto>>(bitacoraCaso);
@@ -48,7 +48,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.BitacoraCaso
                 .Include(te => te.estadoNuevoNavigation)
                 .Include(te => te.idDictamenNavigation)
                 .Include(te => te.idAnexo)
-                //.Include(te => te.usuarioNavigation)
+                .Include(te => te.usuarioNavigation)
                 .FirstOrDefaultAsync(te => te.idEvento == id);
 
             if (bitacoraCaso == null)

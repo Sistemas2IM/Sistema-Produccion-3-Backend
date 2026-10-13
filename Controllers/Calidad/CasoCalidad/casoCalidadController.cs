@@ -70,6 +70,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.CasoCalidad
                         .ThenInclude(m => m.idMaquinaNavigation)
                     .Include(c => c.idProcesoNavigation)
                         .ThenInclude(m => m.idMaterialNavigation)
+                    .Include(c => c.bitacoraCaso)
+                        .ThenInclude(c => c.usuarioNavigation)
                     // INCLUDES DE MÁQUINAS
                     .Include(c => c.idProcesoNavigation).ThenInclude(p => p.procesoImpresora)
                     .Include(c => c.idProcesoNavigation).ThenInclude(p => p.procesoAcabado)
@@ -99,6 +101,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.CasoCalidad
                         .ThenInclude(a => a.idAccionNavigation)
                     .Include(c => c.casoAccionSolicitada)
                         .ThenInclude(a => a.idEstadoNavigation)
+                    .Include(c => c.casoAccionSolicitada)
+                        .ThenInclude(a => a.responsableNavigation)
                     .Include(c => c.idCausaRaizNavigation)
                     .Include(c => c.idResolucionNavigation)
                     .Include(c => c.areaResponsableNavigation)
@@ -225,6 +229,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.CasoCalidad
                 .Include(c => c.bitacoraCaso)
                     .ThenInclude(b => b.idDictamenNavigation)
                 .Include(c => c.casoAccionSolicitada)
+                    .ThenInclude(a => a.responsableNavigation)
                 .Include(c => c.unidadMedidaNavigation)
                 .Where(c => c.archivado == false && c.cancelado == false)
                 .ToListAsync();

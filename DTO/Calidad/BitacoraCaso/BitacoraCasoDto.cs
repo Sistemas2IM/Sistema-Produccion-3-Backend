@@ -29,7 +29,7 @@ namespace Sistema_Produccion_3_Backend.DTO.Calidad.BitacoraCaso
 
         public string? usuario { get; set; }
 
-        //public string? nombreUsuario { get; set; }
+        public string? nombreUsuario { get; set; }
 
         public DateTime? fecha { get; set; }
 
