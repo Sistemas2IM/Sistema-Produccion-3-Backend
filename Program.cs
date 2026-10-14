@@ -12,6 +12,7 @@ using Sistema_Produccion_3_Backend.Models;
 using Sistema_Produccion_3_Backend.Services;
 using Sistema_Produccion_3_Backend.Services.Automatizacion;
 using Sistema_Produccion_3_Backend.Services.RequestLock;
+using Sistema_Produccion_3_Backend.Services.Flags;
 using Sistema_Produccion_3_Backend.Validators.Auth;
 using Sistema_Produccion_3_Backend.Validators.ProductoTerminado;
 using Sistema_Produccion_3_Backend.Controllers.GoogleChat;
@@ -83,6 +84,9 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddSingleton<IRequestLockService, RequestLockService>();
 
 //---------------------------------------------------------------------------------
+
+//flags
+builder.Services.AddScoped<IFlagService, FlagService>();
 
 // Servicios de Autenticación de Usuarios
 builder.Services.AddScoped<IAuthService, AuthService>();

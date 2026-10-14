@@ -133,16 +133,22 @@ namespace Sistema_Produccion_3_Backend.Services.Automatizacion
                                         if ((local.razonSocial ?? "") != razonSocialSap) diferencias.Add($"Razón Social|{local.razonSocial}|{razonSocialSap}");
                                         if (local.fechaVencimiento?.Date != fechaEntregaSap?.Date) diferencias.Add($"Fecha Entrega|{local.fechaVencimiento?.ToString("yyyy-MM-dd")}|{fechaEntregaSap?.ToString("yyyy-MM-dd")}");
 
-                                        // 🚀 Lógica de similitud para Descripción con el formato correcto de barras
-                                        string descNexo = local.descipcionOf ?? "";
-                                        double similitudDesc = CalcularSimilitud(descNexo, descripcionOfSap);
+                                        // 🚀 Lógica de similitud para Descripción: Solo evaluamos si ambos tienen texto
+                                        string descNexo = local.descipcionOf?.Trim() ?? "";
+                                        string descSap = descripcionOfSap?.Trim() ?? "";
 
-                                        if (similitudDesc < 95.0)
+                                        // Ignoramos la validación si alguno de los dos sistemas tiene el campo vacío o solo espacios
+                                        if (!string.IsNullOrWhiteSpace(descNexo) && !string.IsNullOrWhiteSpace(descSap))
                                         {
-                                            // Extraemos únicamente las líneas que sufrieron cambios
-                                            var (textoDiferenteNexo, textoDiferenteSap) = ExtraerLineasDiferentes(descNexo, descripcionOfSap);
+                                            double similitudDesc = CalcularSimilitud(descNexo, descSap);
 
-                                            diferencias.Add($"Descripción ({similitudDesc:F1}% similar)[SEP]{textoDiferenteNexo}[SEP]{textoDiferenteSap}");
+                                            if (similitudDesc < 95.0)
+                                            {
+                                                // Extraemos únicamente las líneas que sufrieron cambios
+                                                var (textoDiferenteNexo, textoDiferenteSap) = ExtraerLineasDiferentes(descNexo, descSap);
+
+                                                diferencias.Add($"Descripción ({similitudDesc:F1}% similar)[SEP]{textoDiferenteNexo}[SEP]{textoDiferenteSap}");
+                                            }
                                         }
 
                                         // EN TU BACKGROUND SERVICE (Lógica de comparación)

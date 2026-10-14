@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.Elfie.Serialization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
+using Sistema_Produccion_3_Backend.DTO.Flags.FlagDocumento;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.BusquedaProcesos;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.ProcesoOfSolicitud;
@@ -23,6 +24,7 @@ using Sistema_Produccion_3_Backend.DTO.ProcesoOf.UpdateMaquina;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.UpdateSAP;
 using Sistema_Produccion_3_Backend.DTO.ReporteOperador.DetalleReporte;
 using Sistema_Produccion_3_Backend.Models;
+using Sistema_Produccion_3_Backend.Services.Flags;
 using Sistema_Produccion_3_Backend.Services.RequestLock;
 using System.Diagnostics;
 using System.Linq;
@@ -40,13 +42,17 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly ILogger<procesoOfController> _logger;
         private readonly IMemoryCache _memoryCache;
+        private readonly IFlagService _flagService;
 
-        public procesoOfController(base_nuevaContext context, IMapper mapper, IRequestLockService lockService, IHttpClientFactory httpClientFactory, IMemoryCache memoryCache, ILogger<procesoOfController> logger)
+        public procesoOfController(base_nuevaContext context, IMapper mapper, IRequestLockService lockService, IHttpClientFactory httpClientFactory, IMemoryCache memoryCache, ILogger<procesoOfController> logger, IFlagService flagService)
         {
             _context = context;
             _mapper = mapper;
             _lockService = lockService;
             _httpClientFactory = httpClientFactory;
+            _memoryCache = memoryCache;
+            _logger = logger;
+            _flagService = flagService;
             _memoryCache = memoryCache;
             _logger = logger;
         }
@@ -954,7 +960,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 var proceso = procesoWrapper.Proceso;
                 var dto = _mapper.Map<ProcesoOfVistaTableroDto>(proceso);
                 dto.detalleProcesoOf = _mapper.Map<List<DetalleReporteDto>>(procesoWrapper.DetalleReporteOrdenado);
-         
+
                 switch (proceso.tipoMaquinaSAP)
                 {
                     case "impresion":
@@ -1019,6 +1025,58 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
 
                 dtos.Add(dto);
             }
+
+            //// 🚀 1. REUNIR TODOS LOS IDS DESDE LAS ENTIDADES (Evita errores de DTOs como booleanos)
+            //var idsProcesos = new HashSet<int>();
+
+            //foreach (var procesoWrapper in procesos)
+            //{
+            //    var p = procesoWrapper.Proceso;
+            //    idsProcesos.Add(p.idProceso);
+
+            //    // Si la entidad es maestra, extraemos los IDs de sus subordinados
+            //    if (p.corridaCombinadamaestroNavigation != null)
+            //    {
+            //        foreach (var corrida in p.corridaCombinadamaestroNavigation)
+            //        {
+            //            if (corrida.subordinado.HasValue)
+            //            {
+            //                idsProcesos.Add(corrida.subordinado.Value);
+            //            }
+            //        }
+            //    }
+
+            //    // Si la entidad es subordinada, aseguramos traer el ID también
+            //    if (p.corridaCombinadasubordinadoNavigation?.subordinado != null)
+            //    {
+            //        idsProcesos.Add(p.corridaCombinadasubordinadoNavigation.subordinado.Value);
+            //    }
+            //}
+
+            //// 🚀 2. CONSULTA ÚNICA PARA TODO EL TABLERO
+            //// Nota: Si sigue dando error TiposDocumento, reemplaza '(int)TiposDocumento.ProcesoOf' por '1'
+            //var flagsDict = await _flagService.ObtenerActivasAsync((int)TiposDocumento.ProcesoOf, idsProcesos);
+
+            //// 🚀 3. ASIGNACIÓN EN MEMORIA A LOS DTOs
+            //foreach (var dto in dtos)
+            //{
+            //    // Asignamos banderas al proceso principal
+            //    dto.flagDocumentoDTO = flagsDict.TryGetValue(dto.idProceso, out var flags)
+            //        ? flags
+            //        : new List<FlagDocumentoDto>();
+
+            //    // Si tu DTO tiene una lista explícita mapeada de subordinadas, le asignamos a cada una
+            //    if (dto.subordinadas != null)
+            //    {
+            //        foreach (var sub in dto.subordinadas)
+            //        {
+            //            // ⚠️ Asegúrate que la clase de 'sub' también tenga la propiedad flagDocumentoDTO
+            //            sub.flagDocumentoDTO = flagsDict.TryGetValue(sub.idRelacion, out var subFlags)
+            //                ? subFlags
+            //                : new List<FlagDocumentoDto>();
+            //        }
+            //    }
+            //}
 
             return Ok(dtos);
         }
