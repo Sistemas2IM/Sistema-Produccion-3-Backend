@@ -1,5 +1,6 @@
 ﻿using Sistema_Produccion_3_Backend.DTO.CorridaCombinada;
 using Sistema_Produccion_3_Backend.DTO.Etiquetas.TarjetaEtiqueta;
+using Sistema_Produccion_3_Backend.DTO.Flags.FlagDocumento;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.Asignacion;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.CamposPersonalizados;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.DetalleProceso;
@@ -170,5 +171,7 @@ namespace Sistema_Produccion_3_Backend.DTO.ProcesoOf
         public List<CorridaCombinadaDto>? subordinadas { get; set; }
 
         public List<ComponenteProduccionDto>? componentes { get; set; }
+
+        public List<FlagDocumentoDto>? flagDocumentoDTO { get; set; } = new();
     }
 }
