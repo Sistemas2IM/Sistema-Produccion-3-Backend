@@ -1,4 +1,5 @@
-﻿using Sistema_Produccion_3_Backend.Services;
+﻿using Sistema_Produccion_3_Backend.DTO.Flags.FlagDocumento;
+using Sistema_Produccion_3_Backend.Services;
 using System.Text.Json.Serialization;
 
 namespace Sistema_Produccion_3_Backend.DTO.CorridaCombinada
@@ -25,5 +26,7 @@ namespace Sistema_Produccion_3_Backend.DTO.CorridaCombinada
         public DateTime? fechaCreacionOf { get; set; } // de subordinado / proceso of
 
         public string? serie { get; set; } // de subordinado / proceso of
+
+        public List<FlagDocumentoDto> flagDocumentoDTO { get; set; } = new();
     }
 }

@@ -1026,57 +1026,58 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 dtos.Add(dto);
             }
 
-            //// 🚀 1. REUNIR TODOS LOS IDS DESDE LAS ENTIDADES (Evita errores de DTOs como booleanos)
-            //var idsProcesos = new HashSet<int>();
+            // 🚀 1. REUNIR TODOS LOS IDS DESDE LAS ENTIDADES (Evita errores de DTOs como booleanos)
+            var idsProcesos = new HashSet<int>();
 
-            //foreach (var procesoWrapper in procesos)
-            //{
-            //    var p = procesoWrapper.Proceso;
-            //    idsProcesos.Add(p.idProceso);
+            foreach (var procesoWrapper in procesos)
+            {
+                var p = procesoWrapper.Proceso;
+                idsProcesos.Add(p.idProceso);
 
-            //    // Si la entidad es maestra, extraemos los IDs de sus subordinados
-            //    if (p.corridaCombinadamaestroNavigation != null)
-            //    {
-            //        foreach (var corrida in p.corridaCombinadamaestroNavigation)
-            //        {
-            //            if (corrida.subordinado.HasValue)
-            //            {
-            //                idsProcesos.Add(corrida.subordinado.Value);
-            //            }
-            //        }
-            //    }
+                // Si la entidad es maestra, extraemos los IDs de sus subordinados
+                if (p.corridaCombinadamaestroNavigation != null)
+                {
+                    foreach (var corrida in p.corridaCombinadamaestroNavigation)
+                    {
+                        if (corrida.subordinado.HasValue)
+                        {
+                            idsProcesos.Add(corrida.subordinado.Value);
+                        }
+                    }
+                }
 
-            //    // Si la entidad es subordinada, aseguramos traer el ID también
-            //    if (p.corridaCombinadasubordinadoNavigation?.subordinado != null)
-            //    {
-            //        idsProcesos.Add(p.corridaCombinadasubordinadoNavigation.subordinado.Value);
-            //    }
-            //}
+                // Si la entidad es subordinada, aseguramos traer el ID también
+                if (p.corridaCombinadasubordinadoNavigation?.subordinado != null)
+                {
+                    idsProcesos.Add(p.corridaCombinadasubordinadoNavigation.subordinado.Value);
+                }
+            }
 
-            //// 🚀 2. CONSULTA ÚNICA PARA TODO EL TABLERO
-            //// Nota: Si sigue dando error TiposDocumento, reemplaza '(int)TiposDocumento.ProcesoOf' por '1'
-            //var flagsDict = await _flagService.ObtenerActivasAsync((int)TiposDocumento.ProcesoOf, idsProcesos);
+            // 🚀 2. CONSULTA ÚNICA PARA TODO EL TABLERO
+            var flagsDict = await _flagService.ObtenerActivasAsync((int)TiposDocumento.ProcesoOf, idsProcesos);
 
-            //// 🚀 3. ASIGNACIÓN EN MEMORIA A LOS DTOs
-            //foreach (var dto in dtos)
-            //{
-            //    // Asignamos banderas al proceso principal
-            //    dto.flagDocumentoDTO = flagsDict.TryGetValue(dto.idProceso, out var flags)
-            //        ? flags
-            //        : new List<FlagDocumentoDto>();
+            // 🚀 3. ASIGNACIÓN EN MEMORIA A LOS DTOs
+            foreach (var dto in dtos)
+            {
+                // Asignamos banderas al proceso principal
+                dto.flagDocumentoDTO = flagsDict.TryGetValue(dto.idProceso, out var flags)
+                    ? flags
+                    : new List<FlagDocumentoDto>();
 
-            //    // Si tu DTO tiene una lista explícita mapeada de subordinadas, le asignamos a cada una
-            //    if (dto.subordinadas != null)
-            //    {
-            //        foreach (var sub in dto.subordinadas)
-            //        {
-            //            // ⚠️ Asegúrate que la clase de 'sub' también tenga la propiedad flagDocumentoDTO
-            //            sub.flagDocumentoDTO = flagsDict.TryGetValue(sub.idRelacion, out var subFlags)
-            //                ? subFlags
-            //                : new List<FlagDocumentoDto>();
-            //        }
-            //    }
-            //}
+                // Si tu DTO tiene una lista explícita mapeada de subordinadas, le asignamos a cada una
+                if (dto.subordinadas != null)
+                {
+                    foreach (var sub in dto.subordinadas)
+                    {
+                        // ⚠️ Asegúrate que la clase de 'sub' también tenga la propiedad flagDocumentoDTO
+                        int idHijo = sub.subordinado ?? 0;
+
+                        sub.flagDocumentoDTO = (idHijo > 0 && flagsDict.TryGetValue(idHijo, out var subFlags))
+                            ? subFlags
+                            : new List<FlagDocumentoDto>();
+                    }
+                }
+            }
 
             return Ok(dtos);
         }

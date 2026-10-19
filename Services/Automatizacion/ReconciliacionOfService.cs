@@ -79,8 +79,7 @@ namespace Sistema_Produccion_3_Backend.Services.Automatizacion
                                     if (dictLocales.TryGetValue(docNumSap, out var local))
                                     {
                                         // --- EXTRAER USANDO TUS ALIAS DEL SP ---
-                                        string ovNumSapStr = oRecordSet.Fields.Item("OVNum").Value?.ToString()?.Trim() ?? "";
-                                        string nombreOfSap = oRecordSet.Fields.Item("CardName").Value?.ToString()?.Trim() ?? "";
+                                        string ovNumSapStr = oRecordSet.Fields.Item("OVNum").Value?.ToString()?.Trim() ?? "";                                     
                                         string codArtSap = oRecordSet.Fields.Item("CodArt").Value?.ToString()?.Trim() ?? "";
                                         string productoOfSap = oRecordSet.Fields.Item("ProdName").Value?.ToString()?.Trim() ?? "";
                                         string lNegocioSap = oRecordSet.Fields.Item("Lnegocio").Value?.ToString()?.Trim() ?? "";
@@ -107,7 +106,6 @@ namespace Sistema_Produccion_3_Backend.Services.Automatizacion
                                         List<string> diferencias = new List<string>();
 
                                         if (local.oV != ovSap) diferencias.Add($"OV|{local.oV}|{ovSap}");
-                                        if ((local.nombreOf ?? "") != nombreOfSap) diferencias.Add($"Nombre|{local.nombreOf}|{nombreOfSap}");
                                         if ((local.codArticulo ?? "") != codArtSap) diferencias.Add($"Cód. Artículo|{local.codArticulo}|{codArtSap}");
                                         if ((local.productoOf ?? "") != productoOfSap) diferencias.Add($"Producto|{local.productoOf}|{productoOfSap}");
                                         if ((local.lineaDeNegocio ?? "") != lNegocioSap) diferencias.Add($"Línea Negocio|{local.lineaDeNegocio}|{lNegocioSap}");
