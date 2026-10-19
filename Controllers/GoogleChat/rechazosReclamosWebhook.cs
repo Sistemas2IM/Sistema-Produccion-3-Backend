@@ -40,16 +40,19 @@ namespace Sistema_Produccion_3_Backend.Controllers.GoogleChat
                 string idMarisol = "107391663729700326308";
                 string idClaudia = "111502846367859573871";
 
-
-                // 🚀 2. RUTAS DE ENVÍO (Calidad siempre por defecto)
-                var urlsDestino = new List<string> {
-            "https://chat.googleapis.com/v1/spaces/AAQAZCnXf3s/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=iAkmD-PzeExi3MQnMueFKDDm1xI_XTkD__lbsl8UozE"
-        };
-
                 // Normalizamos vendedor y línea de negocio
                 string vendedor = vendedorOf?.Trim().ToLower() ?? "";
                 string linea = lineaDeNegocio?.Trim().ToLower() ?? "";
                 bool esFlexo = linea.Contains("flexo");
+
+
+                // 🚀 2. RUTAS DE ENVÍO (Calidad dinámico: Offset vs Flexo)
+                var urlsDestino = new List<string>
+                {
+                    esFlexo
+                        ? "https://chat.googleapis.com/v1/spaces/AAQAsAVZanQ/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=hZL5ump8GVyMRohJFqQ2ASg7OjezlGLYCua9x5e49Q4" // Calidad Flexo
+                        : "https://chat.googleapis.com/v1/spaces/AAQAZCnXf3s/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=iAkmD-PzeExi3MQnMueFKDDm1xI_XTkD__lbsl8UozE" // Calidad Offset
+                };
 
                 // Evaluamos vendedor para agregar su webhook correspondiente (Offset vs Flexo)
                 if (vendedor.Contains("hugo campos"))
