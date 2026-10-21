@@ -3,11 +3,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Caching.Memory;
+using Sistema_Produccion_3_Backend.DTO.Flags.FlagDocumento;
 using Sistema_Produccion_3_Backend.DTO.ProcesoOf.BusquedaProcesos;
 using Sistema_Produccion_3_Backend.DTO.TarjetasOF;
 using Sistema_Produccion_3_Backend.DTO.TarjetasOF.BusquedaTarjetas;
 using Sistema_Produccion_3_Backend.DTO.TarjetasOF.Reportes;
 using Sistema_Produccion_3_Backend.Models;
+using Sistema_Produccion_3_Backend.Services.Flags;
 using System.Linq;
 
 namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
@@ -21,11 +23,17 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly ILogger<tarjetaOfController> _logger;
         private readonly IMemoryCache _memoryCache;
+        private readonly IFlagService _flagService;
 
         // Replace the constructor signature to fix CS1552
-        public tarjetaOfController(base_nuevaContext context, IMapper mapper, IHttpClientFactory httpClientFactory, IMemoryCache memoryCache, ILogger<tarjetaOfController> logger)
+        public tarjetaOfController(base_nuevaContext context, IMapper mapper, IHttpClientFactory httpClientFactory, IMemoryCache memoryCache, ILogger<tarjetaOfController> logger, IFlagService flagService)
         {
             _context = context;
+            _mapper = mapper;
+            _httpClientFactory=httpClientFactory;
+            _logger=logger;
+            _memoryCache = memoryCache;
+            _flagService = flagService;
             _mapper = mapper;
             _httpClientFactory=httpClientFactory;
             _logger=logger;
@@ -53,10 +61,9 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
         public async Task<ActionResult<IEnumerable<TarjetaOfDto>>> GettarjetaOf()
         {
             var tarjetasOrdenadas = await _context.tarjetaOf
-                .AsNoTracking() // 🚀 Libera la memoria de EF Core (clave para endpoints GET)
-                .AsSplitQuery() // 🚀 Evita la "explosión cartesiana" al traer las listas de etiquetaOf y ffeTiempos
+                .AsNoTracking() // 🚀 Libera la memoria de EF Core
+                .AsSplitQuery() // 🚀 Evita la "explosión cartesiana"
                 .Where(t => t.archivada == false)
-                // 🚀 Ordenamiento directo: EF Core traducirá esto a un CASE en SQL sin instanciar objetos anónimos
                 .OrderBy(t => t.idEstadoOf == 1 ? 0 : 1)
                 .ThenBy(t => t.idEstadoOf == 1 ? -t.oF : t.posicion)
                 .Include(u => u.idEstadoOfNavigation)
@@ -69,13 +76,14 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
 
             var tarjetaOfDto = _mapper.Map<List<TarjetaOfDto>>(tarjetasOrdenadas);
 
+            // 🚀 1. REUNIMOS LOS IDs (Ya lo hacías para buscar diferencias SAP)
             var idsOf = tarjetaOfDto.Select(t => t.oF).ToList();
 
             if (idsOf.Any())
             {
                 var conteoDiferencias = await _context.logSincronizacionOf
                     .AsNoTracking()
-                    .Where(l => idsOf.Contains(l.oF)) // Agrega && l.estado == "Descuadrado" si solo quieres contar activos
+                    .Where(l => idsOf.Contains(l.oF))
                     .GroupBy(l => l.oF)
                     .Select(g => new {
                         oF = g.Key,
@@ -83,9 +91,20 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                     })
                     .ToDictionaryAsync(x => x.oF, x => x.cantidad);
 
+                // 🚀 2. CONSULTA ÚNICA DE BANDERAS PARA TODAS LAS TARJETAS
+                // (En tu captura anterior vi que TarjetaOf era el 15 en tu Enum)
+                var flagsDict = await _flagService.ObtenerActivasAsync((int)TiposDocumento.TarjetaOf, idsOf);
+
+                // 🚀 3. ASIGNACIÓN EN MEMORIA DE AMBOS DICCIONARIOS (Diferencias y Flags)
                 foreach (var dto in tarjetaOfDto)
                 {
+                    // Asignación de diferencias SAP
                     dto.cantidadDiferenciasSap = conteoDiferencias.GetValueOrDefault(dto.oF, 0);
+
+                    // Asignación de banderas
+                    dto.flagDocumentoDTO = flagsDict.TryGetValue(dto.oF, out var flags)
+                        ? flags
+                        : new List<FlagDocumentoDto>();
                 }
             }
 
@@ -435,12 +454,23 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
                 .Include(se => se.secuenciadoPorNavigation)
                 .Include(h => h.historialVencimientoOf)
                 .FirstOrDefaultAsync(u => u.oF == id);
+
             var tarjetaOfDto = _mapper.Map<TarjetaOfDto>(tarjetaOf);
-            
+
             if (tarjetaOfDto == null)
             {
                 return Ok("");
             }
+
+            // 🚀 CONSULTA Y ASIGNACIÓN DE BANDERAS ACTIVAS PARA ESTA OF
+            var flagsDict = await _flagService.ObtenerActivasAsync(
+                (int)TiposDocumento.TarjetaOf,
+                new[] { tarjetaOfDto.oF }
+            );
+
+            tarjetaOfDto.flagDocumentoDTO = flagsDict.TryGetValue(tarjetaOfDto.oF, out var flags)
+                ? flags
+                : new List<FlagDocumentoDto>();
 
             return Ok(tarjetaOfDto);
         }

@@ -1,5 +1,6 @@
 ﻿using Sistema_Produccion_3_Backend.DTO.Etiquetas.Etiqueta;
 using Sistema_Produccion_3_Backend.DTO.Etiquetas.EtiquetaOf;
+using Sistema_Produccion_3_Backend.DTO.Flags.FlagDocumento;
 using Sistema_Produccion_3_Backend.DTO.TiemposEstimados.TiemposOf;
 using Sistema_Produccion_3_Backend.Models;
 using Sistema_Produccion_3_Backend.Services;
@@ -116,6 +117,8 @@ namespace Sistema_Produccion_3_Backend.DTO.TarjetasOF
         //public ffeTiemposOfDto? tiemposOfDto { get; set; }
 
         //public EstadoOfDto? estadoOfDto { get; set; }
+
+        public List<FlagDocumentoDto>? flagDocumentoDTO { get; set; } = new();
 
     }
 }
