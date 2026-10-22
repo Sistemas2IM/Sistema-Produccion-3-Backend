@@ -50,45 +50,45 @@ namespace Sistema_Produccion_3_Backend.Controllers.GoogleChat
                 var urlsDestino = new List<string>
                 {
                     esFlexo
-                        ? "https://chat.googleapis.com/v1/spaces/AAQAsAVZanQ/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=hZL5ump8GVyMRohJFqQ2ASg7OjezlGLYCua9x5e49Q4" // Calidad Flexo
-                        : "https://chat.googleapis.com/v1/spaces/AAQAZCnXf3s/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=iAkmD-PzeExi3MQnMueFKDDm1xI_XTkD__lbsl8UozE" // Calidad Offset
+                        ? "" // Calidad Flexo
+                        : "" // Calidad Offset
                 };
 
                 // Evaluamos vendedor para agregar su webhook correspondiente (Offset vs Flexo)
                 if (vendedor.Contains("hugo campos"))
                 {
                     urlsDestino.Add(esFlexo
-                        ? "https://chat.googleapis.com/v1/spaces/AAQA_pwneUY/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=9FX0MwqytenAJAD7OXodHxhKcS7DPc763nVzGZZAl68"
-                        : "https://chat.googleapis.com/v1/spaces/AAQAilWl2Jo/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=A_yWs6EE-IfQBU5w_USJjShwA2kAxPRSbESFH2DrYjk");
+                        ? "" // Calidad Flexo
+                        : ""); // Calidad Offset
                 }
                 else if (vendedor.Contains("javier toledo"))
                 {
                     urlsDestino.Add(esFlexo
-                        ? "https://chat.googleapis.com/v1/spaces/AAQALh_MjAA/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=MhqS8I35I1hNWaWKYZzOE6XGbP9a2W1RsIBsnSldh_M"
-                        : "https://chat.googleapis.com/v1/spaces/AAQA6GMP9tw/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=l8nS8pLNykzWIw4XLfb6J-r9wvt5UKrnwfliR50UpC0");
+                        ? "" // Calidad Flexo
+                        : ""); // Calidad Offset
                 }
                 else if (vendedor.Contains("juan mónico") || vendedor.Contains("juan monico"))
                 {
                     urlsDestino.Add(esFlexo
-                        ? "https://chat.googleapis.com/v1/spaces/AAQAKIkMsgE/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=bxAiuETKksuXpwVR0i89DB5Dr10SRCl8SuGqI9OKP0I"
-                        : "https://chat.googleapis.com/v1/spaces/AAQAvl06ADc/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=iHTcm8qgEwBL9oFHaRmxCJvmnvyJiW25DbLvKijtJZc");
+                        ? "" // Calidad Flexo
+                        : ""); // Calidad Offset
                 }
                 else if (vendedor.Contains("marisol osegueda"))
                 {
                     if (!esFlexo)
-                        urlsDestino.Add("https://chat.googleapis.com/v1/spaces/AAQAnCd5iFM/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=fTcbUJFLc4JDJSVprm95wEfRJp6COGnZE3DSl8RiuK4");
+                        urlsDestino.Add("");
                 }
                 else if (vendedor.Contains("claudia ruano"))
                 {
                     urlsDestino.Add(esFlexo
-                        ? "https://chat.googleapis.com/v1/spaces/AAQAl0RbCc4/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=CEOT9v4DyAd7yq2FyAVGyLYPffHaSBKtMZu3POmBOr8"
-                        : "https://chat.googleapis.com/v1/spaces/AAQAF1YqrtA/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=HhIwSaU11IIeqpa0HkyL3Ma8yildVUDXt4aiAdA46lc");
+                        ? "" // Calidad Flexo
+                        : ""); // Calidad Offset
                 }
                 else if (vendedor.Contains("jenny galvez") || vendedor.Contains("jenny gálvez"))
                 {
                     urlsDestino.Add(esFlexo
-                        ? "https://chat.googleapis.com/v1/spaces/AAQA50GvVkQ/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=LkJttJbKruQYmw6L2OG6kubfveOLf-QYl0kLepegWJA"
-                        : "https://chat.googleapis.com/v1/spaces/AAQAGR8CzsU/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=2roIwXvkK6QLLmm46Fzxb5hLHZtvWpvHJrOMY2BlSuQ");
+                        ? "" // Calidad Flexo
+                        : ""); // Calidad Offset
                 }
 
                 // 🚀 3. CONFIGURAR MENCIONES Y TEXTO VISUAL SEGÚN EL ESTADO

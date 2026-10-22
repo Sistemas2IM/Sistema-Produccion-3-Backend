@@ -44,7 +44,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.GoogleChat
             await _context.SaveChangesAsync();
 
             // 2. Webhook Soporte
-            const string urlSoporteGeneral = "https://chat.googleapis.com/v1/spaces/AAQA_XKMSY4/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=RZQ7_IeGm1pddB1z1YHlnNeygReUl3j4jvCh8d-g8nY";
+            const string urlSoporteGeneral = "";
 
             // 3. Lógica de severidad
             string iconoSeveridad = logDto.severidad switch
