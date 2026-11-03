@@ -278,6 +278,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.CasoCalidad
             var casoCompleto = await _context.casoCalidad
                 .Include(c => c.idTipoCasoNavigation)
                 .Include(c => c.registradoPorNavigation)
+                .Include(c => c.responsableNavigation)
                 .FirstOrDefaultAsync(c => c.idCasoCalidad == entidad.idCasoCalidad);
 
             // 🚀 2. OBTENEMOS VENDEDOR Y LÍNEA DE NEGOCIO EN UNA SOLA CONSULTA
@@ -329,10 +330,17 @@ namespace Sistema_Produccion_3_Backend.Controllers.Calidad.CasoCalidad
                 var casoCompleto = await _context.casoCalidad
                     .Include(c => c.idTipoCasoNavigation)
                     .Include(c => c.registradoPorNavigation)
+                    .Include(c => c.responsableNavigation)
                     .FirstOrDefaultAsync(c => c.idCasoCalidad == id);
 
+                // Necesitamos la línea de negocio para llegar al mismo espacio de Calidad (Offset/Flexo) que la apertura
+                var lineaDeNegocio = await _context.tarjetaOf
+                    .Where(t => t.oF == casoCalidad.oF)
+                    .Select(t => t.lineaDeNegocio)
+                    .FirstOrDefaultAsync();
+
                 // 🚀 2. NOTIFICACIÓN DE SEGUIMIENTO (Pasamos 'null' en el vendedor para enviar SOLO A CALIDAD)
-                await _rechazos.EnviarNotificacionCasoCalidad(casoCompleto ?? casoCalidad, "Seguimiento", null, null);
+                await _rechazos.EnviarNotificacionCasoCalidad(casoCompleto ?? casoCalidad, "Seguimiento", null, lineaDeNegocio);
             }
             catch (DbUpdateConcurrencyException)
             {

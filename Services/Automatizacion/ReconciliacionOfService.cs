@@ -67,6 +67,9 @@ namespace Sistema_Produccion_3_Backend.Services.Automatizacion
 
                                 var discrepancias = new List<logSincronizacionOf>();
 
+                                // OFs que SAP devolvió y que existen en NEXO (las únicas que realmente se compararon)
+                                var ofsEvaluadas = new HashSet<int>();
+
                                 // Convertimos la lista de OFs locales en un Diccionario para búsquedas ultrarrápidas
                                 var dictLocales = ofsLocales.ToDictionary(o => o.oF);
 
@@ -78,6 +81,8 @@ namespace Sistema_Produccion_3_Backend.Services.Automatizacion
                                     // ¿Tenemos esta OF de SAP en nuestra lista de tarjetas activas locales?
                                     if (dictLocales.TryGetValue(docNumSap, out var local))
                                     {
+                                        ofsEvaluadas.Add(docNumSap);
+
                                         // --- EXTRAER USANDO TUS ALIAS DEL SP ---
                                         string ovNumSapStr = oRecordSet.Fields.Item("OVNum").Value?.ToString()?.Trim() ?? "";                                     
                                         string codArtSap = oRecordSet.Fields.Item("CodArt").Value?.ToString()?.Trim() ?? "";
@@ -193,38 +198,23 @@ namespace Sistema_Produccion_3_Backend.Services.Automatizacion
                                             disc.fechaUltimaRevision = DateTime.Now;
                                             context.logSincronizacionOf.Add(disc);
 
-                                            string urlWebhookOffset = "https://chat.googleapis.com/v1/spaces/AAQAcyo_Bds/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=VDp369j32Q8rsHYsIIqOadsUhqtV5cGfQqSQRhBy0Kw";
-                                            string urlWebhookFlexo = "https://chat.googleapis.com/v1/spaces/AAQAmuIgng8/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=jl3fY-gXIJyrcAuhVxW2xMHd8biS2EeljElNS39CV1Y";
-                                            string urlDestino = "";
-
-                                            string linea = "";
-                                            if (dictLocales.TryGetValue(disc.oF, out var localOf))
-                                            {
-                                                linea = localOf.lineaDeNegocio?.Trim().ToUpperInvariant() ?? "";
-                                            }
-
-                                            // 🚀 ENRUTAMIENTO
-                                            if (linea == "FLEXO")
-                                            {
-                                                urlDestino = urlWebhookFlexo;
-                                            }
-                                            else if (linea == "OFFSET")
-                                            {
-                                                urlDestino = urlWebhookOffset;
-                                            }
-                                            else
-                                            {
-                                                // Opcional: URL por defecto si viene DIGITAL, PROMO, o vacío
-                                                urlDestino = urlWebhookOffset;
-                                            }
-
-                                            await EnviarAlertaDiscrepancia(disc, urlDestino);
+                                            await EnviarAlertaDiscrepancia(disc, ObtenerWebhookPorOf(disc.oF, dictLocales));
                                         }
                                     }
 
-                                    // b) Resolver los que ya se arreglaron
-                                    var idsConErrorHoy = discrepancias.Select(d => d.oF).ToList();
-                                    var logsArreglados = logsActivos.Where(l => !idsConErrorHoy.Contains(l.oF));
+                                    // b) Cerrar los logs que ya no tienen diferencias
+                                    var idsConErrorHoy = discrepancias.Select(d => d.oF).ToHashSet();
+                                    var logsSinError = logsActivos.Where(l => !idsConErrorHoy.Contains(l.oF)).ToList();
+
+                                    // Solo es una corrección real si la OF se volvió a comparar contra SAP y ya cuadra.
+                                    // Si SAP ya no la devuelve (cerrada/cancelada) o ya no existe en NEXO, no se resolvió: salió del alcance.
+                                    var logsArreglados = logsSinError.Where(l => ofsEvaluadas.Contains(l.oF)).ToList();
+                                    var logsFueraDeAlcance = logsSinError.Where(l => !ofsEvaluadas.Contains(l.oF)).ToList();
+
+                                    // Solo notificamos si el descuadre se confirmó en un ciclo reciente.
+                                    // Evita avisos tardíos si el servicio estuvo detenido o en el primer arranque tras un despliegue.
+                                    var umbralNotificacion = DateTime.Now - TimeSpan.FromHours(3);
+                                    var logsANotificar = logsArreglados.Where(l => l.fechaUltimaRevision >= umbralNotificacion).ToList();
 
                                     foreach (var arreglado in logsArreglados)
                                     {
@@ -232,10 +222,22 @@ namespace Sistema_Produccion_3_Backend.Services.Automatizacion
                                         arreglado.fechaUltimaRevision = DateTime.Now;
                                     }
 
+                                    foreach (var fueraDeAlcance in logsFueraDeAlcance)
+                                    {
+                                        fueraDeAlcance.estado = "Fuera de alcance";
+                                        fueraDeAlcance.fechaUltimaRevision = DateTime.Now;
+                                    }
+
                                     // Guardar cambios en la DB
                                     await context.SaveChangesAsync(stoppingToken);
 
-                                    _logger.LogWarning($"Reconciliación OF: {discrepancias.Count} activas. {logsArreglados.Count()} resueltas.");
+                                    // c) Notificar resoluciones (solo después de persistir el cambio de estado)
+                                    foreach (var arreglado in logsANotificar)
+                                    {
+                                        await EnviarNotificacionResolucion(arreglado, ObtenerWebhookPorOf(arreglado.oF, dictLocales));
+                                    }
+
+                                    _logger.LogWarning($"Reconciliación OF: {discrepancias.Count} activas. {logsArreglados.Count} resueltas ({logsANotificar.Count} notificadas). {logsFueraDeAlcance.Count} fuera de alcance.");
                                 }
                                 else
                                 {
@@ -269,6 +271,84 @@ namespace Sistema_Produccion_3_Backend.Services.Automatizacion
                 }
           
                 await Task.Delay(TimeSpan.FromHours(1), stoppingToken);
+            }
+        }
+
+        private string ObtenerWebhookPorOf(int oF, Dictionary<int, tarjetaOf> dictLocales)
+        {
+            string urlWebhookOffset = "https://chat.googleapis.com/v1/spaces/AAQAcyo_Bds/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=VDp369j32Q8rsHYsIIqOadsUhqtV5cGfQqSQRhBy0Kw";
+            string urlWebhookFlexo = "https://chat.googleapis.com/v1/spaces/AAQAmuIgng8/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=jl3fY-gXIJyrcAuhVxW2xMHd8biS2EeljElNS39CV1Y";
+
+            string linea = "";
+            if (dictLocales.TryGetValue(oF, out var localOf))
+            {
+                linea = localOf.lineaDeNegocio?.Trim().ToUpperInvariant() ?? "";
+            }
+
+            // 🚀 ENRUTAMIENTO
+            if (linea == "FLEXO") return urlWebhookFlexo;
+            if (linea == "OFFSET") return urlWebhookOffset;
+
+            // Opcional: URL por defecto si viene DIGITAL, PROMO, o vacío
+            return urlWebhookOffset;
+        }
+
+        private async Task EnviarNotificacionResolucion(logSincronizacionOf resuelto, string webhookUrl)
+        {
+            if (string.IsNullOrWhiteSpace(webhookUrl)) return;
+
+            try
+            {
+                var client = _httpClientFactory.CreateClient();
+
+                // Listamos los campos que estaban descuadrados (soporta formato nuevo y viejo)
+                var widgetsCampos = new List<object>();
+                var lineas = (resuelto.detalleDiferencia ?? "").Split(new[] { "[NEXT]", "||" }, StringSplitOptions.RemoveEmptyEntries);
+
+                foreach (var linea in lineas)
+                {
+                    string[] separador = linea.Contains("[SEP]") ? new[] { "[SEP]" } : new[] { "|" };
+                    string campo = linea.Split(separador, StringSplitOptions.None)[0].Trim();
+
+                    widgetsCampos.Add(new { decoratedText = new { text = $"✔️ {campo}", wrapText = true } });
+                }
+
+                TimeSpan duracion = resuelto.fechaUltimaRevision - resuelto.fechaDeteccion;
+                string duracionTexto = duracion.TotalDays >= 1
+                    ? $"{(int)duracion.TotalDays} d {duracion.Hours} h"
+                    : $"{(int)duracion.TotalHours} h {duracion.Minutes} min";
+
+                var widgetsTiempo = new List<object>
+                {
+                    new { decoratedText = new { topLabel = "Detectado", text = resuelto.fechaDeteccion.ToString("yyyy-MM-dd HH:mm") } },
+                    new { decoratedText = new { topLabel = "Resuelto", text = resuelto.fechaUltimaRevision.ToString("yyyy-MM-dd HH:mm") } },
+                    new { decoratedText = new { topLabel = "Tiempo descuadrado", text = duracionTexto } }
+                };
+
+                var sectionsList = new List<object>();
+                if (widgetsCampos.Any()) sectionsList.Add(new { header = "<font color=\"#388e3c\"><b>✅ CAMPOS CUADRADOS</b></font>", widgets = widgetsCampos });
+                sectionsList.Add(new { header = "<b>🕒 TIEMPOS</b>", widgets = widgetsTiempo });
+
+                var payload = new
+                {
+                    text = $"✅ RECONCILIACIÓN RESUELTA: OF {resuelto.oF}",
+                    cardsV2 = new object[] {
+                new {
+                    cardId = $"resolucion-reconciliacion-{resuelto.oF}",
+                    card = new {
+                        header = new { title = "✅ Descuadre Resuelto", subtitle = $"Orden de Fabricación: {resuelto.oF}" },
+                        sections = sectionsList.ToArray()
+                    }
+                }
+            }
+                };
+
+                var content = new StringContent(System.Text.Json.JsonSerializer.Serialize(payload), System.Text.Encoding.UTF8, "application/json");
+                await client.PostAsync(webhookUrl, content);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"❌ Error al enviar webhook de resolución para la OF {resuelto.oF}");
             }
         }
 

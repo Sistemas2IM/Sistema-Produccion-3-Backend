@@ -26,7 +26,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.GoogleChat
             _httpClientFactory = httpClientFactory;
         }
 
-        public async Task EnviarNotificacionCasoCalidad(casoCalidad caso, string tipoEvento, string vendedorOf, string lineaDeNegocio)
+        public async Task EnviarNotificacionCasoCalidad(casoCalidad caso, string tipoEvento, string? vendedorOf, string? lineaDeNegocio)
         {
             try
             {
@@ -134,37 +134,44 @@ namespace Sistema_Produccion_3_Backend.Controllers.GoogleChat
                 }
 
                 // 🚀 4. DATOS COMPLEMENTARIOS Y FORMATO
-                string tipoCasoTexto = caso.idTipoCasoNavigation?.nombre ?? $"Tipo ID {caso.idTipoCaso}";
+                // Las tarjetas interpretan HTML: todo texto libre se escapa y "No especificado" va en <i>, no en markdown
+                const string noEspecificado = "<i>No especificado</i>";
+
+                string tipoCasoTexto = Html(caso.idTipoCasoNavigation?.nombre ?? $"Tipo ID {caso.idTipoCaso}");
+                string origenTexto = Html(caso.origen);
 
                 string registradoPorNombre = caso.registradoPorNavigation != null
-                    ? $"{caso.registradoPorNavigation.nombres} {caso.registradoPorNavigation.apellidos}"
-                    : (caso.registradoPor ?? "*No especificado*");
+                    ? Html($"{caso.registradoPorNavigation.nombres} {caso.registradoPorNavigation.apellidos}")
+                    : (string.IsNullOrWhiteSpace(caso.registradoPor) ? noEspecificado : Html(caso.registradoPor));
+
+                string responsableNombre = caso.responsableNavigation != null
+                    ? Html($"{caso.responsableNavigation.nombres} {caso.responsableNavigation.apellidos}")
+                    : (string.IsNullOrWhiteSpace(caso.responsable) ? noEspecificado : Html(caso.responsable));
 
                 bool esApertura = tipoEvento.Equals("Apertura", StringComparison.OrdinalIgnoreCase);
                 string colorHeader = esApertura ? "#d32f2f" : "#f57c00";
                 string tituloAlerta = esApertura ? "🚨 APERTURA DE CASO DE CALIDAD" : "📝 SEGUIMIENTO DE CASO";
 
-                // 🚀 5. ARMADO DE LA TARJETA (Uso de HTML **, *)
+                // 🚀 5. ARMADO DE LA TARJETA (Uso de HTML , *)
                 var widgetsDetalles = new List<object>();
-                widgetsDetalles.Add(new { decoratedText = new { topLabel = "Número de Caso", text = $"**{caso.idCasoCalidad}**" } });
-                widgetsDetalles.Add(new { decoratedText = new { topLabel = "Estado Actual", text = $"**{nombreVisual}**" } });
+                widgetsDetalles.Add(new { decoratedText = new { topLabel = "Número de Caso", text = $"{caso.idCasoCalidad}" } });
+                widgetsDetalles.Add(new { decoratedText = new { topLabel = "Estado Actual", text = $"{nombreVisual}" } });
                 widgetsDetalles.Add(new { decoratedText = new { topLabel = "Orden de Fabricación (OF)", text = caso.oF.ToString() } });
-                widgetsDetalles.Add(new { decoratedText = new { topLabel = "Vendedor", text = !string.IsNullOrWhiteSpace(vendedorOf) ? vendedorOf : "*No especificado*" } });
-                widgetsDetalles.Add(new { decoratedText = new { topLabel = "Tipo y Origen", text = $"{tipoCasoTexto} {caso.origen}" } });
+                widgetsDetalles.Add(new { decoratedText = new { topLabel = "Vendedor", text = !string.IsNullOrWhiteSpace(vendedorOf) ? Html(vendedorOf) : noEspecificado } });
+                widgetsDetalles.Add(new { decoratedText = new { topLabel = "Tipo y Origen", text = $"{tipoCasoTexto} {origenTexto}" } });
                 widgetsDetalles.Add(new { decoratedText = new { topLabel = "Fecha y Hora", text = (caso.fechaActualizacion ?? caso.fechaRegistro).ToString("dd/MM/yyyy HH:mm") } });
 
                 if (!string.IsNullOrWhiteSpace(caso.descripcion))
                 {
-                    string descLimpia = caso.descripcion.Replace("\n", "<br>");
-                    widgetsDetalles.Add(new { decoratedText = new { topLabel = "Descripción del Caso", text = descLimpia, wrapText = true } });
+                    widgetsDetalles.Add(new { decoratedText = new { topLabel = "Descripción del Caso", text = HtmlMultilinea(caso.descripcion), wrapText = true } });
                 }
 
                 widgetsDetalles.Add(new { decoratedText = new { topLabel = "Registrado Por", text = registradoPorNombre } });
-                widgetsDetalles.Add(new { decoratedText = new { topLabel = "Responsable Asignado", text = caso.responsable ?? "*Sin asignar*" } });
+                widgetsDetalles.Add(new { decoratedText = new { topLabel = "Responsable Asignado", text = responsableNombre } });
 
                 if (!esApertura && caso.fechaCierre.HasValue && !string.IsNullOrWhiteSpace(caso.justificacionCierre))
                 {
-                    widgetsDetalles.Add(new { decoratedText = new { topLabel = "Justificación de Cierre", text = caso.justificacionCierre, wrapText = true } });
+                    widgetsDetalles.Add(new { decoratedText = new { topLabel = "Justificación de Cierre", text = HtmlMultilinea(caso.justificacionCierre), wrapText = true } });
                 }
 
                 // 🚀 6. ENSAMBLAJE DEL PAYLOAD
@@ -185,14 +192,14 @@ namespace Sistema_Produccion_3_Backend.Controllers.GoogleChat
                 {
                     header = new
                     {
-                        title = $"**{tituloAlerta}**",
-                        subtitle = $"OF: {caso.oF} | {tipoCasoTexto} {caso.origen}"
+                        title = $"{tituloAlerta}",
+                        subtitle = $"OF: {caso.oF} | {caso.idTipoCasoNavigation?.nombre ?? $"Tipo ID {caso.idTipoCaso}"} {caso.origen}"
                     },
                     sections = new dynamic[]
                     {
                         new
                         {
-                            header = "**📄 INFORMACIÓN PRINCIPAL**",
+                            header = "📄 INFORMACIÓN PRINCIPAL",
                             widgets = widgetsDetalles
                         }
                     }
@@ -215,14 +222,42 @@ namespace Sistema_Produccion_3_Backend.Controllers.GoogleChat
                         finalUrl += "messageReplyOption=REPLY_MESSAGE_FALLBACK_TO_NEW_THREAD";
                     }
 
-                    var content = new StringContent(jsonContent, System.Text.Encoding.UTF8, "application/json");
-                    await client.PostAsync(finalUrl, content);
+                    // try por webhook: si falla uno, los demás destinos igual reciben la notificación
+                    try
+                    {
+                        var content = new StringContent(jsonContent, System.Text.Encoding.UTF8, "application/json");
+                        var response = await client.PostAsync(finalUrl, content);
+
+                        if (!response.IsSuccessStatusCode)
+                        {
+                            string cuerpo = await response.Content.ReadAsStringAsync();
+                            _logger.LogError($"❌ Google Chat rechazó la notificación del caso {caso.idCasoCalidad} (espacio {ObtenerEspacio(webhookUrl)}): {(int)response.StatusCode} {response.ReasonPhrase}. {cuerpo}");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, $"❌ Error al enviar webhook de calidad del caso {caso.idCasoCalidad} (espacio {ObtenerEspacio(webhookUrl)})");
+                    }
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"❌ Error al enviar webhooks de calidad para el caso {caso.idCasoCalidad}");
+                _logger.LogError(ex, $"❌ Error al preparar la notificación de calidad para el caso {caso.idCasoCalidad}");
             }
+        }
+
+        private static string Html(string? texto) => System.Net.WebUtility.HtmlEncode(texto?.Trim() ?? "");
+
+        // Se escapa primero y luego se convierten los saltos, para que el <br> no quede escapado
+        private static string HtmlMultilinea(string texto) =>
+            Html(texto).Replace("\r\n", "<br>").Replace("\n", "<br>");
+
+        // Solo el ID del espacio para el log, sin exponer key ni token
+        private static string ObtenerEspacio(string webhookUrl)
+        {
+            var partes = webhookUrl.Split('/');
+            int idx = Array.IndexOf(partes, "spaces");
+            return idx >= 0 && idx + 1 < partes.Length ? partes[idx + 1] : "desconocido";
         }
     }
 }
