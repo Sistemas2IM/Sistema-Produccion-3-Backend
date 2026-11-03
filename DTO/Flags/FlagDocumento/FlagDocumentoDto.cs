@@ -9,6 +9,17 @@ namespace Sistema_Produccion_3_Backend.DTO.Flags.FlagDocumento
 
         public int? idFlag { get; set; }
 
+        // Datos del catálogo (idFlagNavigation)
+        public string? codigo { get; set; }
+
+        public string? nombre { get; set; }
+
+        public string? color { get; set; }
+
+        public string? efecto { get; set; }
+
+        public bool puedeQuitarse { get; set; }
+
         public int? tipoDocumento { get; set; }
 
         public int? idDocumento { get; set; }

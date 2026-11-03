@@ -1680,7 +1680,13 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             CreateMap<motivoCambioFechaOf, MotivoCambioFechaOfDto>().ReverseMap();
 
             // FLAGS
-            CreateMap<flagDocumento, FlagDocumentoDto>().ReverseMap();
+            CreateMap<flagDocumento, FlagDocumentoDto>()
+                .ForMember(dest => dest.codigo, opt => opt.MapFrom(src => src.idFlagNavigation != null ? src.idFlagNavigation.codigo : null))
+                .ForMember(dest => dest.nombre, opt => opt.MapFrom(src => src.idFlagNavigation != null ? src.idFlagNavigation.nombre : null))
+                .ForMember(dest => dest.color, opt => opt.MapFrom(src => src.idFlagNavigation != null ? src.idFlagNavigation.color : null))
+                .ForMember(dest => dest.efecto, opt => opt.MapFrom(src => src.idFlagNavigation != null ? src.idFlagNavigation.efecto : null))
+                .ForMember(dest => dest.puedeQuitarse, opt => opt.MapFrom(src => src.idFlagNavigation != null && src.idFlagNavigation.permiteQuitarManual))
+                .ReverseMap();
             CreateMap<UpdateFlagDocumentoDto, flagDocumento>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 

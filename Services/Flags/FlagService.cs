@@ -2,7 +2,6 @@
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Sistema_Produccion_3_Backend.DTO.Flags.FlagDocumento;
-using Sistema_Produccion_3_Backend.DTO.Flags.FlagManual;
 using Sistema_Produccion_3_Backend.Models;
 
 namespace Sistema_Produccion_3_Backend.Services.Flags
@@ -57,78 +56,121 @@ namespace Sistema_Produccion_3_Backend.Services.Flags
         // --------------------------------------------------------------------------------
         // 2. ASIGNAR MANUAL ASYNC (Implementación de IFlagService)
         // --------------------------------------------------------------------------------
-        public async Task<FlagDocumentoDto> AsignarManualAsync(CrearFlagManualDto dto)
+        public async Task<FlagDocumentoDto> AsignarManualAsync(AddFlagDocumentoDto dto)
         {
-            // A. Validar tipo de documento soportado
-            bool esOf = dto.tipoDocumento == (int)TiposDocumento.TarjetaOf;
-            bool esProceso = dto.tipoDocumento == (int)TiposDocumento.ProcesoOf;
-
-            if (!esOf && !esProceso)
+            if (dto.idFlag == null || dto.tipoDocumento == null || dto.idDocumento == null)
             {
-                throw new InvalidOperationException($"El tipo de documento {dto.tipoDocumento} no admite asignación manual en esta etapa.");
+                throw new FlagValidationException("Los campos idFlag, tipoDocumento e idDocumento son obligatorios.");
             }
 
-            // B. Validar existencia del documento (OF o Proceso)
-            if (esOf)
-            {
-                bool existeOf = await _context.tarjetaOf.AnyAsync(t => t.oF == dto.idDocumento && t.archivada != true);
-                if (!existeOf)
-                    throw new KeyNotFoundException($"La Orden de Fabricación (OF) {dto.idDocumento} no existe o está archivada.");
-            }
-            else if (esProceso)
-            {
-                bool existeProceso = await _context.procesoOf.AnyAsync(p => p.idProceso == dto.idDocumento && p.archivada != true);
-                if (!existeProceso)
-                    throw new KeyNotFoundException($"El proceso {dto.idDocumento} no existe o está archivado.");
-            }
+            int idFlag = dto.idFlag.Value;
+            int tipoDocumento = dto.tipoDocumento.Value;
+            int idDocumento = dto.idDocumento.Value;
+            string? texto = string.IsNullOrWhiteSpace(dto.texto) ? null : dto.texto.Trim();
 
-            // C. Validar catálogo: Activa y en modo MANUAL
+            // 1. La flag existe, está activa y su modo de asignación es MANUAL
             var flagCatalogo = await _context.catalogoFlag
-                .FirstOrDefaultAsync(f => f.idFlag == dto.idFlag);
+                .FirstOrDefaultAsync(f => f.idFlag == idFlag);
 
             if (flagCatalogo == null || !flagCatalogo.activo)
             {
-                throw new KeyNotFoundException($"La flag con ID {dto.idFlag} no existe o no está activa.");
+                throw new FlagValidationException($"La flag con ID {idFlag} no existe o no está activa.");
             }
 
-            if (!string.Equals(flagCatalogo.modoAsignacion, "MANUAL", StringComparison.OrdinalIgnoreCase))
+            if (!string.Equals(flagCatalogo.modoAsignacion?.Trim(), "MANUAL", StringComparison.OrdinalIgnoreCase))
             {
-                throw new InvalidOperationException("Solo se permite asignar manualmente flags configuradas con modo 'MANUAL'.");
+                throw new FlagValidationException($"La flag '{flagCatalogo.nombre}' no es de asignación manual.");
             }
 
-            // D. Validar si la flag está habilitada para este tipo de documento
+            // 2. La flag aplica al tipo de documento
             bool flagPermitida = await _context.flagTipoDocumento
-                .AnyAsync(ftd => ftd.idFlag == dto.idFlag && ftd.tipoDocumento == dto.tipoDocumento);
+                .AnyAsync(ftd => ftd.idFlag == idFlag && ftd.tipoDocumento == tipoDocumento);
 
             if (!flagPermitida)
             {
-                throw new InvalidOperationException($"La flag '{flagCatalogo.nombre}' no está autorizada para este tipo de documento.");
+                throw new FlagValidationException($"La flag '{flagCatalogo.nombre}' no aplica al tipo de documento {tipoDocumento}.");
             }
 
-            // E. Validar si ya existe activa (Previene duplicados)
+            // 3. Tipo de documento soportado en esta etapa
+            bool esOf = tipoDocumento == (int)TiposDocumento.TarjetaOf;
+            bool esProceso = tipoDocumento == (int)TiposDocumento.ProcesoOf;
+
+            if (!esOf && !esProceso)
+            {
+                throw new FlagValidationException($"El tipo de documento {tipoDocumento} aún no está soportado para asignación manual.");
+            }
+
+            // 4 y 5. El documento existe y no está cancelado ni archivado
+            if (esOf)
+            {
+                var of = await _context.tarjetaOf
+                    .AsNoTracking()
+                    .Where(t => t.oF == idDocumento)
+                    .Select(t => new { t.archivada, t.cancelada })
+                    .FirstOrDefaultAsync();
+
+                if (of == null)
+                    throw new FlagNotFoundException($"La Orden de Fabricación {idDocumento} no existe.");
+
+                if (of.cancelada == true || of.archivada == true)
+                    throw new FlagValidationException($"La Orden de Fabricación {idDocumento} está cancelada o archivada.");
+            }
+            else
+            {
+                var proceso = await _context.procesoOf
+                    .AsNoTracking()
+                    .Where(p => p.idProceso == idDocumento)
+                    .Select(p => new { p.archivada, p.cancelada, p.idTablero })
+                    .FirstOrDefaultAsync();
+
+                if (proceso == null)
+                    throw new FlagNotFoundException($"El proceso {idDocumento} no existe.");
+
+                if (proceso.cancelada == true || proceso.archivada == true)
+                    throw new FlagValidationException($"El proceso {idDocumento} está cancelado o archivado.");
+
+                // 6. La flag está configurada para el tablero del proceso
+                bool flagEnTablero = proceso.idTablero != null && await _context.tableroFlag
+                    .AnyAsync(tf => tf.idTablero == proceso.idTablero && tf.idFlag == idFlag);
+
+                if (!flagEnTablero)
+                    throw new FlagValidationException($"La flag '{flagCatalogo.nombre}' no está configurada para el tablero del proceso {idDocumento}.");
+            }
+
+            // 7. Texto obligatorio si la flag lo requiere
+            if (flagCatalogo.requiereTexto && texto == null)
+            {
+                throw new FlagValidationException($"La flag '{flagCatalogo.nombre}' requiere un texto.");
+            }
+
+            // Usuario que registra (FK a usuario)
+            string? registradoPor = string.IsNullOrWhiteSpace(dto.registradoPor) ? null : dto.registradoPor.Trim();
+            if (registradoPor != null && !await _context.usuario.AnyAsync(u => u.user == registradoPor))
+            {
+                throw new FlagValidationException($"El usuario '{registradoPor}' no existe.");
+            }
+
+            // 8. No existe la misma flag activa en el documento
             bool yaExisteActiva = await _context.flagDocumento
-                .AnyAsync(f => f.tipoDocumento == dto.tipoDocumento &&
-                               f.idDocumento == dto.idDocumento &&
-                               f.idFlag == dto.idFlag &&
-                               f.activa == true);
+                .AnyAsync(f => f.tipoDocumento == tipoDocumento &&
+                               f.idDocumento == idDocumento &&
+                               f.idFlag == idFlag &&
+                               f.activa);
 
             if (yaExisteActiva)
             {
-                throw new InvalidOperationException("La flag ya se encuentra asignada y activa en este documento.");
+                throw new FlagConflictException($"La flag '{flagCatalogo.nombre}' ya está activa en este documento.");
             }
 
-            // F. Creación controlada por el servidor
+            // Creación: siempre una fila nueva, campos de propagación controlados por el servidor
             var nuevoRegistro = new flagDocumento
             {
-                tipoDocumento = dto.tipoDocumento,
-                idDocumento = dto.idDocumento,
-                idFlag = dto.idFlag,
-                texto = dto.texto?.Trim(),
-
-                // 🚀 CORRECCIÓN: mapeo a 'registradoPor' como string
-                registradoPor = dto.idUsuario?.ToString(),
-
-                fechaRegistro = DateTime.Now,
+                tipoDocumento = tipoDocumento,
+                idDocumento = idDocumento,
+                idFlag = idFlag,
+                texto = texto,
+                registradoPor = registradoPor,
+                fechaRegistro = dto.fechaRegistro ?? DateTime.Now,
                 activa = true,
                 idFlagOrigen = null,
                 idFlagRaiz = null,
@@ -137,35 +179,18 @@ namespace Sistema_Produccion_3_Backend.Services.Flags
 
             _context.flagDocumento.Add(nuevoRegistro);
 
-            // G. Guardar y atrapar colisión concurrente (código 2601 / 2627)
+            // Colisión concurrente contra el índice único flagDocumento_activaUnica_UX
             try
             {
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateException ex)
+            catch (DbUpdateException ex) when (ex.InnerException is SqlException sqlEx && (sqlEx.Number == 2601 || sqlEx.Number == 2627))
             {
-                if (ex.InnerException is SqlException sqlEx && (sqlEx.Number == 2601 || sqlEx.Number == 2627))
-                {
-                    throw new InvalidOperationException("Conflicto de concurrencia: el documento ya tiene esta bandera activa.");
-                }
-                throw;
+                throw new FlagConflictException($"La flag '{flagCatalogo.nombre}' ya está activa en este documento.");
             }
 
-            // H. Retornar DTO de respuesta
-            return new FlagDocumentoDto
-            {
-                idFlagDocumento = nuevoRegistro.idFlagDocumento,
-                idFlag = nuevoRegistro.idFlag,
-                tipoDocumento = nuevoRegistro.tipoDocumento,
-                idDocumento = nuevoRegistro.idDocumento,
-                texto = nuevoRegistro.texto,
-                activa = nuevoRegistro.activa,
-                idFlagOrigen = nuevoRegistro.idFlagOrigen,
-                idFlagRaiz = nuevoRegistro.idFlagRaiz,
-                eventoRegistro = nuevoRegistro.eventoRegistro,
-                registradoPor = nuevoRegistro.registradoPor,
-                fechaRegistro = nuevoRegistro.fechaRegistro
-            };
+            nuevoRegistro.idFlagNavigation = flagCatalogo;
+            return _mapper.Map<FlagDocumentoDto>(nuevoRegistro);
         }
 
         // --------------------------------------------------------------------------------
