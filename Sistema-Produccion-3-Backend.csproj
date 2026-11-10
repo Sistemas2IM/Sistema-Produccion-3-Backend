@@ -70,8 +70,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="Sap.Data.Hana.v4.5">
-      <HintPath>..\..\..\..\..\Windows\Microsoft.NET\assembly\GAC_MSIL\Sap.Data.Hana.v4.5\v4.0_2.17.22.0__0326b8ea63db4bc4\Sap.Data.Hana.v4.5.dll</HintPath>
+    <!-- Cliente ADO.NET de HANA para .NET Core (SAP HANA Client 2.x). En runtime requiere HDBDOTNETCORE apuntando a hdbclient\dotnetcore -->
+    <Reference Include="Sap.Data.Hana.Net.v8.0">
+      <HintPath>C:\Program Files\sap\hdbclient\dotnetcore\v8.0\Sap.Data.Hana.Net.v8.0.dll</HintPath>
     </Reference>
   </ItemGroup>
 

@@ -11,11 +11,14 @@ using Sistema_Produccion_3_Backend.AutomapperProfiles;
 using Sistema_Produccion_3_Backend.Models;
 using Sistema_Produccion_3_Backend.Services;
 using Sistema_Produccion_3_Backend.Services.Automatizacion;
+using Sistema_Produccion_3_Backend.Services.Correo;
+using Sistema_Produccion_3_Backend.Services.SAP.HANA;
 using Sistema_Produccion_3_Backend.Services.RequestLock;
 using Sistema_Produccion_3_Backend.Services.Flags;
 using Sistema_Produccion_3_Backend.Validators.Auth;
 using Sistema_Produccion_3_Backend.Validators.ProductoTerminado;
 using Sistema_Produccion_3_Backend.Controllers.GoogleChat;
+using Sistema_Produccion_3_Backend.Controllers.Test; // TEMPORAL - borrar después de la prueba de correo
 using System.Text;
 
 
@@ -44,6 +47,13 @@ builder.Services.AddHostedService<ReconciliacionOfService>();
 builder.Services.AddHostedService<TiemposEstimadosService>();
 builder.Services.AddHostedService<VigilanteVencimientosService>();
 builder.Services.AddScoped<rechazosReclamosWebhook>();
+
+// Alertas de aprobacion SAP B1 por correo
+builder.Services.Configure<AlertasAprobacionOptions>(builder.Configuration.GetSection(AlertasAprobacionOptions.Seccion));
+builder.Services.Configure<SmtpOptions>(builder.Configuration.GetSection(SmtpOptions.Seccion));
+builder.Services.AddScoped<AprobacionesSapRepository>();
+builder.Services.AddScoped<ICorreoService, SmtpCorreoService>();
+builder.Services.AddHostedService<AlertasAprobacionSapService>();
 // AUTOMAPPER
 builder.Services.AddAutoMapper(cfg => cfg.AddProfile<MappingProfile>());
 
@@ -163,5 +173,11 @@ app.UseAuthentication(); // Middleware de autenticación JWT
 app.UseAuthorization();  // Middleware de autorización
 
 app.MapControllers();
+
+// TEMPORAL - borrar después de la prueba de correo
+if (app.Environment.IsDevelopment())
+{
+    app.MapTestCorreo(); // TEMPORAL - borrar después de la prueba de correo
+}
 
 app.Run();
