@@ -53,7 +53,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.GoogleChat
                         ? "" // Calidad Flexo
                         : "" // Calidad Offset
                 };
-
+                ;
                 // Evaluamos vendedor para agregar su webhook correspondiente (Offset vs Flexo)
                 if (vendedor.Contains("hugo campos"))
                 {

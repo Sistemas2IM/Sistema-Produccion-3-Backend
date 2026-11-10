@@ -17,6 +17,8 @@ public partial class base_nuevaContext : DbContext
 
     public virtual DbSet<anexos_NEXO> anexos_NEXO { get; set; }
 
+    public virtual DbSet<AprobacionAviso> AprobacionAviso { get; set; }
+
     public virtual DbSet<areas> areas { get; set; }
 
     public virtual DbSet<articuloOv> articuloOv { get; set; }
@@ -301,6 +303,14 @@ public partial class base_nuevaContext : DbContext
             entity.HasKey(e => e.Id).HasName("PK__anexos_N__3214EC076FC81350");
 
             entity.Property(e => e.FechaSubida).HasDefaultValueSql("(getdate())");
+        });
+
+        modelBuilder.Entity<AprobacionAviso>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK_AprobacionAviso");
+
+            entity.Property(e => e.FechaCreacion).HasDefaultValueSql("(sysdatetime())");
+            entity.Property(e => e.StatusSap).IsFixedLength();
         });
 
         modelBuilder.Entity<areas>(entity =>

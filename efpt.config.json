@@ -27,6 +27,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[AprobacionAviso]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[areas]",
          "ObjectType": 0
       },
