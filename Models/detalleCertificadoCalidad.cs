@@ -19,7 +19,7 @@ public partial class detalleCertificadoCalidad
 
     public string valor { get; set; }
 
-    [StringLength(75)]
+    [StringLength(150)]
     public string resultado { get; set; }
 
     [Column(TypeName = "datetime")]
@@ -27,7 +27,7 @@ public partial class detalleCertificadoCalidad
 
     public int? idUnidad { get; set; }
 
-    [StringLength(75)]
+    [StringLength(150)]
     public string toleranciaMedida { get; set; }
 
     [ForeignKey("idCertificadoCalidad")]

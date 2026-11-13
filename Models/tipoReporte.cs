@@ -40,11 +40,17 @@ public partial class tipoReporte
     [InverseProperty("tipoDocumentoNavigation")]
     public virtual ICollection<flagTipoDocumento> flagTipoDocumento { get; set; } = new List<flagTipoDocumento>();
 
+    [InverseProperty("tipoDocumentoNavigation")]
+    public virtual ICollection<procesoOf> procesoOf { get; set; } = new List<procesoOf>();
+
     [InverseProperty("idTipoReporteNavigation")]
     public virtual ICollection<reportesDeOperadores> reportesDeOperadores { get; set; } = new List<reportesDeOperadores>();
 
     [InverseProperty("tipoDocumentoNavigation")]
     public virtual ICollection<seccionDocumento> seccionDocumento { get; set; } = new List<seccionDocumento>();
+
+    [InverseProperty("tipoDocumentoNavigation")]
+    public virtual ICollection<tarjetaOf> tarjetaOf { get; set; } = new List<tarjetaOf>();
 
     [InverseProperty("tipoReporteNavigation")]
     public virtual ICollection<turnoAuditoria> turnoAuditoria { get; set; } = new List<turnoAuditoria>();

@@ -26,6 +26,10 @@ namespace Sistema_Produccion_3_Backend.Services.Automatizacion
         // Textos de los correos; vacíos = no se muestran
         public string? InstruccionesAprobacion { get; set; }
         public string? NotaAprobada { get; set; }
+        // "Web Client" dentro del texto se convierte en el enlace (si no aparece, todo el texto es el enlace)
+        public string? TextoEnlaceWebClient { get; set; } = "Puedes revisar el documento en el Web Client.";
+        // Líneas del borrador que se muestran en la sección Detalle del aviso al aprobador
+        public int MaxLineasDetalle { get; set; } = 10;
     }
 
     // Avisa por correo de solicitudes de aprobación de SAP B1 (ver Docs/SPEC_alertas_aprobacion_sap.md).

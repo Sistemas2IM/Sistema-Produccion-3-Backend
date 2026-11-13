@@ -17,7 +17,7 @@ public partial class base_nuevaContext : DbContext
 
     public virtual DbSet<anexos_NEXO> anexos_NEXO { get; set; }
 
-    public virtual DbSet<AprobacionAviso> AprobacionAviso { get; set; }
+    public virtual DbSet<aprobacionAviso> aprobacionAviso { get; set; }
 
     public virtual DbSet<areas> areas { get; set; }
 
@@ -305,11 +305,15 @@ public partial class base_nuevaContext : DbContext
             entity.Property(e => e.FechaSubida).HasDefaultValueSql("(getdate())");
         });
 
-        modelBuilder.Entity<AprobacionAviso>(entity =>
+        modelBuilder.Entity<aprobacionAviso>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK_AprobacionAviso");
 
-            entity.Property(e => e.FechaCreacion).HasDefaultValueSql("(sysdatetime())");
+            entity.Property(e => e.Enviado).HasAnnotation("Relational:DefaultConstraintName", "DF_AprobacionAviso_Enviado");
+            entity.Property(e => e.FechaCreacion)
+                .HasDefaultValueSql("(sysdatetime())")
+                .HasAnnotation("Relational:DefaultConstraintName", "DF_AprobacionAviso_FechaCreacion");
+            entity.Property(e => e.Intentos).HasAnnotation("Relational:DefaultConstraintName", "DF_AprobacionAviso_Intentos");
             entity.Property(e => e.StatusSap).IsFixedLength();
         });
 
@@ -1785,6 +1789,8 @@ public partial class base_nuevaContext : DbContext
 
             entity.HasOne(d => d.procesoSiguienteNavigation).WithMany(p => p.InverseprocesoSiguienteNavigation).HasConstraintName("FK_PROCESO_SIGUIENTE");
 
+            entity.HasOne(d => d.tipoDocumentoNavigation).WithMany(p => p.procesoOf).HasConstraintName("FK_PROCESOOF_TIPO_DOCUMENTO");
+
             entity.HasOne(d => d.tipoEntradaNavigation).WithMany(p => p.procesoOftipoEntradaNavigation).HasConstraintName("FK_TIPO_ENTRADA");
 
             entity.HasOne(d => d.tipoSalidaNavigation).WithMany(p => p.procesoOftipoSalidaNavigation).HasConstraintName("FK_TIPO_SALIDA");
@@ -2090,6 +2096,8 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.secuenciadoPorNavigation).WithMany(p => p.tarjetaOfsecuenciadoPorNavigation).HasConstraintName("FK_SECUENCIA_ORDEN");
 
             entity.HasOne(d => d.tipoComponenteNavigation).WithMany(p => p.tarjetaOf).HasConstraintName("FK_TIPO_COMPONENTE");
+
+            entity.HasOne(d => d.tipoDocumentoNavigation).WithMany(p => p.tarjetaOf).HasConstraintName("FK_TARJETAOF_TIPO_DOCUMENTO");
         });
 
         modelBuilder.Entity<tipoCaso>(entity =>

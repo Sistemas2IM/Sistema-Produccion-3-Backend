@@ -15,11 +15,16 @@ namespace Sistema_Produccion_3_Backend.Services.Automatizacion
             var filas = new List<(string, string)>
             {
                 ("Tipo de documento", Html(s.TipoDoc)),
-                ("Folio", s.Folio.ToString()),
-                ("Fecha del documento", FormatearFecha(s.DocDate ?? s.CreateDate)),
-                ("Solicitado", $"{FormatearFecha(s.CreateDate)} {FormatearHora(s.CreateTime)}".Trim()),
-                ("Solicitante", Html(s.Solicitante ?? $"Usuario {s.SolicitanteID}"))
+                ("Folio", s.Folio.ToString())
             };
+
+            // Serie + número del borrador tal como se ve en SAP (sin serie: solo el número)
+            if (s.DocNum.HasValue)
+                filas.Add(("Número en SAP (borrador)", Html($"{s.SerieNombre} {s.DocNum.Value}".Trim())));
+
+            filas.Add(("Fecha del documento", FormatearFecha(s.DocDate ?? s.CreateDate)));
+            filas.Add(("Solicitado", $"{FormatearFecha(s.CreateDate)} {FormatearHora(s.CreateTime)}".Trim()));
+            filas.Add(("Solicitante", Html(s.Solicitante ?? $"Usuario {s.SolicitanteID}")));
 
             if (!string.IsNullOrWhiteSpace(s.CardName) || !string.IsNullOrWhiteSpace(s.CardCode))
                 filas.Add(("Socio de negocio", Html($"{s.CardCode} - {s.CardName}".Trim(' ', '-'))));
@@ -31,7 +36,7 @@ namespace Sistema_Produccion_3_Backend.Services.Automatizacion
             }
             else if (s.DocTotal.HasValue)
             {
-                filas.Add(("Monto", Html($"{s.DocTotal.Value.ToString("N2", CultureInfo.InvariantCulture)} {s.DocCur}".Trim())));
+                filas.Add(("Total (con IVA)", Html($"{Total(s.DocTotal.Value)} {s.DocCur}".Trim())));
             }
 
             filas.Add(("Etapa", Html(s.Etapa ?? $"Etapa {s.CurrStep}")));
@@ -40,10 +45,12 @@ namespace Sistema_Produccion_3_Backend.Services.Automatizacion
                 filas.Add(("Comentarios", HtmlMultilinea(s.Remarks)));
 
             var pie = new StringBuilder();
+            pie.Append(Detalle(s, opt.MaxLineasDetalle));
             pie.Append(Parrafo(opt.InstruccionesAprobacion));
+            // El Web Client solo sirve para revisar el borrador; la aprobación se hace desde la alerta en B1
             string? url = UrlWebClient(s, opt);
-            if (url != null)
-                pie.Append($"<p>También puedes hacerlo desde el <a href=\"{WebUtility.HtmlEncode(url)}\">Web Client</a>.</p>");
+            if (url != null && !string.IsNullOrWhiteSpace(opt.TextoEnlaceWebClient))
+                pie.Append($"<p>{TextoConEnlace(opt.TextoEnlaceWebClient.Trim(), url)}</p>");
 
             string cuerpo = Documento(
                 "Solicitud de aprobación pendiente",
@@ -129,6 +136,112 @@ namespace Sistema_Produccion_3_Backend.Services.Automatizacion
 
             return plantilla.Trim().Replace("{DraftEntry}", s.Folio.ToString(CultureInfo.InvariantCulture));
         }
+
+        // "Web Client" (sin distinguir mayúsculas) pasa a ser el enlace; si no aparece, todo el texto lo es.
+        // Los tramos se escapan sin Trim para conservar los espacios alrededor del enlace
+        private static string TextoConEnlace(string texto, string url)
+        {
+            const string marcador = "Web Client";
+            string Enlace(string t) => $"<a href=\"{WebUtility.HtmlEncode(url)}\">{WebUtility.HtmlEncode(t)}</a>";
+
+            int i = texto.IndexOf(marcador, StringComparison.OrdinalIgnoreCase);
+            if (i < 0) return Enlace(texto);
+
+            return WebUtility.HtmlEncode(texto[..i])
+                + Enlace(texto.Substring(i, marcador.Length))
+                + WebUtility.HtmlEncode(texto[(i + marcador.Length)..]);
+        }
+
+        // Sección "Detalle" con las líneas del borrador. Sin líneas (o si la consulta falló) no se muestra
+        private static string Detalle(SolicitudPendienteSap s, int maxLineas)
+        {
+            if (s.Lineas == null || s.Lineas.Count == 0) return "";
+
+            var mostradas = s.Lineas.Take(Math.Max(1, maxLineas)).ToList();
+            int restantes = s.Lineas.Count - mostradas.Count;
+            bool traslado = s.ObjType == AprobacionesSapRepository.ObjTypeTraslado;
+
+            var columnas = new List<(string Titulo, bool Numero, bool Ajustar, Func<LineaBorradorSap, string> Valor)>
+            {
+                ("Código", false, false, l => Html(l.ItemCode)),
+                ("Descripción", false, true, l => Html(l.Descripcion)),
+                ("Cantidad", true, false, l => FormatearCantidad(l.Cantidad)),
+                ("UM", false, false, l => Html(l.UnidadMedida))
+            };
+
+            // Los traslados traen precios en 0: se muestran los almacenes de cada línea
+            if (traslado)
+            {
+                columnas.Add(("De → A", false, false, l => $"{Html(l.AlmacenOrigen)} &rarr; {Html(l.AlmacenDestino)}"));
+            }
+            else
+            {
+                // Una sola moneda en las líneas mostradas: va en el encabezado; si hay varias, en cada celda
+                var monedas = mostradas.Select(l => Moneda(l, s)).Distinct().ToList();
+                bool monedaUnica = monedas.Count == 1;
+                string sufijo = monedaUnica && monedas[0] != "" ? $" ({monedas[0]})" : "";
+                string Monto(LineaBorradorSap l, string valor) =>
+                    Html(monedaUnica ? valor : $"{valor} {Moneda(l, s)}");
+
+                columnas.Add(($"Precio unitario{sufijo}", true, false, l => Monto(l, FormatearPrecio(l.Precio))));
+                if (mostradas.Any(l => l.DescuentoPorc > 0))
+                    columnas.Add(("% Desc.", true, false, l => FormatearPorcentaje(l.DescuentoPorc)));
+                columnas.Add(($"Total línea{sufijo}", true, false, l => Monto(l, Total(l.TotalLinea))));
+            }
+
+            const string celda = "padding:5px 6px;border:1px solid #ddd;vertical-align:top;";
+            var sb = new StringBuilder();
+            sb.Append("<h3 style=\"color:#1a4f8b;font-size:15px;margin:18px 0 6px\">Detalle</h3>");
+            sb.Append("<table style=\"border-collapse:collapse;width:100%;font-size:13px\">");
+
+            sb.Append("<tr>");
+            foreach (var c in columnas)
+                sb.Append($"<th style=\"{celda}background:#f5f7fa;text-align:{(c.Numero ? "right" : "left")};{(c.Ajustar ? "" : "white-space:nowrap;")}\">{Html(c.Titulo)}</th>");
+            sb.Append("</tr>");
+
+            foreach (var l in mostradas)
+            {
+                sb.Append("<tr>");
+                foreach (var c in columnas)
+                {
+                    // La descripción puede ser larga: hace salto de línea en lugar de cortarse
+                    string estilo = c.Ajustar
+                        ? "word-wrap:break-word;overflow-wrap:break-word;"
+                        : "white-space:nowrap;";
+                    sb.Append($"<td style=\"{celda}{estilo}{(c.Numero ? "text-align:right;" : "")}\">{c.Valor(l)}</td>");
+                }
+                sb.Append("</tr>");
+            }
+
+            if (restantes > 0)
+            {
+                string texto = restantes == 1 ? "… y 1 línea más." : $"… y {restantes} líneas más.";
+                sb.Append($"<tr><td colspan=\"{columnas.Count}\" style=\"{celda}color:#666;font-style:italic\">{Html($"{texto} Revisa el documento completo en SAP.")}</td></tr>");
+            }
+
+            sb.Append("</table>");
+
+            // Suma de todas las líneas, no solo de las mostradas
+            if (!traslado)
+            {
+                string moneda = s.DocCur ?? s.Lineas.Select(l => l.Moneda).FirstOrDefault(m => m != null) ?? "";
+                sb.Append($"<p style=\"margin:6px 0 0;text-align:right\"><b>Subtotal sin IVA:</b> {Html($"{Total(s.Lineas.Sum(l => l.TotalLinea))} {moneda}")}</p>");
+            }
+
+            return sb.ToString();
+        }
+
+        // Currency de la línea; si viene vacía, la moneda del documento
+        private static string Moneda(LineaBorradorSap l, SolicitudPendienteSap s) => l.Moneda ?? s.DocCur ?? "";
+
+        private static string FormatearCantidad(decimal v) => v.ToString("0.###", CultureInfo.InvariantCulture);
+
+        // Mínimo 2 y máximo 5 decimales: 0.30, 0.245, 0.07105
+        private static string FormatearPrecio(decimal v) => v.ToString("0.00###", CultureInfo.InvariantCulture);
+
+        private static string FormatearPorcentaje(decimal v) => v.ToString("0.##", CultureInfo.InvariantCulture) + "%";
+
+        private static string Total(decimal v) => v.ToString("N2", CultureInfo.InvariantCulture);
 
         private static string Saludo(string? nombre) =>
             string.IsNullOrWhiteSpace(nombre) ? "Hola," : $"Hola {Html(nombre)},";

@@ -13,7 +13,7 @@ namespace Sistema_Produccion_3_Backend.Models
 {
     public partial interface Ibase_nuevaContextProcedures
     {
-        Task<List<FFE_DetalleProcesosResult>> FFE_DetalleProcesosAsync(int? idOF, OutputParameter<int> returnValue = null, CancellationToken cancellationToken = default);
+        Task<List<FFE_DetalleProcesosResult>> FFE_DetalleProcesosAsync(int? idOF, DateTime? fechaReferencia, OutputParameter<int> returnValue = null, CancellationToken cancellationToken = default);
         Task<List<FFE_ResumenOFResult>> FFE_ResumenOFAsync(int? idOF, OutputParameter<int> returnValue = null, CancellationToken cancellationToken = default);
         Task<List<IndicadoresReporteResult>> IndicadoresReporteAsync(string idReporte, OutputParameter<int> returnValue = null, CancellationToken cancellationToken = default);
         Task<List<infoConversionBobinaResult>> infoConversionBobinaAsync(string codBobina, OutputParameter<int> returnValue = null, CancellationToken cancellationToken = default);

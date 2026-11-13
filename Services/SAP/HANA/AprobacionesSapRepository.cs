@@ -29,8 +29,29 @@ namespace Sistema_Produccion_3_Backend.Services.SAP.HANA
         public string? AlmacenOrigenNombre { get; set; }
         public string? AlmacenDestino { get; set; }
         public string? AlmacenDestinoNombre { get; set; }
+        public string? SerieNombre { get; set; }
+        public int? DocNum { get; set; }
+        // Líneas del borrador (DRF1); null = no se pudieron consultar (el correo sale sin detalle)
+        public List<LineaBorradorSap>? Lineas { get; set; }
 
         public string TipoDoc => AprobacionesSapRepository.TipoDocumento(ObjType);
+    }
+
+    // Línea de un borrador (DRF1)
+    public class LineaBorradorSap
+    {
+        public int DocEntry { get; set; }
+        public int LineNum { get; set; }
+        public string? ItemCode { get; set; }
+        public string? Descripcion { get; set; }
+        public decimal Cantidad { get; set; }
+        public string? UnidadMedida { get; set; }
+        public string? AlmacenOrigen { get; set; }
+        public string? AlmacenDestino { get; set; }
+        public decimal Precio { get; set; }
+        public string? Moneda { get; set; }
+        public decimal DescuentoPorc { get; set; }
+        public decimal TotalLinea { get; set; }
     }
 
     // Estado actual de una solicitud ya avisada (consulta 2 de la spec)
@@ -75,7 +96,8 @@ namespace Sistema_Produccion_3_Backend.Services.SAP.HANA
                 T0.""OwnerID"" AS ""SolicitanteID"", UO.""U_NAME"" AS ""Solicitante"",
                 T0.""Remarks"", T0.""CreateDate"", T0.""CreateTime"",
                 D.""Filler"" AS ""AlmacenOrigen"", WO.""WhsName"" AS ""AlmacenOrigenNombre"",
-                D.""ToWhsCode"" AS ""AlmacenDestino"", WD.""WhsName"" AS ""AlmacenDestinoNombre""
+                D.""ToWhsCode"" AS ""AlmacenDestino"", WD.""WhsName"" AS ""AlmacenDestinoNombre"",
+                N.""SeriesName"", D.""DocNum""
             FROM ""OWDD"" T0
             INNER JOIN ""WDD1"" T1
                     ON T1.""WddCode"" = T0.""WddCode""
@@ -87,8 +109,17 @@ namespace Sistema_Produccion_3_Backend.Services.SAP.HANA
             LEFT JOIN ""ODRF"" D  ON D.""DocEntry"" = T0.""DraftEntry""
             LEFT JOIN ""OWHS"" WO ON WO.""WhsCode"" = D.""Filler""
             LEFT JOIN ""OWHS"" WD ON WD.""WhsCode"" = D.""ToWhsCode""
+            LEFT JOIN ""NNM1"" N  ON N.""Series"" = D.""Series""
             WHERE T0.""Status"" = 'W'
             ORDER BY T0.""WddCode"", T1.""SortId""";
+
+        private const string ConsultaLineas = @"
+            SELECT L.""DocEntry"", L.""LineNum"", L.""ItemCode"", L.""Dscription"",
+                   L.""Quantity"", L.""unitMsr"", L.""FromWhsCod"", L.""WhsCode"",
+                   L.""Price"", L.""Currency"", L.""DiscPrcnt"", L.""LineTotal""
+            FROM ""DRF1"" L
+            WHERE L.""DocEntry"" IN ({0})
+            ORDER BY L.""DocEntry"", L.""LineNum""";
 
         // HANA no permite TOP/ORDER BY en subconsultas correlacionadas: el último decisor sale de ROW_NUMBER()
         private const string ConsultaEstados = @"
@@ -118,11 +149,13 @@ namespace Sistema_Produccion_3_Backend.Services.SAP.HANA
             WHERE T0.""WddCode"" IN ({0})";
 
         private readonly string _connectionString;
+        private readonly ILogger<AprobacionesSapRepository> _logger;
 
-        public AprobacionesSapRepository(IConfiguration configuration)
+        public AprobacionesSapRepository(IConfiguration configuration, ILogger<AprobacionesSapRepository> logger)
         {
             _connectionString = configuration.GetConnectionString("SapHanaConnection")
                 ?? throw new InvalidOperationException("Falta ConnectionStrings:SapHanaConnection.");
+            _logger = logger;
         }
 
         public async Task<List<SolicitudPendienteSap>> ObtenerPendientesAsync(CancellationToken ct)
@@ -160,8 +193,71 @@ namespace Sistema_Produccion_3_Backend.Services.SAP.HANA
                     AlmacenOrigen = Texto(r, "AlmacenOrigen"),
                     AlmacenOrigenNombre = Texto(r, "AlmacenOrigenNombre"),
                     AlmacenDestino = Texto(r, "AlmacenDestino"),
-                    AlmacenDestinoNombre = Texto(r, "AlmacenDestinoNombre")
+                    AlmacenDestinoNombre = Texto(r, "AlmacenDestinoNombre"),
+                    SerieNombre = Texto(r, "SeriesName"),
+                    DocNum = r["DocNum"] is DBNull ? null : Convert.ToInt32(r["DocNum"])
                 });
+            }
+
+            await CargarLineasAsync(resultado, ct);
+            return resultado;
+        }
+
+        // El detalle es opcional: si la consulta falla, Lineas queda en null y el aviso sale sin la sección
+        public async Task CargarLineasAsync(IReadOnlyCollection<SolicitudPendienteSap> solicitudes, CancellationToken ct)
+        {
+            if (solicitudes.Count == 0) return;
+
+            try
+            {
+                var porBorrador = (await ObtenerLineasAsync(solicitudes.Select(s => s.Folio).ToList(), ct))
+                    .GroupBy(l => l.DocEntry)
+                    .ToDictionary(g => g.Key, g => g.ToList());
+
+                foreach (var s in solicitudes)
+                    s.Lineas = porBorrador.TryGetValue(s.Folio, out var lineas) ? lineas : new List<LineaBorradorSap>();
+            }
+            catch (Exception ex) when (ex is not OperationCanceledException)
+            {
+                _logger.LogError(ex, "❌ No se pudieron consultar las líneas de los borradores (DRF1); los avisos se envían sin detalle.");
+            }
+        }
+
+        public async Task<List<LineaBorradorSap>> ObtenerLineasAsync(IReadOnlyCollection<int> draftEntries, CancellationToken ct)
+        {
+            var resultado = new List<LineaBorradorSap>();
+            if (draftEntries.Count == 0) return resultado;
+
+            using var cn = new HanaConnection(_connectionString);
+            await cn.OpenAsync(ct);
+
+            // Una consulta por ciclo (por lote de TamanoLote borradores)
+            foreach (var lote in draftEntries.Distinct().Chunk(TamanoLote))
+            {
+                string marcadores = string.Join(",", lote.Select(_ => "?"));
+                using var cmd = new HanaCommand(string.Format(ConsultaLineas, marcadores), cn);
+                foreach (var entry in lote)
+                    cmd.Parameters.Add(new HanaParameter { HanaDbType = HanaDbType.Integer, Value = entry });
+
+                using var r = await cmd.ExecuteReaderAsync(ct);
+                while (await r.ReadAsync(ct))
+                {
+                    resultado.Add(new LineaBorradorSap
+                    {
+                        DocEntry = Convert.ToInt32(r["DocEntry"]),
+                        LineNum = Convert.ToInt32(r["LineNum"]),
+                        ItemCode = Texto(r, "ItemCode"),
+                        Descripcion = Texto(r, "Dscription"),
+                        Cantidad = Decimal(r, "Quantity"),
+                        UnidadMedida = Texto(r, "unitMsr"),
+                        AlmacenOrigen = Texto(r, "FromWhsCod"),
+                        AlmacenDestino = Texto(r, "WhsCode"),
+                        Precio = Decimal(r, "Price"),
+                        Moneda = Texto(r, "Currency"),
+                        DescuentoPorc = Decimal(r, "DiscPrcnt"),
+                        TotalLinea = Decimal(r, "LineTotal")
+                    });
+                }
             }
 
             return resultado;
@@ -229,6 +325,9 @@ namespace Sistema_Produccion_3_Backend.Services.SAP.HANA
             var texto = valor.ToString()?.Trim();
             return string.IsNullOrEmpty(texto) ? null : texto;
         }
+
+        private static decimal Decimal(IDataRecord r, string columna) =>
+            r[columna] is DBNull ? 0m : Convert.ToDecimal(r[columna]);
 
         private static DateTime? Fecha(IDataRecord r, string columna) =>
             r[columna] is DBNull ? null : Convert.ToDateTime(r[columna]);

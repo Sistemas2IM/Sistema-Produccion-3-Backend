@@ -106,6 +106,8 @@ public partial class tarjetaOf
     [StringLength(50)]
     public string secuenciadoPor { get; set; }
 
+    public int? tipoDocumento { get; set; }
+
     [InverseProperty("ofOrigenNavigation")]
     public virtual ICollection<tarjetaOf> InverseofOrigenNavigation { get; set; } = new List<tarjetaOf>();
 
@@ -173,6 +175,10 @@ public partial class tarjetaOf
     [ForeignKey("tipoComponente")]
     [InverseProperty("tarjetaOf")]
     public virtual tipoComponente tipoComponenteNavigation { get; set; }
+
+    [ForeignKey("tipoDocumento")]
+    [InverseProperty("tarjetaOf")]
+    public virtual tipoReporte tipoDocumentoNavigation { get; set; }
 
     [InverseProperty("oFDestinoNavigation")]
     public virtual ICollection<transferenciaProceso> transferenciaProceso { get; set; } = new List<transferenciaProceso>();

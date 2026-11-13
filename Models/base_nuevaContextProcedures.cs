@@ -43,7 +43,7 @@ namespace Sistema_Produccion_3_Backend.Models
             _context = context;
         }
 
-        public virtual async Task<List<FFE_DetalleProcesosResult>> FFE_DetalleProcesosAsync(int? idOF, OutputParameter<int> returnValue = null, CancellationToken cancellationToken = default)
+        public virtual async Task<List<FFE_DetalleProcesosResult>> FFE_DetalleProcesosAsync(int? idOF, DateTime? fechaReferencia, OutputParameter<int> returnValue = null, CancellationToken cancellationToken = default)
         {
             var parameterreturnValue = new SqlParameter
             {
@@ -60,9 +60,15 @@ namespace Sistema_Produccion_3_Backend.Models
                     Value = idOF ?? Convert.DBNull,
                     SqlDbType = System.Data.SqlDbType.Int,
                 },
+                new SqlParameter
+                {
+                    ParameterName = "FechaReferencia",
+                    Value = fechaReferencia ?? Convert.DBNull,
+                    SqlDbType = System.Data.SqlDbType.DateTime,
+                },
                 parameterreturnValue,
             };
-            var _ = await _context.SqlQueryAsync<FFE_DetalleProcesosResult>("EXEC @returnValue = [dbo].[FFE_DetalleProcesos] @idOF = @idOF", sqlParameters, cancellationToken);
+            var _ = await _context.SqlQueryAsync<FFE_DetalleProcesosResult>("EXEC @returnValue = [dbo].[FFE_DetalleProcesos] @idOF = @idOF, @FechaReferencia = @FechaReferencia", sqlParameters, cancellationToken);
 
             returnValue?.SetValue(parameterreturnValue.Value);
 
@@ -136,7 +142,7 @@ namespace Sistema_Produccion_3_Backend.Models
                 new SqlParameter
                 {
                     ParameterName = "codBobina",
-                    Size = 100,
+                    Size = 50,
                     Value = codBobina ?? Convert.DBNull,
                     SqlDbType = System.Data.SqlDbType.NVarChar,
                 },
@@ -189,7 +195,7 @@ namespace Sistema_Produccion_3_Backend.Models
                 new SqlParameter
                 {
                     ParameterName = "idSolicitud",
-                    Size = 100,
+                    Size = 50,
                     Value = idSolicitud ?? Convert.DBNull,
                     SqlDbType = System.Data.SqlDbType.NVarChar,
                 },
