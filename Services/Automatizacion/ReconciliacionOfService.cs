@@ -276,8 +276,8 @@ namespace Sistema_Produccion_3_Backend.Services.Automatizacion
 
         private string ObtenerWebhookPorOf(int oF, Dictionary<int, tarjetaOf> dictLocales)
         {
-            string urlWebhookOffset = "https://chat.googleapis.com/v1/spaces/AAQAcyo_Bds/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=VDp369j32Q8rsHYsIIqOadsUhqtV5cGfQqSQRhBy0Kw";
-            string urlWebhookFlexo = "https://chat.googleapis.com/v1/spaces/AAQAmuIgng8/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=jl3fY-gXIJyrcAuhVxW2xMHd8biS2EeljElNS39CV1Y";
+            string urlWebhookOffset = "";
+            string urlWebhookFlexo = "";
 
             string linea = "";
             if (dictLocales.TryGetValue(oF, out var localOf))
