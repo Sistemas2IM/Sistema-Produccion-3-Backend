@@ -361,3 +361,5 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/Controllers/GoogleChat/rechazosReclamosWebhook.cs
+/Services/Automatizacion/ReconciliacionOfService.cs
