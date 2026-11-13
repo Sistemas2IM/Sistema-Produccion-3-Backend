@@ -61,7 +61,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.Test
             Aprobador = "aprobador.prueba",
             AprobadorNombre = "Aprobador de Prueba",
             ObjType = AprobacionesSapRepository.ObjTypeTraslado,
-            Folio = 99001,
+            // DraftEntry real para que el enlace al Web Client abra un borrador existente
+            Folio = 16621,
             DocDate = DateTime.Today,
             DocTotal = 0,
             DocCur = "USD",

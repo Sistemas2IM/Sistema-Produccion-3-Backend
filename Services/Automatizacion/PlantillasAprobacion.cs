@@ -41,8 +41,9 @@ namespace Sistema_Produccion_3_Backend.Services.Automatizacion
 
             var pie = new StringBuilder();
             pie.Append(Parrafo(opt.InstruccionesAprobacion));
-            if (!string.IsNullOrWhiteSpace(opt.UrlWebClient))
-                pie.Append($"<p>También puedes hacerlo desde el <a href=\"{WebUtility.HtmlEncode(opt.UrlWebClient.Trim())}\">Web Client</a>.</p>");
+            string? url = UrlWebClient(s, opt);
+            if (url != null)
+                pie.Append($"<p>También puedes hacerlo desde el <a href=\"{WebUtility.HtmlEncode(url)}\">Web Client</a>.</p>");
 
             string cuerpo = Documento(
                 "Solicitud de aprobación pendiente",
@@ -117,6 +118,16 @@ namespace Sistema_Produccion_3_Backend.Services.Automatizacion
             sb.Append("<p style=\"color:#888;font-size:12px\">Este es un aviso automático; no respondas a este correo.</p>");
             sb.Append("</div>");
             return sb.ToString();
+        }
+
+        // Sin plantilla para el tipo = sin enlace. Solo se sustituye {DraftEntry}; el resto de la URL
+        // no se toca (el HtmlEncode del href solo escapa '&' a nivel HTML, el cliente lo revierte)
+        private static string? UrlWebClient(SolicitudPendienteSap s, AlertasAprobacionOptions opt)
+        {
+            if (!opt.UrlWebClientPorTipo.TryGetValue(s.ObjType, out var plantilla) || string.IsNullOrWhiteSpace(plantilla))
+                return null;
+
+            return plantilla.Trim().Replace("{DraftEntry}", s.Folio.ToString(CultureInfo.InvariantCulture));
         }
 
         private static string Saludo(string? nombre) =>

@@ -20,7 +20,9 @@ namespace Sistema_Produccion_3_Backend.Services.Automatizacion
         public bool AvisarAutoaprobacion { get; set; } = true;
         // Aviso de resultado (aprobada/rechazada/cancelada) al solicitante
         public bool AvisarSolicitante { get; set; }
-        public string? UrlWebClient { get; set; }
+        // ObjType -> plantilla de URL del Web Client; {DraftEntry} se sustituye por OWDD.DraftEntry.
+        // La plantilla se usa tal cual (p. ej. %252C debe quedar doblemente codificado)
+        public Dictionary<string, string> UrlWebClientPorTipo { get; set; } = new();
         // Textos de los correos; vacíos = no se muestran
         public string? InstruccionesAprobacion { get; set; }
         public string? NotaAprobada { get; set; }
