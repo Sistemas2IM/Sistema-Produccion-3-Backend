@@ -78,6 +78,11 @@ public partial class transferenciaProceso
 
     public int? idPreliminar { get; set; }
 
+    public int? idMotivoFinalizacion { get; set; }
+
+    [StringLength(500)]
+    public string comentarioFinalizacion { get; set; }
+
     [ForeignKey("areaDestino")]
     [InverseProperty("transferenciaProcesoareaDestinoNavigation")]
     public virtual areas areaDestinoNavigation { get; set; }
@@ -101,6 +106,10 @@ public partial class transferenciaProceso
     [InverseProperty("transferenciaProceso")]
     public virtual lotePliego idLoteNavigation { get; set; }
 
+    [ForeignKey("idMotivoFinalizacion")]
+    [InverseProperty("transferenciaProceso")]
+    public virtual motivoConciliacion idMotivoFinalizacionNavigation { get; set; }
+
     [ForeignKey("idOrigen")]
     [InverseProperty("transferenciaProcesoidOrigenNavigation")]
     public virtual procesoOf idOrigenNavigation { get; set; }
@@ -120,6 +129,9 @@ public partial class transferenciaProceso
     [ForeignKey("oFDestino")]
     [InverseProperty("transferenciaProceso")]
     public virtual tarjetaOf oFDestinoNavigation { get; set; }
+
+    [InverseProperty("idTransferenciaNavigation")]
+    public virtual ICollection<pesajeTarima> pesajeTarima { get; set; } = new List<pesajeTarima>();
 
     [ForeignKey("recibidoPor")]
     [InverseProperty("transferenciaProcesorecibidoPorNavigation")]

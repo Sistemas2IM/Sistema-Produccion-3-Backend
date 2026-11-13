@@ -136,7 +136,7 @@ namespace Sistema_Produccion_3_Backend.Models
                 new SqlParameter
                 {
                     ParameterName = "codBobina",
-                    Size = 100,
+                    Size = 50,
                     Value = codBobina ?? Convert.DBNull,
                     SqlDbType = System.Data.SqlDbType.NVarChar,
                 },
@@ -189,7 +189,7 @@ namespace Sistema_Produccion_3_Backend.Models
                 new SqlParameter
                 {
                     ParameterName = "idSolicitud",
-                    Size = 100,
+                    Size = 50,
                     Value = idSolicitud ?? Convert.DBNull,
                     SqlDbType = System.Data.SqlDbType.NVarChar,
                 },

@@ -146,6 +146,8 @@ public partial class procesoOf
 
     public bool? esEnsamblaje { get; set; }
 
+    public int? tipoDocumento { get; set; }
+
     [InverseProperty("procesoAnteriorNavigation")]
     public virtual ICollection<procesoOf> InverseprocesoAnteriorNavigation { get; set; } = new List<procesoOf>();
 
@@ -265,6 +267,10 @@ public partial class procesoOf
 
     [InverseProperty("idProcesoNavigation")]
     public virtual ICollection<tarjetaEtiqueta> tarjetaEtiqueta { get; set; } = new List<tarjetaEtiqueta>();
+
+    [ForeignKey("tipoDocumento")]
+    [InverseProperty("procesoOf")]
+    public virtual tipoReporte tipoDocumentoNavigation { get; set; }
 
     [ForeignKey("tipoEntrada")]
     [InverseProperty("procesoOftipoEntradaNavigation")]

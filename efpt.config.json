@@ -5,7 +5,7 @@
    "FilterSchemas": false,
    "IncludeConnectionString": false,
    "IrregularWords": null,
-   "MinimumProductVersion": "2.6.1301",
+   "MinimumProductVersion": "2.6.1777",
    "ModelNamespace": null,
    "OutputContextPath": null,
    "OutputPath": "Models",
@@ -27,7 +27,7 @@
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[AprobacionAviso]",
+         "Name": "[dbo].[aprobacionAviso]",
          "ObjectType": 0
       },
       {
@@ -76,6 +76,10 @@
       },
       {
          "Name": "[dbo].[catalogoFlag]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[catalogoTara]",
          "ObjectType": 0
       },
       {
@@ -403,6 +407,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[pesajeTarima]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[posturasOf]",
          "ObjectType": 0
       },
@@ -641,5 +649,6 @@
    "UseSchemaNamespaces": false,
    "UseSpatial": false,
    "UseT4": false,
-   "UseT4Split": false
+   "UseT4Split": false,
+   "UseTypedTvpParameters": true
 }

@@ -24,4 +24,7 @@ public partial class motivoConciliacion
 
     [InverseProperty("idMotivoNavigation")]
     public virtual ICollection<conciliacion> conciliacion { get; set; } = new List<conciliacion>();
+
+    [InverseProperty("idMotivoFinalizacionNavigation")]
+    public virtual ICollection<transferenciaProceso> transferenciaProceso { get; set; } = new List<transferenciaProceso>();
 }

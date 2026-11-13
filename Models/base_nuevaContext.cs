@@ -17,7 +17,7 @@ public partial class base_nuevaContext : DbContext
 
     public virtual DbSet<anexos_NEXO> anexos_NEXO { get; set; }
 
-    public virtual DbSet<AprobacionAviso> AprobacionAviso { get; set; }
+    public virtual DbSet<aprobacionAviso> aprobacionAviso { get; set; }
 
     public virtual DbSet<areas> areas { get; set; }
 
@@ -40,6 +40,8 @@ public partial class base_nuevaContext : DbContext
     public virtual DbSet<casoCalidad> casoCalidad { get; set; }
 
     public virtual DbSet<catalogoFlag> catalogoFlag { get; set; }
+
+    public virtual DbSet<catalogoTara> catalogoTara { get; set; }
 
     public virtual DbSet<catalogoTipoAcabado> catalogoTipoAcabado { get; set; }
 
@@ -197,6 +199,8 @@ public partial class base_nuevaContext : DbContext
 
     public virtual DbSet<permisoTipo> permisoTipo { get; set; }
 
+    public virtual DbSet<pesajeTarima> pesajeTarima { get; set; }
+
     public virtual DbSet<posturasOf> posturasOf { get; set; }
 
     public virtual DbSet<procesoAcabado> procesoAcabado { get; set; }
@@ -305,11 +309,15 @@ public partial class base_nuevaContext : DbContext
             entity.Property(e => e.FechaSubida).HasDefaultValueSql("(getdate())");
         });
 
-        modelBuilder.Entity<AprobacionAviso>(entity =>
+        modelBuilder.Entity<aprobacionAviso>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK_AprobacionAviso");
 
-            entity.Property(e => e.FechaCreacion).HasDefaultValueSql("(sysdatetime())");
+            entity.Property(e => e.Enviado).HasAnnotation("Relational:DefaultConstraintName", "DF_AprobacionAviso_Enviado");
+            entity.Property(e => e.FechaCreacion)
+                .HasDefaultValueSql("(sysdatetime())")
+                .HasAnnotation("Relational:DefaultConstraintName", "DF_AprobacionAviso_FechaCreacion");
+            entity.Property(e => e.Intentos).HasAnnotation("Relational:DefaultConstraintName", "DF_AprobacionAviso_Intentos");
             entity.Property(e => e.StatusSap).IsFixedLength();
         });
 
@@ -531,6 +539,15 @@ public partial class base_nuevaContext : DbContext
 
             entity.Property(e => e.activo).HasDefaultValue(true);
             entity.Property(e => e.permiteQuitarManual).HasDefaultValue(true);
+        });
+
+        modelBuilder.Entity<catalogoTara>(entity =>
+        {
+            entity.HasKey(e => e.idTipoTara).HasName("catalogoTara_PK");
+
+            entity.Property(e => e.activo)
+                .HasDefaultValue(true)
+                .HasAnnotation("Relational:DefaultConstraintName", "catalogoTara_activo_DF");
         });
 
         modelBuilder.Entity<catalogoTipoAcabado>(entity =>
@@ -1564,6 +1581,37 @@ public partial class base_nuevaContext : DbContext
                 .HasConstraintName("FK_SUBMODULO");
         });
 
+        modelBuilder.Entity<pesajeTarima>(entity =>
+        {
+            entity.HasKey(e => e.idPesaje).HasName("pesajeTarima_PK");
+
+            entity.Property(e => e.cancelado).HasAnnotation("Relational:DefaultConstraintName", "pesajeTarima_cancelado_DF");
+            entity.Property(e => e.estado)
+                .HasDefaultValue("Pesada")
+                .HasAnnotation("Relational:DefaultConstraintName", "pesajeTarima_estado_DF");
+            entity.Property(e => e.fechaPesaje)
+                .HasDefaultValueSql("(getdate())")
+                .HasAnnotation("Relational:DefaultConstraintName", "pesajeTarima_fechaPesaje_DF");
+            entity.Property(e => e.manual).HasAnnotation("Relational:DefaultConstraintName", "pesajeTarima_manual_DF");
+            entity.Property(e => e.pesadoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.recibidoPor).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+            entity.Property(e => e.reimpresiones).HasAnnotation("Relational:DefaultConstraintName", "pesajeTarima_reimpresiones_DF");
+
+            entity.HasOne(d => d.idLoteNavigation).WithMany(p => p.pesajeTarima)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("pesajeTarima_lotePliego_FK");
+
+            entity.HasOne(d => d.idTipoTaraNavigation).WithMany(p => p.pesajeTarima).HasConstraintName("pesajeTarima_catalogoTara_FK");
+
+            entity.HasOne(d => d.idTransferenciaNavigation).WithMany(p => p.pesajeTarima).HasConstraintName("pesajeTarima_transferenciaProceso_FK");
+
+            entity.HasOne(d => d.pesadoPorNavigation).WithMany(p => p.pesajeTarimapesadoPorNavigation)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("pesajeTarima_pesadoPor_FK");
+
+            entity.HasOne(d => d.recibidoPorNavigation).WithMany(p => p.pesajeTarimarecibidoPorNavigation).HasConstraintName("pesajeTarima_recibidoPor_FK");
+        });
+
         modelBuilder.Entity<posturasOf>(entity =>
         {
             entity.HasKey(e => e.idPostura).HasName("PK_POSTURASOF");
@@ -1784,6 +1832,8 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.procesoAnteriorNavigation).WithMany(p => p.InverseprocesoAnteriorNavigation).HasConstraintName("FK_PROCESO_ANTERIOR");
 
             entity.HasOne(d => d.procesoSiguienteNavigation).WithMany(p => p.InverseprocesoSiguienteNavigation).HasConstraintName("FK_PROCESO_SIGUIENTE");
+
+            entity.HasOne(d => d.tipoDocumentoNavigation).WithMany(p => p.procesoOf).HasConstraintName("FK_PROCESOOF_TIPO_DOCUMENTO");
 
             entity.HasOne(d => d.tipoEntradaNavigation).WithMany(p => p.procesoOftipoEntradaNavigation).HasConstraintName("FK_TIPO_ENTRADA");
 
@@ -2090,6 +2140,8 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.secuenciadoPorNavigation).WithMany(p => p.tarjetaOfsecuenciadoPorNavigation).HasConstraintName("FK_SECUENCIA_ORDEN");
 
             entity.HasOne(d => d.tipoComponenteNavigation).WithMany(p => p.tarjetaOf).HasConstraintName("FK_TIPO_COMPONENTE");
+
+            entity.HasOne(d => d.tipoDocumentoNavigation).WithMany(p => p.tarjetaOf).HasConstraintName("FK_TARJETAOF_TIPO_DOCUMENTO");
         });
 
         modelBuilder.Entity<tipoCaso>(entity =>
@@ -2136,6 +2188,8 @@ public partial class base_nuevaContext : DbContext
             entity.HasOne(d => d.idDestinoNavigation).WithMany(p => p.transferenciaProcesoidDestinoNavigation).HasConstraintName("FK_TRANSFER_ID_DESTINO_OF");
 
             entity.HasOne(d => d.idLoteNavigation).WithMany(p => p.transferenciaProceso).HasConstraintName("FK_TRANSFER_LOTEPLIEG");
+
+            entity.HasOne(d => d.idMotivoFinalizacionNavigation).WithMany(p => p.transferenciaProceso).HasConstraintName("transferenciaProceso_motivoConciliacion_FK");
 
             entity.HasOne(d => d.idOrigenNavigation).WithMany(p => p.transferenciaProcesoidOrigenNavigation).HasConstraintName("FK_TRANSFER_ID_ORIGEN_OF");
 

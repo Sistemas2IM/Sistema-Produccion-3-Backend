@@ -44,7 +44,7 @@ public partial class lotePliego
 
     public int? procesoOrigen { get; set; }
 
-    [Column(TypeName = "decimal(18, 0)")]
+    [Column(TypeName = "decimal(10, 2)")]
     public decimal? peso { get; set; }
 
     [StringLength(30)]
@@ -63,6 +63,9 @@ public partial class lotePliego
     [ForeignKey("idSolicitud")]
     [InverseProperty("lotePliego")]
     public virtual solicitudMateriales idSolicitudNavigation { get; set; }
+
+    [InverseProperty("idLoteNavigation")]
+    public virtual ICollection<pesajeTarima> pesajeTarima { get; set; } = new List<pesajeTarima>();
 
     [ForeignKey("procesoOrigen")]
     [InverseProperty("lotePliego")]

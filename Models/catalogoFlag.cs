@@ -43,6 +43,9 @@ public partial class catalogoFlag
 
     public bool activo { get; set; }
 
+    [StringLength(90)]
+    public string icono { get; set; }
+
     [InverseProperty("idFlagNavigation")]
     public virtual ICollection<flagDocumento> flagDocumento { get; set; } = new List<flagDocumento>();
 

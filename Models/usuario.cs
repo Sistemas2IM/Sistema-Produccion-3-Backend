@@ -48,6 +48,12 @@ public partial class usuario
 
     public int? codEmpleado { get; set; }
 
+    [StringLength(200)]
+    public string pinHash { get; set; }
+
+    [Column(TypeName = "datetime")]
+    public DateTime? pinActualizado { get; set; }
+
     [InverseProperty("userNavigation")]
     public virtual ICollection<asignacion> asignacion { get; set; } = new List<asignacion>();
 
@@ -173,6 +179,12 @@ public partial class usuario
 
     [InverseProperty("userNavigation")]
     public virtual ICollection<permisoMaquina> permisoMaquina { get; set; } = new List<permisoMaquina>();
+
+    [InverseProperty("pesadoPorNavigation")]
+    public virtual ICollection<pesajeTarima> pesajeTarimapesadoPorNavigation { get; set; } = new List<pesajeTarima>();
+
+    [InverseProperty("recibidoPorNavigation")]
+    public virtual ICollection<pesajeTarima> pesajeTarimarecibidoPorNavigation { get; set; } = new List<pesajeTarima>();
 
     [InverseProperty("userNavigation")]
     public virtual ICollection<refreshToken> refreshToken { get; set; } = new List<refreshToken>();
