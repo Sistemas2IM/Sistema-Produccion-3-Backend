@@ -100,7 +100,7 @@ namespace Sistema_Produccion_3_Backend.Services.Automatizacion
             var pendientes = await sap.ObtenerPendientesAsync(ct);
 
             // Una solicitud decidida no vuelve a 'W', así que los avisos abiertos cubren todas las pendientes ya registradas
-            var avisosAbiertos = await context.AprobacionAviso
+            var avisosAbiertos = await context.aprobacionAviso
                 .Where(a => a.TipoAviso == TipoPendiente && a.StatusSap == StatusPendiente)
                 .ToListAsync(ct);
             var porLlave = avisosAbiertos.ToDictionary(a => (a.WddCode, a.StepCode, a.UserID));
@@ -135,10 +135,10 @@ namespace Sistema_Produccion_3_Backend.Services.Automatizacion
 
             bool avisarSolicitante = opt.AvisarSolicitante && !opt.Seed;
             var resultadosPorReintentar = avisarSolicitante
-                ? await context.AprobacionAviso
+                ? await context.aprobacionAviso
                     .Where(a => a.TipoAviso == TipoResultado && !a.Enviado && a.Intentos < opt.MaxIntentos)
                     .ToListAsync(ct)
-                : new List<AprobacionAviso>();
+                : new List<aprobacionAviso>();
 
             var wddConsultar = avisosPorCerrar.Select(a => a.WddCode)
                 .Concat(resultadosPorReintentar.Select(a => a.WddCode))
@@ -176,11 +176,11 @@ namespace Sistema_Produccion_3_Backend.Services.Automatizacion
         }
 
         // Inserta el aviso antes de enviar: la llave única evita duplicados si dos instancias corren a la vez
-        private async Task<AprobacionAviso?> RegistrarAvisoAsync(
+        private async Task<aprobacionAviso?> RegistrarAvisoAsync(
             base_nuevaContext context, int wddCode, int stepCode, int userId, string tipoAviso,
             string statusSap, string? email, bool seed, CancellationToken ct)
         {
-            var aviso = new AprobacionAviso
+            var aviso = new aprobacionAviso
             {
                 WddCode = wddCode,
                 StepCode = stepCode,
@@ -194,7 +194,7 @@ namespace Sistema_Produccion_3_Backend.Services.Automatizacion
                 FechaCreacion = DateTime.Now
             };
 
-            context.AprobacionAviso.Add(aviso);
+            context.aprobacionAviso.Add(aviso);
 
             try
             {
@@ -209,7 +209,7 @@ namespace Sistema_Produccion_3_Backend.Services.Automatizacion
         }
 
         private async Task<bool> IntentarEnvioAsync(
-            base_nuevaContext context, ICorreoService correo, AprobacionAviso aviso,
+            base_nuevaContext context, ICorreoService correo, aprobacionAviso aviso,
             string? email, string asunto, string cuerpo, CancellationToken ct)
         {
             // Sin correo no cuenta como intento: si luego se agrega el correo en SAP, el aviso sale en el siguiente ciclo

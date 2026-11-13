@@ -24,7 +24,8 @@ namespace Sistema_Produccion_3_Backend.Controllers.Indicadores
         {
             try
             {
-                var result = await _contextSP.FFE_DetalleProcesosAsync(idOF);
+                // fechaReferencia null: el SP usa GETDATE()
+                var result = await _contextSP.FFE_DetalleProcesosAsync(idOF, null);
 
                 if (result == null || result.Count == 0)
                     return NotFound($"No se encontraron procesos para la OF {idOF}");
