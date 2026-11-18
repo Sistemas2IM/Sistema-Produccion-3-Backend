@@ -122,6 +122,18 @@ namespace Sistema_Produccion_3_Backend.Services
                 existingUser.password = BCrypt.Net.BCrypt.HashPassword(update.Password);
             }
 
+            // Si se incluye un nuevo PIN, se guarda solo su hash
+            if (!string.IsNullOrEmpty(update.Pin))
+            {
+                if (!PinHasher.EsPinValido(update.Pin))
+                {
+                    return new RegisterResponse { result = false, message = "El PIN debe tener de 4 a 6 dígitos" };
+                }
+
+                existingUser.pinHash = PinHasher.HashPin(update.Pin);
+                existingUser.pinActualizado = DateTime.Now;
+            }
+
             // Actualizar la fecha de modificación (opcional)
             existingUser.ultimaActualizacion = DateTime.Now;
 
