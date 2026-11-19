@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Sistema_Produccion_3_Backend.DTO.AnexosNEXO;
 using Sistema_Produccion_3_Backend.DTO.Buscadores.DTOGlobales;
+using Sistema_Produccion_3_Backend.DTO.Pesaje;
 using Sistema_Produccion_3_Backend.DTO.Calidad.AccionSolicitada;
 using Sistema_Produccion_3_Backend.DTO.Calidad.AuditoriaProceso;
 using Sistema_Produccion_3_Backend.DTO.Calidad.AuditoriaProceso.Batch;
@@ -1205,6 +1206,18 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForMember(dest => dest.simboloUnidad, opt => opt.MapFrom(src => src.unidadMedidaNavigation.simbolo))
                 .ReverseMap();
 
+            // Los campos de pesaje se llenan en pesajeConsultasController
+            CreateMap<lotePliego, PesajeLoteDto>()
+                .IncludeBase<lotePliego, lotePliegoDto>()
+                .ForMember(dest => dest.of, opt => opt.Ignore())
+                .ForMember(dest => dest.cliente, opt => opt.Ignore())
+                .ForMember(dest => dest.materialDescripcion, opt => opt.Ignore())
+                .ForMember(dest => dest.gramaje, opt => opt.Ignore())
+                .ForMember(dest => dest.maquinaDestino, opt => opt.Ignore())
+                .ForMember(dest => dest.tarimas, opt => opt.Ignore());
+
+            CreateMap<pesajeTarima, PesajeTarimaDto>();
+
             CreateMap<lotePliego, AddLotePliegoDto>().ReverseMap();
             CreateMap<UpdateLotePliegoDto, lotePliego>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
@@ -1213,6 +1226,9 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
                 .ForMember(dest => dest.nombreTablero, opt => opt.MapFrom(src => src.idOrigenNavigation.idTableroNavigation.nombreTablero))
                 .ForMember(dest => dest.nombreEnviadoPor, opt => opt.MapFrom(src => src.enviadoPorNavigation.nombres + " " + src.enviadoPorNavigation.apellidos))
                 .ForMember(dest => dest.nombreRecibidoPor, opt => opt.MapFrom(src => src.recibidoPorNavigation.nombres + " " + src.recibidoPorNavigation.apellidos))
+                // Los llenan los endpoints de pendientes (AgregarTarimasPesadas); en los demás quedan en null
+                .ForMember(dest => dest.tarimasPesadas, opt => opt.Ignore())
+                .ForMember(dest => dest.tarimas, opt => opt.Ignore())
                 .ReverseMap();
             CreateMap<transferenciaProceso, AddTransferenciaProcesoDto>().ReverseMap();
             CreateMap<UpdateTransferenciaProcesoDto, transferenciaProceso>()

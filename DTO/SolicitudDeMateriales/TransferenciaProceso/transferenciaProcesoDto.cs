@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Sistema_Produccion_3_Backend.DTO.Pesaje;
 
 namespace Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.TransferenciaProceso
 {
@@ -56,5 +57,9 @@ namespace Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.TransferenciaPr
         public int? tipoComponente { get; set; }
 
         public int? idPreliminar { get; set; }
+
+        public int? tarimasPesadas { get; set; }
+
+        public List<PesajeTarimaDto>? tarimas { get; set; }
     }
 }

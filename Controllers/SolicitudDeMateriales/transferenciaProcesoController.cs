@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.DotNet.Scaffolding.Shared.Messaging;
 using Microsoft.EntityFrameworkCore;
 using Sistema_Produccion_3_Backend.DTO.Etiquetas.EtiquetaOf;
+using Sistema_Produccion_3_Backend.DTO.Pesaje;
 using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.TransferenciaProceso;
 using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.TransferenciaProceso.Batch;
 using Sistema_Produccion_3_Backend.Models;
@@ -71,10 +72,11 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales
                 .Include(t => t.recibidoPorNavigation)
                 .Include(t => t.enviadoPorNavigation)
                 .Where(t => t.estado == "Pendiente" // o el valor de estado pendiente en tu BD
-                    && t.idOrigenNavigation.oF == of) // aquí filtras por OF               
+                    && t.idOrigenNavigation.oF == of) // aquí filtras por OF
                 .ToListAsync();
 
             var transferenciasProcesosDto = _mapper.Map<List<transferenciaProcesoDto>>(transferenciasProcesos);
+            await AgregarTarimasPesadas(transferenciasProcesosDto);
 
             if (transferenciasProcesosDto == null || !transferenciasProcesosDto.Any())
             {
@@ -100,6 +102,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales
                 .ToListAsync();
 
             var transferenciasProcesosDto = _mapper.Map<List<transferenciaProcesoDto>>(transferenciasProcesos);
+            await AgregarTarimasPesadas(transferenciasProcesosDto);
 
             if (transferenciasProcesosDto == null || !transferenciasProcesosDto.Any())
             {
@@ -124,6 +127,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales
                 .ToListAsync();
 
             var transferenciasProcesosDto = _mapper.Map<List<transferenciaProcesoDto>>(transferenciasProcesos);
+            await AgregarTarimasPesadas(transferenciasProcesosDto);
 
             if (transferenciasProcesosDto == null || !transferenciasProcesosDto.Any())
             {
@@ -131,6 +135,38 @@ namespace Sistema_Produccion_3_Backend.Controllers.SolicitudDeMateriales
             }
 
             return Ok(transferenciasProcesosDto);
+        }
+
+        // Agrega a cada transferencia sus tarimas no canceladas: las ya ligadas a la transferencia
+        // y las pesadas del mismo lote que todavía no se han transferido
+        private async Task AgregarTarimasPesadas(List<transferenciaProcesoDto> transferencias)
+        {
+            if (transferencias.Count == 0)
+            {
+                return;
+            }
+
+            var idsTransferencia = transferencias.Select(t => t.idTransferencia).ToList();
+            var idsLote = transferencias.Where(t => t.idLote.HasValue).Select(t => t.idLote!.Value).Distinct().ToList();
+
+            var tarimas = await _context.pesajeTarima
+                .AsNoTracking()
+                .Where(p => !p.cancelado
+                    && ((p.idTransferencia != null && idsTransferencia.Contains(p.idTransferencia.Value))
+                        || (p.idTransferencia == null && idsLote.Contains(p.idLote))))
+                .OrderBy(p => p.correlativo)
+                .ToListAsync();
+
+            foreach (var transferencia in transferencias)
+            {
+                var tarimasTransferencia = tarimas
+                    .Where(p => p.idTransferencia == transferencia.idTransferencia
+                        || (p.idTransferencia == null && p.idLote == transferencia.idLote))
+                    .ToList();
+
+                transferencia.tarimas = _mapper.Map<List<PesajeTarimaDto>>(tarimasTransferencia);
+                transferencia.tarimasPesadas = transferencia.tarimas.Count;
+            }
         }
 
         [HttpGet("get/transferenciasProcesos/enviadas/{id_origen}")]
