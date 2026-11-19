@@ -64,6 +64,7 @@ using Sistema_Produccion_3_Backend.DTO.Etiquetas.EtiquetaOf;
 using Sistema_Produccion_3_Backend.DTO.Etiquetas.EtiquetaOf.BatchEtiquetaOf;
 using Sistema_Produccion_3_Backend.DTO.Etiquetas.TarjetaEtiqueta;
 using Sistema_Produccion_3_Backend.DTO.Etiquetas.TarjetaEtiqueta.BatchTarjetaEtiqueta;
+using Sistema_Produccion_3_Backend.DTO.Flags.CatalogoFlag;
 using Sistema_Produccion_3_Backend.DTO.Flags.FlagDocumento;
 using Sistema_Produccion_3_Backend.DTO.GoogleChat.SoporteNexo;
 using Sistema_Produccion_3_Backend.DTO.Horarios.HorariosOperativos;
@@ -1696,6 +1697,7 @@ namespace Sistema_Produccion_3_Backend.AutomapperProfiles
             CreateMap<motivoCambioFechaOf, MotivoCambioFechaOfDto>().ReverseMap();
 
             // FLAGS
+            CreateMap<catalogoFlag, CatalogoFlagDto>().ReverseMap();
             CreateMap<flagDocumento, FlagDocumentoDto>()
                 .ForMember(dest => dest.codigo, opt => opt.MapFrom(src => src.idFlagNavigation != null ? src.idFlagNavigation.codigo : null))
                 .ForMember(dest => dest.nombre, opt => opt.MapFrom(src => src.idFlagNavigation != null ? src.idFlagNavigation.nombre : null))
