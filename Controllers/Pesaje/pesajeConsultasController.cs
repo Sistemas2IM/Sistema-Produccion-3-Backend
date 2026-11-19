@@ -81,8 +81,6 @@ namespace Sistema_Produccion_3_Backend.Controllers.Pesaje
             var lote = await _context.lotePliego
                 .AsNoTracking()
                 .Include(l => l.unidadMedidaNavigation)
-                .Include(l => l.procesoOrigenNavigation)
-                    .ThenInclude(p => p.oFNavigation)
                 .Include(l => l.idSolicitudNavigation)
                     .ThenInclude(s => s.idMaquinaNavigation)
                 .Include(l => l.pesajeTarima.Where(p => !p.cancelado).OrderBy(p => p.correlativo))
@@ -96,27 +94,13 @@ namespace Sistema_Produccion_3_Backend.Controllers.Pesaje
 
             var dto = _mapper.Map<PesajeLoteDto>(lote);
 
-            var of = lote.procesoOrigenNavigation?.oF;
-            var cliente = lote.procesoOrigenNavigation?.oFNavigation?.clienteOf;
-            if (of == null && lote.idSolicitud.HasValue)
-            {
-                // Lote sin proceso de origen: se toma la OF de la solicitud solo si es una sola
-                var ofsSolicitud = await _context.solicitudMaterialesOf
-                    .Where(s => s.idSolicitud == lote.idSolicitud.Value)
-                    .Select(s => s.oF)
-                    .Distinct()
-                    .Take(2)
-                    .ToListAsync();
-
-                if (ofsSolicitud.Count == 1)
-                {
-                    of = ofsSolicitud[0];
-                    cliente = await _context.tarjetaOf
-                        .Where(t => t.oF == of)
-                        .Select(t => t.clienteOf)
-                        .FirstOrDefaultAsync();
-                }
-            }
+            var of = await PesajeLoteHelper.ObtenerOfAsync(_context, lote);
+            var cliente = of == null
+                ? null
+                : await _context.tarjetaOf
+                    .Where(t => t.oF == of)
+                    .Select(t => t.clienteOf)
+                    .FirstOrDefaultAsync();
 
             var material = string.IsNullOrWhiteSpace(lote.idMaterialSAP)
                 ? null

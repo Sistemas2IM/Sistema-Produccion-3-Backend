@@ -1,10 +1,13 @@
 using System.Data;
 using System.Security.Claims;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Sistema_Produccion_3_Backend.DTO.Pesaje;
+using Sistema_Produccion_3_Backend.DTO.SolicitudDeMateriales.TransferenciaProceso;
 using Sistema_Produccion_3_Backend.Models;
 
 namespace Sistema_Produccion_3_Backend.Controllers.Pesaje
@@ -19,11 +22,22 @@ namespace Sistema_Produccion_3_Backend.Controllers.Pesaje
         private static readonly string[] TiposUnidad = { "Tarima", "Bobina", "Paquete" };
         private static readonly string[] EstadosLotePesable = { "Pendiente", "Transferencia Parcial" };
 
-        private readonly base_nuevaContext _context;
+        private const string EstadoEntregada = "Entregada";
+        private const string EstadoLoteTransferido = "Transferido";
 
-        public pesajeTarimaController(base_nuevaContext context)
+        // Valores con los que se crean hoy las transferencias de material de un lote hacia impresión
+        private const string TipoTransferenciaMaterial = "Material";
+        private const string EstadoTransferenciaPendiente = "Pendiente";
+        private const string UnidadPliegos = "Pliegos";
+        private const int AreaOrigenLote = 5;
+
+        private readonly base_nuevaContext _context;
+        private readonly IMapper _mapper;
+
+        public pesajeTarimaController(base_nuevaContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         // POST api/pesaje/lotes/5/tarimas
@@ -141,6 +155,115 @@ namespace Sistema_Produccion_3_Backend.Controllers.Pesaje
             });
         }
 
+        // POST api/pesaje/lotes/5/finalizar
+        [HttpPost("lotes/{idLote}/finalizar")]
+        public async Task<ActionResult<PesajeFinalizadoDto>> FinalizarLote(int idLote, [FromBody(EmptyBodyBehavior = EmptyBodyBehavior.Allow)] FinalizarPesajeLoteDto? dto)
+        {
+            var usuario = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrWhiteSpace(usuario))
+            {
+                return Unauthorized(new { mensaje = "No se pudo identificar al usuario del token" });
+            }
+
+            if (dto?.idMotivoFinalizacion is int idMotivo
+                && !await _context.motivoConciliacion.AnyAsync(m => m.idMotivo == idMotivo))
+            {
+                return BadRequest(new { mensaje = $"El motivo de finalización {idMotivo} no existe" });
+            }
+            if (dto?.comentarioFinalizacion?.Trim().Length > 500)
+            {
+                return BadRequest(new { mensaje = "comentarioFinalizacion no puede exceder 500 caracteres" });
+            }
+
+            await using var transaction = await _context.Database.BeginTransactionAsync(IsolationLevel.ReadCommitted);
+
+            // Mismo bloqueo que al registrar tarimas: no se puede pesar mientras se finaliza el lote
+            var lote = await _context.lotePliego
+                .FromSqlInterpolated($"SELECT * FROM lotePliego WITH (UPDLOCK, HOLDLOCK) WHERE idLote = {idLote}")
+                .Include(l => l.idSolicitudNavigation)
+                .FirstOrDefaultAsync();
+
+            if (lote == null)
+            {
+                return NotFound(new { mensaje = $"No se encontró el lote con el id {idLote}" });
+            }
+
+            var tarimas = await _context.pesajeTarima
+                .Where(p => p.idLote == idLote && !p.cancelado)
+                .ToListAsync();
+
+            if (tarimas.Any(p => p.idTransferencia != null || p.estado != EstadoPesada))
+            {
+                return Conflict(new { mensaje = "El lote ya tiene tarimas finalizadas" });
+            }
+            if (tarimas.Count == 0)
+            {
+                return Conflict(new { mensaje = "El lote no tiene tarimas pesadas" });
+            }
+
+            var of = await PesajeLoteHelper.ObtenerOfAsync(_context, lote);
+            if (of == null)
+            {
+                return Conflict(new { mensaje = "No se pudo determinar la OF del lote" });
+            }
+
+            var procesoImpresion = await _context.procesoOf
+                .Where(p => p.oF == of && p.tipoMaquinaSAP == PesajeLoteHelper.TipoMaquinaImpresion)
+                .OrderBy(p => p.secuencia ?? int.MaxValue)
+                .ThenBy(p => p.idProceso)
+                .Select(p => new { p.idProceso, p.idTableroNavigation.idArea })
+                .FirstOrDefaultAsync();
+
+            if (procesoImpresion == null)
+            {
+                return Conflict(new { mensaje = $"La OF {of} no tiene proceso de impresión" });
+            }
+
+            // Misma creación que POST api/transferenciaProceso/post (AddTransferenciaProcesoDto + AutoMapper)
+            var transferencia = _mapper.Map<transferenciaProceso>(new AddTransferenciaProcesoDto
+            {
+                idLote = lote.idLote,
+                tipo = TipoTransferenciaMaterial,
+                estado = EstadoTransferenciaPendiente,
+                unidadDeMedida = UnidadPliegos,
+                fechaEnvio = DateTime.Now,
+                enviadoPor = usuario,
+                cantidadEnviada = lote.cantidadPendiente ?? lote.cantidadPliegos,
+                idDestino = procesoImpresion.idProceso,
+                areaOrigen = AreaOrigenLote,
+                areaDestino = procesoImpresion.idArea,
+                oFDestino = of,
+                idSolicitudOrigen = lote.idSolicitud,
+                idMaterialSAP = lote.idMaterialSAP,
+                materialDescripcion = lote.idSolicitudNavigation?.materialDescripcion
+            });
+            transferencia.idMotivoFinalizacion = dto?.idMotivoFinalizacion;
+            transferencia.comentarioFinalizacion = string.IsNullOrWhiteSpace(dto?.comentarioFinalizacion)
+                ? null
+                : dto.comentarioFinalizacion.Trim();
+
+            _context.transferenciaProceso.Add(transferencia);
+
+            lote.peso = tarimas.Sum(p => p.pesoNeto);
+            lote.estado = EstadoLoteTransferido;
+            lote.cantidadPendiente = 0;
+
+            foreach (var tarima in tarimas)
+            {
+                tarima.estado = EstadoEntregada;
+                tarima.idTransferenciaNavigation = transferencia;
+            }
+
+            await _context.SaveChangesAsync();
+            await transaction.CommitAsync();
+
+            return Ok(new PesajeFinalizadoDto
+            {
+                idTransferencia = transferencia.idTransferencia,
+                mensaje = "Pesaje finalizado"
+            });
+        }
+
         // DELETE api/pesaje/tarimas/5
         [HttpDelete("tarimas/{idPesaje}")]
         public async Task<IActionResult> CancelarTarima(int idPesaje)
@@ -184,48 +307,43 @@ namespace Sistema_Produccion_3_Backend.Controllers.Pesaje
                     : NotFound(new { mensaje = $"No se encontró la tarima con el id {idPesaje}" });
             }
 
-            var vineta = await _context.pesajeTarima
+            var tarima = await _context.pesajeTarima
                 .AsNoTracking()
-                .Where(p => p.idPesaje == idPesaje)
-                .Select(p => new
-                {
-                    p.codigoVineta,
-                    p.idLoteNavigation.codLote,
-                    p.idLoteNavigation.idMaterialSAP,
-                    of = p.idLoteNavigation.procesoOrigenNavigation.oF,
-                    cliente = p.idLoteNavigation.procesoOrigenNavigation.oFNavigation.clienteOf,
-                    materialSolicitud = p.idLoteNavigation.idSolicitudNavigation.materialDescripcion,
-                    p.pesoNeto,
-                    p.conteoEstimado,
-                    p.manual,
-                    p.fechaPesaje,
-                    p.pesadoPor,
-                    p.reimpresiones
-                })
-                .FirstAsync();
+                .Include(p => p.idLoteNavigation)
+                    .ThenInclude(l => l.idSolicitudNavigation)
+                .FirstAsync(p => p.idPesaje == idPesaje);
+            var lote = tarima.idLoteNavigation;
 
-            var material = vineta.materialSolicitud;
-            if (string.IsNullOrWhiteSpace(material) && !string.IsNullOrWhiteSpace(vineta.idMaterialSAP))
+            var of = await PesajeLoteHelper.ObtenerOfAsync(_context, lote);
+            var cliente = of == null
+                ? null
+                : await _context.tarjetaOf
+                    .Where(t => t.oF == of)
+                    .Select(t => t.clienteOf)
+                    .FirstOrDefaultAsync();
+
+            var material = lote.idSolicitudNavigation?.materialDescripcion;
+            if (string.IsNullOrWhiteSpace(material) && !string.IsNullOrWhiteSpace(lote.idMaterialSAP))
             {
                 material = await _context.material
-                    .Where(m => m.idMaterial == vineta.idMaterialSAP)
+                    .Where(m => m.idMaterial == lote.idMaterialSAP)
                     .Select(m => m.nombreMaterial)
                     .FirstOrDefaultAsync();
             }
 
             return Ok(new VinetaTarimaDto
             {
-                codigoVineta = vineta.codigoVineta,
-                codLote = vineta.codLote,
-                of = vineta.of?.ToString(),
-                cliente = vineta.cliente,
-                material = material ?? vineta.idMaterialSAP,
-                pesoNeto = vineta.pesoNeto,
-                conteoEstimado = vineta.conteoEstimado,
-                manual = vineta.manual,
-                fechaPesaje = vineta.fechaPesaje,
-                pesadoPor = vineta.pesadoPor,
-                reimpresiones = vineta.reimpresiones
+                codigoVineta = tarima.codigoVineta,
+                codLote = lote.codLote,
+                of = of?.ToString(),
+                cliente = cliente,
+                material = material ?? lote.idMaterialSAP,
+                pesoNeto = tarima.pesoNeto,
+                conteoEstimado = tarima.conteoEstimado,
+                manual = tarima.manual,
+                fechaPesaje = tarima.fechaPesaje,
+                pesadoPor = tarima.pesadoPor,
+                reimpresiones = tarima.reimpresiones
             });
         }
     }
