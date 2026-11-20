@@ -35,15 +35,15 @@ public partial class detalleFichaClientes_Log
 
     public int? idUnidad { get; set; }
 
-    [StringLength(75)]
+    [StringLength(150)]
     public string toleranciaPromedio { get; set; }
 
-    [StringLength(75)]
+    [StringLength(150)]
     public string toleranciaMinima { get; set; }
 
-    [StringLength(75)]
+    [StringLength(150)]
     public string toleranciaMaxima { get; set; }
 
-    [StringLength(75)]
+    [StringLength(150)]
     public string toleranciaMedida { get; set; }
 }
