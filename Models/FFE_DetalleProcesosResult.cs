@@ -13,7 +13,7 @@ namespace Sistema_Produccion_3_Backend.Models
         [StringLength(100)]
         public string nombrePostura { get; set; }
         [StringLength(200)]
-        public string idMaquinaSAP { get; set; }
+        public string nombreMaquina { get; set; }
         [Column("tiempoEstimado", TypeName = "decimal(20,2)")]
         public decimal? tiempoEstimado { get; set; }
         public DateTime? fechaInicioReal { get; set; }

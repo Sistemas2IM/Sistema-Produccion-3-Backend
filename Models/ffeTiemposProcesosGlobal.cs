@@ -48,6 +48,9 @@ public partial class ffeTiemposProcesosGlobal
     [Column(TypeName = "datetime")]
     public DateTime? Actualizado { get; set; }
 
+    [Column(TypeName = "datetime")]
+    public DateTime? Inicio_Estimado_Original { get; set; }
+
     [ForeignKey("idProceso")]
     [InverseProperty("ffeTiemposProcesosGlobal")]
     public virtual procesoOf idProcesoNavigation { get; set; }
