@@ -33,8 +33,23 @@ namespace Sistema_Produccion_3_Backend.Services.SAP.HANA
         public int? DocNum { get; set; }
         // Líneas del borrador (DRF1); null = no se pudieron consultar (el correo sale sin detalle)
         public List<LineaBorradorSap>? Lineas { get; set; }
+        // Archivos anexos del borrador (ATC1); null = no se consultaron o la consulta falló
+        public List<AdjuntoBorradorSap>? Adjuntos { get; set; }
 
         public string TipoDoc => AprobacionesSapRepository.TipoDocumento(ObjType);
+    }
+
+    // Archivo anexo de un borrador (ODRF.AtcEntry -> ATC1)
+    public class AdjuntoBorradorSap
+    {
+        public int DocEntry { get; set; }
+        public int Line { get; set; }
+        public string? Carpeta { get; set; } // trgtPath (NCLOB)
+        public string? FileName { get; set; }
+        public string? FileExt { get; set; }
+
+        // Nombre original con el que se adjunta: FileName.FileExt
+        public string NombreArchivo => string.IsNullOrEmpty(FileExt) ? FileName ?? "" : $"{FileName}.{FileExt}";
     }
 
     // Línea de un borrador (DRF1)
@@ -120,6 +135,14 @@ namespace Sistema_Produccion_3_Backend.Services.SAP.HANA
             FROM ""DRF1"" L
             WHERE L.""DocEntry"" IN ({0})
             ORDER BY L.""DocEntry"", L.""LineNum""";
+
+        // trgtPath es NCLOB: no puede ir en GROUP BY, DISTINCT ni funciones de agregado
+        private const string ConsultaAdjuntos = @"
+            SELECT D.""DocEntry"", A.""Line"", A.""trgtPath"", A.""FileName"", A.""FileExt""
+            FROM ""ODRF"" D
+            JOIN ""ATC1"" A ON A.""AbsEntry"" = D.""AtcEntry""
+            WHERE D.""DocEntry"" IN ({0})
+            ORDER BY D.""DocEntry"", A.""Line""";
 
         // HANA no permite TOP/ORDER BY en subconsultas correlacionadas: el último decisor sale de ROW_NUMBER()
         private const string ConsultaEstados = @"
@@ -256,6 +279,61 @@ namespace Sistema_Produccion_3_Backend.Services.SAP.HANA
                         Moneda = Texto(r, "Currency"),
                         DescuentoPorc = Decimal(r, "DiscPrcnt"),
                         TotalLinea = Decimal(r, "LineTotal")
+                    });
+                }
+            }
+
+            return resultado;
+        }
+
+        // Los adjuntos son opcionales: si la consulta falla, Adjuntos queda en null y el aviso sale igual
+        public async Task CargarAdjuntosAsync(IReadOnlyCollection<SolicitudPendienteSap> solicitudes, CancellationToken ct)
+        {
+            if (solicitudes.Count == 0) return;
+
+            try
+            {
+                var porBorrador = (await ObtenerAdjuntosAsync(solicitudes.Select(s => s.Folio).ToList(), ct))
+                    .GroupBy(a => a.DocEntry)
+                    .ToDictionary(g => g.Key, g => g.ToList());
+
+                foreach (var s in solicitudes)
+                    s.Adjuntos = porBorrador.TryGetValue(s.Folio, out var adjuntos) ? adjuntos : new List<AdjuntoBorradorSap>();
+            }
+            catch (Exception ex) when (ex is not OperationCanceledException)
+            {
+                _logger.LogError(ex, "❌ No se pudieron consultar los adjuntos de los borradores (ATC1); los avisos se envían sin archivos.");
+            }
+        }
+
+        public async Task<List<AdjuntoBorradorSap>> ObtenerAdjuntosAsync(IReadOnlyCollection<int> draftEntries, CancellationToken ct)
+        {
+            var resultado = new List<AdjuntoBorradorSap>();
+            if (draftEntries.Count == 0) return resultado;
+
+            using var cn = new HanaConnection(_connectionString);
+            await cn.OpenAsync(ct);
+
+            // Una consulta por ciclo (por lote de TamanoLote borradores)
+            foreach (var lote in draftEntries.Distinct().Chunk(TamanoLote))
+            {
+                string marcadores = string.Join(",", lote.Select(_ => "?"));
+                using var cmd = new HanaCommand(string.Format(ConsultaAdjuntos, marcadores), cn);
+                foreach (var entry in lote)
+                    cmd.Parameters.Add(new HanaParameter { HanaDbType = HanaDbType.Integer, Value = entry });
+
+                using var r = await cmd.ExecuteReaderAsync(ct);
+                int colCarpeta = r.GetOrdinal("trgtPath");
+                while (await r.ReadAsync(ct))
+                {
+                    resultado.Add(new AdjuntoBorradorSap
+                    {
+                        DocEntry = Convert.ToInt32(r["DocEntry"]),
+                        Line = Convert.ToInt32(r["Line"]),
+                        // NCLOB: se lee como texto
+                        Carpeta = r.IsDBNull(colCarpeta) ? null : r.GetString(colCarpeta).Trim(),
+                        FileName = Texto(r, "FileName"),
+                        FileExt = Texto(r, "FileExt")
                     });
                 }
             }

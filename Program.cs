@@ -53,6 +53,7 @@ builder.Services.Configure<AlertasAprobacionOptions>(builder.Configuration.GetSe
 builder.Services.Configure<SmtpOptions>(builder.Configuration.GetSection(SmtpOptions.Seccion));
 builder.Services.AddScoped<AprobacionesSapRepository>();
 builder.Services.AddScoped<ICorreoService, SmtpCorreoService>();
+builder.Services.AddSingleton<AdjuntosAprobacion>();
 builder.Services.AddHostedService<AlertasAprobacionSapService>();
 // AUTOMAPPER
 builder.Services.AddAutoMapper(cfg => cfg.AddProfile<MappingProfile>());

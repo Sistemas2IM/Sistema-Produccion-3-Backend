@@ -8,7 +8,8 @@ namespace Sistema_Produccion_3_Backend.Services.Automatizacion
     // HTML de los correos de aprobación. Todo texto que viene de SAP se escapa.
     public static class PlantillasAprobacion
     {
-        public static (string Asunto, string Cuerpo) Pendiente(SolicitudPendienteSap s, AlertasAprobacionOptions opt)
+        // adjuntos null = sin sección "Adjuntos" (AdjuntarArchivos apagado)
+        public static (string Asunto, string Cuerpo) Pendiente(SolicitudPendienteSap s, AlertasAprobacionOptions opt, AdjuntosCorreo? adjuntos = null)
         {
             string asunto = $"Aprobación pendiente: {s.TipoDoc} #{s.Folio}";
 
@@ -46,6 +47,7 @@ namespace Sistema_Produccion_3_Backend.Services.Automatizacion
 
             var pie = new StringBuilder();
             pie.Append(Detalle(s, opt.MaxLineasDetalle));
+            pie.Append(Adjuntos(adjuntos));
             pie.Append(Parrafo(opt.InstruccionesAprobacion));
             // El Web Client solo sirve para revisar el borrador; la aprobación se hace desde la alerta en B1
             string? url = UrlWebClient(s, opt);
@@ -228,6 +230,37 @@ namespace Sistema_Produccion_3_Backend.Services.Automatizacion
                 sb.Append($"<p style=\"margin:6px 0 0;text-align:right\"><b>Subtotal sin IVA:</b> {Html($"{Total(s.Lineas.Sum(l => l.TotalLinea))} {moneda}")}</p>");
             }
 
+            return sb.ToString();
+        }
+
+        // Sección "Adjuntos" con el estado de cada archivo del borrador. Sin archivos no se muestra
+        private static string Adjuntos(AdjuntosCorreo? adjuntos)
+        {
+            if (adjuntos == null) return "";
+
+            const string titulo = "<h3 style=\"color:#1a4f8b;font-size:15px;margin:18px 0 6px\">Adjuntos</h3>";
+
+            if (adjuntos.ConsultaFallida)
+                return titulo + $"<p style=\"color:#666;font-style:italic\">{Html("No se pudieron consultar los adjuntos; revísalos en SAP.")}</p>";
+
+            if (adjuntos.Archivos.Count == 0) return "";
+
+            const string celda = "padding:5px 6px;border:1px solid #ddd;vertical-align:top;";
+            var sb = new StringBuilder(titulo);
+            sb.Append("<table style=\"border-collapse:collapse;width:100%;font-size:13px\">");
+            sb.Append($"<tr><th style=\"{celda}background:#f5f7fa;text-align:left\">Archivo</th><th style=\"{celda}background:#f5f7fa;text-align:left;white-space:nowrap\">Estado</th></tr>");
+
+            foreach (var a in adjuntos.Archivos)
+            {
+                // Lo que no se adjuntó va en naranja para distinguirlo
+                string color = a.Estado == EstadoAdjunto.Adjuntado ? "" : "color:#a15c00;";
+                sb.Append("<tr>");
+                sb.Append($"<td style=\"{celda}word-wrap:break-word;overflow-wrap:break-word\">{Html(a.Nombre)}</td>");
+                sb.Append($"<td style=\"{celda}{color}\">{Html(AdjuntosAprobacion.TextoEstado(a.Estado))}</td>");
+                sb.Append("</tr>");
+            }
+
+            sb.Append("</table>");
             return sb.ToString();
         }
 

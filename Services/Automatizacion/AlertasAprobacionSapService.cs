@@ -30,6 +30,22 @@ namespace Sistema_Produccion_3_Backend.Services.Automatizacion
         public string? TextoEnlaceWebClient { get; set; } = "Puedes revisar el documento en el Web Client.";
         // Líneas del borrador que se muestran en la sección Detalle del aviso al aprobador
         public int MaxLineasDetalle { get; set; } = 10;
+        // Adjuntar al aviso del aprobador los archivos del borrador (ATC1) que están en el NAS
+        public bool AdjuntarArchivos { get; set; } = true;
+        // Suma máxima de los archivos de un correo (Gmail admite 25 MB, pero base64 agrega ~33%)
+        public int MaxAdjuntosMB { get; set; } = 15;
+        // La ruta de ATC1 (\\192.168.2.246\anexos) no es donde están los archivos: se cambia el prefijo
+        // antes de leer. Se aplica el primer par que coincida; sin coincidencia se usa la ruta de SAP
+        public List<ReemplazoRuta> ReemplazosRutaAdjuntos { get; set; } = new();
+        // Solo se leen archivos cuya ruta final esté dentro de estas carpetas. Las listas van vacías a propósito:
+        // el binder agrega los valores de la configuración a los de la lista, no los reemplaza. Sin carpetas = todo "No permitido"
+        public List<string> RutasAdjuntosPermitidas { get; set; } = new();
+    }
+
+    public class ReemplazoRuta
+    {
+        public string Desde { get; set; } = "";
+        public string Hacia { get; set; } = "";
     }
 
     // Avisa por correo de solicitudes de aprobación de SAP B1 (ver Docs/SPEC_alertas_aprobacion_sap.md).
@@ -93,8 +109,10 @@ namespace Sistema_Produccion_3_Backend.Services.Automatizacion
             var context = sp.GetRequiredService<base_nuevaContext>();
             var sap = sp.GetRequiredService<AprobacionesSapRepository>();
             var correo = sp.GetRequiredService<ICorreoService>();
+            var lectorAdjuntos = sp.GetRequiredService<AdjuntosAprobacion>();
 
             int nuevos = 0, enviados = 0, fallidos = 0, cerradas = 0;
+            var porEnviar = new List<(SolicitudPendienteSap Solicitud, aprobacionAviso Aviso)>();
 
             // 1. Aprobadores de la etapa actual de cada solicitud pendiente
             var pendientes = await sap.ObtenerPendientesAsync(ct);
@@ -124,8 +142,37 @@ namespace Sistema_Produccion_3_Backend.Services.Automatizacion
 
                 if (opt.Seed || aviso.Enviado || aviso.Intentos >= opt.MaxIntentos) continue;
 
-                var (asunto, cuerpo) = PlantillasAprobacion.Pendiente(p, opt);
-                if (await IntentarEnvioAsync(context, correo, aviso, p.AprobadorEmail, asunto, cuerpo, ct)) enviados++;
+                porEnviar.Add((p, aviso));
+            }
+
+            // Adjuntos: una consulta por ciclo, solo de los borradores con avisos por enviar.
+            // Sin aprobador con correo no se consulta ni se lee nada
+            if (opt.AdjuntarArchivos)
+            {
+                var conCorreo = porEnviar.Where(x => !string.IsNullOrWhiteSpace(x.Solicitud.AprobadorEmail))
+                    .Select(x => x.Solicitud).ToList();
+                await sap.CargarAdjuntosAsync(conCorreo, ct);
+            }
+
+            // Los archivos se leen una vez por borrador y se reutilizan para todos sus aprobadores.
+            // Solo viven durante el ciclo: un reintento por fallo de SMTP los vuelve a leer
+            var adjuntosPorBorrador = new Dictionary<int, AdjuntosCorreo>();
+
+            foreach (var (p, aviso) in porEnviar)
+            {
+                // Por si SAP devolviera dos filas con la misma llave: el aviso ya salió en este ciclo
+                if (aviso.Enviado) continue;
+
+                AdjuntosCorreo? adjuntos = null;
+                if (opt.AdjuntarArchivos && !string.IsNullOrWhiteSpace(p.AprobadorEmail)
+                    && !adjuntosPorBorrador.TryGetValue(p.Folio, out adjuntos))
+                {
+                    adjuntos = await lectorAdjuntos.PrepararAsync(p, opt, ct);
+                    adjuntosPorBorrador[p.Folio] = adjuntos;
+                }
+
+                var (asunto, cuerpo) = PlantillasAprobacion.Pendiente(p, opt, adjuntos);
+                if (await IntentarEnvioAsync(context, correo, aviso, p.AprobadorEmail, asunto, cuerpo, ct, adjuntos?.ParaEnviar)) enviados++;
                 else if (aviso.Email != null) fallidos++;
             }
 
@@ -210,7 +257,8 @@ namespace Sistema_Produccion_3_Backend.Services.Automatizacion
 
         private async Task<bool> IntentarEnvioAsync(
             base_nuevaContext context, ICorreoService correo, aprobacionAviso aviso,
-            string? email, string asunto, string cuerpo, CancellationToken ct)
+            string? email, string asunto, string cuerpo, CancellationToken ct,
+            IReadOnlyCollection<ArchivoCorreo>? adjuntos = null)
         {
             // Sin correo no cuenta como intento: si luego se agrega el correo en SAP, el aviso sale en el siguiente ciclo
             if (string.IsNullOrWhiteSpace(email))
@@ -229,7 +277,7 @@ namespace Sistema_Produccion_3_Backend.Services.Automatizacion
 
             try
             {
-                await correo.EnviarAsync(email, asunto, cuerpo, ct);
+                await correo.EnviarAsync(email, asunto, cuerpo, ct, adjuntos);
                 aviso.Enviado = true;
                 aviso.FechaEnvio = DateTime.Now;
                 aviso.UltimoError = null;

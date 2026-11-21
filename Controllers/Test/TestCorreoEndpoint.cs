@@ -11,7 +11,8 @@ using System.Text.RegularExpressions;
 namespace Sistema_Produccion_3_Backend.Controllers.Test
 {
     // TEMPORAL - borrar después de la prueba de correo
-    public record TestCorreoRequest(string? Destino, string? Tipo);
+    // DraftEntry (opcional) cambia el borrador del tipo elegido, p. ej. una OC con adjuntos con espacios en el nombre
+    public record TestCorreoRequest(string? Destino, string? Tipo, int? DraftEntry = null);
 
     // TEMPORAL - borrar después de la prueba de correo
     // Endpoint mínimo (no controlador) para que solo exista si Program.cs lo mapea en Development
@@ -23,6 +24,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Test
                 TestCorreoRequest req,
                 ICorreoService correo,
                 AprobacionesSapRepository sap,
+                AdjuntosAprobacion lectorAdjuntos,
                 IConfiguration configuration,
                 IOptionsMonitor<AlertasAprobacionOptions> opciones,
                 CancellationToken ct) =>
@@ -34,17 +36,20 @@ namespace Sistema_Produccion_3_Backend.Controllers.Test
                 var opt = opciones.CurrentValue;
 
                 // Borradores reales de ODRF/DRF1, uno por tipo con enlace al Web Client:
-                // traslado 16621 (1 línea), factura 16685 (4 líneas), pedido 16681, OC 16677
+                // traslado 16621 (1 línea), factura 16685 (4 líneas), pedido 16681, OC 16677 (2 adjuntos en el NAS)
                 int? draftEntry = tipo switch
                 {
                     "traslado" => 16621,
                     "factura" or "factura-max2" => 16685,
                     "pedido" => 16681,
-                    "orden" => 16677,
+                    "orden" or "orden-noexiste" or "orden-nopermitido" or "orden-max0" or "orden-sinadjuntos" or "orden-sinreemplazo" => 16677,
                     _ => null
                 };
+                if (draftEntry.HasValue && req.DraftEntry.HasValue)
+                    draftEntry = req.DraftEntry;
 
                 (string Asunto, string Cuerpo) correoPrueba;
+                AdjuntosCorreo? adjuntos = null;
                 try
                 {
                     if (draftEntry.HasValue)
@@ -57,8 +62,24 @@ namespace Sistema_Produccion_3_Backend.Controllers.Test
                         await sap.CargarLineasAsync(new[] { s }, ct);
 
                         // Copia: no se modifica la instancia de opciones que usa el servicio
-                        var optPrueba = tipo == "factura-max2" ? ConMaxLineas(opt, 2) : opt;
-                        correoPrueba = PlantillasAprobacion.Pendiente(s, optPrueba);
+                        var optPrueba = tipo switch
+                        {
+                            "factura-max2" => Copia(opt, o => o.MaxLineasDetalle = 2),
+                            "orden-max0" => Copia(opt, o => o.MaxAdjuntosMB = 0),
+                            "orden-sinadjuntos" => Copia(opt, o => o.AdjuntarArchivos = false),
+                            "orden-sinreemplazo" => Copia(opt, o => o.ReemplazosRutaAdjuntos = new()),
+                            _ => opt
+                        };
+
+                        // Mismo camino que el servicio: si ATC1 falla, la sección lo indica y el correo sale igual
+                        if (optPrueba.AdjuntarArchivos)
+                        {
+                            await sap.CargarAdjuntosAsync(new[] { s }, ct);
+                            AgregarAdjuntoFicticio(s, tipo, optPrueba);
+                            adjuntos = await lectorAdjuntos.PrepararAsync(s, optPrueba, ct);
+                        }
+
+                        correoPrueba = PlantillasAprobacion.Pendiente(s, optPrueba, adjuntos);
                     }
                     else
                     {
@@ -66,7 +87,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Test
                         {
                             case "resultado": correoPrueba = PlantillasAprobacion.Resultado(ResultadoAprobado(), opt); break;
                             case "rechazada": correoPrueba = PlantillasAprobacion.Resultado(ResultadoRechazado(), opt); break;
-                            default: return Results.BadRequest(new { error = "tipo debe ser traslado, factura, factura-max2, pedido, orden, resultado o rechazada." });
+                            default: return Results.BadRequest(new { error = "tipo debe ser traslado, factura, factura-max2, pedido, orden, orden-noexiste, orden-nopermitido, orden-max0, orden-sinadjuntos, orden-sinreemplazo, resultado o rechazada." });
                         }
                     }
                 }
@@ -77,10 +98,26 @@ namespace Sistema_Produccion_3_Backend.Controllers.Test
 
                 try
                 {
-                    await correo.EnviarAsync(req.Destino, $"[PRUEBA] {correoPrueba.Asunto}", correoPrueba.Cuerpo, ct);
+                    await correo.EnviarAsync(req.Destino, $"[PRUEBA] {correoPrueba.Asunto}", correoPrueba.Cuerpo, ct, adjuntos?.ParaEnviar);
                     // href tal como quedó en el HTML (con &amp;), para comprobar que %252C no se recodificó
                     var href = Regex.Match(correoPrueba.Cuerpo, "href=\"([^\"]*)\"");
-                    return Results.Ok(new { enviado = true, destino = req.Destino, tipo, asunto = correoPrueba.Asunto, enlace = href.Success ? href.Groups[1].Value : null });
+                    return Results.Ok(new
+                    {
+                        enviado = true,
+                        destino = req.Destino,
+                        tipo,
+                        asunto = correoPrueba.Asunto,
+                        enlace = href.Success ? href.Groups[1].Value : null,
+                        adjuntosConsultaFallida = adjuntos?.ConsultaFallida,
+                        adjuntos = adjuntos?.Archivos.Select(a => new
+                        {
+                            nombre = a.Nombre,
+                            estado = AdjuntosAprobacion.TextoEstado(a.Estado),
+                            ruta = a.Ruta,
+                            tipoMime = a.Archivo?.TipoMime,
+                            kb = a.Archivo == null ? (int?)null : a.Archivo.Contenido.Length / 1024
+                        })
+                    });
                 }
                 catch (Exception ex)
                 {
@@ -142,14 +179,53 @@ namespace Sistema_Produccion_3_Backend.Controllers.Test
             };
         }
 
-        private static AlertasAprobacionOptions ConMaxLineas(AlertasAprobacionOptions o, int max) => new()
+        private static AlertasAprobacionOptions Copia(AlertasAprobacionOptions o, Action<AlertasAprobacionOptions> cambio)
         {
-            UrlWebClientPorTipo = o.UrlWebClientPorTipo,
-            InstruccionesAprobacion = o.InstruccionesAprobacion,
-            NotaAprobada = o.NotaAprobada,
-            TextoEnlaceWebClient = o.TextoEnlaceWebClient,
-            MaxLineasDetalle = max
-        };
+            var copia = new AlertasAprobacionOptions
+            {
+                UrlWebClientPorTipo = o.UrlWebClientPorTipo,
+                InstruccionesAprobacion = o.InstruccionesAprobacion,
+                NotaAprobada = o.NotaAprobada,
+                TextoEnlaceWebClient = o.TextoEnlaceWebClient,
+                MaxLineasDetalle = o.MaxLineasDetalle,
+                AdjuntarArchivos = o.AdjuntarArchivos,
+                MaxAdjuntosMB = o.MaxAdjuntosMB,
+                ReemplazosRutaAdjuntos = new List<ReemplazoRuta>(o.ReemplazosRutaAdjuntos),
+                RutasAdjuntosPermitidas = new List<string>(o.RutasAdjuntosPermitidas)
+            };
+            cambio(copia);
+            return copia;
+        }
+
+        // Adjunto ficticio al final de los reales de ATC1:
+        // orden-noexiste = archivo que no existe, con la carpeta tal como la guarda SAP (pasa por el reemplazo);
+        // orden-nopermitido = archivo local que sí existe pero está fuera de RutasAdjuntosPermitidas (no debe leerse)
+        private static void AgregarAdjuntoFicticio(SolicitudPendienteSap s, string tipo, AlertasAprobacionOptions opt)
+        {
+            if (s.Adjuntos == null) return;
+
+            var ficticio = tipo switch
+            {
+                "orden-noexiste" => new AdjuntoBorradorSap
+                {
+                    Carpeta = @"\\192.168.2.246\anexos",
+                    FileName = "PRUEBA_NO_EXISTE",
+                    FileExt = "pdf"
+                },
+                "orden-nopermitido" => new AdjuntoBorradorSap
+                {
+                    Carpeta = Environment.GetFolderPath(Environment.SpecialFolder.Windows),
+                    FileName = "win",
+                    FileExt = "ini"
+                },
+                _ => null
+            };
+            if (ficticio == null) return;
+
+            ficticio.DocEntry = s.Folio;
+            ficticio.Line = s.Adjuntos.Count == 0 ? 0 : s.Adjuntos.Max(a => a.Line) + 1;
+            s.Adjuntos.Add(ficticio);
+        }
 
         private static string? Texto(IDataRecord r, string columna)
         {
