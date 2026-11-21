@@ -202,6 +202,137 @@ namespace Sistema_Produccion_3_Backend.Controllers.TablerosOf
             return Ok(consolidadasOV);
         }
 
+        // GET: api/tarjetaOf/get/ov-consolidadas/vendedor/{vendedor}
+        // Gestión de OV: mismas OV consolidadas, filtradas con las reglas de Control de Pedidos por vendedor
+        // Ejemplo URL: /api/tarjetaOf/get/ov-consolidadas/vendedor/Claudia%20Ruano
+        [HttpGet("get/ov-consolidadas/vendedor/{vendedor}")]
+        public async Task<ActionResult<object>> GetTarjetasConsolidadasPorOvVendedor(string vendedor)
+        {
+            vendedor = vendedor?.Trim();
+            if (string.IsNullOrEmpty(vendedor))
+            {
+                return BadRequest("Debe indicar el nombre del vendedor");
+            }
+
+            try
+            {
+                // 1. Validamos que el vendedor exista como usuario (nombres + apellidos)
+                var existeUsuario = await _context.usuario
+                    .AsNoTracking()
+                    .AnyAsync(u => u.nombres + " " + u.apellidos == vendedor);
+                if (!existeUsuario)
+                {
+                    return NotFound("Usuario no encontrado");
+                }
+
+                IQueryable<tarjetaOf> query = _context.tarjetaOf
+                    .AsNoTracking()
+                    .AsSplitQuery()
+                    .Where(t =>
+                        t.archivada == false &&
+                        t.oV != null &&
+                        t.oV != 0
+                    );
+
+                // 2. Reglas por vendedor (mismas que Control de Pedidos: TablerosGestion get/vendedor{vendedor})
+                var queryFiltrada = AplicarFiltroVendedor(query, vendedor);
+                if (queryFiltrada == null)
+                {
+                    return BadRequest("Usuario no tiene permisos configurados");
+                }
+
+                var tarjetasOrdenadas = await queryFiltrada
+                    .OrderBy(t => t.idEstadoOf == 1 ? 0 : 1)
+                    .ThenBy(t => t.idEstadoOf == 1 ? -t.oF : t.posicion)
+                    .Include(u => u.idEstadoOfNavigation)
+                    .Include(r => r.etiquetaOf)
+                        .ThenInclude(o => o.idEtiquetaNavigation)
+                    .Include(f => f.ffeTiemposOfGlobal)
+                    .Include(se => se.secuenciadoPorNavigation)
+                    .Include(h => h.historialVencimientoOf)
+                    .ToListAsync();
+
+                var tarjetaOfDto = _mapper.Map<List<TarjetaOfDto>>(tarjetasOrdenadas);
+
+                // 3. Consolidación por oV (misma estructura que get/ov-consolidadas); sin resultados => []
+                var consolidadasOV = tarjetaOfDto
+                    .GroupBy(t => t.oV.ToString())
+                    .Select(g => new
+                    {
+                        ov = g.Key,
+                        cliente = g.First().clienteOf,
+                        vendedor = g.First().vendedorOf,
+                        cantidadTarjetas = g.Count(),
+                        tarjetas = g.ToList()
+                    })
+                    .OrderByDescending(g => g.ov)
+                    .ToList();
+
+                return Ok(consolidadasOV);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al consultar OV consolidadas del vendedor {vendedor}", vendedor);
+                return StatusCode(500, $"Error interno del servidor: {ex.Message}");
+            }
+        }
+
+        // Devuelve null si el vendedor no tiene permisos configurados
+        private static IQueryable<tarjetaOf>? AplicarFiltroVendedor(IQueryable<tarjetaOf> query, string vendedor)
+        {
+            switch (vendedor)
+            {
+                // Vendedores normales (solo ven sus propias órdenes)
+                case "Claudia Ruano":
+                case "Jenny Gálvez":
+                case "Juan Mónico":
+                case "Hugo Campos":
+                case "Javier Toledo":
+                case "Xiomara Cruz":
+                case "Norma Mejía":
+                    return query.Where(t => t.vendedorOf == vendedor);
+
+                // Encargados con acceso completo excepto oficina
+                case "Fátima García":
+                case "Oscar Chavez":
+                    return query.Where(t => t.vendedorOf != "Oficina");
+
+                case "Eliseo Menjívar":
+                    return query.Where(t => t.vendedorOf == "Claudia Ruano" ||
+                                            t.vendedorOf == "Jenny Gálvez" ||
+                                            t.vendedorOf == "Juan Mónico" ||
+                                            t.vendedorOf == "Hugo Campos" ||
+                                            t.vendedorOf == "Javier Toledo" ||
+                                            t.vendedorOf == "Norma Mejía" ||
+                                            t.vendedorOf == "Eliseo Menjívar");
+
+                // Gerencia: ve todo
+                case "Manuel Díaz":
+                case "Root Admin":
+                case "Gabriela Menendez":
+                    return query;
+
+                case "Floridalma Alfaro":
+                    return query.Where(t => t.lineaDeNegocio == "FLEXO" && t.vendedorOf != "Oficina");
+
+                case "Ingrid Guevara":
+                case "Katya":
+                case "Elba Deleon":
+                    return query.Where(t => t.vendedorOf != "Oficina");
+
+                case "Diana Munguia":
+                    return query.Where(t => t.vendedorOf == "Oficina" ||
+                                            t.vendedorOf == "Engracia Díaz" ||
+                                            t.vendedorOf == "Margarita Díaz");
+
+                case "Wendy Del Cid":
+                    return query.Where(t => t.lineaDeNegocio == "PROMO");
+
+                default:
+                    return null;
+            }
+        }
+
         // GET por user, si es el usuario "emenjivar" debe mostrar solo las del area con id 19, si no, mostrar todo
         // Ejemplo URL: /api/tarjetaOf/get/por-usuario/emenjivar
         [HttpGet("get/por-usuario/{username}")]
