@@ -21,7 +21,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Flags
             _mapper = mapper;
         }
 
-        // 🚀 1. FLAGS MANUALES CONFIGURADAS POR TABLERO DE PROCESOS
+        // 🚀 1. FLAGS ACTIVAS CONFIGURADAS POR TABLERO DE PROCESOS
         // GET: api/catalogoFlag/tablero/{idTablero}
         [HttpGet("tablero/{idTablero}")]
         public async Task<ActionResult<IEnumerable<CatalogoFlagDto>>> GetFlagsPorTablero(int idTablero)
@@ -29,8 +29,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Flags
             var flags = await _context.tableroFlag
                 .AsNoTracking()
                 .Where(tf => tf.idTablero == idTablero
-                          && tf.idFlagNavigation.activo == true // Cambiar a == 1 si en tu entidad es byte/int
-                          && tf.idFlagNavigation.modoAsignacion == "MANUAL")
+                          && tf.idFlagNavigation.activo == true)
                 .OrderBy(tf => tf.orden)
                 .Select(tf => tf.idFlagNavigation)
                 .ToListAsync();
@@ -38,7 +37,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Flags
             return Ok(_mapper.Map<List<CatalogoFlagDto>>(flags));
         }
 
-        // 🚀 2. FLAGS MANUALES CONFIGURADAS POR TIPO DE DOCUMENTO (Ej: OF en Control de Pedidos)
+        // 🚀 2. FLAGS ACTIVAS CONFIGURADAS POR TIPO DE DOCUMENTO (Ej: OF en Control de Pedidos)
         // GET: api/catalogoFlag/tipoDocumento/{tipoDocumento}
         [HttpGet("tipoDocumento/{tipoDocumento}")]
         public async Task<ActionResult<IEnumerable<CatalogoFlagDto>>> GetFlagsPorTipoDocumento(int tipoDocumento)
@@ -46,8 +45,7 @@ namespace Sistema_Produccion_3_Backend.Controllers.Flags
             var flags = await _context.flagTipoDocumento
                 .AsNoTracking()
                 .Where(ftd => ftd.tipoDocumento == tipoDocumento
-                           && ftd.idFlagNavigation.activo == true // Cambiar a == 1 si en tu entidad es byte/int
-                           && ftd.idFlagNavigation.modoAsignacion == "MANUAL")
+                           && ftd.idFlagNavigation.activo == true)
                 .OrderBy(ftd => ftd.orden)
                 .Select(ftd => ftd.idFlagNavigation)
                 .ToListAsync();
