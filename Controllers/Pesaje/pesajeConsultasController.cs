@@ -1,6 +1,5 @@
 using System.Globalization;
 using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Sistema_Produccion_3_Backend.DTO.Pesaje;
@@ -10,7 +9,6 @@ namespace Sistema_Produccion_3_Backend.Controllers.Pesaje
 {
     [Route("api/pesaje")]
     [ApiController]
-    [Authorize]
     public class pesajeConsultasController : ControllerBase
     {
         private const int MaxUsuariosRecientes = 6;
@@ -25,8 +23,6 @@ namespace Sistema_Produccion_3_Backend.Controllers.Pesaje
         }
 
         // GET api/pesaje/usuarios-recientes?idBascula=BP-01
-        // Sin token: se usa en la pantalla de bloqueo para elegir al usuario antes de pedir el PIN
-        [AllowAnonymous]
         [HttpGet("usuarios-recientes")]
         public async Task<ActionResult<IEnumerable<UsuarioRecienteDto>>> GetUsuariosRecientes([FromQuery] string? idBascula)
         {

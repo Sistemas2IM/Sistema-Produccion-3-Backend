@@ -78,6 +78,61 @@ namespace Sistema_Produccion_3_Backend.Controllers.Pesaje
             });
         }
 
+        // PUT api/pesaje/auth/pin
+        // Se pide la contraseña del usuario para autorizar el cambio; el PIN se guarda solo como hash
+        [HttpPut("pin")]
+        public async Task<IActionResult> CambiarPin(CambioPinDto dto)
+        {
+            if (!PinHasher.EsPinValido(dto.pinNuevo))
+            {
+                return BadRequest(new { mensaje = "El PIN debe tener de 4 a 6 dígitos" });
+            }
+
+            var user = dto.user?.Trim() ?? string.Empty;
+            var intentos = ObtenerIntentos(user);
+
+            var segundosBloqueo = SegundosRestantesBloqueo(intentos);
+            if (segundosBloqueo > 0)
+            {
+                return RespuestaBloqueado(segundosBloqueo);
+            }
+
+            var usuario = string.IsNullOrEmpty(user)
+                ? null
+                : await _context.usuario.FirstOrDefaultAsync(u => u.user == user);
+
+            var passwordCorrecta = PinHasher.VerificarHash(dto.password, usuario?.password);
+
+            if (usuario == null || usuario.status != true || !passwordCorrecta)
+            {
+                lock (intentos)
+                {
+                    intentos.Fallidos++;
+                    if (intentos.Fallidos >= MaxIntentosFallidos)
+                    {
+                        intentos.BloqueadoHasta = DateTime.UtcNow.Add(DuracionBloqueo);
+                        intentos.Fallidos = 0;
+                    }
+                }
+
+                segundosBloqueo = SegundosRestantesBloqueo(intentos);
+                if (segundosBloqueo > 0)
+                {
+                    return RespuestaBloqueado(segundosBloqueo);
+                }
+
+                return Unauthorized(new { mensaje = "Usuario o contraseña incorrectos" });
+            }
+
+            usuario.pinHash = PinHasher.HashPin(dto.pinNuevo!);
+            usuario.pinActualizado = DateTime.Now;
+            await _context.SaveChangesAsync();
+
+            _memoryCache.Remove(ClaveIntentos(user));
+
+            return NoContent();
+        }
+
         private IntentosPin ObtenerIntentos(string user)
         {
             return _memoryCache.GetOrCreate(ClaveIntentos(user), entry =>

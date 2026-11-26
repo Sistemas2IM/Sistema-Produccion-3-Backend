@@ -20,15 +20,21 @@ namespace Sistema_Produccion_3_Backend.Services
 
         public static bool VerificarPin(string? pin, string? pinHash)
         {
-            if (string.IsNullOrEmpty(pin) || string.IsNullOrEmpty(pinHash))
+            return VerificarHash(pin, pinHash);
+        }
+
+        // Mismo mecanismo que AuthService (BCrypt.Verify), con hash ficticio si falta el valor o el hash
+        public static bool VerificarHash(string? valor, string? hash)
+        {
+            if (string.IsNullOrEmpty(valor) || string.IsNullOrEmpty(hash))
             {
-                BCrypt.Net.BCrypt.Verify(pin ?? string.Empty, HashFicticio);
+                BCrypt.Net.BCrypt.Verify(valor ?? string.Empty, HashFicticio);
                 return false;
             }
 
             try
             {
-                return BCrypt.Net.BCrypt.Verify(pin, pinHash);
+                return BCrypt.Net.BCrypt.Verify(valor, hash);
             }
             catch (BCrypt.Net.SaltParseException)
             {
