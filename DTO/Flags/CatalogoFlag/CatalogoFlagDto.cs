@@ -23,5 +23,7 @@ namespace Sistema_Produccion_3_Backend.DTO.Flags.CatalogoFlag
         public string? color { get; set; }
 
         public bool? activo { get; set; }
+
+        public string? icono { get; set; }
     }
 }
